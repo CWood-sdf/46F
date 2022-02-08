@@ -5,11 +5,13 @@
 #define TO_4(x) x*x*x*x
 #define TO_3(x) x*x*x
 #define TO_2(x) x*x
+
 //SensorClasses.h -- Use this file to make helper classes for sensors
 extern GPS_Share share;
 struct KillThread {
   static inline vector<thread*> instances;
   thread* t;
+  
   KillThread(void(*callback)(void) ) : t(new thread(callback)) {
     instances.push_back(t);
   }

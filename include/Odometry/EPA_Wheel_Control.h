@@ -909,18 +909,18 @@ public: // Path following implementations
 public: // Functions that just move the wheels  
 
   virtual void moveLeft(int speed){
-    Left.spin(fwd, speed, pct);
+    Left.spinVolt(fwd, speed);
   }
   virtual void moveRight(int speed){
-    Right.spin(fwd, speed, pct);
+    Right.spinVolt(fwd, speed);
   }
   virtual void turnLeft(int speed = 100){
-    Right.spin(fwd, speed, pct);
-    Left.spin(reverse, speed, pct);
+    Right.spinVolt(fwd, speed);
+    Left.spinVolt(reverse, speed);
   }
   virtual void turnRight(int speed = 100){
-    Left.spin(fwd, speed, pct);
-    Right.spin(reverse, speed, pct);
+    Left.spinVolt(fwd, speed);
+    Right.spinVolt(reverse, speed);
   }
   virtual void coastBrake(){
     Left.stop(coast);

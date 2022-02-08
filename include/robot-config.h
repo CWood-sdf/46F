@@ -52,11 +52,10 @@ Sensors
 *************************************/
 //Front Goal Switch
 LineCounter frontCounter(Brain.ThreeWirePort.E);
+LineCounter backCounter(Brain.ThreeWirePort.F);
 
-//Limit
-limit backGoalDetect = limit(Brain.ThreeWirePort.C);
 //Three wire expander
-triport Expander = triport(PORT7);
+triport Expander = triport(PORT9);
 
 //Inertial Sensor
 inertial angler = inertial(PORT3);

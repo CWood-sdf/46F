@@ -6,7 +6,7 @@
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
-#pragma GCC diagnostic ignored "-Wunused-variable"
+// #pragma GCC diagnostic ignored "-Wunused-variable"
 #ifndef VEX_H
 #define VEX_H
 #define _USE_MATH_DEFINES
