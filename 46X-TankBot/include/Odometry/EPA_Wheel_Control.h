@@ -219,7 +219,7 @@ protected: // PID variables + other random things
   PID slaveCtrl = PID(3.1775, 0.001, 2.0);
 
   //Get ctrl kP up to 6.25
-  PID ctrl = PID(4.91, 0.001, 2.4325, 0, 4, 1);
+  PID ctrl = PID(4.91, 0, 2.4325);
   //Make derivative absolutely massive to force a hard stop
   //PID purePursuitCtrl = PID(5.5, 0.0, 3.4);
   PID turnCtrl = PID(0.67, 0, 0.1);
@@ -909,18 +909,18 @@ public: // Path following implementations
 public: // Functions that just move the wheels  
 
   virtual void moveLeft(int speed){
-    Left.spinVolt(fwd, speed);
+    Left.spin(fwd, speed, pct);
   }
   virtual void moveRight(int speed){
-    Right.spinVolt(fwd, speed);
+    Right.spin(fwd, speed, pct);
   }
   virtual void turnLeft(int speed = 100){
-    Right.spinVolt(fwd, speed);
-    Left.spinVolt(reverse, speed);
+    Right.spin(fwd, speed, pct);
+    Left.spin(reverse, speed, pct);
   }
   virtual void turnRight(int speed = 100){
-    Left.spinVolt(fwd, speed);
-    Right.spinVolt(reverse, speed);
+    Left.spin(fwd, speed, pct);
+    Right.spin(reverse, speed, pct);
   }
   virtual void coastBrake(){
     Left.stop(coast);
