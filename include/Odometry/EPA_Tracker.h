@@ -1,3 +1,5 @@
+#ifndef EPA_TRACKER_H
+#define EPA_TRACKER_H
 #include "Odometry/FieldCoord.h"
 //EPA_Tracker.h -- Use this file to track the robot's absolute position on the field
 //This file does so much math that it be like Beethoven 9 if it all works properly
@@ -271,3 +273,4 @@ public:
     lastTime = Brain.Timer.systemHighResolution();
   }
 };
+#endif
