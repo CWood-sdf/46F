@@ -1,5 +1,6 @@
 #include "Odometry/EPA_Tracker.h"
-
+#ifndef GPS_SHARE_H
+#define GPS_SHARE_H
 //template <class Odom>
 class GPS_Share {
   Positioner& odom;
@@ -94,3 +95,4 @@ public:
     s(sleepTime);
   }
 };
+#endif
