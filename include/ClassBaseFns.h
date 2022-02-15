@@ -64,17 +64,7 @@ namespace ClassFns {
       wc.moveRight(fwd - alignVal);
     }
   }
-  //Useful for depositing pre-loads on two different goals
-  FN_WITH_APA_SIG(allowOutRings, int)
-    conveyer.autonCtrl = true;
-    conveyer.autonOut = amnt;
-  }
-  FN_WITH_APA_SIG_NO_ARG(freeConveyer)
-    conveyer.autonCtrl = false;
-  }
-  FN_WITH_APA_SIG_NO_ARG(ctrlConveyer)
-    conveyer.autonCtrl = true;
-  }
+  
 
   FN_WITH_APA_SIG_NO_ARG(raiseLiftByOne)
     liftCtrllr.done = false;
