@@ -5,7 +5,8 @@
 //  1 - Bezier Curves - To make beautifully smooth paths
 //  2 - Pure Pursuit - To direct the bot's motion along Bezier paths
 //  3 - PID Controllers - To direct the bot's speed along the path
-
+#ifndef EPA_WHEEL_CONTROL_H
+#define EPA_WHEEL_CONTROL_H
 #include "Odometry/PID.h"
 #include "Odometry/GPS_Share.h"
 #include <deque>
@@ -86,11 +87,7 @@ struct VectorArr {
   }
   //operator=
   VectorArr& operator=(VectorArr&& v){
-    cout << "Ok" << endl;
-    s(500);
     arr = v.arr;
-    cout << "Ok" << endl;
-    s(500);
     return *this;
   }
 };
@@ -202,6 +199,7 @@ class BasicWheelController {
 protected: // PID variables + other random things
   // PosExtractor<gps> GPS;
   // PosExtractor Odom;
+  typedef BasicWheelController& chain_method;
   static inline LinkedList<BasicWheelController*&> requestedInstances;
   static inline BasicWheelController* inst = NULL;
   void fillInstances(){
@@ -486,18 +484,45 @@ public: // TurnTo
     
     followPath(arr);
   }
+  enum class exitMode;
 private: // followPath vars
   PVector lastTarget;
   double maxAcc = 20;
   double maxDAcc = 30;
   double kConst = 1.0;
   double exitDist = 0.0;
+  exitMode BrakeMode;
+public: // exitMode
+  enum class exitMode {
+    normal,
+    hold = normal,
+    coast,
+    nothing
+  };
 public: // followPath var editors
-  void setKConst(double v){
-    kConst = v;
+  chain_method setSpeedLimit(double v){
+    speedLimit = v;
+    CHAIN;
   }
-  void setExitDist(double v){
+  chain_method setMaxAcc(double v){
+    maxAcc = v;
+    CHAIN;
+  }
+  chain_method setMaxDeAcc(double v){
+    maxDAcc = v;
+    CHAIN;
+  }
+  chain_method setExitMode(exitMode m){
+    BrakeMode = m;
+    CHAIN;
+  }
+  chain_method setKConst(double v){
+    kConst = v;
+    CHAIN;
+  }
+  chain_method setExitDist(double v){
     exitDist = v;
+    CHAIN;
   }
   PVector getLastTarget(){
     return lastTarget;
@@ -668,22 +693,22 @@ private: // General path follower, keep it private so that the implementations u
         timesStopped = 0;
       }
       //50 ms not moving -> exit
-      if(timesStopped > 10){
+      if(timesStopped * sleepTime > 50){
         cout << "Stop Exit" << endl;
         break;
       }
       //Get the speed of the robot
       double speed = ctrl.getVal(dist) * (isNeg * 2.0 - 1.0);
       /***   UGLY CHEAP HACKY NONFIXY FIX   *****/
-      //Pls remove eventually
-      if(speedLimited){
-        if(speed > limitedSpeed){
-          speed = limitedSpeed;
-        }
-        if(speed < -limitedSpeed){
-          speed = -limitedSpeed;
-        }
-      }
+      // //Pls remove eventually
+      // if(speedLimited){
+      //   if(speed > limitedSpeed){
+      //     speed = limitedSpeed;
+      //   }
+      //   if(speed < -limitedSpeed){
+      //     speed = -limitedSpeed;
+      //   }
+      // }
       
       //Use the distFns for the current dist
       useDistFns(botPos().dist2D(bezier.last()));
@@ -760,7 +785,10 @@ private: // General path follower, keep it private so that the implementations u
         //Change extraSpeed to match original speed : extraSpeed ratio
         extraSpeed *= orgSpeed / speed / 2.0;
       }
-      
+      if(abs(speed) > speedLimit){
+        speed /= abs(speed);
+        speed *= speedLimit;
+      }
       //Mindblowing lines right here
       //Move the robot
       moveRight(speed - extraSpeed);
@@ -779,8 +807,15 @@ private: // General path follower, keep it private so that the implementations u
       //Set the last target for external stuff
       lastTarget = bezier.last();
       //Stop the bot
-      if(exitDist == 0.0){
-        hardBrake();
+      switch(BrakeMode){
+        case exitMode::normal:
+          hardBrake();
+          break;
+        case exitMode::coast:
+          coastBrake();
+          break;
+        case exitMode::nothing:
+          break;
       }
       this->drawArr = false;
       cout << "Path stop" << endl;
@@ -1170,3 +1205,4 @@ public: // Import variables + constructor
     
   }
 };
+#endif
