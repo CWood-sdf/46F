@@ -178,29 +178,12 @@ void autonInit(){
 
 }
 void autonomous(){
-  cout << "Yeet" << endl;
+  cout << "Auton Init" << endl;
   unclipGoal();
   unclipLiftGoal();
-  conveyer.autonCtrl = true;
-  conveyer.autonOut = 0;
-  conveyer.countIn = 3;
   liftCtrllr.enable();
-  cout << "Yeet" << endl;
-  //wc.estimateStartPos(PVector(57.75465729349735, -45.32583479789102), 279.7750439367311)
-//wc.estimateStartPos(PVector(57.75465729349735, -45.32583479789102), 279.7750439367311)
-backwardsSlow(300);
-clipGoal();
-wc.driveTo(-26.04, -28.73);
-unclipGoal();
-wc.driveTo(25.13, 26.37);
-wc.driveTo(-25.19, 47.74);
+  cout << "Auton Init Done" << endl;
 
-
-  // conveyer.autonCtrl = false;
-
-  // waitForLiftFinish();
-  // liftCtrllr.disable();
-  s(15000);
 }
 
 //}
@@ -243,7 +226,6 @@ void drivercontrol (){
   //int wheelsMove = 0;
   liftCtrllr.disable();
   // backLiftCtrllr.disable();
-  conveyer.noOut = goalHolder.value();
   KillThread::killAll();
   while(1){
     //Drive control, uses quotient/square for smoothness
@@ -279,7 +261,6 @@ void drivercontrol (){
       driveReversed = !driveReversed;
     }
     if(R1Latch.pressing()){
-      conveyer.noOut = !goalHolder.value();
       liftGoalHolder.set(!liftGoalHolder.value());
       
     }
@@ -426,7 +407,7 @@ void drivercontrol (){
     s(30);
   }
 }*/
-void liftControl(){
+void automation(){
   int canMove = 20;
   LinkedList<double> positions;
   while(1){
@@ -459,21 +440,9 @@ void liftControl(){
         liftMot.stop(hold);
       }
     }
-    // if(!backLiftCtrllr.disabled()){
-    //   if(!backLiftCtrllr.isUp && flapConveyer.position(deg) < backLiftCtrllr.getPosition() - 30){
-    //     flapConveyer.spin(fwd, 80, pct);
-    //     backLiftCtrllr.done = false;
-    //   }
-    //   else if(backLiftCtrllr.isUp && flapConveyer.position(deg) > backLiftCtrllr.getPosition() + 30){
-    //     flapConveyer.spin(vex::reverse, 80, pct);
-    //     backLiftCtrllr.done = false;
-    //   }
-    //   else {
-
-    //     backLiftCtrllr.done = !backLiftCtrllr.prevented();
-    //     flapConveyer.stop(hold);
-    //   }
-    // }
+    if(conveyer.ready){
+      flaps.spin(fwd, 100, pct);
+    }
     positions.push_back(liftMot.position(deg));
     if(canMove < 0){
       positions.popBase();
@@ -640,16 +609,13 @@ void programWrite(bool start){
     }
     //
     else if(isPressing(Greg.ButtonR1)){
-      allowOutRings(numArg);
       numArg = 0;
     }
     //
     else if(isPressing(Greg.ButtonR2)){
       if(threaded){
-        freeConveyer();
       }
       else {
-        ctrlConveyer();
       }
     }
     //
@@ -794,18 +760,16 @@ void brainOS() {
   }	
 }
 //}
+bool init = false;
 int main() {
   // testMotorConfiguration();
-  unclipGoal();
-  unclipLiftGoal();
-  cout << "Yeet" << endl;
-  // //useVisionAlign = true; 
-  gyroInit(angler);
-  cout << "Yeet" << endl;
-  // //conveyer.noOut = true;
-  gyroInit(GPS);
-  cout << "Yeet" << endl;
-  s(500);
+  thread initThread = thread([](){
+    unclipGoal();
+    unclipLiftGoal();
+    gyroInit(angler);
+    gyroInit(GPS);
+    init = true;
+  });
   // updateBotAngle();
   // startTilt = botAngles.z;
 
@@ -816,12 +780,15 @@ int main() {
   // //Make a thread to execute some auton tasks concurrently
   // thread otherThreads = thread(executeThreads);
   
-  thread liftThread = thread(liftControl);
+  thread automationThread = thread(automation);
 
   // //WINDOWS LOADER: YEET BURGER
   thread loader = thread(brainOS);
   // s(1000);
-  cout << "Yeet" << endl;
+  while(!init){
+    s(100);
+  }
+  cout << "Init Done" << endl;
   //wc.turnTo(0);
   // while(1){
   //   cout << share.position() << endl;
@@ -838,14 +805,11 @@ int main() {
   
   wc.followPath({PVector(0, 48), PVector(-48, 48)});
   // drivercontrol();
-  while(!Competition.isEnabled()){
-    s(100);
-  }
   // drivercontrol();
   // autonomous();
   // drivercontrol();
   // cout << "Y " << endl;
-  // Competition.drivercontrol(drivercontrol);
+  Competition.drivercontrol(drivercontrol);
   // cout << "Yeet " << endl;
   Competition.autonomous(autonomous);
   
