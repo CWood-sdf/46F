@@ -2,7 +2,10 @@
 #include "Mogo.h"
 #include "goalFront.h"
 #include "goalDetector.h"
-
+#include "Sensors/PotDial.h"
+#include "Sensors/LineCounter.h"
+#include "Sensors/Distance.h"
+#include "Odometry/EPA_Wheel_Control.h"
 /*************************************
 
 Motors
@@ -106,13 +109,7 @@ Autonomous System Controllers
 *************************************/
 
 struct {
-  bool noOut = false;
-  bool disabled = false;
-  int enabledFor = 0;
-  int countIn = 0;
-  bool controller = false;
-  bool autonCtrl = false;
-  int autonOut = 0;
+  bool ready = false;
 } conveyer;
 
 
@@ -199,90 +196,6 @@ public:
   }
 } liftCtrllr;
 
-// class {
-//   PID angleTarget = PID(1.0, 0.001, 0.1);
-//   int currentIndex = 0;
-//   bool lastPressing = false;
-//   vector<double> positions = { 970, 750, 330, 0 };
-//   int timesDone = 0;
-//   int sleepTime = 20;
-//   bool isDisabled = false;
-//   int prevent = 0;
-// public:
-//   int getIndex(){
-//     return currentIndex;
-//   }
-//   bool done = false;
-//   void prev(){
-//     prevent = 5;
-//   }
-//   bool prevented(){
-//     return prevent-- > 0;
-//   }
-//   void disable(){
-//     isDisabled = true;
-//   }
-//   void enable(){
-//     isDisabled = false;
-//   }
-//   bool disabled(){
-//     return isDisabled;
-//   }
-//   bool isUp = false;
-//   void sleep(){
-//     s(sleepTime);
-//   }
-//   void freePress(){
-//     lastPressing = false;
-//   }
-//   void addIndex(){
-//     isUp = true;
-//     if(!lastPressing){
-//       currentIndex++;
-//       if(currentIndex >= positions.size()){
-//         currentIndex = positions.size() - 1;
-//       }
-//       angleTarget.setTarget(getPosition());
-//     }
-//     lastPressing = true;
-//   }
-//   void subIndex(){
-//     isUp = false;
-//     if(!lastPressing){
-//       currentIndex--;
-//       if(currentIndex < 0){
-//         currentIndex = 0;
-//       }
-//       angleTarget.setTarget(getPosition());
-//     }
-//     lastPressing = true;
-//   }
-//   double getPosition(){
-//     return positions[currentIndex];
-//   }
-//   double getSpeed(){
-//     if(abs(angleTarget.getError()) < 10.0){
-//       timesDone ++;
-//     }
-//     else {
-//       timesDone = 0;
-//     }
-//     return angleTarget.getVal(liftMot.position(rotationUnits::deg));
-//   }
-//   bool isDone(){
-//     return done;
-//   }
-//   void setIndex(int i){
-//     if(i > currentIndex){
-//       isUp = !false;
-//       currentIndex = i;
-//     }
-//     if(i < currentIndex){
-//       isUp = !true;
-//       currentIndex = i;
-//     }
-//   }
-// } backLiftCtrllr;
 
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
 void testMotorConfiguration(){
