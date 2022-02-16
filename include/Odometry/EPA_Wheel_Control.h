@@ -487,8 +487,9 @@ public: // TurnTo
   enum class exitMode;
 private: // followPath vars
   PVector lastTarget;
-  double maxAcc = 20;
-  double maxDAcc = 30;
+  double maxAcc = 20; // in/s^2
+  double maxDAcc = 30; // in/s^2
+  
   double kConst = 1.0;
   double exitDist = 0.0;
   exitMode BrakeMode;
@@ -584,10 +585,10 @@ private: // General path follower, keep it private so that the implementations u
       targetSpeeds.back() = 40;
       for(int i = 1; i < bezier.size(); i++){
         //I think this math of converting inches to percent works
-        double d = bezier[i].dist2D(bezier[i - 1]) / 0.567;
+        double d = bezier[i].dist2D(bezier[i - 1]);
         double a = maxAcc;
         if(startVel < targetSpeeds[i]){
-          startVel = targetSpeeds[i] = sqrt(startVel * startVel + 2.0 * a * d);
+          startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
           if(startVel > targetSpeeds[i + 1]){
             startVel = targetSpeeds[i + 1];
           }
@@ -599,8 +600,8 @@ private: // General path follower, keep it private so that the implementations u
             startVel = targetSpeeds[i];
             i--;
             double a = maxDAcc;
-            double d = bezier[i].dist2D(bezier[i + 1]) / 0.567;
-            startVel = targetSpeeds[i] = sqrt(startVel * startVel + 2.0 * a * d);
+            double d = bezier[i].dist2D(bezier[i + 1]);
+            startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
           } while(startVel < targetSpeeds[i - 1]);
           i = startI;
           startVel = targetSpeeds[i];

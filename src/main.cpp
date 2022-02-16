@@ -774,7 +774,7 @@ int main() {
   // startTilt = botAngles.z;
 
   // //thread conveyer = thread(conveyerControl);
-  thread updatePos = thread(trackPos);
+  // thread updatePos = thread(trackPos);
   thread gpsUpdate = thread(updateSharePos);
 
   // //Make a thread to execute some auton tasks concurrently

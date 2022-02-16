@@ -54,7 +54,7 @@ Sensors
 
 *************************************/
 //Front Goal Switch
-LineCounter frontCounter(Brain.ThreeWirePort.E);
+LineCounter frontCounter(Brain.ThreeWirePort.H);
 LineCounter backCounter(Brain.ThreeWirePort.F);
 
 //Three wire expander

@@ -58,35 +58,35 @@ void updateBotAngle(bool add){
 }
 void microWait(uint time);
 
-void trackPos (){
-  int times = 0;
-  while(1){
-    //Pause for 2 milliseconds
-    int waitTime = 2000;
-    updateBotAngle();
-    positioner.update(times == 10, waitTime);
-    // cout << "Yeet" << endl;
-    s(2);
-    // microWait(waitTime);
-    //Print the position every 5 iterations (0.01 s)
-    // if(times++ == 5){
-    //   while(!gpsPosShare.try_lock()){
+// void trackPos (){
+//   int times = 0;
+//   while(1){
+//     //Pause for 2 milliseconds
+//     int waitTime = 2000;
+//     updateBotAngle();
+//     positioner.update(times == 10, waitTime);
+//     // cout << "Yeet" << endl;
+//     s(2);
+//     // microWait(waitTime);
+//     //Print the position every 5 iterations (0.01 s)
+//     // if(times++ == 5){
+//     //   while(!gpsPosShare.try_lock()){
 
-    //   }
-    //   gpsPosShare.lock();
-    //   gpsPostns.push_back({{GPS.xPosition(), GPS.yPosition()}, GPS.heading()});
-    //   gpsPosShare.unlock();
-    //   while(!odomPosShare.try_lock()){
+//     //   }
+//     //   gpsPosShare.lock();
+//     //   gpsPostns.push_back({{GPS.xPosition(), GPS.yPosition()}, GPS.heading()});
+//     //   gpsPosShare.unlock();
+//     //   while(!odomPosShare.try_lock()){
 
-    //   }
-    //   odomPosShare.lock();
-    //   odomPostns.push_back({positioner.getPos(), positioner.heading()});
-    //   odomPosShare.unlock();
-    //   times = 0;
-    //   //cout << wc.botPos() << endl;
-    // }
-  }
-}
+//     //   }
+//     //   odomPosShare.lock();
+//     //   odomPostns.push_back({positioner.getPos(), positioner.heading()});
+//     //   odomPosShare.unlock();
+//     //   times = 0;
+//     //   //cout << wc.botPos() << endl;
+//     // }
+//   }
+// }
 void programWrite(bool start = true);
 
 //Allows a program reset at a new spot if there is limited tile space
@@ -143,6 +143,8 @@ void executeThreads(){
 }
 void updateSharePos(){
   while(1){
+    updateBotAngle();
+    positioner.update(false, 4);
     share.update();
   }
 }

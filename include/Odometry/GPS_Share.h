@@ -55,7 +55,7 @@ public:
     return speed;
   }
   bool gpsBad(){
-    return GPS.quality() != 100;
+    return GPS.quality() != 100 || !GPS.installed();
   }
   void update(){
     static int g = 0;

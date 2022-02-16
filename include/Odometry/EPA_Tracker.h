@@ -146,7 +146,7 @@ public:
     }
     encXAmnt = EncodersX.size();
     encYAmnt = EncodersY.size();
-    cout << EncodersY.size() << " sdf" << endl;
+    cout << "Init Odom with " << encXAmnt << " x encoders and " << encYAmnt << " y encoders" << endl;
   }
   Positioner(){
   }
@@ -202,7 +202,6 @@ public:
     //Same thing here    
     for(int i = 0; i < EncodersY.size(); i++){
       double rot = posNeg180(rotY[i] - lastY[i]) * DEG_TO_RAD;// * multY[i];
-
       //double turnExpected = deltaBotAngle * DEG_TO_RAD * distFromCenterY[i];
       if(rot < 0){
         rot *= multNegY[i];
