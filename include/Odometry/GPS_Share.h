@@ -12,7 +12,7 @@ class GPS_Share {
   double speed = 0.0;
   bool lastBad = false;
   bool isFirstBad = false;
-  static const int sleepTime = 4;
+  static const int sleepTime = 10;
   static const int badTime = 200;
   bool firstBad(){
     if(isFirstBad){

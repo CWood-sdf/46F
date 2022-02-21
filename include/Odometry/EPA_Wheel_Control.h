@@ -629,7 +629,7 @@ private: // General path follower, keep it private so that the implementations u
     int time = 0, //Counts the time in loop iterations
     timeIn = 0, // The amount of time spent near the target
     maxTimeIn = 20, // The time needed before exit
-    sleepTime = 5, // The sleep time
+    sleepTime = 10, // The sleep time
     g = 0; // A debug output counter
 
     double normAngle = 0.0, //The normAngle
