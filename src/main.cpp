@@ -777,8 +777,8 @@ int main() {
   // thread updatePos = thread(trackPos);
   thread gpsUpdate = thread(updateSharePos);
 
-  // //Make a thread to execute some auton tasks concurrently
-  // thread otherThreads = thread(executeThreads);
+  //Make a thread to execute some auton tasks concurrently
+  thread otherThreads = thread(executeThreads);
   
   thread automationThread = thread(automation);
 
