@@ -493,6 +493,7 @@ private: // followPath vars
   double kConst = 1.0;
   double exitDist = 0.0;
   exitMode BrakeMode;
+  bool exitEarly = false;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -501,6 +502,10 @@ public: // exitMode
     nothing
   };
 public: // followPath var editors
+  chain_method forceEarlyExit(){
+    exitEarly = true;
+    CHAIN;
+  }
   chain_method setSpeedLimit(double v){
     speedLimit = v;
     CHAIN;
@@ -533,12 +538,11 @@ private: // General path follower, keep it private so that the implementations u
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg){
     double purePursuitDist = 16.0; // Distance to pure pursuit target
-    //Simple initialization and turn to first point
-    // cout << 100 << endl;
-    // s(500);
     VectorArr bezier;
     
     auto arrCopy = arr;
+
+    //Simple initialization and turn to first point
     {
       //Allow the array to be drawn
       this->drawArr = true;
@@ -634,9 +638,7 @@ private: // General path follower, keep it private so that the implementations u
 
     double normAngle = 0.0, //The normAngle
     //Going with an hopefully possible 1 in accuracy
-    minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist, // The maximum distance from target before starting timeIn count
-    /*******      STUPID UGLY NONFIX FIX       *************/
-    limitedSpeed = 20; // What the speed should be when it's limited
+    minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
     // #undef DEBUG
     #ifdef DEBUG  
     struct {
@@ -659,22 +661,24 @@ private: // General path follower, keep it private so that the implementations u
     
     //Save the current distance fns
     setOldDistFns();
-    bool speedLimited = false; // Is the speed limited?
     int timesStopped = 0;
-    int q = 0;
 
     //Loop
     while(timeIn * sleepTime < maxTimeIn){
-      //pathEditor(ctrllr);
+      if(exitEarly){
+        cout << "Exit due to external thread request" << endl;
+        exitEarly = false;
+        break;
+      }
       // Keep the Pure Pursuit target purePursuitDist inches away from the bot
       while(pursuit.dist2D(botPos()) < purePursuitDist && pursuit != bezier.last()){
         pursuit = bezier[bezierIndex];
         ++bezierIndex;
       }
-      //Force slowspeed, I don't like this because it's a dumb fix for a problem that shouldn't exist
-      if(botPos().dist2D(bezier.last()) < minAllowedDist){
-        speedLimited = true;
-      }
+      // //Force slowspeed, I don't like this because it's a dumb fix for a problem that shouldn't exist
+      // if(botPos().dist2D(bezier.last()) < minAllowedDist){
+      //   speedLimited = true;
+      // }
       //Near the target, increment timeIn
       if(botPos().dist2D(bezier.last()) < minAllowedDist && pursuit == bezier.last()){
         timeIn++;
@@ -700,16 +704,6 @@ private: // General path follower, keep it private so that the implementations u
       }
       //Get the speed of the robot
       double speed = ctrl.getVal(dist) * (isNeg * 2.0 - 1.0);
-      /***   UGLY CHEAP HACKY NONFIXY FIX   *****/
-      // //Pls remove eventually
-      // if(speedLimited){
-      //   if(speed > limitedSpeed){
-      //     speed = limitedSpeed;
-      //   }
-      //   if(speed < -limitedSpeed){
-      //     speed = -limitedSpeed;
-      //   }
-      // }
       
       //Use the distFns for the current dist
       useDistFns(botPos().dist2D(bezier.last()));
