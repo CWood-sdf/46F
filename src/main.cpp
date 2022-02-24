@@ -206,6 +206,7 @@ public:
       if(state == stateLim + 1){
         state = 1;
       }
+      
       isPressing = true;
       return true;
     }
@@ -214,7 +215,7 @@ public:
     }
     return false;
   }
-  bool getState(){
+  int getState(){
     return state;
   }
 };
@@ -227,6 +228,7 @@ void drivercontrol (){
   liftCtrllr.disable();
   // backLiftCtrllr.disable();
   KillThread::killAll();
+  goalHolder = new pneumatics(Brain.ThreeWirePort.H);
   while(1){
     //Drive control, uses quotient/square for smoothness
     double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
@@ -262,10 +264,18 @@ void drivercontrol (){
     }
     if(R1Latch.pressing()){
       liftGoalHolder.set(!liftGoalHolder.value());
-      
     }
     if(R2Latch.pressing()){
-      goalHolder.set(!goalHolder.value());
+      if(R2Latch.getState() == 1){
+        conveyer.ready = true;
+        // (new pneumatics(Brain.ThreeWirePort.H))->open();
+        goalHolder->open();
+      }
+      else {
+        // (new pneumatics(Brain.ThreeWirePort.H))->close();
+        conveyer.ready = false;
+        goalHolder->close();
+      }
     }
     if(Greg.ButtonL2.pressing()){
       //Move the lift to the next index
@@ -789,6 +799,7 @@ int main() {
     s(100);
   }
   cout << "Init Done" << endl;
+  drivercontrol();
   //wc.turnTo(0);
   // while(1){
   //   cout << share.position() << endl;

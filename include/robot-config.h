@@ -12,24 +12,24 @@ Motors
 
 *************************************/
 //Front Left Wheel (FL)
-motor FL = motor(PORT11,gearSetting::ratio18_1,!false);
+motor FL = motor(PORT12,gearSetting::ratio18_1,!false);
 //Front Right Wheel (FR)
 motor FR = motor(PORT19, gearSetting::ratio18_1,!true);
 //Back Left Wheel (BL)
-motor BL = motor(PORT14, gearSetting::ratio18_1,!false);
+motor BL = motor(PORT16, gearSetting::ratio18_1,!false);
 //Back Right Wheel (BR)
-motor BR = motor(PORT18, gearSetting::ratio18_1,!true);
+motor BR = motor(PORT17, gearSetting::ratio18_1,!true);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT13, gearSetting::ratio18_1,!false);
+motor ML = motor(PORT9, gearSetting::ratio18_1,!false);
 //Middle Right Wheel (MR)
-motor MR = motor(PORT17, gearSetting::ratio18_1,!true);
+motor MR = motor(PORT13, gearSetting::ratio18_1,!true);
 
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
-motor flapConveyer = motor(PORT8, gearSetting::ratio18_1, false);
+motor flapConveyer = motor(PORT6, gearSetting::ratio18_1, true);
 
-motor liftMot = motor(PORT6, ratio36_1, true);
+motor liftMot = motor(PORT5, ratio36_1, true);
 
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
@@ -45,7 +45,7 @@ NewMotor<> lift = NewMotor<>(liftMot);
 Pneumatics
 
 *************************************/
-pneumatics goalHolder = pneumatics(Brain.ThreeWirePort.H);
+pneumatics* goalHolder = new pneumatics(Brain.ThreeWirePort.H);
 pneumatics liftGoalHolder = pneumatics(Brain.ThreeWirePort.G);
 
 /*************************************
@@ -61,10 +61,10 @@ LineCounter backCounter(Brain.ThreeWirePort.F);
 triport Expander = triport(PORT9);
 
 //Inertial Sensor
-inertial angler = inertial(PORT3);
+inertial angler = inertial(PORT11);
 
 //gps
-gps GPS = gps(PORT7, -6.0, 0.0, inches, -90);
+gps GPS = gps(PORT18, -6.0, 0.0, inches, -90);
 // Make a list of ports so Will can check them if they get messed up (make it a word doc)
 Distance goalFront = Distance(PORT11);
 Distance goalBack = Distance(PORT12);

@@ -125,11 +125,11 @@ namespace ClassFns {
   //   waitForBackLiftFinish(false);
   // }
   FN_WITH_APA_SIG_NO_ARG(clipGoal)
-    goalHolder.close();
+    goalHolder->close();
     //wc.addGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(unclipGoal)
-    goalHolder.open();
+    goalHolder->open();
     //wc.removeGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
