@@ -503,6 +503,7 @@ private: // followPath vars
   bool exitEarly = false;
   bool turnPrevent = false;
   bool reversed = false;
+  bool moving = false;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -511,14 +512,18 @@ public: // exitMode
     nothing
   };
 public: // followPath var editors
-  void estimateStartPos(PVector v, double a){
+  bool isMoving(){
+    return moving;
+  }
+  chain_method estimateStartPos(PVector v, double a){
     if(abs(botPos().x) > 48){
       if(sign(botPos().x) != sign(v.x)){
         reversed = true;
       }
-    } else if(botPos().mag() < 12){
+    } else if(botPos().mag() < 6){
       share.setPos(v, a);
     }
+    CHAIN;
   }
   void preventTurn(){
     turnPrevent = true;
@@ -561,8 +566,13 @@ private: // General path follower, keep it private so that the implementations u
   virtual void followPath(VectorArr arr, bool isNeg){
     double purePursuitDist = 16.0; // Distance to pure pursuit target
     VectorArr bezier;
-    
+    if(reversed){
+      for(int i = 0; i < arr.size(); i++){
+        arr[i] *= -1.0;
+      }
+    }
     auto arrCopy = arr;
+    
     //Simple initialization and turn to first point
     {
       //Allow the array to be drawn
@@ -582,7 +592,9 @@ private: // General path follower, keep it private so that the implementations u
         i++;
       }
       if(!turnPrevent){
+        callingInDrive = true;
         turnTo(botPos().angleTo(bezier[i - 1]) + 180.0 * isNeg);
+        callingInDrive = false;
       }
       turnPrevent = false;
       cout << "Turn Done" << endl;
@@ -684,7 +696,7 @@ private: // General path follower, keep it private so that the implementations u
     //Save the current distance fns
     setOldDistFns();
     int timesStopped = 0;
-
+    moving = true;
     //Loop
     while(timeIn * sleepTime < maxTimeIn){
       if(exitEarly){
@@ -816,7 +828,7 @@ private: // General path follower, keep it private so that the implementations u
       realTime.add(speed, pos.velocity(), targetSpeeds[bezierIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
       #endif
     }
-    
+    moving = false;
     //Stop drawing the path
     //De-init code
     {
