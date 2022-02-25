@@ -60,8 +60,8 @@ namespace ClassFns {
       double fwd = driveFwd.getVal(wc.botPos().dist2D(wc.getLastTarget()));
       PVector l = basicAlign.closest(amnt);
       double alignVal = align.getVal(l.x);
-      wc.moveLeft(fwd + alignVal);
-      wc.moveRight(fwd - alignVal);
+      wc.moveLeft(fwd + alignVal, directionType::fwd);
+      wc.moveRight(fwd - alignVal, directionType::fwd);
     }
   }
   
@@ -133,10 +133,10 @@ namespace ClassFns {
     //wc.removeGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
-    liftGoalHolder.open();
+    liftGoalHolder.close();
   }
   FN_WITH_APA_SIG_NO_ARG(unclipLiftGoal)
-    liftGoalHolder.close();
+    liftGoalHolder.open();
   }
   //Really old functions
   // FN_WITH_APA_SIG_NO_ARG(alignGoalFront)

@@ -194,6 +194,12 @@ vector<double> bezierCurvature(VectorArr ptArr, double inc = 1.0 / 50.0){
   }
   return ret;
 }
+int sign(double v){
+  if(v == 0.0){
+    return 0;
+  }
+  return (int)abs(v) / v;
+}
 //The basic wheel controller 
 class BasicWheelController {
 protected: // PID variables + other random things
@@ -214,13 +220,14 @@ protected: // PID variables + other random things
   LinkedList<PidAdder> customPidsSlave;
   GPS_Share& pos;
   bool usingGPS = true;
-  PID slaveCtrl = PID(3.1775, 0.001, 2.0);
+  //Cap, growth, zero
+  PID slaveCtrl = PID(3.2, 0.2, 0.1, 0, 0, 4);
 
   //Get ctrl kP up to 6.25
-  PID ctrl = PID(4.91, 0.001, 2.4325, 0, 4, 1);
+  PID ctrl = PID(6.25, 0.001, 2.4325, 0, 8, 1);
   //Make derivative absolutely massive to force a hard stop
   //PID purePursuitCtrl = PID(5.5, 0.0, 3.4);
-  PID turnCtrl = PID(0.67, 0, 0.1);
+  PID turnCtrl = PID(2.42, 0.2, 1.35, 0, 20, 4);
 
   PidAdder oneGoalTurn = PidAdder(0.05, 0.000001, -0.01);
   PidAdder oneGoalDrive = PidAdder(0.1, 0.000001, -0.01);
@@ -312,9 +319,6 @@ public: // Some Functions
     return ctrl.getDVals();
   }
   void driveTo(double x, double y, bool bad = false){
-    if(reverseAuton){
-      x *= -1.0;
-    }
     driveTo(PVector(x, y));
   }
   void backInto(double x, double y){
@@ -385,6 +389,9 @@ public: // PID Stuff
   PID getCtrl(){
     return ctrl;
   }
+  PID getSlave(){
+    return slaveCtrl;
+  }  
   void setOldDistFns(){
     oldFns = distFns;
   }
@@ -407,7 +414,7 @@ private: // turnTo, with re-updating function
     //If the auton is on the other side, turn to the opposite angle
     double angle = angleCalc();
     cout << angle << endl;
-    if(!callingInDrive && reverseAuton){
+    if(!callingInDrive && reversed){
       angle *= -1.0;
     }
     int timeIn = 0;
@@ -487,13 +494,15 @@ public: // TurnTo
   enum class exitMode;
 private: // followPath vars
   PVector lastTarget;
-  double maxAcc = 20; // in/s^2
-  double maxDAcc = 30; // in/s^2
+  double maxAcc = 500; // in/s^2
+  double maxDAcc = 360; // in/s^2
   
   double kConst = 1.0;
   double exitDist = 0.0;
   exitMode BrakeMode;
   bool exitEarly = false;
+  bool turnPrevent = false;
+  bool reversed = false;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -502,6 +511,19 @@ public: // exitMode
     nothing
   };
 public: // followPath var editors
+  void estimateStartPos(PVector v, double a){
+    if(botPos().mag() < 12){
+      share.setPos(v, a);
+    }
+    else if(abs(botPos().x) > 48){
+      if(sign(botPos().x) != sign(v.x)){
+        reversed = true;
+      }
+    }
+  }
+  void preventTurn(){
+    turnPrevent = true;
+  }
   chain_method forceEarlyExit(){
     exitEarly = true;
     CHAIN;
@@ -533,6 +555,7 @@ public: // followPath var editors
   PVector getLastTarget(){
     return lastTarget;
   }
+
 private: // General path follower, keep it private so that the implementations use isNeg, not the autonomous
   
   //The beefiest function in this file
@@ -541,7 +564,6 @@ private: // General path follower, keep it private so that the implementations u
     VectorArr bezier;
     
     auto arrCopy = arr;
-
     //Simple initialization and turn to first point
     {
       //Allow the array to be drawn
@@ -560,7 +582,10 @@ private: // General path follower, keep it private so that the implementations u
         dist += bezier[i].dist2D(bezier[i + 1]);
         i++;
       }
-      turnTo(botPos().angleTo(bezier[i - 1]) + 180.0 * isNeg);
+      if(!turnPrevent){
+        turnTo(botPos().angleTo(bezier[i - 1]) + 180.0 * isNeg);
+      }
+      turnPrevent = false;
       cout << "Turn Done" << endl;
       afterTurn();
       afterTurn = [](){};
@@ -586,7 +611,7 @@ private: // General path follower, keep it private so that the implementations u
       //vf^2 = vi^2 + 2ad
       double startVel = 30;
       targetSpeeds[0] = startVel;
-      targetSpeeds.back() = 40;
+      targetSpeeds.push_back(40);
       for(int i = 1; i < bezier.size(); i++){
         //I think this math of converting inches to percent works
         double d = bezier[i].dist2D(bezier[i - 1]);
@@ -612,10 +637,7 @@ private: // General path follower, keep it private so that the implementations u
         }
       }
     }
-    //Because this is necessary for some stupid reason
-    for(int i = 0; i < 2; i++){
-      targetSpeeds.push_back(40);
-    }
+    
 
     //The index of the pursuit target
     int bezierIndex = 0;
@@ -632,14 +654,15 @@ private: // General path follower, keep it private so that the implementations u
     timer t = timer();
     int time = 0, //Counts the time in loop iterations
     timeIn = 0, // The amount of time spent near the target
-    maxTimeIn = 20, // The time needed before exit
+    maxTimeIn = 5, // The time needed before exit
     sleepTime = 10, // The sleep time
     g = 0; // A debug output counter
 
     double normAngle = 0.0, //The normAngle
     //Going with an hopefully possible 1 in accuracy
     minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
-    // #undef DEBUG
+    cout << minAllowedDist << endl;
+    #undef DEBUG
     #ifdef DEBUG  
     struct {
       vector<double> outSpeeds, encSpeeds, targSpeeds, angles, cp, cd, sp, sd;
@@ -722,7 +745,6 @@ private: // General path follower, keep it private so that the implementations u
       //Angle of robot to target
       double angle = baseAngle(botPos().angleTo(virtualPursuit));
       
-
       //The angle that it needs to travel at
       double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
 
@@ -786,8 +808,8 @@ private: // General path follower, keep it private so that the implementations u
       }
       //Mindblowing lines right here
       //Move the robot
-      moveRight(speed - extraSpeed);
-      moveLeft(speed + extraSpeed);
+      moveRight(speed - extraSpeed, isNeg ? reverse : fwd);
+      moveLeft(speed + extraSpeed, isNeg ? reverse : fwd);
       //Sleep (WOW, HE'S A GENIUS)
       s(sleepTime);
       
@@ -928,8 +950,12 @@ public: // Path following implementations
   }
   virtual void driveFwd(double maxDist){
     PVector end = PVector(0.0, maxDist);
+    end.rotate(-end.heading2D());
+    cout << end.heading2D() << endl;
+    cout << botAngle() << endl;
     end.rotate(botAngle());
-    followPath({ end });
+    cout << end.heading2D() << endl;
+    driveTo(end);
   }
 
   virtual void stopDriveFwd(){
@@ -938,11 +964,11 @@ public: // Path following implementations
   }
 public: // Functions that just move the wheels  
 
-  virtual void moveLeft(int speed){
-    Left.spinVolt(fwd, speed);
+  virtual void moveLeft(int speed, directionType d){
+    Left.spinVolt(d, speed);
   }
-  virtual void moveRight(int speed){
-    Right.spinVolt(fwd, speed);
+  virtual void moveRight(int speed, directionType d){
+    Right.spinVolt(d, speed);
   }
   virtual void turnLeft(int speed = 100){
     Right.spinVolt(fwd, speed);

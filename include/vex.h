@@ -50,7 +50,6 @@ double deltaBotAngle = 0.0;
 double avgBotAngle = 0.0;
 double tiltAngle = botAngles.z;
 double startTilt = 0.0;
-bool reverseAuton = false;
 ostream& operator<< (ostream& cout, PVector& v){
   cout << VECT_OUT(v);
   return cout;

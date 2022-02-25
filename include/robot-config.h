@@ -54,7 +54,7 @@ Sensors
 
 *************************************/
 //Front Goal Switch
-LineCounter frontCounter(Brain.ThreeWirePort.H);
+LineCounter frontCounter(Brain.ThreeWirePort.C);
 LineCounter backCounter(Brain.ThreeWirePort.F);
 
 //Three wire expander
@@ -71,11 +71,11 @@ Distance goalBack = Distance(PORT12);
 
 
 //PotDials
-PotDial skillsOrSide = PotDial(Brain.ThreeWirePort.C, 3);
-PotDial centerGoals = PotDial(Brain.ThreeWirePort.D, 4);
-PotDial autonGoals = PotDial(Brain.ThreeWirePort.E, 2);
-PotDial::Controller<function<void()>> autonMap = 
-    PotDial::Controller<function<void()>>(skillsOrSide, centerGoals, autonGoals);
+// PotDial skillsOrSide = PotDial(Brain.ThreeWirePort.C, 3);
+// PotDial centerGoals = PotDial(Brain.ThreeWirePort.D, 4);
+// PotDial autonGoals = PotDial(Brain.ThreeWirePort.E, 2);
+// PotDial::Controller<function<void()>> autonMap = 
+//     PotDial::Controller<function<void()>>(skillsOrSide, centerGoals, autonGoals);
 
 
 /*************************************

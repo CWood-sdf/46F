@@ -117,48 +117,28 @@ void rightSideGoal(){
   
 }
 void addPids(){
-  cout << "Drive P" << endl;
+  cout << "Turn P" << endl;
   while(1){
     if(isPressing(Greg.ButtonA)){
-      wc.addDrivePid(0, 0, 0);
+      wc.addTurnPid(0, 0, 0);
       break;
     }
     if(isPressing(Greg.ButtonB)){
-      wc.addDrivePid(0.05, 0, 0.0);
+      wc.addTurnPid(0.1, 0, 0.0);
       break;
     }
   }
-  cout << "Drive D" << endl;
-  while(1){
-    if(isPressing(Greg.ButtonA)){
-      break;
-    }
-    if(isPressing(Greg.ButtonB)){
-      wc.addDrivePid(0.0, 0, 0.05);
-      break;
-    }
-  }
-  cout << "Slave P" << endl;
-  while(1){
-    if(isPressing(Greg.ButtonA)){
-      wc.addSlavePid(0, 0, 0);
-      break;
-    }
-    if(isPressing(Greg.ButtonB)){
-      wc.addSlavePid(0.05, 0, 0.00);
-      break;
-    }
-  }
-  cout << "Slave D" << endl;
+  cout << "Turn D" << endl;
   while(1){
     if(isPressing(Greg.ButtonA)){
       break;
     }
     if(isPressing(Greg.ButtonB)){
-      wc.addSlavePid(0.0, 0, 0.05);
+      wc.addTurnPid(0.0, 0, 0.05);
       break;
     }
   }
+  
   cout << "Done" << endl;
 }
 void execute(){
@@ -798,8 +778,36 @@ int main() {
   while(!init){
     s(100);
   }
+  s(500);
   cout << "Init Done" << endl;
+  // unclipLiftGoal();
+  // while(!Greg.ButtonA.pressing()){
+  //   s(100);
+  // }
+  // // wc.backwardsFollow({{0, 0}});
+  // wc.setMaxAcc(5000000);
+  // wc.setMaxDeAcc(50000000);
+  // unclipLiftGoal();
+  // wc.preventTurn();
+  // thread yeet = thread([](){
+  //   double start = Brain.Timer.system();
+  //   while(1){
+  //     if(frontCounter.pressing()){
+  //       cout << Brain.Timer.system() - start << endl;
+  //       clipLiftGoal();
+  //       s(300);
+  //       wc.forceEarlyExit();
+  //       break;
+  //     }
+  //     s(10);
+  //   }
+  // });
+  // wc.driveTo(12, -36);
+  // clipLiftGoal();
+  // yeet.detach();
+  // wc.backwardsFollow({{-48, -36}});
   drivercontrol();
+  
   //wc.turnTo(0);
   // while(1){
   //   cout << share.position() << endl;

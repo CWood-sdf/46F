@@ -137,9 +137,15 @@ public:
     k -= a;
     return *this;
   }
+  KVals getKVals(){
+    return k;
+  }
 };
 
-
+ostream& operator<<(ostream& cout, PID&& v){
+  cout << v.getKVals().p << ", " << v.getKVals().i << ", " << v.getKVals().d << endl;
+  return cout;
+}
 class MotionProf;
 //Stores numbers to add to a PID's KVals
 class MPAdder {

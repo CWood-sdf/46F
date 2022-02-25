@@ -94,5 +94,9 @@ public:
     }
     s(sleepTime);
   }
+  void setPos(PVector v, double a){
+    pos.pos = v;
+    pos.angle = a;
+  }
 };
 #endif
