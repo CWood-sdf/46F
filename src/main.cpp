@@ -146,8 +146,7 @@ void execute(){
     
   }
 }
-void skills(){}
-void tentativeSkills(){
+void skills(){
   
 
 }
