@@ -512,13 +512,12 @@ public: // exitMode
   };
 public: // followPath var editors
   void estimateStartPos(PVector v, double a){
-    if(botPos().mag() < 12){
-      share.setPos(v, a);
-    }
-    else if(abs(botPos().x) > 48){
+    if(abs(botPos().x) > 48){
       if(sign(botPos().x) != sign(v.x)){
         reversed = true;
       }
+    } else if(botPos().mag() < 12){
+      share.setPos(v, a);
     }
   }
   void preventTurn(){
