@@ -1,5 +1,4 @@
 //#include "EPA_Tracker.h"
-#include "Mogo.h"
 #include "goalFront.h"
 #include "goalDetector.h"
 #include "Sensors/PotDial.h"
