@@ -139,11 +139,7 @@ void addPids(){
   
   cout << "Done" << endl;
 }
-void execute(){
-  while(1){
-    
-  }
-}
+
 void skills(){
   
 

@@ -4,6 +4,7 @@
 #include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
 #include "Sensors/Distance.h"
+#include "Sensors/VisionOdom.h"
 #include "Odometry/EPA_Wheel_Control.h"
 /*************************************
 
@@ -64,10 +65,11 @@ inertial angler = inertial(PORT11);
 
 //gps
 gps GPS = gps(PORT18, -6.0, 0.0, inches, -90);
-// Make a list of ports so Will can check them if they get messed up (make it a word doc)
-Distance goalFront = Distance(PORT11);
-Distance goalBack = Distance(PORT12);
+// Distance goalFront = Distance(PORT11);
+// Distance goalBack = Distance(PORT12);
 
+//Vision Odoms
+VisionOdom basicAlign = VisionOdom(goalFrontVision, PVector(0, 6), 14, 0, 0);
 
 //PotDials
 // PotDial skillsOrSide = PotDial(Brain.ThreeWirePort.C, 3);

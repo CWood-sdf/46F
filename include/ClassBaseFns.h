@@ -46,10 +46,23 @@ string parseInt(vision::signature& c){
 namespace ClassFns {
   
   FN_WITH_APA_SIG_NO_ARG(allowVisionAlign)
-    wc.setExitDist(24.0);
+    wc.setExitDist(16.0);
+  }
+  FN_WITH_APA_SIG_NO_ARG(clipGoal)
+    goalHolder->close();
+    //wc.addGoal();
+  }
+  FN_WITH_APA_SIG_NO_ARG(unclipGoal)
+    goalHolder->open();
+    //wc.removeGoal();
+  }
+  FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
+    liftGoalHolder.close();
+  }
+  FN_WITH_APA_SIG_NO_ARG(unclipLiftGoal)
+    liftGoalHolder.open();
   }
   FN_WITH_APA_SIG(visionAlign, vision::signature&)
-    static VisionOdom basicAlign = VisionOdom(goalFrontVision, PVector(0, 6), 14, 0, 0);
     //Highest speed desired == 30
     //Highest err ~= 12
     PID align = PID(2.5, 0, 1.666);
@@ -61,9 +74,15 @@ namespace ClassFns {
       double fwd = driveFwd.getVal(wc.botPos().dist2D(wc.getLastTarget()));
       PVector l = basicAlign.closest(amnt);
       double alignVal = align.getVal(l.x);
+      if(frontCounter.pressing()){
+        clipLiftGoal();
+        s(200);
+        break;
+      }
       wc.moveLeft(fwd + alignVal, directionType::fwd);
       wc.moveRight(fwd - alignVal, directionType::fwd);
     }
+    wc.hardBrake();
   }
   
 
@@ -97,20 +116,7 @@ namespace ClassFns {
     waitForLiftFinish(false);
   }
   
-  FN_WITH_APA_SIG_NO_ARG(clipGoal)
-    goalHolder->close();
-    //wc.addGoal();
-  }
-  FN_WITH_APA_SIG_NO_ARG(unclipGoal)
-    goalHolder->open();
-    //wc.removeGoal();
-  }
-  FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
-    liftGoalHolder.close();
-  }
-  FN_WITH_APA_SIG_NO_ARG(unclipLiftGoal)
-    liftGoalHolder.open();
-  }
+  
   FN_WITH_APA_SIG_NO_ARG(useLineGoalDetect)
     threadFns.push_back([](){
       while(1){
