@@ -473,7 +473,6 @@ private: // turnTo, with re-updating function
       }
       hardBrake();
     }
-    cout << normAngle << endl;
     // hardBrake();
     // s(500);
     // normAngle = posNeg180(angle - posNeg180(botAngle()));
@@ -737,7 +736,7 @@ private: // General path follower, keep it private so that the implementations u
         break;
       }
       //Get the speed of the robot
-      double speed = ctrl.getVal(dist) * (isNeg * 2.0 - 1.0);
+      double speed = ctrl.getVal(abs(dist)) * (isNeg * 2.0 - 1.0);
       
       //Use the distFns for the current dist
       useDistFns(botPos().dist2D(bezier.last()));
@@ -803,7 +802,6 @@ private: // General path follower, keep it private so that the implementations u
         // cout << extraSpeed << ", " << normAngle << endl;
         // cout << speed << ", " << dist << endl;
         g = 0;
-        cout << normAngle << endl;
       }
       //Slew speed
       if(abs(speed) > targetSpeeds[bezierIndex]){
@@ -962,11 +960,11 @@ public: // Path following implementations
   virtual void driveFwd(double maxDist){
     PVector end = PVector(0.0, maxDist);
     end.rotate(-end.heading2D());
-    cout << end.heading2D() << endl;
-    cout << botAngle() << endl;
     end.rotate(botAngle());
-    cout << end.heading2D() << endl;
+    auto wasReverse = reversed;
+    reversed = false;
     driveTo(end);
+    reversed = wasReverse;
   }
 
   virtual void stopDriveFwd(){
