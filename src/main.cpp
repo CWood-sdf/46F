@@ -7,8 +7,6 @@ TODO:
 using namespace ClassFns;
 using namespace vex;
 competition Competition;
-//Useless variable
-bool useVisionAlign = true;
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
 bool isPressing(controller::button& btn){
   if(btn.pressing()){
@@ -202,7 +200,7 @@ void drivercontrol (){
   ButtonLatch R1Latch = ButtonLatch(Greg.ButtonR1);
   ButtonLatch R2Latch = ButtonLatch(Greg.ButtonR2);
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
-  static bool driveReversed = true;
+  static bool driveReversed = false;
   //int wheelsMove = 0;
   liftCtrllr.disable();
   // backLiftCtrllr.disable();
@@ -245,16 +243,8 @@ void drivercontrol (){
       liftGoalHolder.set(!liftGoalHolder.value());
     }
     if(R2Latch.pressing()){
-      if(R2Latch.getState() == 1){
-        conveyer.ready = true;
-        // (new pneumatics(Brain.ThreeWirePort.H))->open();
-        goalHolder->open();
-      }
-      else {
-        // (new pneumatics(Brain.ThreeWirePort.H))->close();
-        conveyer.ready = false;
-        goalHolder->close();
-      }
+      conveyer.ready = !(bool)goalHolder->value();
+      goalHolder->set(!goalHolder->value());
     }
     if(Greg.ButtonL2.pressing()){
       //Move the lift to the next index
@@ -431,6 +421,9 @@ void automation(){
     }
     if(conveyer.ready){
       flaps.spin(fwd, 100, pct);
+    }
+    else {
+      flaps.stop(hold);
     }
     positions.push_back(liftMot.position(deg));
     if(canMove < 0){
@@ -780,8 +773,16 @@ int main() {
   s(500);
   cout << "Init Done" << endl;
   // unclipLiftGoal();
-  // while(!Greg.ButtonA.pressing()){
+  // while(1){
   //   s(100);
+  //   if(!frontCounter.pressing()){
+  //     Greg.rumble(".");
+  //     s(2000);
+  //     while(!Greg.ButtonA.pressing()){
+  //       s(10);
+  //     }
+  //     break;
+  //   }
   // }
   // // wc.backwardsFollow({{0, 0}});
   // wc.setMaxAcc(5000000);
@@ -794,17 +795,17 @@ int main() {
   //     if(frontCounter.pressing()){
   //       cout << Brain.Timer.system() - start << endl;
   //       clipLiftGoal();
-  //       s(300);
+  //       s(100);
   //       wc.forceEarlyExit();
   //       break;
   //     }
   //     s(10);
   //   }
   // });
-  // wc.driveTo(12, -36);
+  // wc.driveTo(12, 36);
   // clipLiftGoal();
   // yeet.detach();
-  // wc.backwardsFollow({{-48, -36}});
+  // wc.backwardsFollow({{-48, 36}});
   drivercontrol();
   
   //wc.turnTo(0);
