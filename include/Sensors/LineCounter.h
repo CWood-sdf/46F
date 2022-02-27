@@ -37,9 +37,7 @@ public:
   bool active(){
     return isActive;
   }
-  void update(bool out = false){
-    if(out)
-    cout << sensor->reflectivity() << endl;
+  void update(){
     
     bool isActive = pressing();
     if(wasActiveLast){
@@ -77,6 +75,9 @@ public:
       threshold = startThreshold;
     }
     return isActive;
+  }
+  int rawData(){
+    return sensor->reflectivity();
   }
 };
 void microWait(uint time);
