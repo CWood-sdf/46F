@@ -221,19 +221,23 @@ protected: // PID variables + other random things
   GPS_Share& pos;
   bool usingGPS = true;
   //Cap, growth, zero
-  PID slaveCtrl = PID(3.2, 0.2, 0.1, 0, 0, 4);
-
+  PID slaveCtrl = PID(-3.2, 0.3, 0.1, 0, 0, 4);
   //Get ctrl kP up to 6.25
   PID ctrl = PID(6.25, 0.001, 2.4325, 0, 8, 1);
   //Make derivative absolutely massive to force a hard stop
   //PID purePursuitCtrl = PID(5.5, 0.0, 3.4);
   PID turnCtrl = PID(2.42, 0.2, 1.35, 0, 20, 4);
 
-  PidAdder oneGoalTurn = PidAdder(0.05, 0.000001, -0.01);
-  PidAdder oneGoalDrive = PidAdder(0.1, 0.000001, -0.01);
-  PidAdder oneGoalSlave = PidAdder(0.05, 0.0000001, -0.005);
-  PidAdder turnYeet = PidAdder(0.1, 0.0, 0.0);
-  PidAdder driveYeet = PidAdder(0.1, 0.0, 0.0);
+  //Main: 2.42, 0.2, 1.35, 0, 20, 4
+  //One goal front: 1.9, 0.2, 0.25
+  //One goal back: 1.1, 0.2, 0.1
+  //Two goals: 1, 0.2, 0.1
+  bool goalFront = false;
+  bool goalBack = false;
+  PID oneGoalFrontTurn = PID(1.9, 0.2, 0.25, 0, 20, 4);
+  PID oneGoalBackTurn = PID(1.1, 0.2, 0.1, 0, 20, 4);
+  PID twoGoal = PID(1, 0.2, 0.1, 0, 20, 4);
+  PID mainTurnCtrl = turnCtrl;
   map<double, std::function<void()>> distFns, oldFns;
   volatile bool continueFwdDrive = false;
   bool callingInDrive = false;
@@ -252,7 +256,6 @@ public: // Some variables
   bool drawArr = false;
   bool isOmniDir = false;
   bool hasFn = false;
-
   //Function to be called between turning and driving
   std::function<void()> afterTurn = [](){};
   //Two motors just because 
@@ -302,19 +305,8 @@ public: // Some Functions
   void addTurnPid(double p, double i, double d){
     addTurnPid(PidAdder(p, i, d));
   }
-  void popTopTurnPid(){
-    auto& a = customPidsTurn.getEnd();
-    turnCtrl -= a;
-    customPidsTurn.popEnd();
-  }
-  void addTurn(){
-    turnCtrl += turnYeet;
-    
-  }
-  void addDrive(){
-    ctrl += driveYeet;
-    
-  }
+  
+  
   vector<double> getDVals(){
     return ctrl.getDVals();
   }
@@ -366,15 +358,41 @@ public: // Some Functions
     Left.stop(hold);
     Right.stop(hold);
   }
-  void addGoal(){
-    ctrl += oneGoalDrive;
-    turnCtrl += oneGoalTurn;
-    slaveCtrl += oneGoalSlave;
+  void removeGoalFront(){
+    goalFront = false;
+    if(goalBack){
+      turnCtrl = oneGoalBackTurn;
+    }
+    else {
+      turnCtrl = mainTurnCtrl;
+    }
   }
-  void removeGoal(){
-    ctrl -= oneGoalDrive;
-    turnCtrl -= oneGoalTurn;
-    slaveCtrl -= oneGoalSlave;
+  void setGoalFront(){
+    goalFront = true;
+    if(goalBack){
+      turnCtrl = twoGoal;
+    }
+    else {
+      turnCtrl = oneGoalFrontTurn;
+    }
+  }
+  void removeGoalBack(){
+    goalBack = false;
+    if(goalFront){
+      turnCtrl = oneGoalFrontTurn;
+    }
+    else {
+      turnCtrl = mainTurnCtrl;
+    }
+  }
+  void setGoalBack(){
+    goalBack = true;
+    if(goalFront){
+      turnCtrl = twoGoal;
+    }
+    else {
+      turnCtrl = oneGoalBackTurn;
+    }
   }
   double limit(double d, double l, double m){
     if(d < l){
@@ -473,6 +491,7 @@ private: // turnTo, with re-updating function
       }
       hardBrake();
     }
+    cout << botAngle() << endl;
     // hardBrake();
     // s(500);
     // normAngle = posNeg180(angle - posNeg180(botAngle()));
@@ -515,12 +534,13 @@ public: // followPath var editors
     return moving;
   }
   chain_method estimateStartPos(PVector v, double a){
-    if(abs(botPos().x) > 48){
-      if(sign(botPos().x) != sign(v.x)){
+    if(abs(botPos().x) > 24){
+      if(sign(botPos().x) == sign(v.x)){
         reversed = true;
+        cout << "Reversing auton" << endl;
       }
     } else if(botPos().mag() < 6){
-      share.setPos(v, a);
+      pos.setPos(v, a);
     }
     CHAIN;
   }
@@ -799,6 +819,7 @@ private: // General path follower, keep it private so that the implementations u
       /***   ^^MIGHT NOT BE NECESSARY IF virtualPursuit DOES IT'S JOB    ****/
 
       if(g++ == 2){
+        cout << normAngle << endl;
         // cout << extraSpeed << ", " << normAngle << endl;
         // cout << speed << ", " << dist << endl;
         g = 0;

@@ -141,22 +141,28 @@ void addPids(){
 }
 
 void skills(){
-  
+  wc.estimateStartPos(PVector(58.598242530755684, -43.638664323374336), 188.66783831282953);
+  cout << wc.botPos() << endl;
+  cout << wc.botAngle() << endl;
+  clipGoal();
+  wc.setGoalBack();
+  useLineGoalDetectNoExit();
+  wc.driveTo(-28.57, -36.1);
+  wc.setGoalFront();
 
 }
 void autonInit(){
-  //wc.followPath({PVector(0.0, -48.0), PVector(0.0, 0.0)});
-  leftSide1GoalRush();
-
-
-}
-void autonomous(){
   cout << "Auton Init" << endl;
   unclipGoal();
   unclipLiftGoal();
   liftCtrllr.enable();
   cout << "Auton Init Done" << endl;
+  
 
+}
+void autonomous(){
+  autonInit();
+  skills();
 }
 
 //}
@@ -416,7 +422,7 @@ void automation(){
       }
     }
     if(conveyer.ready){
-      flaps.spin(fwd, 100, pct);
+      flaps.spin(fwd, 60, pct);
     }
     else {
       flaps.stop(hold);
@@ -767,7 +773,28 @@ int main() {
     s(100);
   }
   s(500);
+  // autonInit();
   cout << "Init Done" << endl;
+  while(!Greg.ButtonA.pressing()){
+    s(100);
+  }
+  //my programmer is gay
+  Greg.rumble(".");
+  autonomous();
+  // clipLiftGoal();
+  // clipGoal();
+  // s(1000);
+  // raiseLiftByOneWait();
+  // // conveyer.ready = true;
+  // s(1000);
+  // while(1){
+  //   wc.turnTo(0);
+  //   addPids();
+  //   wc.turnTo(180);
+  //   addPids();
+  // }
+  // addPids();
+  
   // unclipLiftGoal();
   // while(1){
   //   s(100);

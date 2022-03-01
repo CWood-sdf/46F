@@ -10,8 +10,8 @@ void updateBotAngle(bool add){
   static double lastAngleYZ = angler.orientation(orientationType::pitch, rotationUnits::deg);
   static double lastAngleXZ = angler.orientation(orientationType::roll, rotationUnits::deg);
   //
-  double err = 360.0 / 353.0;
-  double errNeg = 360.0 / 354.0;
+  double err = 360.0 / 359.5;
+  double errNeg = 360.0 / 359.5;
 
   double errYZ = 1.0;
   double errXZ = 1.0;

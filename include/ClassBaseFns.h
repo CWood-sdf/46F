@@ -49,11 +49,11 @@ namespace ClassFns {
     wc.setExitDist(16.0);
   }
   FN_WITH_APA_SIG_NO_ARG(clipGoal)
-    goalHolder->close();
+    goalHolder->open();
     //wc.addGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(unclipGoal)
-    goalHolder->open();
+    goalHolder->close();
     //wc.removeGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
