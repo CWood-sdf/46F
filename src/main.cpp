@@ -80,31 +80,59 @@ void turnLeft(int t){
 //Autonomous Stuff {
 
 //Map order skillsOrSide - 3, centerGoals - 4, autonGoals - 2
-void preventUntilGoal(){
-  // wc.pathEditor = [](BasicWheelController::PurePursuitController& l){
-  //   if(l.isFullDone()){
-  //     wc.pathEditor = [](PursuitController&){};
-  //   }
-  //   else {
-  //     if(!frontCounter.pressing()){
-  //       l.killBreak();
-  //     }
-  //     else {
-  //       l.unKillBreak();
-  //     }
-  //   }
-  // };
-}
+
 void awp(){
+  wc.estimateStartPos(PVector(57.52249730893436, -42.504198062432735), 193.05920344456405);
+  clipGoal();
+  raiseLiftByOne();
+  wc.followPath({PVector(34.44, -50.94), PVector(34.27, 28.45)});
+  unclipGoal();
+  wc.backwardsFollow({PVector(34.96, 48.08)});
+  clipGoal();
+  wc.driveTo(-6.71, 48.43);
+  wc.backwardsFollow({PVector(42.71, 33.96)});
+
 }
 void leftSide1GoalRush(){
+  wc.estimateStartPos(PVector(60, -24), 90);
+  unclipLiftGoal();
+  // wc.backwardsFollow({{0, 0}});
+  wc.setMaxAcc(5000000);
+  wc.setMaxDeAcc(50000000);
+  unclipLiftGoal();
+  wc.preventTurn();
+  useLineGoalDetect();
   wc.driveTo(12, -36);
-  fwdsSlow(800);
   clipLiftGoal();
-  wc.backInto(48, -36);
+  wc.setMaxAcc(300);
+  wc.setMaxDeAcc(300);
+  // wc.backInto(48, -36);
+  // wc.estimateStartPos(PVector(9.987513455328326, -36.82066738428418), 271.33692142088273);
+  wc.backwardsFollow({PVector(37.54, -60.58), PVector(52.35, -39.4)});
+  clipGoal();
+
 }
 void rightSide1GoalRush(){
-  
+  wc.estimateStartPos(PVector(60, 24), 90);
+  unclipLiftGoal();
+  // wc.backwardsFollow({{0, 0}});
+  wc.setMaxAcc(5000000);
+  wc.setMaxDeAcc(50000000);
+  unclipLiftGoal();
+  wc.preventTurn();
+  useLineGoalDetect();
+  wc.driveTo(12, 36);
+  clipLiftGoal();
+  raiseLiftByOne();
+  wc.setMaxAcc(300);
+  wc.setMaxDeAcc(300);
+  raiseLiftByOneWait();
+  wc.backwardsFollow({PVector(35.99, 34.99)});
+  wc.backwardsFollow({PVector(35.99, 49.29)});
+  clipGoal();
+  wc.driveTo(-8.09, 47.57);
+  wc.backwardsFollow({PVector(39.95, 34.48)});
+
 
 }
 void leftSide2GoalRush(){
@@ -168,7 +196,7 @@ void skills(){
   raiseLiftByOne();
   raiseLiftByOneWait();
   //To platform
-  wc.driveTo(-40.85, -0.05);
+  wc.driveTo(-40.85, -4.05);
   //Level platform
   lowerLiftByOne();
   lowerLiftByOne();
