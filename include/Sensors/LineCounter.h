@@ -8,7 +8,7 @@ class LineCounter {
   int threshold = startThreshold;
   static const int startThreshold = 15;
   //May have to increase lowThreshold to prevent 2 balls in a row from counting as one
-  static const int lowThreshold = 10;
+  static const int lowThreshold = 13;
   bool wasActiveLast = false;
   unsigned int countOut = 0;
   unsigned int countIn = 0;

@@ -141,14 +141,116 @@ void addPids(){
 }
 
 void skills(){
+  // conveyer.ready = true;
   wc.estimateStartPos(PVector(58.598242530755684, -43.638664323374336), 188.66783831282953);
-  cout << wc.botPos() << endl;
-  cout << wc.botAngle() << endl;
   clipGoal();
-  wc.setGoalBack();
   useLineGoalDetectNoExit();
-  wc.driveTo(-28.57, -36.1);
-  wc.setGoalFront();
+  threadFns.push_back([](){
+    s(800);
+    raiseLiftByOne();
+  });
+  wc.driveTo(-24.57, -36.1);
+  // wc.estimateStartPos(PVector(-27.166256590509672, -35.20281195079085), 270.9173989455184);
+  //Slow for rings
+  thread k = thread([](){
+    while(abs(wc.botPos().y) > 12){
+      s(10);
+    }
+    unclipGoal();
+  });
+  wc.setSpeedLimit(50);
+  wc.driveTo(-25.47, -4.05);
+  s(2000);
+  wc.setSpeedLimit(100);
+  //Up to top
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOneWait();
+  //To platform
+  wc.driveTo(-40.85, -0.05);
+  //Level platform
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  s(800);
+  //Drop
+  unclipLiftGoal();
+  //Back to normal
+  raiseLiftByOneWait();
+  //Turn to general goal direction
+  wc.turnTo(144.78);
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  waitForLiftFinish();
+  useLineGoalDetect();
+  wc.driveTo(-24.07, -24.73);
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  waitForLiftFinish();
+  wc.followPath({PVector(-31.66, -5.39), PVector(-44.88, -2.58)});
+  unclipLiftGoal();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  s(500);
+  unclipLiftGoal();
+  raiseLiftByOne();
+  s(400);
+  // wc.estimateStartPos(PVector(-42.63198594024605, -13.550790861159918), 294.95957820738136);
+  wc.turnTo(76.42);
+  useLineGoalDetect();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOneWait();
+  //To tall goal
+  wc.setSpeedLimit(40);
+  wc.driveTo(3.20, -0.05);
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  //To platform
+  wc.setSpeedLimit(100);
+  wc.driveTo(-42.41, -0.33);
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  s(1200);
+  unclipLiftGoal();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  s(500);
+  //
+  wc.backwardsFollow({PVector(-36.72, -47.85)});
+  clipGoal();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  useLineGoalDetect();
+  wc.followPath({PVector(-22.66, 2.75), PVector(-6.92, 36.12)});
+  raiseLiftByOne();
+  // wc.estimateStartPos(PVector(-10.294551845342706, 28.628471001757475), 52.007029876977136);
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  raiseLiftByOne();
+  wc.followPath({PVector(8.82, 37.62), PVector(59.16, 37.06)});
+  wc.turnTo(181.46);
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOneWait();
+  wc.driveTo(59.16, 9.78);
+  raiseLiftByOneWait();
+  balanceBot();
+
 
 }
 void autonInit(){
@@ -156,13 +258,15 @@ void autonInit(){
   unclipGoal();
   unclipLiftGoal();
   liftCtrllr.enable();
+  goalClipUse = true;
   cout << "Auton Init Done" << endl;
-  
 
 }
 void autonomous(){
   autonInit();
+  auto startTime = Brain.Timer.system();
   skills();
+  cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
 //}
@@ -299,103 +403,18 @@ void drivercontrol (){
     
   }
 }
-/*void conveyerControl(){
-  bool colorActive = false;
-  // bool lineActive = false;
-  s(1000);
-  long int startTime = Brain.Timer.system();
-  //conveyer.disabled = true;
-  for(auto i : vector<int>(100)){
-    topRingCounter.firstHit();
-    i = 1;
-  }
-  while(1){
-    if(conveyer.countIn < 0){
-      conveyer.countIn = 0;
-    }
-    //cout << ringDetector.hue() << endl;
-    //If there is a ring in the bottom, increment the ring count, 
-    //  but don't do it more than once
-    if((ringDetector.hue() > 100 && ringDetector.hue() < 370)){
-      //cout << "Ring" << endl;
-      if(!colorActive){
-        conveyer.countIn++;
-      }
-      colorActive = true;
-    }
-    else {
-      colorActive = false;
-    }
-    //If there is a ring leaving, enable the conveyer for a short time to 
-    //  allow it to leave
-    if(topRingCounter.firstHit()){
-      //cout << "YEET" << endl;
-      conveyer.autonOut--;
-      conveyer.countIn--;
-      if(conveyer.noOut){
-        conveyer.disabled = true;
-      }
-      else {
-        conveyer.enabledFor = 800;
-      }
-      //topRingCounter.reset();
-      // lineActive = true;
-    }
-    // else {
-    //   lineActive = false;
-    // }
-    //If there is a ring leaving and we don't want rings to leave, disable the conveyer
-    if((topRingCounter.active() and conveyer.noOut)){
-      conveyer.disabled = true;
-    }
-    else if(Brain.Timer.system() - startTime > 1000){
-      conveyer.disabled = false;
-    }
 
-    //If there are rings on the bottom
-    // groundRingDetector.takeSnapshot(Rings);
-    // if(groundRingDetector.objectCount > 0 && groundRingDetector.largestObject.width > 30){
-    //   conveyer.enabledFor = 500;
-    // }
-    if((ringDetectorLeft.installed() 
-        && ringDetectorLeft.objectDistance(distanceUnits::in) < 6.0
-        && ringDetectorLeft.isObjectDetected())
-        || (ringDetectorRight.installed()
-        && ringDetectorRight.objectDistance(distanceUnits::in) < 6.0
-        && ringDetectorRight.isObjectDetected())){  
-      // cout << ringDetectorRight.objectDistance(distanceUnits::in) << endl;
-      // cout << ringDetectorLeft.objectDistance(distanceUnits::in) << endl;
-      conveyer.enabledFor = 500;
-    }
-    //Run the conveyer
-    if((!conveyer.disabled && not conveyer.controller)){
-      if((conveyer.autonCtrl && conveyer.autonOut > 0) || !conveyer.autonCtrl){
-        if(conveyer.countIn > 0 or conveyer.enabledFor > 0){
-          //spinFlaps();
-        }
-        //Don't run the flaps if there isn't a reason to
-        else {
-          stopFlaps();
-        }
-      }
-    }
-    else if(not conveyer.controller){
-      stopFlaps();
-    }
-    //Decrease the enabled for outside of the loop bc we don't want 
-    //  conveyer running randomly after no longer being disabled
-    conveyer.enabledFor -= 30;
-    s(30);
-  }
-}*/
 void automation(){
   int canMove = 20;
   LinkedList<double> positions;
+  int convNoBackTime = 0;
+  int convBackTime = 0;
+  LinkedList<double> convLastPos = { 0, 0, 0, 0 };
   while(1){
     if(!liftCtrllr.disabled()){
       if(!liftCtrllr.isUp && liftMot.position(deg) < liftCtrllr.getPosition()){
         
-        liftMot.spin(fwd);
+        liftMot.spin(fwd, 12, volt);
         if(canMove < 0){
           if(abs(positions.getBase() - liftMot.position(deg)) < 10){
             // cout << "Transferring to High speed" << endl;
@@ -406,7 +425,7 @@ void automation(){
         liftCtrllr.done = false;
       }
       else if(liftCtrllr.isUp && liftMot.position(deg) > liftCtrllr.getPosition()){
-        liftMot.spin(vex::reverse);
+        liftMot.spin(vex::reverse, 12, volt);
         if(canMove < 0){
           if(abs(positions.getBase() - liftMot.position(deg)) < 10){
             // cout << "Transferring to High speed" << endl;
@@ -422,10 +441,24 @@ void automation(){
       }
     }
     if(conveyer.ready){
-      flaps.spin(fwd, 60, pct);
+      if(convBackTime < 0){
+        flaps.spin(fwd, 80, pct);
+      }
+      else {
+        flaps.spin(reverse, 100, pct);
+      }
+      if(abs(flapConveyer.rotation(deg) - convLastPos.getBase()) < 10 && convNoBackTime < 0){
+        convBackTime = 100;
+        convNoBackTime = 100;
+      }
+      convBackTime -= liftCtrllr.getSleepTime();
+      convNoBackTime -= liftCtrllr.getSleepTime();
+      convLastPos.push_back(flapConveyer.rotation(deg));
+      convLastPos.popBase();
     }
     else {
       flaps.stop(hold);
+      convNoBackTime = 100;
     }
     positions.push_back(liftMot.position(deg));
     if(canMove < 0){
@@ -754,6 +787,7 @@ int main() {
     gyroInit(GPS);
     init = true;
   });
+
   // updateBotAngle();
   // startTilt = botAngles.z;
 
@@ -773,13 +807,19 @@ int main() {
     s(100);
   }
   s(500);
+  unclipLiftGoal();
+  unclipGoal();
   // autonInit();
   cout << "Init Done" << endl;
+  
+  // testMotorConfiguration();
   while(!Greg.ButtonA.pressing()){
     s(100);
   }
   //my programmer is gay
   Greg.rumble(".");
+  // balanceBot();
+  // wc.driveTo(0, 24);
   autonomous();
   // clipLiftGoal();
   // clipGoal();

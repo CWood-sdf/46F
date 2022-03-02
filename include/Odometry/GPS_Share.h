@@ -58,40 +58,32 @@ public:
     return GPS.quality() != 100 || !GPS.installed();
   }
   void update(){
-    static int g = 0;
-
+    //Get the odometry position
     FieldCoord currentOdom = odom.fullPos();
     
+    //Get the change in the odometry position
     FieldCoord deltaOdom = currentOdom - lastOdom;
+    //Reset the last odometry position for the next iteration
     lastOdom = currentOdom;
+    //Get the speed
+    //Uses odometry for speed because the GPS has random, slight variation
+    //Odometry speed returns 0 when the speed is 0
     speed = deltaOdom.pos.mag() / (double)sleepTime * 1000.0;
+
+    //Get GPS coordinate
     FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
-    gpsReadings.push_back(gpsCoord);
-    odomReadings.push_back(currentOdom);
 
-    while(odomReadings.size() > badTime / sleepTime){
-      odomReadings.popBase();
-    }
-    while(gpsReadings.size() > badTime / sleepTime){
-      gpsReadings.popBase();
-    }
-    //cout << GPS.quality() << endl;
+    //If GPS can't see position
     if(gpsBad()){
-      //   FieldCoord firstOdom = odomReadings.getBase();
-      //   deltaOdom = currentOdom - firstOdom;
-
-      // }
-      //cout << "Using Odom" << endl;
+      //Use change in odometry
       pos.pos += deltaOdom.pos;
       pos.angle += deltaOdom.angle;
     }
     else {
+      //Set position to GPS value
       pos = gpsCoord;
     }
-    g++;
-    if(g == 26){
-      g = 0;
-    }
+    //Sleep
     s(sleepTime);
   }
   void setPos(PVector v, double a){

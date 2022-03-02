@@ -15,7 +15,7 @@ struct KillThread {
     return *this;
   }
   static void killAll(){
-    cout << "KAT" << endl;
+    cout << "KAT " << instances.size() << endl;
     for(auto i : instances){
       i->interrupt();
       i->detach();

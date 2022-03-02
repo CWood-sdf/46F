@@ -19,7 +19,7 @@ void updateBotAngle(bool add){
   //
   if(!share.gpsBad()/* && !gpsFirst*/){
     // cout << "Share not bad: " << share.heading() << endl;
-    botAngles.x = share.heading();
+    botAngles.x = posNeg180(share.heading());
     gpsFirst = true;
   }
   double angle = angler.orientation(orientationType::yaw, rotationUnits::deg);

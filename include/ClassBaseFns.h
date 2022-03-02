@@ -44,23 +44,38 @@ string parseInt(vision::signature& c){
 
 //All the functions that are based on classes
 namespace ClassFns {
-  
+  bool goalClipUse = false;
+
   FN_WITH_APA_SIG_NO_ARG(allowVisionAlign)
     wc.setExitDist(16.0);
   }
   FN_WITH_APA_SIG_NO_ARG(clipGoal)
     goalHolder->open();
+    if(goalClipUse){
+      conveyer.ready = true;
+      wc.setGoalBack();
+    }
     //wc.addGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(unclipGoal)
     goalHolder->close();
+    if(goalClipUse){
+      conveyer.ready = false;
+      wc.removeGoalBack();
+    }
     //wc.removeGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
     liftGoalHolder.close();
+    if(goalClipUse){
+      wc.setGoalFront();
+    }
   }
   FN_WITH_APA_SIG_NO_ARG(unclipLiftGoal)
     liftGoalHolder.open();
+    if(goalClipUse){
+      wc.removeGoalFront();
+    }
   }
   FN_WITH_APA_SIG(visionAlign, vision::signature&)
     //Highest speed desired == 30
@@ -102,6 +117,9 @@ namespace ClassFns {
       //cout << liftCtrllr.isDone() << endl;
       s(10);
     }
+  }
+  FN_WITH_APA_SIG(setLiftIndex, int)
+    liftCtrllr.setIndex(amnt);
   }
   FN_WITH_APA_SIG_NO_ARG(raiseLiftByOneWait)
     liftCtrllr.done = false;
@@ -145,31 +163,44 @@ namespace ClassFns {
   }
   //Needed for prog skills (maybe)
   FN_WITH_APA_SIG_NO_ARG(balanceBot)
-    PID speedGetter = PID(1.5, 0.001, 0.1);
+    PID straight = wc.getSlave();
     bool exit = false;
     bool angleInRange = false;
     int t = 0;
-    
-    while(!exit){
-      double angle = tiltAngle;
-      angleInRange = abs(angle) < 3.0;
-      if(!angleInRange){
-        t = 0;
-      } else {
-        if(t++ >= 100){
-          exit = true;
+    double lastTilt = tiltAngle;
+    double tiltDeriv = 0;
+    int timeIn = 0;
+    straight.setTarget(0);
+    while(1){
+      tiltDeriv = tiltAngle - lastTilt;
+      double normAngle = 0;
+      if(abs(wc.botAngle()) < 90){
+        normAngle = wc.botAngle();
+      }
+      else {
+        normAngle = posNeg180(wc.botAngle() + 180);
+      }
+      double extra = -straight.getVal(normAngle) / 4.0;
+      if(abs(tiltAngle) > 5 && abs(tiltDeriv) < 0.3 && abs(wc.botPos().y) > 7){
+        if(tiltAngle > 0){
+          wc.moveLeft(40 + extra, fwd);
+          wc.moveRight(40 - extra, fwd);
         }
+        else {
+          wc.moveLeft(40 - extra, reverse);
+          wc.moveRight(40 + extra, reverse);
+        }
+        timeIn = 0;
       }
-      double speed = speedGetter.getVal(angle);
-      double angleTravel;// = wc.posNeg180(glblBotAngle - angle);
-      if(speed < 0){
-        angleTravel = posNeg180(-90 - glblBotAngle);
-      } else {
-        angleTravel = posNeg180(90 - glblBotAngle);
+      else {
+        wc.hardBrake();
+        timeIn += 10;
       }
-      
-      s(1);
-      
+      if(timeIn > 1000){
+        break;
+      }
+      lastTilt = tiltAngle;
+      s(10);
     }
     
 

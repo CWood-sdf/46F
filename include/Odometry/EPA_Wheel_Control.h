@@ -194,11 +194,11 @@ vector<double> bezierCurvature(VectorArr ptArr, double inc = 1.0 / 50.0){
   }
   return ret;
 }
-int sign(double v){
+double sign(double v){
   if(v == 0.0){
     return 0;
   }
-  return (int)abs(v) / v;
+  return v / abs(v);
 }
 //The basic wheel controller 
 class BasicWheelController {
@@ -221,7 +221,7 @@ protected: // PID variables + other random things
   GPS_Share& pos;
   bool usingGPS = true;
   //Cap, growth, zero
-  PID slaveCtrl = PID(-3.2, 0.3, 0.1, 0, 0, 4);
+  PID slaveCtrl = PID(6.0, 0.1, 0.1, 0, 0, 10);
   //Get ctrl kP up to 6.25
   PID ctrl = PID(6.25, 0.001, 2.4325, 0, 8, 1);
   //Make derivative absolutely massive to force a hard stop
@@ -234,9 +234,9 @@ protected: // PID variables + other random things
   //Two goals: 1, 0.2, 0.1
   bool goalFront = false;
   bool goalBack = false;
-  PID oneGoalFrontTurn = PID(1.9, 0.2, 0.25, 0, 20, 4);
-  PID oneGoalBackTurn = PID(1.1, 0.2, 0.1, 0, 20, 4);
-  PID twoGoal = PID(1, 0.2, 0.1, 0, 20, 4);
+  PID oneGoalFrontTurn = PID(1.9, 0.2, 0.25, 0, 15, 4);
+  PID oneGoalBackTurn  = PID(1.1, 0.2, 0.1, 0, 15, 4);
+  PID twoGoal          = PID(1, 0.2, 0.1, 0, 15, 4);
   PID mainTurnCtrl = turnCtrl;
   map<double, std::function<void()>> distFns, oldFns;
   volatile bool continueFwdDrive = false;
@@ -414,16 +414,20 @@ public: // PID Stuff
     oldFns = distFns;
   }
   void useDistFns(double dist){
-    auto iterator = distFns.begin();
-    for(; iterator != distFns.end(); ){
-      auto& fn = *iterator;
-      if(fn.first < dist){
-        fn.second();
-        distFns.erase(iterator);
-      } else {
-        ++iterator;
+    for (auto it = distFns.begin(); it != distFns.end() /* not hoisted */; /* no increment */)
+    {
+      if ((*it).first < dist)
+      {
+
+        (*it).second();
+        distFns.erase(it++);    // or "it = m.erase(it)" since C++11
+      }
+      else
+      {
+        ++it;
       }
     }
+    
   }
 private: // turnTo, with re-updating function
   virtual void turnTo(std::function<double()> angleCalc){
@@ -491,7 +495,12 @@ private: // turnTo, with re-updating function
       }
       hardBrake();
     }
+    hardBrake();
+    s(300);
+
     cout << botAngle() << endl;
+    cout << angleCalc() << endl;
+
     // hardBrake();
     // s(500);
     // normAngle = posNeg180(angle - posNeg180(botAngle()));
@@ -534,14 +543,18 @@ public: // followPath var editors
     return moving;
   }
   chain_method estimateStartPos(PVector v, double a){
-    if(abs(botPos().x) > 24){
-      if(sign(botPos().x) == sign(v.x)){
-        reversed = true;
-        cout << "Reversing auton" << endl;
-      }
-    } else if(botPos().mag() < 6){
-      pos.setPos(v, a);
+    cout << sign(botPos().x) << ", " << sign(v.x) << endl;
+    if(sign(botPos().x) != sign(v.x)){
+      reversed = true;
+      cout << "Reversing auton" << endl;
     }
+    else {
+      reversed = false;
+    }
+  
+    // if(abs(botPos().dist2D(v)) > 6){
+    //   pos.setPos(v, a);
+    // }
     CHAIN;
   }
   void preventTurn(){
@@ -633,7 +646,7 @@ private: // General path follower, keep it private so that the implementations u
       
       for(int i = 0; i < bezier.size(); i++){
         targetSpeeds.push_back(abs(min(speedLimit, kConst / curvatures[i])));
-        if(abs(targetSpeeds.back()) > 100){
+        if(targetSpeeds.back() > 100){
           targetSpeeds.back() = 100;
         }
       }
@@ -806,7 +819,7 @@ private: // General path follower, keep it private so that the implementations u
 
       /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
       //Get the turn speed and divide by 2 because it is being applied to both wheels
-      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0;
+      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 15;
       
       //normAngle is too big for program to handle -> exit
       if(abs(normAngle) > 70){
@@ -819,7 +832,7 @@ private: // General path follower, keep it private so that the implementations u
       /***   ^^MIGHT NOT BE NECESSARY IF virtualPursuit DOES IT'S JOB    ****/
 
       if(g++ == 2){
-        cout << normAngle << endl;
+        cout << normAngle << ", " << extraSpeed << endl;
         // cout << extraSpeed << ", " << normAngle << endl;
         // cout << speed << ", " << dist << endl;
         g = 0;

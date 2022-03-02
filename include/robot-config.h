@@ -119,12 +119,15 @@ class {
   PID angleTarget = PID(1.0, 0.001, 0.1);
   int currentIndex = 0;
   bool lastPressing = false;
-  vector<double> positions = { 0, -100, -480, -510 };
+  vector<double> positions = { 0, -100, -480, -490 };
   int timesDone = 0;
   int sleepTime = 20;
   bool isDisabled = false;
   int prevent = 0;
 public:
+  int getSleepTime(){
+    return sleepTime;
+  }
   bool done = false;
   void prev(){
     prevent = 5;
