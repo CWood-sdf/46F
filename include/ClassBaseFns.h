@@ -50,7 +50,7 @@ namespace ClassFns {
     wc.setExitDist(16.0);
   }
   FN_WITH_APA_SIG_NO_ARG(clipGoal)
-    goalHolder->open();
+    goalHolder->close();
     if(goalClipUse){
       conveyer.ready = true;
       wc.setGoalBack();
@@ -58,7 +58,7 @@ namespace ClassFns {
     //wc.addGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(unclipGoal)
-    goalHolder->close();
+    goalHolder->open();
     if(goalClipUse){
       conveyer.ready = false;
       wc.removeGoalBack();
@@ -66,13 +66,13 @@ namespace ClassFns {
     //wc.removeGoal();
   }
   FN_WITH_APA_SIG_NO_ARG(clipLiftGoal)
-    liftGoalHolder.close();
+    liftGoalHolder.open();
     if(goalClipUse){
       wc.setGoalFront();
     }
   }
   FN_WITH_APA_SIG_NO_ARG(unclipLiftGoal)
-    liftGoalHolder.open();
+    liftGoalHolder.close();
     if(goalClipUse){
       wc.removeGoalFront();
     }

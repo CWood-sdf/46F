@@ -18,9 +18,9 @@ motor FR = motor(PORT19, gearSetting::ratio18_1,!true);
 //Back Left Wheel (BL)
 motor BL = motor(PORT16, gearSetting::ratio18_1,!false);
 //Back Right Wheel (BR)
-motor BR = motor(PORT17, gearSetting::ratio18_1,!true);
+motor BR = motor(PORT9, gearSetting::ratio18_1,!true);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT9, gearSetting::ratio18_1,!false);
+motor ML = motor(PORT14, gearSetting::ratio18_1,!false);
 //Middle Right Wheel (MR)
 motor MR = motor(PORT13, gearSetting::ratio18_1,!true);
 
@@ -210,6 +210,15 @@ void testMotorConfiguration(){
   TEST_MOT(FR)
   TEST_MOT(MR)
   TEST_MOT(BR)
+}
+#define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
+void testMotorConnection(){
+  TMC(FL)
+  TMC(ML)
+  TMC(BL)
+  TMC(FR)
+  TMC(MR)
+  TMC(BR)
 }
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

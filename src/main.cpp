@@ -112,7 +112,11 @@ void leftSide1GoalRush(){
   clipGoal();
 
 }
-void rightSide1GoalRush(){
+void rightSide2GoalRush(){
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
   wc.estimateStartPos(PVector(60, 24), 90);
   unclipLiftGoal();
   // wc.backwardsFollow({{0, 0}});
@@ -121,17 +125,46 @@ void rightSide1GoalRush(){
   unclipLiftGoal();
   wc.preventTurn();
   useLineGoalDetect();
-  wc.driveTo(12, 36);
+  wc.driveTo(-12, 36);
   clipLiftGoal();
   raiseLiftByOne();
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
-  raiseLiftByOneWait();
-  wc.backwardsFollow({PVector(35.99, 34.99)});
-  wc.backwardsFollow({PVector(35.99, 49.29)});
+  wc.backwardsFollow({PVector(38, 36)});
+  unclipLiftGoal();
+  wc.backwardsFollow({PVector(38, 50)});
   clipGoal();
+  s(500);
+  useLineGoalDetect();
+  wc.driveTo(-4.67, -5.67);
+  wc.driveTo(30.19, -4.27);
+
+}
+void rightSide1GoalRush(){
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  lowerLiftByOne();
+  wc.estimateStartPos(PVector(60, 24), 90);
+  unclipLiftGoal();
+  // wc.backwardsFollow({{0, 0}});
+  wc.setMaxAcc(5000000);
+  wc.setMaxDeAcc(50000000);
+  unclipLiftGoal();
+  wc.preventTurn();
+  useLineGoalDetect();
+  wc.driveTo(-12, 36);
+  clipLiftGoal();
+  raiseLiftByOne();
+  wc.setMaxAcc(300);
+  wc.setMaxDeAcc(300);
+  wc.backwardsFollow({PVector(38, 36)});
+  wc.backwardsFollow({PVector(38, 50)});
+  clipGoal();
+  s(1000);
+  wc.setSpeedLimit(50);
   wc.driveTo(-8.09, 47.57);
-  wc.backwardsFollow({PVector(39.95, 34.48)});
+  wc.backwardsFollow({PVector(48.95, 34.48)});
 
 
 }
@@ -172,9 +205,10 @@ void skills(){
   // conveyer.ready = true;
   wc.estimateStartPos(PVector(58.598242530755684, -43.638664323374336), 188.66783831282953);
   clipGoal();
+  
   useLineGoalDetectNoExit();
   threadFns.push_back([](){
-    s(800);
+    s(1000);
     raiseLiftByOne();
   });
   wc.driveTo(-24.57, -36.1);
@@ -188,7 +222,6 @@ void skills(){
   });
   wc.setSpeedLimit(50);
   wc.driveTo(-25.47, -4.05);
-  s(2000);
   wc.setSpeedLimit(100);
   //Up to top
   raiseLiftByOne();
@@ -205,6 +238,7 @@ void skills(){
   //Drop
   unclipLiftGoal();
   //Back to normal
+  raiseLiftByOne();
   raiseLiftByOneWait();
   //Turn to general goal direction
   wc.turnTo(144.78);
@@ -213,12 +247,15 @@ void skills(){
   lowerLiftByOne();
   lowerLiftByOne();
   waitForLiftFinish();
-  useLineGoalDetect();
+  // useLineGoalDetect();
   wc.driveTo(-24.07, -24.73);
+  clipLiftGoal();
+  s(800);
   raiseLiftByOne();
   raiseLiftByOne();
   raiseLiftByOne();
   waitForLiftFinish();
+  //To platform
   wc.followPath({PVector(-31.66, -5.39), PVector(-44.88, -2.58)});
   unclipLiftGoal();
   lowerLiftByOne();
@@ -229,7 +266,8 @@ void skills(){
   s(400);
   // wc.estimateStartPos(PVector(-42.63198594024605, -13.550790861159918), 294.95957820738136);
   wc.turnTo(76.42);
-  useLineGoalDetect();
+  // useLineGoalDetect();
+  unclipLiftGoal();
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
@@ -237,7 +275,8 @@ void skills(){
   //To tall goal
   wc.setSpeedLimit(40);
   wc.driveTo(3.20, -0.05);
-  raiseLiftByOne();
+  clipLiftGoal();
+  s(500);
   raiseLiftByOne();
   raiseLiftByOne();
   raiseLiftByOne();
@@ -255,14 +294,14 @@ void skills(){
   raiseLiftByOne();
   s(500);
   //
-  wc.backwardsFollow({PVector(-36.72, -47.85)});
+  wc.backwardsFollow({PVector(-32.72, -47.85)});
   clipGoal();
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
   useLineGoalDetect();
-  wc.followPath({PVector(-22.66, 2.75), PVector(-6.92, 36.12)});
+  wc.followPath({PVector(-22.66, 2.75), PVector(-6.92, 30.12)});
   raiseLiftByOne();
   // wc.estimateStartPos(PVector(-10.294551845342706, 28.628471001757475), 52.007029876977136);
   raiseLiftByOne();
@@ -293,7 +332,7 @@ void autonInit(){
 void autonomous(){
   autonInit();
   auto startTime = Brain.Timer.system();
-  skills();
+  rightSide2GoalRush();
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
@@ -377,7 +416,7 @@ void drivercontrol (){
       liftGoalHolder.set(!liftGoalHolder.value());
     }
     if(R2Latch.pressing()){
-      conveyer.ready = !(bool)goalHolder->value();
+      conveyer.ready = (bool)goalHolder->value();
       goalHolder->set(!goalHolder->value());
     }
     if(Greg.ButtonL2.pressing()){
@@ -468,26 +507,28 @@ void automation(){
         liftMot.stop(hold);
       }
     }
-    if(conveyer.ready){
+    if(conveyer.ready && liftMot.position(deg) < -50){
       if(convBackTime < 0){
         flaps.spin(fwd, 80, pct);
       }
       else {
         flaps.spin(reverse, 100, pct);
       }
-      if(abs(flapConveyer.rotation(deg) - convLastPos.getBase()) < 10 && convNoBackTime < 0){
-        convBackTime = 100;
-        convNoBackTime = 100;
+      if(abs(flapConveyer.rotation(deg) - convLastPos.getBase()) < 5 && convNoBackTime < 0){
+        convBackTime = 300;
+        convNoBackTime = 500;
       }
-      convBackTime -= liftCtrllr.getSleepTime();
-      convNoBackTime -= liftCtrllr.getSleepTime();
-      convLastPos.push_back(flapConveyer.rotation(deg));
-      convLastPos.popBase();
+      
+      
     }
     else {
       flaps.stop(hold);
-      convNoBackTime = 100;
+      convNoBackTime = 500;
     }
+    convBackTime -= liftCtrllr.getSleepTime();
+    convNoBackTime -= liftCtrllr.getSleepTime();
+    convLastPos.push_back(flapConveyer.rotation(deg));
+    convLastPos.popBase();
     positions.push_back(liftMot.position(deg));
     if(canMove < 0){
       positions.popBase();
@@ -810,7 +851,7 @@ int main() {
   // testMotorConfiguration();
   thread initThread = thread([](){
     unclipGoal();
-    unclipLiftGoal();
+    clipLiftGoal();
     gyroInit(angler);
     gyroInit(GPS);
     init = true;
@@ -835,7 +876,7 @@ int main() {
     s(100);
   }
   s(500);
-  unclipLiftGoal();
+  clipLiftGoal();
   unclipGoal();
   // autonInit();
   cout << "Init Done" << endl;
@@ -843,13 +884,11 @@ int main() {
   // testMotorConfiguration();
   while(!Greg.ButtonA.pressing()){
     s(100);
+    // cout << frontCounter.pressing() << ", " << frontCounter.rawData() << endl;
   }
   //my programmer is gay
   Greg.rumble(".");
-  // balanceBot();
-  // wc.driveTo(0, 24);
   autonomous();
-  // clipLiftGoal();
   // clipGoal();
   // s(1000);
   // raiseLiftByOneWait();

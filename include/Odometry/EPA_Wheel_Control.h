@@ -819,7 +819,7 @@ private: // General path follower, keep it private so that the implementations u
 
       /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
       //Get the turn speed and divide by 2 because it is being applied to both wheels
-      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 15;
+      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 0;
       
       //normAngle is too big for program to handle -> exit
       if(abs(normAngle) > 70){
