@@ -183,12 +183,12 @@ namespace ClassFns {
       double extra = -straight.getVal(normAngle) / 4.0;
       if(abs(tiltAngle) > 5 && abs(tiltDeriv) < 0.3 && abs(wc.botPos().y) > 7){
         if(tiltAngle > 0){
-          wc.moveLeft(40 + extra, fwd);
-          wc.moveRight(40 - extra, fwd);
+          wc.moveLeft(70 + extra, fwd);
+          wc.moveRight(70 - extra, fwd);
         }
         else {
-          wc.moveLeft(40 - extra, reverse);
-          wc.moveRight(40 + extra, reverse);
+          wc.moveLeft(70 - extra, reverse);
+          wc.moveRight(70 + extra, reverse);
         }
         timeIn = 0;
       }

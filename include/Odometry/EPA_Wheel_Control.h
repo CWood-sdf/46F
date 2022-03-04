@@ -437,7 +437,7 @@ private: // turnTo, with re-updating function
     double angle = angleCalc();
     cout << angle << endl;
     if(!callingInDrive && reversed){
-      angle *= -1.0;
+      angle += 90;
     }
     int timeIn = 0;
     int i = 0;
@@ -531,6 +531,7 @@ private: // followPath vars
   bool turnPrevent = false;
   bool reversed = false;
   bool moving = false;
+  bool stopExitPrev = false;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -590,6 +591,10 @@ public: // followPath var editors
   }
   PVector getLastTarget(){
     return lastTarget;
+  }
+  chain_method prevStopExit(){
+    stopExitPrev = true;
+    CHAIN
   }
 
 private: // General path follower, keep it private so that the implementations use isNeg, not the autonomous
@@ -764,7 +769,7 @@ private: // General path follower, keep it private so that the implementations u
         timesStopped = 0;
       }
       //50 ms not moving -> exit
-      if(timesStopped * sleepTime > 50){
+      if(timesStopped * sleepTime > 50 && !stopExitPrev){
         cout << "Stop Exit" << endl;
         break;
       }
@@ -819,7 +824,7 @@ private: // General path follower, keep it private so that the implementations u
 
       /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
       //Get the turn speed and divide by 2 because it is being applied to both wheels
-      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 0;
+      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 + 5.0;
       
       //normAngle is too big for program to handle -> exit
       if(abs(normAngle) > 70){
@@ -851,8 +856,8 @@ private: // General path follower, keep it private so that the implementations u
       }
       //Mindblowing lines right here
       //Move the robot
-      moveRight(speed - extraSpeed, isNeg ? reverse : fwd);
-      moveLeft(speed + extraSpeed, isNeg ? reverse : fwd);
+      moveRight(abs(speed - extraSpeed), isNeg ? reverse : fwd);
+      moveLeft(abs(speed + extraSpeed), isNeg ? reverse : fwd);
       //Sleep (WOW, HE'S A GENIUS)
       s(sleepTime);
       
@@ -883,6 +888,7 @@ private: // General path follower, keep it private so that the implementations u
       cout << botPos() << ", " << bezier.last() << endl;
       exitDist = 0.0;
     }
+    stopExitPrev = false;
     //Print all the lists
     #ifdef DEBUG
       s(1000);

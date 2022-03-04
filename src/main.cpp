@@ -87,7 +87,7 @@ void awp(){
   raiseLiftByOne();
   wc.followPath({PVector(34.44, -50.94), PVector(34.27, 28.45)});
   unclipGoal();
-  wc.backwardsFollow({PVector(34.96, 48.08)});
+  wc.backwardsFollow({PVector(38.0, 48.08)});
   clipGoal();
   wc.driveTo(-6.71, 48.43);
   wc.backwardsFollow({PVector(42.71, 33.96)});
@@ -102,14 +102,18 @@ void leftSide1GoalRush(){
   unclipLiftGoal();
   wc.preventTurn();
   useLineGoalDetect();
-  wc.driveTo(12, -36);
+  wc.driveTo(-12, -36);
   clipLiftGoal();
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
   // wc.backInto(48, -36);
   // wc.estimateStartPos(PVector(9.987513455328326, -36.82066738428418), 271.33692142088273);
-  wc.backwardsFollow({PVector(37.54, -60.58), PVector(52.35, -39.4)});
+  
+  wc.backwardsFollow({PVector(37.54, -60.58), PVector(52.35, -35.4)});
+  raiseLiftByOne();
   clipGoal();
+  wc.prevStopExit();
+  wc.driveTo(36, -36);
 
 }
 void rightSide2GoalRush(){
@@ -125,12 +129,14 @@ void rightSide2GoalRush(){
   unclipLiftGoal();
   wc.preventTurn();
   useLineGoalDetect();
+
   wc.driveTo(-12, 36);
-  clipLiftGoal();
-  raiseLiftByOne();
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
+  wc.prevStopExit();
   wc.backwardsFollow({PVector(38, 36)});
+  raiseLiftByOne();
+  wc.turnTo(45);
   unclipLiftGoal();
   wc.backwardsFollow({PVector(38, 50)});
   clipGoal();
@@ -138,6 +144,20 @@ void rightSide2GoalRush(){
   useLineGoalDetect();
   wc.driveTo(-4.67, -5.67);
   wc.driveTo(30.19, -4.27);
+
+}
+void rightCenterGoalRush(){
+  wc.estimateStartPos(PVector(60, 24), 90);
+  unclipLiftGoal();
+  wc.setMaxAcc(5000000);
+  wc.setMaxDeAcc(50000000);
+  unclipLiftGoal();
+  wc.preventTurn();
+  useLineGoalDetect();
+  wc.driveTo(0, 4.0);
+  raiseLiftByOne();
+  wc.backwardsFollow({PVector(35.25, 25.81), PVector(35.82, 47.74)});
+  clipGoal();
 
 }
 void rightSide1GoalRush(){
@@ -155,11 +175,12 @@ void rightSide1GoalRush(){
   useLineGoalDetect();
   wc.driveTo(-12, 36);
   clipLiftGoal();
-  raiseLiftByOne();
+  
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
   wc.backwardsFollow({PVector(38, 36)});
-  wc.backwardsFollow({PVector(38, 50)});
+  raiseLiftByOne();
+  wc.backwardsFollow({PVector(40, 50)});
   clipGoal();
   s(1000);
   wc.setSpeedLimit(50);
@@ -247,7 +268,7 @@ void skills(){
   lowerLiftByOne();
   lowerLiftByOne();
   waitForLiftFinish();
-  // useLineGoalDetect();
+  useLineGoalDetect();
   wc.driveTo(-24.07, -24.73);
   clipLiftGoal();
   s(800);
@@ -263,10 +284,11 @@ void skills(){
   s(500);
   unclipLiftGoal();
   raiseLiftByOne();
+  raiseLiftByOne();
   s(400);
   // wc.estimateStartPos(PVector(-42.63198594024605, -13.550790861159918), 294.95957820738136);
-  wc.turnTo(76.42);
-  // useLineGoalDetect();
+  wc.turnTo(wc.botPos().angleTo({0, 0}));
+  useLineGoalDetect();
   unclipLiftGoal();
   lowerLiftByOne();
   lowerLiftByOne();
@@ -282,7 +304,7 @@ void skills(){
   raiseLiftByOne();
   //To platform
   wc.setSpeedLimit(100);
-  wc.driveTo(-42.41, -0.33);
+  wc.driveTo(-42.41, -12.33);
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
@@ -301,13 +323,14 @@ void skills(){
   lowerLiftByOne();
   lowerLiftByOne();
   useLineGoalDetect();
-  wc.followPath({PVector(-22.66, 2.75), PVector(-6.92, 30.12)});
+  wc.followPath({PVector(-36, 0), PVector(0, 42.12)});
   raiseLiftByOne();
   // wc.estimateStartPos(PVector(-10.294551845342706, 28.628471001757475), 52.007029876977136);
   raiseLiftByOne();
   raiseLiftByOne();
   raiseLiftByOne();
   raiseLiftByOne();
+
   wc.followPath({PVector(8.82, 37.62), PVector(59.16, 37.06)});
   wc.turnTo(181.46);
   lowerLiftByOne();
@@ -332,7 +355,7 @@ void autonInit(){
 void autonomous(){
   autonInit();
   auto startTime = Brain.Timer.system();
-  rightSide2GoalRush();
+  skills();
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
@@ -880,15 +903,20 @@ int main() {
   unclipGoal();
   // autonInit();
   cout << "Init Done" << endl;
-  
+  Competition.autonomous(autonomous);
+  // Competition.drivercontrol(drivercontrol);
+  // wc.backwardsFollow({PVector(0, 0)});
   // testMotorConfiguration();
   while(!Greg.ButtonA.pressing()){
     s(100);
     // cout << frontCounter.pressing() << ", " << frontCounter.rawData() << endl;
   }
-  //my programmer is gay
   Greg.rumble(".");
+  // wc.estimateStartPos({-36, -36}, 0);
+  // wc.followPath({PVector(-36, 0), PVector(0, 30.12)});
   autonomous();
+  // wc.estimateStartPos({-36, -36}, 0);
+  // wc.followPath({PVector(-36, 0), PVector(0, 42.12)});
   // clipGoal();
   // s(1000);
   // raiseLiftByOneWait();
