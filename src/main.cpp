@@ -322,8 +322,11 @@ void skills(){
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
+
+  wc.driveTo(-36, 36);
   useLineGoalDetect();
-  wc.followPath({PVector(-36, 0), PVector(0, 42.12)});
+  wc.driveTo(4, 37);
+
   raiseLiftByOne();
   // wc.estimateStartPos(PVector(-10.294551845342706, 28.628471001757475), 52.007029876977136);
   raiseLiftByOne();
@@ -895,101 +898,34 @@ int main() {
   // //WINDOWS LOADER: YEET BURGER
   thread loader = thread(brainOS);
   // s(1000);
-  while(!init){
-    s(100);
-  }
-  s(500);
-  clipLiftGoal();
-  unclipGoal();
   // autonInit();
   cout << "Init Done" << endl;
-  Competition.autonomous(autonomous);
-  // Competition.drivercontrol(drivercontrol);
-  // wc.backwardsFollow({PVector(0, 0)});
-  // testMotorConfiguration();
-  while(!Greg.ButtonA.pressing()){
-    s(100);
-    // cout << frontCounter.pressing() << ", " << frontCounter.rawData() << endl;
-  }
-  Greg.rumble(".");
-  // wc.estimateStartPos({-36, -36}, 0);
-  // wc.followPath({PVector(-36, 0), PVector(0, 30.12)});
-  autonomous();
-  // wc.estimateStartPos({-36, -36}, 0);
-  // wc.followPath({PVector(-36, 0), PVector(0, 42.12)});
-  // clipGoal();
-  // s(1000);
-  // raiseLiftByOneWait();
-  // // conveyer.ready = true;
-  // s(1000);
-  // while(1){
-  //   wc.turnTo(0);
-  //   addPids();
-  //   wc.turnTo(180);
-  //   addPids();
-  // }
-  // addPids();
-  
-  // unclipLiftGoal();
-  // while(1){
+  // while(!init){
   //   s(100);
-  //   if(!frontCounter.pressing()){
-  //     Greg.rumble(".");
-  //     s(2000);
-  //     while(!Greg.ButtonA.pressing()){
-  //       s(10);
-  //     }
-  //     break;
-  //   }
   // }
-  // // wc.backwardsFollow({{0, 0}});
-  // wc.setMaxAcc(5000000);
-  // wc.setMaxDeAcc(50000000);
+  // clipGoal();
   // unclipLiftGoal();
-  // wc.preventTurn();
-  // thread yeet = thread([](){
-  //   double start = Brain.Timer.system();
-  //   while(1){
-  //     if(frontCounter.pressing()){
-  //       cout << Brain.Timer.system() - start << endl;
-  //       clipLiftGoal();
-  //       s(100);
-  //       wc.forceEarlyExit();
-  //       break;
-  //     }
-  //     s(10);
-  //   }
-  // });
-  // wc.driveTo(12, 36);
+  // wc.estimateStartPos({60, 36}, 180);
+  // cout << wc.botPos() << endl;
+  // cout << wc.botAngle();
+  // raiseLiftByOne();
+  // raiseLiftByOne();
+  // raiseLiftByOne();
+  // raiseLiftByOneWait();
+  // s(1000);
   // clipLiftGoal();
-  // yeet.detach();
-  // wc.backwardsFollow({{-48, 36}});
-  drivercontrol();
-  
-  //wc.turnTo(0);
-  // while(1){
-  //   cout << share.position() << endl;
-  //   s(50);
-  // }
-  // while(1){
-  //   if(share.velocity() != 0){
-  //     cout << "ok" << endl;
-  //     s(10);
-  //   }
-  //   s(1);
-  // }
-  s(500);
-  
-  wc.followPath({PVector(0, 48), PVector(-48, 48)});
-  // drivercontrol();
-  // drivercontrol();
-  // autonomous();
-  // drivercontrol();
-  // cout << "Y " << endl;
-  Competition.drivercontrol(drivercontrol);
-  // cout << "Yeet " << endl;
+  // lowerLiftByOne();
+  // lowerLiftByOne();
+  // lowerLiftByOne();
+  // lowerLiftByOneWait();
+  // while(abs(wc.botPos().y) > 12){
+  //   fwdsSlow(30, 100);
+  // }  
+  // raiseLiftByOne();
+  // balanceBot();
   Competition.autonomous(autonomous);
-  
+  Competition.drivercontrol(drivercontrol);
+  drivercontrol();
   while(1){
     
     s(300);

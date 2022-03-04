@@ -545,7 +545,10 @@ public: // followPath var editors
   }
   chain_method estimateStartPos(PVector v, double a){
     cout << sign(botPos().x) << ", " << sign(v.x) << endl;
-    if(sign(botPos().x) != sign(v.x)){
+    if(botPos().mag() < 3){
+      pos.setPos(v, a);
+    }
+    else if(sign(botPos().x) != sign(v.x)){
       reversed = true;
       cout << "Reversing auton" << endl;
     }

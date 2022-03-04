@@ -171,24 +171,34 @@ namespace ClassFns {
     double tiltDeriv = 0;
     int timeIn = 0;
     straight.setTarget(0);
+    int time = 0;
+    double botDist = 12.0;
+    double orgSign = sign(tiltAngle);
+    double lastSign = orgSign;
+    int speed = 60;
     while(1){
+      orgSign = sign(tiltAngle);
+      if(lastSign != orgSign){
+        speed -= 10;
+      }
+      lastSign = orgSign;
       tiltDeriv = tiltAngle - lastTilt;
       double normAngle = 0;
-      if(abs(wc.botAngle()) < 90){
-        normAngle = wc.botAngle();
+      if(abs(wc.botAngle()) > 90){
+        normAngle = posNeg180(wc.botAngle() - 180);
       }
       else {
         normAngle = posNeg180(wc.botAngle() + 180);
       }
-      double extra = -straight.getVal(normAngle) / 4.0;
-      if(abs(tiltAngle) > 5 && abs(tiltDeriv) < 0.3 && abs(wc.botPos().y) > 7){
-        if(tiltAngle > 0){
-          wc.moveLeft(70 + extra, fwd);
-          wc.moveRight(70 - extra, fwd);
+      double extra = straight.getVal(normAngle);
+      if(abs(tiltAngle) > 5 && abs(tiltDeriv) < 0.3 && abs(wc.botPos().y) > botDist){
+        if(tiltAngle < 0){
+          wc.moveLeft(speed + extra, fwd);
+          wc.moveRight(speed - extra, fwd);
         }
         else {
-          wc.moveLeft(70 - extra, reverse);
-          wc.moveRight(70 + extra, reverse);
+          wc.moveLeft(speed - extra, reverse);
+          wc.moveRight(speed + extra, reverse);
         }
         timeIn = 0;
       }
@@ -196,6 +206,17 @@ namespace ClassFns {
         wc.hardBrake();
         timeIn += 10;
       }
+      if(abs(wc.botPos().y) <= botDist && abs(tiltDeriv) < 0.3){
+        time++;
+      }
+      else {
+        time = 0;
+      }
+      if(time > 30){
+        botDist -= 0.5;
+        time = 0;
+      }
+
       if(timeIn > 1000){
         break;
       }
