@@ -435,10 +435,11 @@ private: // turnTo, with re-updating function
     
     //If the auton is on the other side, turn to the opposite angle
     double angle = angleCalc();
-    cout << angle << endl;
-    if(!callingInDrive && reversed){
-      angle += 90;
-    }
+    cout << "A: " << angle << endl;
+    cout << "A2: " << botAngle() << endl;
+    // if(!callingInDrive && reversed){
+    //   angle += 90;
+    // }
     int timeIn = 0;
     int i = 0;
     //Get the normAngle
@@ -453,7 +454,7 @@ private: // turnTo, with re-updating function
     // 
     // 
     // 
-    
+    cout << normAngle << endl;
     if(normAngle < -degRange){
       //It is off by 4 degrees, because:
       //    A: if it is within 4 degrees, without the minSpeed 
@@ -827,7 +828,7 @@ private: // General path follower, keep it private so that the implementations u
 
       /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
       //Get the turn speed and divide by 2 because it is being applied to both wheels
-      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 + 5.0;
+      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 10.0;
       
       //normAngle is too big for program to handle -> exit
       if(abs(normAngle) > 70){

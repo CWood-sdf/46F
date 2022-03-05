@@ -94,7 +94,8 @@ void awp(){
 
 }
 void leftSide1GoalRush(){
-  wc.estimateStartPos(PVector(60, -24), 90);
+  wc.estimateStartPos(PVector(60, -48), PVector(60, -48).angleTo({-12, -16}));
+  s(10);
   unclipLiftGoal();
   // wc.backwardsFollow({{0, 0}});
   wc.setMaxAcc(5000000);
@@ -102,14 +103,14 @@ void leftSide1GoalRush(){
   unclipLiftGoal();
   wc.preventTurn();
   useLineGoalDetect();
-  wc.driveTo(-12, -36);
+  wc.driveTo(0, -36);
   clipLiftGoal();
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
   // wc.backInto(48, -36);
   // wc.estimateStartPos(PVector(9.987513455328326, -36.82066738428418), 271.33692142088273);
   
-  wc.backwardsFollow({PVector(37.54, -60.58), PVector(52.35, -35.4)});
+  wc.backwardsFollow({PVector(37.54, -60.58), PVector(52.35, -48.4)});
   raiseLiftByOne();
   clipGoal();
   wc.prevStopExit();
@@ -131,6 +132,7 @@ void rightSide2GoalRush(){
   useLineGoalDetect();
 
   wc.driveTo(-12, 36);
+  wc.hardBrake();
   wc.setMaxAcc(300);
   wc.setMaxDeAcc(300);
   wc.prevStopExit();
@@ -165,13 +167,19 @@ void rightSide1GoalRush(){
   lowerLiftByOne();
   lowerLiftByOne();
   lowerLiftByOne();
-  wc.estimateStartPos(PVector(60, 24), 90);
+  wc.estimateStartPos(PVector(60, 36), -90);
+  // cout << wc.botPos() << endl;
+  // cout << wc.botAngle() << endl;
+  // cout << wc.botPos().angleTo({-12, 36}) << endl;
+  // s(5000);
+  // cout << wc.botAngle() << endl;
+  // s(5000);
   unclipLiftGoal();
   // wc.backwardsFollow({{0, 0}});
   wc.setMaxAcc(5000000);
   wc.setMaxDeAcc(50000000);
   unclipLiftGoal();
-  wc.preventTurn();
+  // wc.preventTurn();
   useLineGoalDetect();
   wc.driveTo(-12, 36);
   clipLiftGoal();
@@ -358,7 +366,7 @@ void autonInit(){
 void autonomous(){
   autonInit();
   auto startTime = Brain.Timer.system();
-  skills();
+  rightSide1GoalRush();
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
@@ -888,10 +896,10 @@ int main() {
 
   // //thread conveyer = thread(conveyerControl);
   // thread updatePos = thread(trackPos);
-  thread gpsUpdate = thread(updateSharePos);
+  KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
-  thread otherThreads = thread(executeThreads);
+  KillThread otherThreads = thread(executeThreads);
   
   thread automationThread = thread(automation);
 
@@ -899,10 +907,6 @@ int main() {
   thread loader = thread(brainOS);
   // s(1000);
   // autonInit();
-  cout << "Init Done" << endl;
-  // while(!init){
-  //   s(100);
-  // }
   // clipGoal();
   // unclipLiftGoal();
   // wc.estimateStartPos({60, 36}, 180);
@@ -923,9 +927,11 @@ int main() {
   // }  
   // raiseLiftByOne();
   // balanceBot();
+  // testMotorConfiguration();
+  // autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
-  drivercontrol();
+  // drivercontrol();
   while(1){
     
     s(300);

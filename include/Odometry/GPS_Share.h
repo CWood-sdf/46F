@@ -91,8 +91,7 @@ public:
     cout << pos << endl;
     cout << glblBotAngle << endl;
     botAngles.x = a;
-    cout << glblBotAngle << endl;
-    pos.angle = a;
+    pos.angle = 0;
     cout << pos.angle << endl;
   }
 };

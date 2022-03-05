@@ -140,7 +140,7 @@ namespace ClassFns {
       while(1){
         if(frontCounter.pressing()){
           clipLiftGoal();
-          s(300);
+          // s(300);
           if(wc.isMoving()){
             wc.forceEarlyExit();
           }
@@ -190,6 +190,10 @@ namespace ClassFns {
       else {
         normAngle = posNeg180(wc.botAngle() + 180);
       }
+      if(abs(normAngle) > 100){
+        normAngle -= sign(normAngle) * 180.0;
+      }
+      cout << normAngle << endl;
       double extra = straight.getVal(normAngle);
       if(abs(tiltAngle) > 5 && abs(tiltDeriv) < 0.3 && abs(wc.botPos().y) > botDist){
         if(tiltAngle < 0){

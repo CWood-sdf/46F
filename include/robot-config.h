@@ -55,7 +55,7 @@ Sensors
 *************************************/
 //Front Goal Switch
 LineCounter frontCounter(Brain.ThreeWirePort.C);
-LineCounter backCounter(Brain.ThreeWirePort.F);
+// LineCounter backCounter(Brain.ThreeWirePort.F);
 
 //Three wire expander
 triport Expander = triport(PORT9);
@@ -90,7 +90,7 @@ Odometry
 //Positioner init
 typedef Positioner posTp;
 posTp::xPortArr arrX = { };
-posTp::yPortArr arrY = { Brain.ThreeWirePort.A };
+posTp::yPortArr arrY = { Brain.ThreeWirePort.E };
 //Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, 
                         { 1.0 }, { 1.0 }, { 1.0 }, { 1.0 },

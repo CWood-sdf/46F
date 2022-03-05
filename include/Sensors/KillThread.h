@@ -17,8 +17,9 @@ struct KillThread {
   static void killAll(){
     cout << "KAT " << instances.size() << endl;
     for(auto i : instances){
+      // i->join();
       i->interrupt();
-      i->detach();
+      // i->detach();
     }
     instances.clear();
   }
