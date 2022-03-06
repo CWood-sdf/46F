@@ -37,8 +37,7 @@ NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
 Pneumatics
 
 *************************************/
-pneumatics* goalHolder = new pneumatics(Brain.ThreeWirePort.H);
-pneumatics liftGoalHolder = pneumatics(Brain.ThreeWirePort.G);
+
 
 /*************************************
 

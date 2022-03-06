@@ -157,7 +157,6 @@ void drivercontrol (){
   //int wheelsMove = 0;
   // backLiftCtrllr.disable();
   KillThread::killAll();
-  goalHolder = new pneumatics(Brain.ThreeWirePort.H);
   while(1){
     //Drive control, uses quotient/square for smoothness
     double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
@@ -191,7 +190,7 @@ void drivercontrol (){
     if(BLatch.pressing()){
       driveReversed = !driveReversed;
     }
-    s(100);
+    s(10);
     
   }
 }
@@ -282,18 +281,14 @@ void brainOS() {
 //}
 bool init = false;
 int main() {
-  // testMotorConfiguration();
+
+  //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
     gyroInit(angler);
     gyroInit(GPS);
     init = true;
   });
 
-  // updateBotAngle();
-  // startTilt = botAngles.z;
-
-  // //thread conveyer = thread(conveyerControl);
-  // thread updatePos = thread(trackPos);
   KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
@@ -305,7 +300,8 @@ int main() {
   
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
-  // drivercontrol();
+
+  //Prevent main from exiting
   while(1){
     
     s(300);
