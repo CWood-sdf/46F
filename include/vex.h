@@ -58,20 +58,6 @@ ostream& operator<<(ostream& cout, PVector&& v){
   return operator<<(cout, v);
 }
 
-template<class Tp>
-class array<Tp, 0>  {
-  Tp t = Tp();
-public:
-  Tp* begin(){
-    return &t;
-  }
-  Tp* end(){
-    return &t;
-  }
-  Tp& operator[](int i){
-    return t;
-  };
-};
 
 //This is necessary because, due to C++ rounding errors, 0.3 * 10 could be 2.9999999
 int mostlyFloor(double v) {

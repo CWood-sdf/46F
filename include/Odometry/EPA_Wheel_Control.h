@@ -230,7 +230,6 @@ protected: // PID variables + other random things
 
  
   map<double, std::function<void()>> distFns, oldFns;
-  volatile bool continueFwdDrive = false;
   bool callingInDrive = false;
 public: // Some variables
   static void requestInstance(BasicWheelController*& wc){
@@ -359,7 +358,7 @@ public: // Some Functions
     }
     return d;
   }
-public: // PID Stuff    
+public: // PID Stuff
   PID getCtrl(){
     return ctrl;
   }
@@ -489,6 +488,7 @@ private: // followPath vars
   bool reversed = false;
   bool moving = false;
   bool stopExitPrev = false;
+  double pathRadius = 1.0;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -556,11 +556,25 @@ public: // followPath var editors
     stopExitPrev = true;
     CHAIN
   }
+  chain_method setPathRadius(double r){
+    pathRadius = r;
+    CHAIN
+  }
+private: // General path follower
 
-private: // General path follower, keep it private so that the implementations use isNeg, not the autonomous
-  
+  size_t getNearest(VectorArr arr, PVector obj){
+    size_t i = 0;
+    double minDist = obj.dist2D(arr[0]);
+    for(int j = 1; j < arr.size(); j++){
+      if(obj.dist2D(arr[j]) < minDist){
+        i = j;
+      }
+    }
+    return i;
+  }
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg){
+    
     double purePursuitDist = 16.0; // Distance to pure pursuit target
     VectorArr bezier;
     if(reversed){
@@ -646,6 +660,16 @@ private: // General path follower, keep it private so that the implementations u
       }
     }
     
+    //Make extended path
+    VectorArr extendedPath;
+    {
+      extendedPath = bezier;
+      PVector ext = bezier.last() - bezier[bezier.size() - 2];
+      double extraDist = 0.7;
+      for(int i = 1; i < 24.0 / extraDist; i++){
+        extendedPath.push(bezier.last() + ext * extraDist * i);
+      }
+    }
 
     //The index of the pursuit target
     int bezierIndex = 0;
@@ -694,8 +718,11 @@ private: // General path follower, keep it private so that the implementations u
     setOldDistFns();
     int timesStopped = 0;
     moving = true;
+    PVector lastPos = botPos();
     //Loop
     while(timeIn * sleepTime < maxTimeIn){
+      //Get the nearest pure pursuit position
+      int nearestIndex = getNearest(bezier, botPos());
       if(exitEarly){
         cout << "Exit due to external thread request" << endl;
         exitEarly = false;
@@ -706,10 +733,7 @@ private: // General path follower, keep it private so that the implementations u
         pursuit = bezier[bezierIndex];
         ++bezierIndex;
       }
-      // //Force slowspeed, I don't like this because it's a dumb fix for a problem that shouldn't exist
-      // if(botPos().dist2D(bezier.last()) < minAllowedDist){
-      //   speedLimited = true;
-      // }
+      
       //Near the target, increment timeIn
       if(botPos().dist2D(bezier.last()) < minAllowedDist && pursuit == bezier.last()){
         timeIn++;
@@ -720,7 +744,7 @@ private: // General path follower, keep it private so that the implementations u
       }
       //The distance to the pursuit target
       double dist = botPos().dist2D(pursuit);
-
+      
       //If the bot's not moving, and it's not currently accelerating
       if(pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000){
         timesStopped++;
@@ -755,7 +779,7 @@ private: // General path follower, keep it private so that the implementations u
       
       //The angle that it needs to travel at
       double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
-
+      
 
       /*** NOTHING HAPPENING IN NEXT TWO BLOCKS ***/
       //So that the robot can take tight turns, 
@@ -775,23 +799,23 @@ private: // General path follower, keep it private so that the implementations u
         //Send it back up top to recalibrate the speeds without sleeping
         //continue;
       }
-      if(g == 5){
-        
-        // cout << pursuit << ", " << botPos() << endl;
-        // cout << angle << endl;
-        // cout << "norm: " << normAngle << endl;
-      }
 
       /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
       //Get the turn speed and divide by 2 because it is being applied to both wheels
       double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 10.0;
-      
+      PVector currentPos = botPos();
+      PVector estimateIn100 = (currentPos - lastPos) * (100.0 / (double)sleepTime) + currentPos;
+      int indexIn100 = getNearest(extendedPath, estimateIn100);
+      if(bezier[indexIn100].dist2D(estimateIn100) < pathRadius){
+        rightExtra = 0;
+
+      }
       //normAngle is too big for program to handle -> exit
       if(abs(normAngle) > 70){
         cout << "Ok exit" << endl;
         break;
       }
-      //Use the extra turn speed as given if the distance is greater than 6 inches, 
+      //2 the extra turn speed as given if the distance is greater than 6 inches, 
       //Otherwise divide by 10 so that the bot isn't over turning
       double extraSpeed = (dist > 6.0 ? rightExtra : rightExtra / 2.0);
       /***   ^^MIGHT NOT BE NECESSARY IF virtualPursuit DOES IT'S JOB    ****/
@@ -803,10 +827,9 @@ private: // General path follower, keep it private so that the implementations u
         g = 0;
       }
       //Slew speed
-      if(abs(speed) > targetSpeeds[bezierIndex]){
-        // cout << targetSpeeds[bezierIndex] << endl;
+      if(abs(speed) > targetSpeeds[nearestIndex]){
         double orgSpeed = speed;
-        speed = targetSpeeds[bezierIndex];
+        speed = targetSpeeds[nearestIndex];
         //Change extraSpeed to match original speed : extraSpeed ratio
         extraSpeed *= orgSpeed / speed / 2.0;
       }
@@ -818,11 +841,12 @@ private: // General path follower, keep it private so that the implementations u
       //Move the robot
       moveRight(abs(speed - extraSpeed), isNeg ? reverse : fwd);
       moveLeft(abs(speed + extraSpeed), isNeg ? reverse : fwd);
+      lastPos = botPos();
       //Sleep (WOW, HE'S A GENIUS)
       s(sleepTime);
       
       #ifdef DEBUG
-      realTime.add(speed, pos.velocity(), targetSpeeds[bezierIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
+      realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
       #endif
     }
     moving = false;
@@ -936,8 +960,6 @@ private: // General path follower, keep it private so that the implementations u
       cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
       cout << endl;
     #endif
-    // cout << botAngle() << endl;
-    continueFwdDrive = true;
     
 
   }
@@ -957,21 +979,137 @@ public: // Path following implementations
     backwardsFollow({ pos });
 
   }
-  virtual void driveFwd(double maxDist){
-    PVector end = PVector(0.0, maxDist);
-    end.rotate(-end.heading2D());
-    end.rotate(botAngle());
-    auto wasReverse = reversed;
-    reversed = false;
-    driveTo(end);
-    reversed = wasReverse;
-  }
+private: // Raw PID
+  void basicPIDDrive(double targetDist, bool isNeg){
+    double purePursuitDist = 16.0; // Distance to pure pursuit target
+    
+    PVector startPos = botPos();
+    double startAngle = botAngle();
+    //The last dist
+    double lastDist = 12 * 2 * 24;
+    //A timer
+    timer t = timer();
+    int time = 0, //Counts the time in loop iterations
+    timeIn = 0, // The amount of time spent near the target
+    maxTimeIn = 5, // The time needed before exit
+    sleepTime = 10, // The sleep time
+    g = 0; // A debug output counter
 
-  virtual void stopDriveFwd(){
-    continueFwdDrive = false;
-    hardBrake();
+    double normAngle = 0.0, //The normAngle
+    //Going with an hopefully possible 1 in accuracy
+    minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
+    cout << minAllowedDist << endl;
+    
+    
+    //Save the current distance fns
+    setOldDistFns();
+    int timesStopped = 0;
+    moving = true;
+    //Loop
+    while(timeIn * sleepTime < maxTimeIn){
+      if(exitEarly){
+        cout << "Exit due to external thread request" << endl;
+        exitEarly = false;
+        break;
+      }
+      //Near the target, increment timeIn
+      if(botPos().dist2D(startPos) < minAllowedDist){
+        timeIn++;
+        
+      }
+      else {
+        timeIn = 0;
+      }
+      //The distance to the pursuit target
+      double dist = targetDist - botPos().dist2D(startPos);
+
+      //If the bot's not moving, and it's not currently accelerating
+      if(pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000){
+        timesStopped++;
+      }
+      else {
+        timesStopped = 0;
+      }
+      //50 ms not moving -> exit
+      if(timesStopped * sleepTime > 50 && !stopExitPrev){
+        cout << "Stop Exit" << endl;
+        break;
+      }
+      //Get the speed of the robot
+      double speed = ctrl.getVal(abs(dist) > 16.0 ? 16.0 : abs(dist)) * (isNeg * 2.0 - 1.0);
+      
+      //Use the distFns for the current dist
+      useDistFns(dist);
+      
+      //Angle of robot to target
+      double angle = startAngle;
+      
+      //The angle that it needs to travel at
+      double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
+
+      
+      /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
+      //Get the turn speed and divide by 2 because it is being applied to both wheels
+      double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 10.0;
+      
+      //normAngle is too big for program to handle -> exit
+      if(abs(normAngle) > 70){
+        cout << "Ok exit" << endl;
+        break;
+      }
+      //Use the extra turn speed as given if the distance is greater than 6 inches, 
+      //Otherwise divide by 10 so that the bot isn't over turning
+      double extraSpeed = (dist > 6.0 ? rightExtra : rightExtra / 2.0);
+      /***   ^^MIGHT NOT BE NECESSARY IF virtualPursuit DOES IT'S JOB    ****/
+
+      if(g++ == 2){
+        cout << normAngle << ", " << extraSpeed << endl;
+        g = 0;
+      }
+      
+      if(abs(speed) > speedLimit){
+        speed /= abs(speed);
+        speed *= speedLimit;
+      }
+      //Mindblowing lines right here
+      //Move the robot
+      moveRight(abs(speed - extraSpeed), isNeg ? reverse : fwd);
+      moveLeft(abs(speed + extraSpeed), isNeg ? reverse : fwd);
+      //Sleep (WOW, HE'S A GENIUS)
+      s(sleepTime);
+      
+    }
+    moving = false;
+    //Stop drawing the path
+    //De-init code
+    {
+      //Stop the bot
+      switch(BrakeMode){
+        case exitMode::normal:
+          hardBrake();
+          break;
+        case exitMode::coast:
+          coastBrake();
+          break;
+        case exitMode::nothing:
+          break;
+      }
+      cout << "Path stop" << endl;
+      //Print postion and target position
+      cout << targetDist << ", " << botPos().dist2D(startPos) << endl;
+      exitDist = 0.0;
+    }
+    stopExitPrev = false;
+    
   }
-public: // Functions that just move the wheels  
+public: // Raw PID implementations
+  virtual void driveFwd(double dist){
+    basicPIDDrive(dist, false);
+  }
+  virtual void driveBack(double dist){
+    basicPIDDrive(dist, true);
+  }
+public: // Functions that just move the wheels
 
   virtual void moveLeft(int speed, directionType d){
     Left.spinVolt(d, speed);
@@ -1042,7 +1180,7 @@ public: // Import variables + constructor
     this->FR = &FR;
   }
 
-public: // EPIC PID Things
+public: // EPIC PID Things, when actually used on competition bot, please rewrite
   void moveAt(double angle, double speed, double turnSpeed){
     double Y1 = cos(angle * DEG_TO_RAD) * speed;
     double Y2 = cos(angle * DEG_TO_RAD) * speed;
@@ -1129,7 +1267,6 @@ public: // EPIC PID Things
     this->drawArr = false;
     cout << botPos() << ", " << bezier.last() << endl;
     cout << botAngle() << endl;
-    continueFwdDrive = true;
 
   }
   void driveTo(PVector pos, double finalAngle){
@@ -1210,7 +1347,6 @@ public: // EPIC PID Things
     this->drawArr = false;
     cout << botPos() << ", " << bezier.last() << endl;
     cout << botAngle() << endl;
-    continueFwdDrive = true;
 
 
     
