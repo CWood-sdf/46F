@@ -228,16 +228,7 @@ protected: // PID variables + other random things
   //PID purePursuitCtrl = PID(5.5, 0.0, 3.4);
   PID turnCtrl = PID(2.42, 0.2, 1.35, 0, 20, 4);
 
-  //Main: 2.42, 0.2, 1.35, 0, 20, 4
-  //One goal front: 1.9, 0.2, 0.25
-  //One goal back: 1.1, 0.2, 0.1
-  //Two goals: 1, 0.2, 0.1
-  bool goalFront = false;
-  bool goalBack = false;
-  PID oneGoalFrontTurn = PID(1.9, 0.2, 0.25, 0, 15, 4);
-  PID oneGoalBackTurn  = PID(1.1, 0.2, 0.1, 0, 15, 4);
-  PID twoGoal          = PID(1, 0.2, 0.1, 0, 15, 4);
-  PID mainTurnCtrl = turnCtrl;
+ 
   map<double, std::function<void()>> distFns, oldFns;
   volatile bool continueFwdDrive = false;
   bool callingInDrive = false;
@@ -358,42 +349,7 @@ public: // Some Functions
     Left.stop(hold);
     Right.stop(hold);
   }
-  void removeGoalFront(){
-    goalFront = false;
-    if(goalBack){
-      turnCtrl = oneGoalBackTurn;
-    }
-    else {
-      turnCtrl = mainTurnCtrl;
-    }
-  }
-  void setGoalFront(){
-    goalFront = true;
-    if(goalBack){
-      turnCtrl = twoGoal;
-    }
-    else {
-      turnCtrl = oneGoalFrontTurn;
-    }
-  }
-  void removeGoalBack(){
-    goalBack = false;
-    if(goalFront){
-      turnCtrl = oneGoalFrontTurn;
-    }
-    else {
-      turnCtrl = mainTurnCtrl;
-    }
-  }
-  void setGoalBack(){
-    goalBack = true;
-    if(goalFront){
-      turnCtrl = twoGoal;
-    }
-    else {
-      turnCtrl = oneGoalBackTurn;
-    }
-  }
+ 
   double limit(double d, double l, double m){
     if(d < l){
       //return l;

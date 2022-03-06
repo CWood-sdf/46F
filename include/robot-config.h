@@ -1,6 +1,4 @@
 //#include "EPA_Tracker.h"
-#include "goalFront.h"
-#include "goalDetector.h"
 #include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
 #include "Sensors/Distance.h"
@@ -27,9 +25,6 @@ motor MR = motor(PORT13, gearSetting::ratio18_1,!true);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
-motor flapConveyer = motor(PORT6, gearSetting::ratio18_1, true);
-
-motor liftMot = motor(PORT5, ratio36_1, true);
 
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
@@ -37,9 +32,6 @@ motor liftMot = motor(PORT5, ratio36_1, true);
 NewMotor<> wheels = NewMotor<>(FL, ML, BL, FR, MR, BR);
 NewMotor<> leftWhls = NewMotor<>(BL, FL, ML);
 NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
-NewMotor<> flaps = NewMotor<>(flapConveyer);
-NewMotor<> lift = NewMotor<>(liftMot);
-
 /*************************************
 
 Pneumatics
@@ -68,8 +60,6 @@ gps GPS = gps(PORT18, -6.0, 0.0, inches, -90);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
-//Vision Odoms
-VisionOdom basicAlign = VisionOdom(goalFrontVision, PVector(0, 6), 14, 0, 0);
 
 //PotDials
 // PotDial skillsOrSide = PotDial(Brain.ThreeWirePort.C, 3);
@@ -108,97 +98,6 @@ Omni_6Controller wc = Omni_6Controller(BL, BR, FL, FR, ML, MR, share);
 Autonomous System Controllers
 
 *************************************/
-
-struct {
-  bool ready = false;
-} conveyer;
-
-
-
-class {
-  PID angleTarget = PID(1.0, 0.001, 0.1);
-  int currentIndex = 0;
-  bool lastPressing = false;
-  vector<double> positions = { 0, -100, -480, -490 };
-  int timesDone = 0;
-  int sleepTime = 20;
-  bool isDisabled = false;
-  int prevent = 0;
-public:
-  int getSleepTime(){
-    return sleepTime;
-  }
-  bool done = false;
-  void prev(){
-    prevent = 5;
-  }
-  bool prevented(){
-    return prevent-- > 0;
-  }
-  void disable(){
-    isDisabled = true;
-  }
-  void enable(){
-    isDisabled = false;
-  }
-  bool disabled(){
-    return isDisabled;
-  }
-  bool isUp = false;
-  void sleep(){
-    s(sleepTime);
-  }
-  void freePress(){
-    lastPressing = false;
-  }
-  void addIndex(){
-    isUp = true;
-    if(!lastPressing){
-      currentIndex++;
-      if(currentIndex >= positions.size()){
-        currentIndex = positions.size() - 1;
-      }
-      angleTarget.setTarget(getPosition());
-    }
-    lastPressing = true;
-  }
-  void subIndex(){
-    isUp = false;
-    if(!lastPressing){
-      currentIndex--;
-      if(currentIndex < 0){
-        currentIndex = 0;
-      }
-      angleTarget.setTarget(getPosition());
-    }
-    lastPressing = true;
-  }
-  double getPosition(){
-    return positions[currentIndex];
-  }
-  double getSpeed(){
-    if(abs(angleTarget.getError()) < 10.0){
-      timesDone ++;
-    }
-    else {
-      timesDone = 0;
-    }
-    return angleTarget.getVal(liftMot.position(rotationUnits::deg));
-  }
-  bool isDone(){
-    return done;
-  }
-  void setIndex(int i){
-    if(i > currentIndex){
-      isUp = false;
-      currentIndex = i;
-    }
-    if(i < currentIndex){
-      isUp = true;
-      currentIndex = i;
-    }
-  }
-} liftCtrllr;
 
 
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
