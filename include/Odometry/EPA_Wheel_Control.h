@@ -7,6 +7,7 @@
 //  3 - PID Controllers - To direct the bot's speed along the path
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
+
 #include "Odometry/PID.h"
 #include "Odometry/GPS_Share.h"
 #include <deque>
@@ -123,22 +124,6 @@ VectorArr bezierCurve(VectorArr ptArr, double inc = 1.0 / 50.0){
     ret.push(pt);
   }
   ret.push(ptArr.last());
-  //PVector lastSafe = ret.first();
-  //bool isSafe = true;
-  // for(int i = 0; i < ret.size(); i++){
-  //   auto& g = ret[i];
-  //   if(!isSafe){
-  //     if(g.dist2D(lastSafe) < spacing){
-  //       ret.pop(i);
-  //       i--;
-  //     }
-  //     else {
-  //       lastSafe = ret[i];
-  //     }
-  //   } else {
-  //     isSafe = false;
-  //   }
-  // }
   return ret;
 }
 VectorArr bezierDerivative(VectorArr ptArr, double inc = 1.0 / 50.0){
@@ -204,15 +189,6 @@ protected: // PID variables + other random things
   // PosExtractor<gps> GPS;
   // PosExtractor Odom;
   typedef BasicWheelController& chain_method;
-  static inline LinkedList<BasicWheelController*&> requestedInstances;
-  static inline BasicWheelController* inst = NULL;
-  void fillInstances(){
-    for(auto& i : requestedInstances){
-      i = this;
-    }
-    inst = this;
-    
-  }
   LinkedList<PidAdder> customPidsDrive;
   LinkedList<PidAdder> customPidsTurn;
   LinkedList<PidAdder> customPidsSlave;
@@ -230,14 +206,7 @@ protected: // PID variables + other random things
   map<double, std::function<void()>> distFns, oldFns;
   bool callingInDrive = false;
 public: // Some variables
-  static void requestInstance(BasicWheelController*& wc){
-    if(inst != NULL){
-      wc = inst;
-    }
-    else {
-      requestedInstances.push_back(wc);
-    }
-  }
+
   
   //A public path for drawing
   VectorArr path;
@@ -245,15 +214,13 @@ public: // Some variables
   bool isOmniDir = false;
   bool hasFn = false;
   //Function to be called between turning and driving
-  std::function<void()> afterTurn = [](){};
-  //Two motors just because 
+  std::function<void()> afterTurn = [](){}; 
   NewMotor<> Left;
   NewMotor<> Right; 
 public: // Constructor
   BasicWheelController(vector<Ref<motor>> L, vector<Ref<motor>> R, GPS_Share& s) :
     pos(s)
   {
-    fillInstances();
     Left = L;
     Right = R;
   }
@@ -294,24 +261,11 @@ public: // Some Functions
     addTurnPid(PidAdder(p, i, d));
   }
   
-  
-  vector<double> getDVals(){
-    return ctrl.getDVals();
-  }
-  void driveTo(double x, double y, bool bad = false){
+  void driveTo(double x, double y){
     driveTo(PVector(x, y));
   }
   void backInto(double x, double y){
     backInto(PVector(x, y));
-  }
-  void useGPS(){
-    usingGPS = true;
-  }
-  void setGPS(bool usingGPS){
-    this->usingGPS = usingGPS;
-  }
-  void noGPS(){
-    usingGPS = false;
   }
   virtual double botAngle (){
     return pos.heading();
@@ -346,16 +300,6 @@ public: // Some Functions
     Left.stop(hold);
     Right.stop(hold);
   }
- 
-  double limit(double d, double l, double m){
-    if(d < l){
-      //return l;
-    }
-    if(d > m){
-      //return m;
-    }
-    return d;
-  }
 public: // PID Stuff
   PID getCtrl(){
     return ctrl;
@@ -385,7 +329,15 @@ public: // PID Stuff
 private: // turnTo, with re-updating function
   virtual void turnTo(std::function<double()> angleCalc){
     //
-    
+    auto oldAngleCalc = angleCalc;
+    if(reversed && !callingInDrive){
+      #ifndef USE_GAME_SPECIFIC
+      #warning GSD (Turning add)
+      #endif
+      angleCalc = [&](){
+        return oldAngleCalc() + 180.0;
+      };
+    }
     //If the auton is on the other side, turn to the opposite angle
     double angle = angleCalc();
     cout << "A: " << angle << endl;
@@ -503,6 +455,9 @@ public: // followPath var editors
     if(botPos().mag() < 3){
       pos.setPos(v, a);
     }
+    #ifndef USE_GAME_SPECIFIC
+    #warning GSD (Conditions for reversing auton)
+    #endif
     else if(sign(botPos().x) != sign(v.x)){
       reversed = true;
       cout << "Reversing auton" << endl;
@@ -510,10 +465,6 @@ public: // followPath var editors
     else {
       reversed = false;
     }
-  
-    // if(abs(botPos().dist2D(v)) > 6){
-    //   pos.setPos(v, a);
-    // }
     CHAIN;
   }
   void preventTurn(){
@@ -588,9 +539,14 @@ private: // General path follower
     
     double purePursuitDist = 16.0; // Distance to pure pursuit target
     VectorArr bezier;
+
+    #ifndef USE_GAME_SPECIFIC
+    #warning GSD (Auton position reverse)
+    #endif
+    //Change to new game dependency
     if(reversed){
-      for(int i = 0; i < arr.size(); i++){
-        arr[i] *= -1.0;
+      for(auto& a : arr){
+        a *= -1.0;
       }
     }
     auto arrCopy = arr;
@@ -1144,7 +1100,7 @@ public: // Functions that just move the wheels
   }
   
 };
-// typedef BasicWheelController::PurePursuitController PursuitController;
+
 class OmniWheelController : public BasicWheelController {
 public: // Import variables + add constructor
   OmniWheelController(vector<Ref<motor>> BL, vector<Ref<motor>> BR, GPS_Share& s) :

@@ -22,7 +22,6 @@ class PID {
   public:
   //The values to multiply the K values by
   double p = 0.0, i = 0.0, d = 0.0;
-  vector<double> dVals;
   //A simple struct that stores the multiplication values
   struct KVals {
     //The variables
@@ -85,7 +84,6 @@ public:
   //Clear out the previous PID usage
   void resetVals(){
     error = 0.0;
-    dVals.clear();
     p = i = d = 0.0;
   }
   //Set the target value of the PID
@@ -108,7 +106,6 @@ public:
       i = 0.0;
     }
     d = error - lastError;
-    dVals.push_back(d);
   }
   //Get the speed value given that error has already been applied
   double getVal(){
@@ -122,10 +119,6 @@ public:
     
     this->incVals(sensorVal);
     return getVal();
-  }
-  //Get the previous DVals
-  vector<double> getDVals(){
-    return dVals;
   }
   //Add a PidAdder
   PID& operator+= (PidAdder a){

@@ -3,6 +3,8 @@
 
 
 #define BASE_FILE <C:/Users/woodc/source/VEX CODE
+//Undef this macro to find all places that are game specific
+#define USE_GAME_SPECIFIC
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"

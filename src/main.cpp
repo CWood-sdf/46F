@@ -31,31 +31,15 @@ bool isPressing(controller::axis& joystick, int mult){
   return false;
 }
 
-//Moves bot backwards for the given amount of time
-void backwards(int t){
-  Left.spin(vex::reverse, 60, pct);
-  Right.spin(vex::reverse, 60, pct);
-  s(t);
-  Left.stop();
-  Right.stop();
-}
 //Moves bot backwards at the given speed for the given amount of time 
-void backwardsSlow(int t, int sp = 40){
+void backwards(int t, int sp = 40){
   Left.spin(vex::reverse, sp, pct);
   Right.spin(vex::reverse, sp, pct);
   s(t);
   Left.stop();
   Right.stop();
 }
-void fwds(int t){
-  Left.spin(fwd, 60, pct);
-  Right.spin(fwd, 60, pct);
-  s(t);
-  Left.stop(hold);
-  Right.stop(hold);
-  
-}
-void fwdsSlow(int t, double sp = 30){
+void fwds(int t, double sp = 30){
   Left.spin(fwd, sp, pct);
   Right.spin(fwd, sp, pct);
   s(t);

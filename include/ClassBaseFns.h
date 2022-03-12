@@ -10,7 +10,7 @@ void ts (int time){
 
 //This macro does a lot
 //First it makes a prototype function with the passed name and accepting 2 arguments:
-//        an int and a boolean that defaults to true
+//        an int and a bool that defaults to true
 //It then defines the function with a beginning body that writes to the APA 
 //      if the 'write' arg is true
 string parseInt(vision::signature& c){

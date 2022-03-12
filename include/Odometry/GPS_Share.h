@@ -88,11 +88,9 @@ public:
   }
   void setPos(PVector v, double a){
     pos.pos = v;
-    cout << pos << endl;
-    cout << glblBotAngle << endl;
     botAngles.x = a;
     pos.angle = 0;
-    cout << pos.angle << endl;
+    update();
   }
 };
 #endif
