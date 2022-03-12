@@ -159,9 +159,7 @@ VectorArr bezierAcc(VectorArr ptArr, double inc = 1.0 / 50.0){
   acc.push(acc.last());
   return acc;
 }
-//Create a bezier curve
 pair<VectorArr, VectorArr> bezierCurveNormalLR(VectorArr ptArr, double dist = 1.0, double inc = 1.0 / 50.0){
-  double spacing = 1.0;
   //Return value
   pair<VectorArr, VectorArr> ret;
   VectorArr bezier = bezierCurve(ptArr, inc);
@@ -572,6 +570,19 @@ private: // General path follower
     }
     return i;
   }
+  size_t getNearest(VectorArr arr, PVector obj, size_t start){
+    size_t i = 0;
+    double minDist = obj.dist2D(arr[start]);
+    if(start == arr.size() - 1){
+      return start;
+    }
+    for(int j = start + 1; j < arr.size(); j++){
+      if(obj.dist2D(arr[j]) < minDist){
+        i = j;
+      }
+    }
+    return i;
+  }
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg){
     
@@ -719,10 +730,12 @@ private: // General path follower
     int timesStopped = 0;
     moving = true;
     PVector lastPos = botPos();
+    int lastIndex = 0;
     //Loop
     while(timeIn * sleepTime < maxTimeIn){
       //Get the nearest pure pursuit position
-      int nearestIndex = getNearest(bezier, botPos());
+      int nearestIndex = getNearest(bezier, botPos(), lastIndex);
+      lastIndex = nearestIndex;
       if(exitEarly){
         cout << "Exit due to external thread request" << endl;
         exitEarly = false;
@@ -997,7 +1010,7 @@ private: // Raw PID
 
     double normAngle = 0.0, //The normAngle
     //Going with an hopefully possible 1 in accuracy
-    minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
+    minAllowedDist = exitDist == 0.0 ? 1.0 : exitDist; // The maximum distance from target before starting timeIn count
     cout << minAllowedDist << endl;
     
     
