@@ -1,8 +1,4 @@
-/******************************
-TODO:
-  - Lift indices
-  
-*******************************/
+//main.cpp
 #include "updaters.h"
 using namespace ClassFns;
 using namespace vex;
@@ -63,8 +59,6 @@ void turnLeft(int t){
 }
 //Autonomous Stuff {
 
-//Map order skillsOrSide - 3, centerGoals - 4, autonGoals - 2
-
 void addPids(){
   cout << "Turn P" << endl;
   while(1){
@@ -94,11 +88,14 @@ void addPids(){
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;
-
 }
 void autonomous(){
-  autonInit();
+  //Auton timer system, used in testing
   auto startTime = Brain.Timer.system();
+  autonInit();
+  //Put auton call here
+
+  //Print time
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
