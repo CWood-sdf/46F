@@ -2,7 +2,7 @@
 //      and defines devices
 
 
-#define BASE_FILE <C:/Users/woodc/source/VEX CODE
+#define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
 //Undef this macro to find all places that are game specific
 #define USE_GAME_SPECIFIC
 //
@@ -39,9 +39,12 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 //Include my epicly epic background files
-#define BASE BASE_FILE/libs
+#define BASE BASE_FILE
 #include BASE_FILE/basefile.h>
 /*<>*/
+
+vector<function<bool()>> bosPop;
+vector<function<void()>> bosMain;
 
 //#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
 //A vector to store the bot angles globally

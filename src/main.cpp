@@ -1,5 +1,6 @@
 //main.cpp
 #include "updaters.h"
+#include "AutonInit/Init.h"
 using namespace ClassFns;
 using namespace vex;
 competition Competition;
@@ -230,33 +231,37 @@ const color darkGreen = color(ClrDarkGreen);
 
 
 void brainOS() {
-  int state = 1;		
+  bosMain.push_back(windowsLoader);
+  bosMain.push_back(printVars);
+  bosMain.push_back(displayTilt);
+  bosMain.push_back(drawPath);
+  bosPop.push_back(Auton::selectAuton);
+  
+  int state = 0;		
   int maxState = 3; 
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<");		
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">");		
+  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, -30, -30, black, ">");		
   while (1) {		
-    switch(state) {
-      case 1:
-        printVars();
-        break;
-      case 2:
-        displayTilt();
-        break;
-      case 3:
-        drawPath();
-        break;
-      default:
-        windowsLoader();
-        break;
+    if(state < bosMain.size()){
+      bosMain[state]();
+    }
+    else {
+      int i = state - bosMain.size();
+      bool result = bosPop[i]();
+      if(result){
+        bosPop.erase(bosPop.begin() + i);
+        state--;
+      }
     }
     screenLeft.draw();		
     screenRight.draw();	
     if (screenLeft.clicked() && state > 0) {	
       state--;	
     }	
-    else if (screenRight.clicked() && state < maxState) {	
+    else if (screenRight.clicked() && state < bosMain.size() + bosPop.size()) {	
       state++;	
     }	
+    Brain.Screen.waitForRefresh();
   }	
 }
 //}
