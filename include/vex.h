@@ -43,8 +43,6 @@ controller Beethoven = controller(partner);
 #include BASE_FILE/basefile.h>
 /*<>*/
 
-vector<function<bool()>> bosPop;
-vector<function<void()>> bosMain;
 
 //#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
 //A vector to store the bot angles globally

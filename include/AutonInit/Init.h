@@ -38,6 +38,10 @@ public:
     return name;
   }
   static inline void callAuton(){
+    if(refList.size() == 0){
+      cout << "No Auton" << endl;
+      return;
+    }
     if(ready){
       auton->call();
     }

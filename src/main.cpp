@@ -1,6 +1,7 @@
 //main.cpp
 #include "updaters.h"
 #include "AutonInit/Init.h"
+#include "BrainOS/Manager.h"
 using namespace ClassFns;
 using namespace vex;
 competition Competition;
@@ -85,7 +86,12 @@ void addPids(){
   
   cout << "Done" << endl;
 }
-
+Auton left = Auton("Left", [](){
+  cout << "l" << endl;
+});
+Auton right = Auton("Right", [](){
+  cout << "r" << endl;
+});
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;
@@ -95,7 +101,7 @@ void autonomous(){
   auto startTime = Brain.Timer.system();
   autonInit();
   //Put auton call here
-
+  Auton::callAuton();
   //Print time
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
@@ -231,35 +237,33 @@ const color darkGreen = color(ClrDarkGreen);
 
 
 void brainOS() {
-  bosMain.push_back(windowsLoader);
-  bosMain.push_back(printVars);
-  bosMain.push_back(displayTilt);
-  bosMain.push_back(drawPath);
-  bosPop.push_back(Auton::selectAuton);
+  bos::bosFns.push_back(windowsLoader);
+  bos::bosFns.push_back(windowsLoader);
+  bos::bosFns.push_back(printVars);
+  bos::bosFns.push_back(displayTilt);
+  bos::bosFns.push_back(drawPath);
+  bos::bosFns.push_back(Auton::selectAuton);
   
   int state = 0;		
   int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, -30, -30, black, ">");		
   while (1) {		
-    if(state < bosMain.size()){
-      bosMain[state]();
+    if(bos::bosFns.size(0)){
+      cout << "bosFns is empty for some reason" << endl;
+      break;
     }
-    else {
-      int i = state - bosMain.size();
-      bool result = bosPop[i]();
-      if(result){
-        bosPop.erase(bosPop.begin() + i);
-        state--;
-      }
+    auto result = bos::bosFns.getCurrent()->call();
+    if(result){
+      bos::bosFns.popCurrent();
     }
     screenLeft.draw();		
     screenRight.draw();	
-    if (screenLeft.clicked() && state > 0) {	
-      state--;	
+    if (screenLeft.clicked()) {	
+      bos::bosFns.moveCurrentLeft();
     }	
-    else if (screenRight.clicked() && state < bosMain.size() + bosPop.size()) {	
-      state++;	
+    else if (screenRight.clicked()) {	
+      bos::bosFns.moveCurrentRight();
     }	
     Brain.Screen.waitForRefresh();
   }	
