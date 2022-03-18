@@ -52,6 +52,9 @@ struct Ref {
   operator tp*(){
     return val;
   }
+  tp* operator->(){
+    return val;
+  }
 };
 // //Use the template command for the amount of encoders used
 // //Each encoder is used for each dimension

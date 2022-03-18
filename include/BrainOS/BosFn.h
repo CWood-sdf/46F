@@ -5,6 +5,9 @@ namespace bos {
     std::function<void()> mainFn;
     bool isPop = false;
   public:
+    BosFn(){
+      
+    }
     BosFn(std::function<bool()> p){
       popFn = p;
       isPop = true;
