@@ -86,12 +86,13 @@ void addPids(){
   
   cout << "Done" << endl;
 }
-Auton left = Auton("Left", [](){
+
+Auton left = "Left" + [](){
   cout << "l" << endl;
-});
-Auton right = Auton("Right", [](){
+};
+Auton right = "Right" + [](){
   cout << "r" << endl;
-});
+};
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;

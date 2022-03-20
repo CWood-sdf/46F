@@ -30,6 +30,8 @@ public:
     setName(name);
     setFn(fn);
   }
+  Auton(const Auton&) = default;
+  Auton(Auton&&) = default;
   chain_method call(){
     fn();
     CHAIN;
@@ -96,4 +98,14 @@ public:
     }
     return ready;
   }
+  Auton& operator+(std::function<void()> fn){
+    setFn(fn);
+    return *this;
+  }
 };
+Auton operator "" _afn(const char* s){
+  return Auton(s, [](){});
+}
+Auton operator+(const char* n, std::function<void()> f){
+  return Auton(n, f);
+}
