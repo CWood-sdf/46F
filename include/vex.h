@@ -43,7 +43,7 @@ controller Beethoven = controller(partner);
 #include BASE_FILE/basefile.h>
 /*<>*/
 
-
+#include "v5lvgl.h"
 //#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
 //A vector to store the bot angles globally
 PVector botAngles = PVector(0.0, 0.0, 0.0);

@@ -274,6 +274,7 @@ bool init = false;
 int main() {
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
+    v5_lv_init();
     gyroInit(angler);
     gyroInit(GPS);
     init = true;

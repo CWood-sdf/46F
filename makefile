@@ -21,7 +21,12 @@ SRC_H  = $(wildcard include/*/*.h)
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include
+INC_F  = include lvgl lvgl/src
+
+# headers needed to use library
+LV_SRC_H += $(wildcard lvgl/lvgl.h) 
+LV_SRC_H += $(wildcard lvgl/src/*.h) 
+LV_SRC_H += $(wildcard lvgl/src/*/*.h)
 
 # build targets
 all: $(BUILD)/$(PROJECT).bin
