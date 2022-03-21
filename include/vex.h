@@ -38,12 +38,13 @@ brain Brain;
 controller Greg = controller();
 controller Beethoven = controller(partner);
 
+#include "v5lvgl.h"
 //Include my epicly epic background files
 #define BASE BASE_FILE
 #include BASE_FILE/basefile.h>
 /*<>*/
 
-#include "v5lvgl.h"
+
 //#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
 //A vector to store the bot angles globally
 PVector botAngles = PVector(0.0, 0.0, 0.0);
