@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "Sensors/PotDial.h"
 class Auton {
   friend class Init;
   static inline size_t idSet = 0;

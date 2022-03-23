@@ -1,5 +1,42 @@
+#ifndef POT_DIAL
+#define POT_DIAL
 #include "Odometry/EPA_Tracker.h"
 typedef triport::port port;
+class PotDial;
+template<class StorageType>
+class SelectorArr {
+  friend class PotDial;
+  static vector<PotDial*> boundDials;
+  static vector<int> possibleTicks;
+  map<vector<int>, StorageType> returnVals;
+public:
+  template<class ... Args>
+  SelectorArr(Args&... potDials);
+  SelectorArr(){
+
+  }
+  void addVal(vector<int> inputs, StorageType out){
+    if(inputs.size() > possibleTicks.size()){
+      cout << "Invalid array size (too big)" << endl;
+    }
+    else if(inputs.size() < possibleTicks.size()){
+      cout << "Invalid array size (too small)" << endl;
+    }
+    else {
+      returnVals[inputs] = out;
+    }
+  }
+  StorageType getVal(vector<int> input){
+    if(input.size() > possibleTicks.size()){
+      cout << "Invalid array size (too big)" << endl;
+    }
+    else if(input.size() < possibleTicks.size()){
+      cout << "Invalid array size (too small)" << endl;
+    }
+    return returnVals[input];
+  }
+  StorageType getVal();
+};
 class PotDial {
   const int ticks;
   pot* sensor;
@@ -15,51 +52,7 @@ class PotDial {
     this->baseVal = baseVal;
   }
 public:
-  template<class StorageType>
-  class Controller {
-    friend class PotDial;
-    vector<PotDial*> boundDials;
-    vector<int> possibleTicks;
-    map<vector<int>, StorageType> returnVals;
-  public:
-    template<class ... Args>
-    Controller(Args&... potDials){
-      vector<Ref<PotDial>> dials = { potDials... };
-      for(auto& d : dials){
-        d.val->addController(*this);
-      }
-    }
-    Controller(){
-
-    }
-    void addVal(vector<int> inputs, StorageType out){
-      if(inputs.size() > possibleTicks.size()){
-        cout << "Invalid array size (too big)" << endl;
-      }
-      else if(inputs.size() < possibleTicks.size()){
-        cout << "Invalid array size (too small)" << endl;
-      }
-      else {
-        returnVals[inputs] = out;
-      }
-    }
-    StorageType getVal(vector<int> input){
-      if(input.size() > possibleTicks.size()){
-        cout << "Invalid array size (too big)" << endl;
-      }
-      else if(input.size() < possibleTicks.size()){
-        cout << "Invalid array size (too small)" << endl;
-      }
-      return returnVals[input];
-    }
-    StorageType getVal(){
-      vector<int> vals = {};
-      for(auto l : boundDials){
-        vals.push_back(l->getAmnt());
-      }
-      return getVal(vals);
-    }
-  };
+  
 public:
   template<typename ... Args>
   PotDial(pot& sensor, Args... otherArgs) : PotDial(otherArgs...){
@@ -70,7 +63,7 @@ public:
     sensor = new pot(p);
   }
   template<class T>
-  PotDial& addController(PotDial::Controller<T>& ctrllr){
+  PotDial& addController(SelectorArr<T>& ctrllr){
     ctrllr.possibleTicks.push_back(ticks);
     ctrllr.boundDials.push_back(this);
     return *this;
@@ -93,3 +86,20 @@ public:
     }
   }
 };
+template<class T>
+template<class ... Args>
+SelectorArr<T>::SelectorArr(Args&... potDials){
+  vector<Ref<PotDial>> dials = { potDials... };
+  for(auto& d : dials){
+    d.val->addController(*this);
+  }
+}
+template<class T>
+T SelectorArr<T>::getVal(){
+  vector<int> vals = {};
+  for(auto l : boundDials){
+    vals.push_back(l->getAmnt());
+  }
+  return getVal(vals);
+}
+#endif
