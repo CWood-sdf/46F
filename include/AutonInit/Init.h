@@ -13,6 +13,7 @@ class Auton {
   string name;
   size_t index;
   function<void()> fn;
+  // SelectorArr potGet;
   typedef Auton& chain_method;
   chain_method setFn(std::function<void()> a){
     this->fn = a;
