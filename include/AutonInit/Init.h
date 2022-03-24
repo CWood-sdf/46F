@@ -13,7 +13,7 @@ class Auton {
   string name;
   size_t index;
   function<void()> fn;
-  // SelectorArr potGet;
+  SelectorArr potGet;
   typedef Auton& chain_method;
   chain_method setFn(std::function<void()> a){
     this->fn = a;
@@ -32,11 +32,18 @@ public:
     setName(name);
     setFn(fn);
   }
+  Auton(string name, vector<int> v) : Auton(){
+    setName(name);
+    potGet = SelectorArr(v);
+  }
   Auton(const Auton&) = default;
   Auton(Auton&&) = default;
   chain_method call(){
     fn();
     CHAIN;
+  }
+  void attachArr(vector<int> v){
+    potGet = SelectorArr(v, fn);
   }
   string getName(){
     return name;
@@ -50,7 +57,7 @@ public:
       auton->call();
     }
     else {
-      refList[0]->call();
+      SelectorArr::getVal()();
     }
   }
   static inline std::vector<Auton*> getRefs(){
@@ -102,6 +109,7 @@ public:
   }
   Auton& operator+(std::function<void()> fn){
     setFn(fn);
+    potGet.attachFn(fn);
     return *this;
   }
 };

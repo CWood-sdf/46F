@@ -4,10 +4,10 @@
 typedef triport::port port;
 class PotDial;
 class SelectorArr {
-  typedef int FnTp;
-  static inline FnTp emptyFn = 0;
-  static vector<PotDial*> boundDials;
-  static map<vector<int>, FnTp> toVal;
+  typedef function<void()> FnTp;
+  static inline FnTp emptyFn = [](){};
+  static inline vector<PotDial*> boundDials = {};
+  static inline map<vector<int>, FnTp> toVal = {};
   vector<int> count;
   bool isValid = false;
   friend class PotDial;
@@ -57,7 +57,7 @@ public:
       toVal[count] = emptyFn;
     }
   }
-  SelectorArr() = delete;
+  SelectorArr() {}
   void attachFn(FnTp fn){
     if(isValid){
       toVal[count] = fn;

@@ -86,11 +86,10 @@ void addPids(){
   
   cout << "Done" << endl;
 }
-
-Auton left = "Left" + [](){
+Auton leftA = "Left" + [](){
   cout << "l" << endl;
 };
-Auton right = "Right" + [](){
+Auton rightA = "Right" + [](){
   cout << "r" << endl;
 };
 void autonInit(){
@@ -108,7 +107,7 @@ void autonomous(){
 }
 
 //}
-#define sensitivity 12
+#define sensitivity 12 
 
 //Drivercontrol + automation {
 class ButtonLatch {
