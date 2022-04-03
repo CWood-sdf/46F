@@ -1,6 +1,7 @@
 //vex.h -- This file includes all external files, defines random functions    
 //      and defines devices
-
+#ifndef VEX_H
+#define VEX_H
 
 #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
 //Undef this macro to find all places that are game specific
@@ -9,8 +10,6 @@
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
 #pragma GCC diagnostic ignored "-Wunused-variable"
-#ifndef VEX_H
-#define VEX_H
 #define _USE_MATH_DEFINES
 //Include a few basic files
 #include <list>
