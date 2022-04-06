@@ -49,5 +49,7 @@ vpath %.h lvgl/ include/
 # build targets
 all: $(BUILD)/$(PROJECT).bin
 
+PROJECTLIB = lib46x
+
 # include build rules
 include vex/mkrules.mk

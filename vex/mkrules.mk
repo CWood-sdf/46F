@@ -13,7 +13,7 @@ $(BUILD)/%.o: %.cpp $(SRC_H) $(SRC_A)
 	$(Q)$(CXX) $(CXX_FLAGS) $(INC) -c -o $@ $<
 	
 # create executable 
-$(BUILD)/$(PROJECT).elf: $(OBJ)
+$(BUILD)/$(PROJECT).elf: $(OBJ) $(BUILD)/$(PROJECTLIB).a
 	$(ECHO) "LINK $@"
 	$(Q)$(LINK) $(LNK_FLAGS) -o $@ $^ $(LIBS)
 	$(Q)$(SIZE) $@
@@ -24,6 +24,7 @@ $(BUILD)/$(PROJECT).bin: $(BUILD)/$(PROJECT).elf
 
 # create archive
 $(BUILD)/$(PROJECTLIB).a: $(OBJ)
+	$(ECHO) "Create archive $@"
 	$(Q)$(ARCH) $(ARCH_FLAGS) $@ $^
 
 # clean project

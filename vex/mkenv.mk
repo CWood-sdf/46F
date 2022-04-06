@@ -68,11 +68,17 @@ SHELL = cmd.exe
 MKDIR = md "$(@D)" 2> nul || :
 RMDIR = rmdir /S /Q
 CLEAN = $(RMDIR) $(BUILD) 2> nul || :
+define copyfile
+	copy $(subst /,\,$1) $(subst /,\,$2) > nul || :
+endef
 else
 $(info unix build for platform $(PLATFORM))
 MKDIR = mkdir -p "$(@D)" 2> /dev/null || :
 RMDIR = rm -rf
 CLEAN = $(RMDIR) $(BUILD) 2> /dev/null || :
+define copyfile
+	cp $1 $2
+endef
 endif
 
 # toolchain include and lib locations
@@ -86,14 +92,14 @@ CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -ansi -std=g
 CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++11 -ffunction-sections -fdata-sections $(DEFINES)
 
 # linker flags
-LNK_FLAGS = -nostdlib -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"libs"
+LNK_FLAGS = -nostdlib -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)"
 
 # future statuc library
 PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group -lv5rt -lstdc++ -lc -lm -lgcc --end-group
+LIBS =  --start-group -l46x -lv5rt -lstdc++ -lc -lm -lgcc --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})
