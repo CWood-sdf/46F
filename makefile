@@ -11,11 +11,7 @@ SRC_C  = $(wildcard src/*.cpp)
 SRC_C += $(wildcard src/*.c)
 SRC_C += $(wildcard src/*/*.cpp) 
 SRC_C += $(wildcard src/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*.c)
-SRC_C += $(wildcard include/lvgl/src/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*/*/*/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*/*/*/*.c)
+
 
 OBJA = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
 OBJ = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )

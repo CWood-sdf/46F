@@ -1,4 +1,6 @@
 #include "Odometry/GPS_Share.h"
+#include "Sensors/Vision/ObjectFilter.h"
+#include "Sensors/Vision/FieldObject.h"
 #define _sin(t) (t - t*t*t/6 + t*t*t*t*t/120 - t*t*t*t*t*t*t/5040 + t*t*t*t*t*t*t*t*t/362880)
 #define _cos(t) (1 - t*t/2 + t*t*t*t/24 - t*t*t*t*t*t/720 + t*t*t*t*t*t*t*t/40320)
 #define _tan(t) (_sin(t)/_cos(t))
@@ -15,12 +17,12 @@ class VisionOdom {
     widthAngle = 56 * DEG_TO_RAD,
     heightAngle = 46 * DEG_TO_RAD, 
     backDist = 0.5 * screenWidth / _tan(widthAngle / 2.0);
-  PVector estimatePos(vision::object& object){
+  PVector estimateRelPos(int pixelX, int pixelY){
     // cout << object.centerX << ", " << object.centerY << endl;
     PVector ret;
     // cout << (screenHeight / 2.0 - object.centerY) << endl;
-    double angleY = atan(-(screenHeight / 2.0 - object.centerY) / backDist);
-    double angleX = atan((screenWidth / 2.0 - object.centerX) / backDist);
+    double angleY = atan(-(screenHeight / 2.0 - pixelY) / backDist);
+    double angleX = atan((screenWidth / 2.0 - pixelX) / backDist);
     // cout << angleY * RAD_TO_DEG << ", " << angleX * RAD_TO_DEG << endl;
     double internalAngleY = M_PI_2 - mountAngle - angleY;
     // cout << internalAngleY * RAD_TO_DEG << endl;
@@ -28,12 +30,27 @@ class VisionOdom {
     double h2 = sqrt(dy*dy + mountHeight * mountHeight);
     double dx = h2 * tan(angleX);
     ret = PVector(dx, dy);
-    PVector rCopy = relPos;
     
+    return ret;
+  }
+  PVector estimatePos(vision::object& object){
+    
+    // cout << object.centerX << ", " << object.centerY << endl;
+    PVector ret = estimateRelPos(object.centerX, object.centerY);
+    PVector rCopy = relPos;
     ret
       .rotate(mountRotation + share.heading())
       .add(share.position())
       .add(rCopy.rotate(share.heading()));
+    return ret;
+  }
+  PVector estimateRelTopMid(vision::object& object){
+    
+    PVector ret = estimateRelPos(object.centerX, object.originY);
+    return ret;
+  }
+  PVector estimateRelBtmMid(vision::object& object){
+    PVector ret = estimateRelPos(object.centerX, object.originY + object.height);
     return ret;
   }
 public:
