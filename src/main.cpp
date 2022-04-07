@@ -283,9 +283,8 @@ int main() {
 
   //Make a thread to execute some auton tasks concurrently
   KillThread otherThreads = thread(executeThreads);
-  
 
-  // //WINDOWS LOADER: YEET BURGER
+  //WINDOWS LOADER: YEET BURGER
   thread loader = thread(brainOS);
   
   Competition.autonomous(autonomous);
@@ -293,7 +292,6 @@ int main() {
 
   //Prevent main from exiting
   while(1){
-    
     s(300);
   }
 }
