@@ -1,9 +1,7 @@
 #include "Odometry/GPS_Share.h"
 #include "Sensors/Vision/ObjectFilter.h"
 #include "Sensors/Vision/FieldObject.h"
-#define _sin(t) (t - t*t*t/6 + t*t*t*t*t/120 - t*t*t*t*t*t*t/5040 + t*t*t*t*t*t*t*t*t/362880)
-#define _cos(t) (1 - t*t/2 + t*t*t*t/24 - t*t*t*t*t*t/720 + t*t*t*t*t*t*t*t/40320)
-#define _tan(t) (_sin(t)/_cos(t))
+
 
 extern GPS_Share share;
 class VisionOdom {
