@@ -43,6 +43,9 @@ controller Beethoven = controller(partner);
 #include BASE_FILE/basefile.h>
 /*<>*/
 
+#define _sin(t) (t - t*t*t/6 + t*t*t*t*t/120 - t*t*t*t*t*t*t/5040 + t*t*t*t*t*t*t*t*t/362880)
+#define _cos(t) (1 - t*t/2 + t*t*t*t/24 - t*t*t*t*t*t/720 + t*t*t*t*t*t*t*t/40320)
+#define _tan(t) (_sin(t)/_cos(t))
 
 //#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
 //A vector to store the bot angles globally
