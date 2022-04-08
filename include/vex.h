@@ -30,12 +30,25 @@
 using namespace vex;
 using namespace std;
 
+#ifndef NO_MAKE
+
 //Make a brain
 brain Brain;
 
 //Make a controller and name it Greg
 controller Greg = controller();
 controller Beethoven = controller(partner);
+
+#else
+
+//Make a brain
+extern brain Brain;
+
+//Make a controller and name it Greg
+extern controller Greg;
+extern controller Beethoven;
+
+#endif
 
 #include "lvgl_inc.h"
 //Include my epicly epic background files
@@ -47,7 +60,8 @@ controller Beethoven = controller(partner);
 #define _cos(t) (1 - t*t/2 + t*t*t*t/24 - t*t*t*t*t*t/720 + t*t*t*t*t*t*t*t/40320)
 #define _tan(t) (_sin(t)/_cos(t))
 
-//#error "Copy LinkedList.h from source/repos/Maple/Maple to libs"
+#ifndef NO_MAKE
+
 //A vector to store the bot angles globally
 PVector botAngles = PVector(0.0, 0.0, 0.0);
 //The Actual Bot Angle
@@ -157,4 +171,24 @@ string toCcp(double v) {
 	} while (v != 0.0 && i++ < 5);
 	return ret;
 }
+#else
+//A vector to store the bot angles globally
+extern PVector botAngles;
+//The Actual Bot Angle
+extern double& glblBotAngle;
+extern double deltaBotAngle;
+extern double avgBotAngle;
+extern double tiltAngle;
+extern double startTilt;
+ostream& operator<< (ostream& cout, PVector& v);
+ostream& operator<<(ostream& cout, PVector&& v);
+
+
+//This is necessary because, due to C++ rounding errors, 0.3 * 10 could be 2.9999999
+int mostlyFloor(double v);
+//Converts an int to a string
+string toCcp(int v);
+//Converts double to string
+string toCcp(double v);
+#endif
 #endif

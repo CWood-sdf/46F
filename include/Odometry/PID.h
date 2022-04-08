@@ -26,6 +26,9 @@ class PID {
   struct KVals {
     //The variables
     double p, i, d;
+    KVals(){
+      p = i = d = 0.0;
+    }
     //Set the values
     KVals& operator=(KVals& vals){
       p = vals.p;
@@ -66,6 +69,9 @@ class PID {
   //Variables
   double target = 0.0, error = 0.0, lastError = 0.0, iCap, iGrowth, iZero;
 public:
+  PID(){
+
+  }
   //Constructors
   PID(KVals vals, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : k(vals){
     this->iCap = iCap;
