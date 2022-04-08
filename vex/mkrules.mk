@@ -1,7 +1,7 @@
 # VEXcode mkrules.mk 2019_03_26_01
 
 # compile C files
-$(BUILD)/%.o: %.c $(SRC_H)
+$(BUILD)/%.o: %.c $(LV_SRC_H)
 	$(Q)$(MKDIR)
 	$(ECHO) "CC  $<"
 	$(Q)$(CC) $(CFLAGS) $(INC) -c -o $@ $<

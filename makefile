@@ -37,6 +37,8 @@ INC_F  = include . include/lvgl include/lvgl/src
 LV_SRC_H += $(wildcard include/lvgl/lvgl.h) 
 LV_SRC_H += $(wildcard include/lvgl/src/*.h) 
 LV_SRC_H += $(wildcard include/lvgl/src/*/*.h)
+LV_SRC_H += include/lv_conf.h
+LV_SRC_H += lvgl_inc.h
 
 LV_DST_H = $(addprefix $(BUILD)/include/, $(LV_SRC_H) )
 LV_DST_H += $(BUILD)/include/lv_conf.h $(BUILD)/include/lvgl_inc.h

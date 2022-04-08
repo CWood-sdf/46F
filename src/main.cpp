@@ -4,7 +4,7 @@
 #include "BrainOS/Manager.h"
 using namespace ClassFns;
 using namespace vex;
-competition Competition;
+competition Competition;//
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
 bool isPressing(controller::button& btn){
   if(btn.pressing()){
