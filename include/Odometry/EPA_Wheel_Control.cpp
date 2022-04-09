@@ -1,6 +1,11 @@
 #define NO_MAKE
 #include "Odometry/EPA_Wheel_Control.h"
-
+double sign(double v){
+  if(v == 0.0){
+    return 0;
+  }
+  return v / abs(v);
+}
 void BasicWheelController::addDrivePid(PidAdder a){
   ctrl += a;
   customPidsDrive.push(a);

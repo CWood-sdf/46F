@@ -140,7 +140,7 @@ public:
     return k;
   }
 };
-
+#ifndef NO_MAKE
 ostream& operator<<(ostream& cout, PID&& v){
   cout << v.getKVals().p << ", " << v.getKVals().i << ", " << v.getKVals().d << endl;
   return cout;
@@ -149,3 +149,7 @@ ostream& operator<<(ostream& cout, PID& p){
   cout << p.k.p << ", " << p.k.i << ", " << p.k.d << endl;
   return cout;
 }
+#else 
+ostream& operator<<(ostream& cout, PID&& v);
+ostream& operator<<(ostream& cout, PID& p);
+#endif

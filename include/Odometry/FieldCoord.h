@@ -45,6 +45,7 @@ public:
     return FieldCoord(-pos, angle + 180);
   }
 };
+#ifndef NO_MAKE
 ostream& operator<< (ostream& cout, FieldCoord& v){
   cout << VECT_OUT(v.pos) << ", " << v.angle;
   return cout;
@@ -52,3 +53,9 @@ ostream& operator<< (ostream& cout, FieldCoord& v){
 ostream& operator<<(ostream& cout, FieldCoord&& v){
   return operator<<(cout, v);
 }
+
+#else 
+ostream& operator<< (ostream& cout, FieldCoord& v);
+ostream& operator<<(ostream& cout, FieldCoord&& v);
+
+#endif

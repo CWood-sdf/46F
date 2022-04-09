@@ -92,6 +92,7 @@ void cool() {
     pts.push_back({ gridHeight, (short)0 });
     pts.push_back({ gridHeight, gridHeight });
     pts.push_back({ (short)0, gridHeight });
+    
     lv_obj_t* line = lv_line_create(gridContainer);
     lv_line_set_points(line, pts.data(), pts.size());
     //lv_obj_add_style(line, &style_title, 0);

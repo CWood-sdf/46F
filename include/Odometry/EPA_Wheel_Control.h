@@ -17,12 +17,7 @@
 #define DEBUG
 #endif
 #include "Bezier.h"
-double sign(double v){
-  if(v == 0.0){
-    return 0;
-  }
-  return v / abs(v);
-}
+double sign(double v);
 //The basic wheel controller 
 class BasicWheelController {
 protected: // PID variables + other random things

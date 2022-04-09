@@ -27,70 +27,21 @@ public:
   LineCounter(triport::port& p) : sensor(new line(p)) {
     ADD_THIS;
   }
-  bool firstHit(){
-    if(fHit){
-      fHit = false;
-      return true;
-    }
-    return false;
-  }
-  bool active(){
-    return isActive;
-  }
-  void update(){
-    
-    bool isActive = pressing();
-    if(wasActiveLast){
-      if(!isActive){
-        countOut++;
-      }
-    } else {
-      if(isActive){
-        countIn++;
-        fHit = true;
-      }
-    }
-    wasActiveLast = isActive;
-  }
-  void reset(){
-    countIn = 0;
-    countOut = 0;
-    if(active()){
-      countIn = 1;
-      countOut = 0;
-    }
-  }
-  int getCountOut(){
-    return countOut;
-  }
-  int getCountIn(){
-    return countIn;
-  }
-  bool pressing(){
-    
-    isActive = threshold <= sensor->reflectivity();
-    if(isActive){
-      threshold = lowThreshold;
-    } else  {
-      threshold = startThreshold;
-    }
-    return isActive;
-  }
-  int rawData(){
-    return sensor->reflectivity();
-  }
+  //Return true if its the first time called after a hit
+  bool firstHit();
+  //Return true if obj near
+  bool active();
+  //Update the values
+  void update();
+  //Reset the counts
+  void reset();
+  //Get the number of objs that entered field of view, then left
+  int getCountOut();
+  //Get the number of objs that entered field of view
+  int getCountIn();
+  //Same as active()
+  bool pressing();
+  //Returns raw line tracker value
+  int rawData();
 };
 void microWait(uint time);
-vector<LineCounter*> LineCounter::instances = {};
-const KillThread LineCounter::updater = thread([](){
-  if(LineCounter::instances.size() == 0){
-    cout << "No Line Counter instances exist, exiting thread" << endl;\
-    return;
-  }
-  while(1){
-    for(auto t : LineCounter::instances){
-      t->update();
-    }
-    microWait(2000);
-  }
-});
