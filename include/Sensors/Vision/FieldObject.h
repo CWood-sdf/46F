@@ -8,7 +8,7 @@ struct CircFieldObject {
     double dFront = distEst / sensorHeight * (pt.y + groundToMid);
     return distEst - dFront + pt.x;
   }
-  double getCenterObjectDistEstimateTop(double topEst, double sensorHeight){
+  double getCenterObjectVertEstimateTop(double topEst, double sensorHeight){
     double angle = atan(sensorHeight / topEst); // in rad
     if(topLeftBound.size() != 1){
       int i = 0;
@@ -33,7 +33,7 @@ struct CircFieldObject {
       return getDistEst(sensorHeight, topEst, pt);
     }
   }
-  double getCenterObjectDistEstimateBtm(double btmEst, double sensorHeight){
+  double getCenterObjectVertEstimateBtm(double btmEst, double sensorHeight){
     double angle = atan(sensorHeight / btmEst); // in rad
     if(btmRghtBound.size() != 1){
       int i = 0;
@@ -58,14 +58,52 @@ struct CircFieldObject {
       return getDistEst(sensorHeight, btmEst, pt);
     }
   }
-  double getCenterObjectHorEstimateLeft(double est, double sensorHeight, double distEst){
-    return 0;
+  PVector getCenterObjectHorEstimateLeft(double est, double sensorHeight, double distEst, double angleFromSensor){
+    PVector farthestPt = {0, 0};
+    for(auto i : topLeftBound){
+      if(abs(i.x) > abs(farthestPt.x)){
+        farthestPt = i;
+      }
+    }
+    farthestPt.rotateXZ(-angleFromSensor);
+    double dist = PVector(est, distEst).mag();
+    double hypotenuse = PVector(dist, sensorHeight).mag();
+    double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
+    PVector endPt = {est, distEst};
+    PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
+    endPt += linePt;
+    PVector posEst = endPt + PVector(farthestPt.x, farthestPt.z);
+    return posEst;
   }
-  double getCenterObjectHorEstimateRight(double est, double sensorHeight, double distEst){
-    return 0;
+  PVector getCenterObjectHorEstimateRight(double est, double sensorHeight, double distEst, double angleFromSensor){
+    PVector farthestPt = {0, 0};
+    for(auto i : btmRghtBound){
+      if(abs(i.x) > abs(farthestPt.x)){
+        farthestPt = i;
+      }
+    }
+    farthestPt.rotateXZ(angleFromSensor);
+    double dist = PVector(est, distEst).mag();
+    double hypotenuse = PVector(dist, sensorHeight).mag();
+    double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
+    PVector endPt = {est, distEst};
+    PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
+    endPt += linePt;
+    PVector posEst = endPt + PVector(farthestPt.x, farthestPt.z);
+    return posEst;
   }
-  PVector getRelPosLocation(PVector top, PVector btm){
-    return {0, 0};
+  PVector getRelPosLocation(PVector topLeft, PVector btmRight, double sensorHeight, double leftAngle, double rightAngle){
+    double yEstTop = getCenterObjectVertEstimateTop(topLeft.y, sensorHeight);
+    double yEstBtm = getCenterObjectVertEstimateBtm(btmRight.y, sensorHeight);
+    double yEst = (yEstBtm + yEstTop) / 2.0;
+    PVector leftEst = getCenterObjectHorEstimateLeft(topLeft.x, sensorHeight, yEst, leftAngle);
+    PVector rightEst = getCenterObjectHorEstimateRight(btmRight.x, sensorHeight, yEst, rightAngle);
+    PVector estTotal = PVector(
+      (leftEst.x + rightEst.x) / 2.0, 
+      (leftEst.y + rightEst.y + yEst) / 3.0 // May want to weight yEst: 
+                                            //    ... + yEst * 2.0) / 4.0
+    );
+    return estTotal;
   }
 };
 
