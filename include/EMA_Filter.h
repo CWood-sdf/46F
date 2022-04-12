@@ -13,8 +13,8 @@ public:
   BasicEMA(double alpha, T val) : BasicEMA<T>(alpha){
     this->val = val;
   }
-  void update(double sensorVal){
-    val = sensorVal * alpha + (1 - alpha) * oldVal;
+  void update(T sensorVal){
+    val = sensorVal * alpha + oldVal * (1 - alpha);
     oldVal = val;
   }
   T value (){
