@@ -1,3 +1,5 @@
+#ifndef FIELD_OBJECT_H
+#define FIELD_OBJECT_H
 #include "vex.h"
 struct CircFieldObject {
   vision::signature* color;
@@ -107,3 +109,4 @@ struct CircFieldObject {
   }
 };
 
+#endif

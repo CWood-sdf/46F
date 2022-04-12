@@ -976,6 +976,20 @@ Discarded input sections
  .bss._ZGVN10KillThread9instancesE
                 0x00000000        0x4 build/include/Sensors/LineCounter.o
  .llvm_addrsig  0x00000000        0x8 build/include/Sensors/LineCounter.o
+ .text          0x00000000        0x0 build/include/Sensors/Vision/ObjectMap.o
+ .comment       0x00000000       0x2e build/include/Sensors/Vision/ObjectMap.o
+ .note.GNU-stack
+                0x00000000        0x0 build/include/Sensors/Vision/ObjectMap.o
+ .ARM.attributes
+                0x00000000       0x38 build/include/Sensors/Vision/ObjectMap.o
+ .llvm_addrsig  0x00000000        0x0 build/include/Sensors/Vision/ObjectMap.o
+ .text          0x00000000        0x0 build/include/Sensors/Vision/FieldObject.o
+ .comment       0x00000000       0x2e build/include/Sensors/Vision/FieldObject.o
+ .note.GNU-stack
+                0x00000000        0x0 build/include/Sensors/Vision/FieldObject.o
+ .ARM.attributes
+                0x00000000       0x38 build/include/Sensors/Vision/FieldObject.o
+ .llvm_addrsig  0x00000000        0x0 build/include/Sensors/Vision/FieldObject.o
  .llvm_addrsig  0x00000000        0x0 build/include/lvgl/src/core/lv_indev_scroll.o
  .llvm_addrsig  0x00000000        0x0 build/include/lvgl/src/core/lv_obj_pos.o
  .llvm_addrsig  0x00000000        0x0 build/include/lvgl/src/core/lv_obj_style_gen.o
@@ -8971,6 +8985,8 @@ LOAD build/include/Sensors/PotDial.o
 LOAD build/include/Sensors/Distance.o
 LOAD build/include/Sensors/VisionOdom.o
 LOAD build/include/Sensors/LineCounter.o
+LOAD build/include/Sensors/Vision/ObjectMap.o
+LOAD build/include/Sensors/Vision/FieldObject.o
 LOAD build/include/lvgl/src/core/lv_indev_scroll.o
 LOAD build/include/lvgl/src/core/lv_obj_pos.o
 LOAD build/include/lvgl/src/core/lv_obj_style_gen.o

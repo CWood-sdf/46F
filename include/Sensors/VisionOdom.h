@@ -1,7 +1,6 @@
 #include "Odometry/GPS_Share.h"
-#include "EMA_Filter.h"
 #include "Sensors/Vision/FieldObject.h"
-
+#include "Sensors/Vision/ObjectMap.h"
 
 extern GPS_Share share;
 class VisionOdom {
@@ -95,4 +94,6 @@ public:
     }
     return c;
   }
+  safearray<PVector, VISION_MAX_OBJECTS> fromArr(safearray<vision::object, VISION_MAX_OBJECTS>& arr);
+  safearray<PVector, VISION_MAX_OBJECTS> fromMap(ObjectMap& objects);
 };

@@ -1,3 +1,5 @@
+#ifndef EMA_FILTER_H
+#define EMA_FILTER_H
 #include "vex.h"
 template<class T>
 class BasicEMA {
@@ -30,3 +32,4 @@ public:
 
   }
 };
+#endif
