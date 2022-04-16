@@ -9,6 +9,9 @@ struct BasicObject {
     width.update(object.width);
     height.update(object.height);
   }
+  bool contains(vision::object& object){
+    return false;
+  }
 };
 struct ObjectMap {
   CircFieldObject object;
