@@ -13,3 +13,12 @@ Use a basic PID loop to move the robot in straight lines
 Uses line tracker for detection of close objects
 <h2>Distance sensor</h2>
 Kalmanized distance sensor
+<h2>Potentiometer</h2>
+Integrated potentiometer auton selection
+<h1>Brain Screen</h1>
+Has windows loader, data output, auton selector, lvgl 8 ported in
+<h1>Future</h1>
+<h2>Vision</h2>
+EMA Filtering of vision objects
+<h2>LVGL</h2>
+Integrate LVGL into brain screen controls
