@@ -1,7 +1,11 @@
 #ifndef EMA_FILTER_H
 #define EMA_FILTER_H
 #include "vex.h"
-template<class Get_T, class T = Get_T>
+template<class G, class T>
+G converter_def(T val){
+  return val;
+}
+template<class Get_T, class T = Get_T, Get_T (*converter)(T) = converter_def>
 class BasicEMA {
   double alpha;
   T val;
@@ -18,7 +22,7 @@ public:
     oldVal = val;
   }
   Get_T value (){
-    return val;
+    return converter(val);
   }
   operator Get_T(){
     return value();

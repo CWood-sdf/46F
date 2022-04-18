@@ -171,6 +171,10 @@ Discarded input sections
  .group         0x00000000        0xc build/src/main.o
  .group         0x00000000        0xc build/src/main.o
  .group         0x00000000        0xc build/src/main.o
+ .text._Z6toBoold
+                0x00000000       0x20 build/src/main.o
+ .ARM.exidx.text._Z6toBoold
+                0x00000000        0x8 build/src/main.o
  .text._ZlsRSoO3PID
                 0x00000000       0xcc build/src/main.o
  .ARM.exidx.text._ZlsRSoO3PID
