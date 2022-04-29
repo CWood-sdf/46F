@@ -21,6 +21,9 @@ public:
     val = sensorVal * alpha + oldVal * (1 - alpha);
     oldVal = val;
   }
+  T* valPtr(){
+    return &val;
+  }
   Get_T value (){
     return converter(val);
   }
