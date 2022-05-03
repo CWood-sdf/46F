@@ -14,15 +14,15 @@ public:
   BasicEMA(double alpha){
     this->alpha = alpha;
   }
-  BasicEMA(double alpha, T val) : BasicEMA<T, Get_T>(alpha){
-    this->val = val;
+  BasicEMA(double alpha, T val) : BasicEMA<Get_T, T, converter>(alpha){
+    seed(val);
   }
   void update(T sensorVal){
     val = sensorVal * alpha + oldVal * (1 - alpha);
     oldVal = val;
   }
-  T* valPtr(){
-    return &val;
+  T& valRef(){
+    return val;
   }
   Get_T value (){
     return converter(val);
@@ -30,11 +30,17 @@ public:
   operator Get_T(){
     return value();
   }
+  void seed(T value){
+    val = value;
+  }
 };
 class EMA : public BasicEMA<double> {
 public:
   using BasicEMA<double>::value;
   using BasicEMA<double>::update;
+  using BasicEMA<double>::valRef;
+  using BasicEMA<double>:: operator double;
+  using BasicEMA<double>::seed;
   EMA(double a) : BasicEMA<double>(a){
 
   }
