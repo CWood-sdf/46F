@@ -183,6 +183,14 @@ Discarded input sections
                 0x00000000       0xcc build/src/main.o
  .ARM.exidx.text._ZlsRSoR3PID
                 0x00000000        0x8 build/src/main.o
+ .text._ZlsRSoO4PIDF
+                0x00000000       0xec build/src/main.o
+ .ARM.exidx.text._ZlsRSoO4PIDF
+                0x00000000        0x8 build/src/main.o
+ .text._ZlsRSoR4PIDF
+                0x00000000       0xec build/src/main.o
+ .ARM.exidx.text._ZlsRSoR4PIDF
+                0x00000000        0x8 build/src/main.o
  .group         0x00000000        0xc build/src/main.o
  .group         0x00000000        0xc build/src/main.o
  .group         0x00000000        0xc build/src/main.o
