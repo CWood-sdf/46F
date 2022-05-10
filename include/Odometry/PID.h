@@ -18,15 +18,9 @@ public:
   }
 };
 
-class PID_Extension {
-  virtual double newD(double newVal){
-    return newVal;
-  }
-  virtual double newP(double newVal){
-    return newVal;
-  }
-  virtual double addToI(double newVal){
-    return newVal;
+struct PID_Extension {
+  PID_Extension(){
+
   }
   virtual void manageP(double& p){
 
@@ -93,9 +87,16 @@ class PID {
   //Variables
   double target = 0.0, error = 0.0, lastError = 0.0, iCap, iGrowth, iZero;
 public:
+  std::shared_ptr<PID_Extension> manager = std::shared_ptr<PID_Extension>();
   PID(){
 
   }
+  // PID(KVals vals, PID_Extension* mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(vals, iCap, iGrowthRange, iZeroRange){
+  //   manager.reset(mgr);
+  // }
+  // PID(double p, double i, double d, PID_Extension* mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(p, i, d, iCap, iGrowthRange, iZeroRange){
+  //   manager.reset(mgr);
+  // }
   //Constructors
   PID(KVals vals, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : k(vals){
     this->iCap = iCap;
@@ -123,6 +124,7 @@ public:
   }
   //Apply the error
   void incVals(double sensorVal){
+    
     lastError = error;
     error = target - sensorVal;
     p = error;
@@ -136,13 +138,16 @@ public:
       i = 0.0;
     }
     d = error - lastError;
+    manager->manageP(p);
+    manager->manageI(i);
+    manager->manageD(d);
   }
   //Get the speed value given that error has already been applied
   double getVal(){
     double pInc = k.p * p;
     double iInc = k.i * this->i;
     double dInc = k.d * this->d;
-    return pInc + iInc + dInc;
+    return manager->getVal(pInc + iInc + dInc);
   }
   //Apply error, then return getVal()
   double getVal(double sensorVal){
