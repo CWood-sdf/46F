@@ -33,6 +33,10 @@ public:
   void seed(T value){
     val = value;
   }
+  BasicEMA<Get_T>& operator=(const BasicEMA<Get_T>& input){
+    val = input.val;
+    return *this;
+  }
 };
 class EMA : public BasicEMA<double> {
 public:
@@ -41,6 +45,7 @@ public:
   using BasicEMA<double>::valRef;
   using BasicEMA<double>:: operator double;
   using BasicEMA<double>::seed;
+  using BasicEMA<double>::operator=;
   EMA(double a) : BasicEMA<double>(a){
 
   }

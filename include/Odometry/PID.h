@@ -34,8 +34,23 @@ struct PID_Extension {
   virtual double getVal(double ret){
     return ret;
   }
+  virtual PID_Extension* getCopy(){
+    return new PID_Extension(*this);
+  }
+  virtual double manageInput(double in){
+    return in;
+  }
 };
 //Some nice simple math
+/********************************
+                      ____   ___    ______
+ENSURE THAT THERE ARE |   \  | |   |  __  |
+                      | |\ \ | |   | |  | |
+                      | | \ \| |   | |__| |
+                      |_|  \___|   |______|
+NON-DOUBLE TYPE VARIABLES BEFORE THE DOUBLE TYPE VARIABLES 
+    (This is for hacky copy constructor)
+********************************/
 class PID {
   public:
   //The values to multiply the K values by
@@ -87,16 +102,16 @@ class PID {
   //Variables
   double target = 0.0, error = 0.0, lastError = 0.0, iCap, iGrowth, iZero;
 public:
-  std::shared_ptr<PID_Extension> manager = std::shared_ptr<PID_Extension>();
+  std::unique_ptr<PID_Extension> manager = std::unique_ptr<PID_Extension>();
   PID(){
 
   }
-  // PID(KVals vals, PID_Extension* mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(vals, iCap, iGrowthRange, iZeroRange){
-  //   manager.reset(mgr);
-  // }
-  // PID(double p, double i, double d, PID_Extension* mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(p, i, d, iCap, iGrowthRange, iZeroRange){
-  //   manager.reset(mgr);
-  // }
+  PID(KVals vals, PID_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(vals, iCap, iGrowthRange, iZeroRange){
+    manager.reset(&mgr);
+  }
+  PID(double p, double i, double d, PID_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PID(p, i, d, iCap, iGrowthRange, iZeroRange){
+    manager.reset(&mgr);
+  }
   //Constructors
   PID(KVals vals, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : k(vals){
     this->iCap = iCap;
@@ -107,6 +122,15 @@ public:
     this->iCap = iCap;
     iGrowth = iGrowthRange;
     iZero = iZeroRange;
+  }
+  PID(const PID& v){
+    double* doubles = (double*)&v;
+    double* thisPtr = (double*)this;
+    int size = (sizeof(PID) - sizeof(std::shared_ptr<PID_Extension>)) / sizeof(double);
+    for(int i = 0; i < size; i++){
+      thisPtr[i] = doubles[i];
+    }
+    manager.reset(v.manager->getCopy());
   }
   //Get the error
   double getError(){
@@ -126,7 +150,7 @@ public:
   void incVals(double sensorVal){
     
     lastError = error;
-    error = target - sensorVal;
+    error = manager->manageInput(target - sensorVal);
     p = error;
     if(abs(error) <= iGrowth && iGrowth != 0.0){
       i += error;
