@@ -140,9 +140,6 @@ _lv_timer_ll        0xc               build/include/lvgl/src/misc/lv_gc.o
 Discarded input sections
 
  .text          0x00000000        0x0 build/src/main.o
- .text._Z1si    0x00000000        0x4 build/src/main.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/src/main.o
  .text._Z8parseIntISsESsT_
                 0x00000000       0x1c build/src/main.o
  .ARM.exidx.text._Z8parseIntISsESsT_
@@ -352,21 +349,6 @@ Discarded input sections
  .llvm_addrsig  0x00000000       0x96 build/src/main.o
  .llvm_addrsig  0x00000000        0x6 build/src/lv_init.o
  .text          0x00000000        0x0 build/include/Odometry/EPA_Tracker.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Odometry/EPA_Tracker.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
- .text._Z1si    0x00000000        0x4 build/include/Odometry/EPA_Tracker.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Odometry/EPA_Tracker.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Odometry/EPA_Tracker.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Tracker.o
  .text._ZN10Positioner6getPosEv
                 0x00000000       0x24 build/include/Odometry/EPA_Tracker.o
@@ -416,31 +398,8 @@ Discarded input sections
                 0x00000000       0x30 build/include/Odometry/EPA_Tracker.o
  .ARM.exidx.text._ZNSt12_Vector_baseIdSaIdEE11_M_allocateEj
                 0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Odometry/EPA_Tracker.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Odometry/EPA_Tracker.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Odometry/EPA_Tracker.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Odometry/EPA_Tracker.o
- .llvm_addrsig  0x00000000        0x5 build/include/Odometry/EPA_Tracker.o
+ .llvm_addrsig  0x00000000        0x4 build/include/Odometry/EPA_Tracker.o
  .text          0x00000000        0x0 build/include/Odometry/Bezier.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Odometry/Bezier.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Odometry/Bezier.o
- .text._Z1si    0x00000000        0x4 build/include/Odometry/Bezier.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Odometry/Bezier.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Odometry/Bezier.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Odometry/Bezier.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Odometry/Bezier.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Odometry/Bezier.o
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
  .text._ZN9VectorArr3popEi
                 0x00000000       0x14 build/include/Odometry/Bezier.o
@@ -506,35 +465,12 @@ Discarded input sections
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Odometry/Bezier.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Odometry/Bezier.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Odometry/Bezier.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Odometry/Bezier.o
  .bss._ZN15BasicLinkedListI10FieldCoordRS0_PS0_S0_E9emptyNodeE
                 0x00000000       0x38 build/include/Odometry/Bezier.o
  .bss._ZGVN15BasicLinkedListI10FieldCoordRS0_PS0_S0_E9emptyNodeE
                 0x00000000        0x4 build/include/Odometry/Bezier.o
- .llvm_addrsig  0x00000000        0x9 build/include/Odometry/Bezier.o
+ .llvm_addrsig  0x00000000        0x6 build/include/Odometry/Bezier.o
  .text          0x00000000        0x0 build/include/Odometry/EPA_Wheel_Control.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
- .text._Z1si    0x00000000        0x4 build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .text._Z4signd
                 0x00000000       0x24 build/include/Odometry/EPA_Wheel_Control.o
  .ARM.exidx.text._Z4signd
@@ -784,14 +720,6 @@ Discarded input sections
                 0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Odometry/EPA_Wheel_Control.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Odometry/EPA_Wheel_Control.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Odometry/EPA_Wheel_Control.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Odometry/EPA_Wheel_Control.o
  .rodata._ZTV19MechWheelController
                 0x00000000       0x4c build/include/Odometry/EPA_Wheel_Control.o
  .bss._ZN15BasicLinkedListI10FieldCoordRS0_PS0_S0_E9emptyNodeE
@@ -800,23 +728,8 @@ Discarded input sections
                 0x00000000        0x4 build/include/Odometry/EPA_Wheel_Control.o
  .rodata._ZStL19piecewise_construct
                 0x00000000        0x1 build/include/Odometry/EPA_Wheel_Control.o
- .llvm_addrsig  0x00000000       0x26 build/include/Odometry/EPA_Wheel_Control.o
+ .llvm_addrsig  0x00000000       0x1d build/include/Odometry/EPA_Wheel_Control.o
  .text          0x00000000        0x0 build/include/Sensors/PotDial.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Sensors/PotDial.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Sensors/PotDial.o
- .text._Z1si    0x00000000        0x4 build/include/Sensors/PotDial.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Sensors/PotDial.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Sensors/PotDial.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Sensors/PotDial.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Sensors/PotDial.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Sensors/PotDial.o
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
  .text._ZNSt14_Function_baseD2Ev
                 0x00000000       0x30 build/include/Sensors/PotDial.o
@@ -890,14 +803,6 @@ Discarded input sections
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Sensors/PotDial.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Sensors/PotDial.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Sensors/PotDial.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Sensors/PotDial.o
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
  .bss._ZN11SelectorArr7emptyFnE
                 0x00000000       0x10 build/include/Sensors/PotDial.o
@@ -913,23 +818,8 @@ Discarded input sections
                 0x00000000       0x18 build/include/Sensors/PotDial.o
  .bss._ZGVN11SelectorArr5toValE
                 0x00000000        0x4 build/include/Sensors/PotDial.o
- .llvm_addrsig  0x00000000        0xf build/include/Sensors/PotDial.o
+ .llvm_addrsig  0x00000000        0xc build/include/Sensors/PotDial.o
  .text          0x00000000        0x0 build/include/Sensors/Distance.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Sensors/Distance.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Sensors/Distance.o
- .text._Z1si    0x00000000        0x4 build/include/Sensors/Distance.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Sensors/Distance.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Sensors/Distance.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Sensors/Distance.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Sensors/Distance.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Sensors/Distance.o
  .text._ZN8Distance14sensorVarianceEv
                 0x00000000       0x98 build/include/Sensors/Distance.o
  .ARM.exidx.text._ZN8Distance14sensorVarianceEv
@@ -1005,14 +895,6 @@ Discarded input sections
                 0x00000000       0x88 build/include/Sensors/Distance.o
  .ARM.exidx.text._ZN10MatrixBaseIdLh3ELh3EEmiER6MatrixIdLh3ELh3EE
                 0x00000000        0x8 build/include/Sensors/Distance.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Sensors/Distance.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Sensors/Distance.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Sensors/Distance.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Sensors/Distance.o
  .rodata..Lconstinit
                 0x00000000       0x18 build/include/Sensors/Distance.o
  .rodata..Lconstinit.1
@@ -1041,7 +923,7 @@ Discarded input sections
  .group         0x00000000        0x8 build/include/Sensors/Distance.o
  .rodata._ZTISt12length_error
                 0x00000000        0xc build/include/Sensors/Distance.o
- .llvm_addrsig  0x00000000        0xf build/include/Sensors/Distance.o
+ .llvm_addrsig  0x00000000        0xd build/include/Sensors/Distance.o
  .text          0x00000000        0x0 build/include/Sensors/VisionOdom.o
  .comment       0x00000000       0x2e build/include/Sensors/VisionOdom.o
  .note.GNU-stack
@@ -1050,21 +932,6 @@ Discarded input sections
                 0x00000000       0x38 build/include/Sensors/VisionOdom.o
  .llvm_addrsig  0x00000000        0x0 build/include/Sensors/VisionOdom.o
  .text          0x00000000        0x0 build/include/Sensors/LineCounter.o
- .text._Z13windowsLoaderv
-                0x00000000      0x2f0 build/include/Sensors/LineCounter.o
- .ARM.exidx.text._Z13windowsLoaderv
-                0x00000000        0x8 build/include/Sensors/LineCounter.o
- .text._Z1si    0x00000000        0x4 build/include/Sensors/LineCounter.o
- .ARM.exidx.text._Z1si
-                0x00000000        0x8 build/include/Sensors/LineCounter.o
- .text._Z8parseIntISsESsT_
-                0x00000000       0x1c build/include/Sensors/LineCounter.o
- .ARM.exidx.text._Z8parseIntISsESsT_
-                0x00000000        0x8 build/include/Sensors/LineCounter.o
- .text._Z8parseIntIPKcESsT_
-                0x00000000       0x1c build/include/Sensors/LineCounter.o
- .ARM.exidx.text._Z8parseIntIPKcESsT_
-                0x00000000        0x8 build/include/Sensors/LineCounter.o
  .group         0x00000000        0xc build/include/Sensors/LineCounter.o
  .text._ZNSt6vectorIPN3vex6threadESaIS2_EED2Ev
                 0x00000000       0x24 build/include/Sensors/LineCounter.o
@@ -1114,20 +981,12 @@ Discarded input sections
                 0x00000000       0x30 build/include/Sensors/LineCounter.o
  .ARM.exidx.text._ZNSt12_Vector_baseIPN3vex6threadESaIS2_EE11_M_allocateEj
                 0x00000000        0x8 build/include/Sensors/LineCounter.o
- .bss._ZZ13windowsLoadervE3pos
-                0x00000000       0x18 build/include/Sensors/LineCounter.o
- .bss._ZGVZ13windowsLoadervE3pos
-                0x00000000        0x1 build/include/Sensors/LineCounter.o
- .bss._ZZ13windowsLoadervE8velocity
-                0x00000000       0x18 build/include/Sensors/LineCounter.o
- .bss._ZGVZ13windowsLoadervE8velocity
-                0x00000000        0x1 build/include/Sensors/LineCounter.o
  .group         0x00000000        0xc build/include/Sensors/LineCounter.o
  .bss._ZN10KillThread9instancesE
                 0x00000000        0xc build/include/Sensors/LineCounter.o
  .bss._ZGVN10KillThread9instancesE
                 0x00000000        0x4 build/include/Sensors/LineCounter.o
- .llvm_addrsig  0x00000000        0xa build/include/Sensors/LineCounter.o
+ .llvm_addrsig  0x00000000        0x8 build/include/Sensors/LineCounter.o
  .text          0x00000000        0x0 build/include/Sensors/Vision/ObjectMap.o
  .comment       0x00000000       0x2e build/include/Sensors/Vision/ObjectMap.o
  .note.GNU-stack
@@ -5714,58 +5573,59 @@ Linker script and memory map
  .text._Z13windowsLoaderv
                 0x03843a28      0x2f0 build/src/main.o
                 0x03843a28                windowsLoader()
+ .text._Z1si    0x03843d18        0x4 build/src/main.o
+                0x03843d18                s(int)
  .text._ZlsRSoR7PVector
-                0x03843d18       0x6c build/src/main.o
-                0x03843d18                operator<<(std::ostream&, PVector&)
+                0x03843d1c       0x6c build/src/main.o
+                0x03843d1c                operator<<(std::ostream&, PVector&)
  .text._Z5toCcpd
-                0x03843d84      0x260 build/src/main.o
-                0x03843d84                toCcp(double)
+                0x03843d88      0x260 build/src/main.o
+                0x03843d88                toCcp(double)
  .text._ZNSt6vectorIP7PotDialSaIS1_EED2Ev
-                0x03843fe4       0x24 build/src/main.o
-                0x03843fe4                std::vector<PotDial*, std::allocator<PotDial*> >::~vector()
+                0x03843fe8       0x24 build/src/main.o
+                0x03843fe8                std::vector<PotDial*, std::allocator<PotDial*> >::~vector()
  .text._ZNSt3mapISt6vectorIiSaIiEESt8functionIFvvEESt4lessIS2_ESaISt4pairIKS2_S5_EEED2Ev
-                0x03844008       0x1c build/src/main.o
-                0x03844008                std::map<std::vector<int, std::allocator<int> >, std::function<void ()>, std::less<std::vector<int, std::allocator<int> > >, std::allocator<std::pair<std::vector<int, std::allocator<int> > const, std::function<void ()> > > >::~map()
+                0x0384400c       0x1c build/src/main.o
+                0x0384400c                std::map<std::vector<int, std::allocator<int> >, std::function<void ()>, std::less<std::vector<int, std::allocator<int> > >, std::allocator<std::pair<std::vector<int, std::allocator<int> > const, std::function<void ()> > > >::~map()
  .text._ZNSt6vectorIPN3vex6threadESaIS2_EED2Ev
-                0x03844024       0x24 build/src/main.o
-                0x03844024                std::vector<vex::thread*, std::allocator<vex::thread*> >::~vector()
+                0x03844028       0x24 build/src/main.o
+                0x03844028                std::vector<vex::thread*, std::allocator<vex::thread*> >::~vector()
  .text._ZN3vex11motor_groupC2IJNS_5motorES2_EEERS2_DpRT_
-                0x03844048       0x44 build/src/main.o
-                0x03844048                vex::motor_group::motor_group<vex::motor, vex::motor>(vex::motor&, vex::motor&, vex::motor&)
+                0x0384404c       0x44 build/src/main.o
+                0x0384404c                vex::motor_group::motor_group<vex::motor, vex::motor>(vex::motor&, vex::motor&, vex::motor&)
  .text._ZN8NewMotorIN3vex5motorEED2Ev
-                0x0384408c       0x24 build/src/main.o
-                0x0384408c                NewMotor<vex::motor>::~NewMotor()
+                0x03844090       0x24 build/src/main.o
+                0x03844090                NewMotor<vex::motor>::~NewMotor()
  .text._ZN11LineCounterC2ERN3vex7triport4portE
-                0x038440b0       0x90 build/src/main.o
-                0x038440b0                LineCounter::LineCounter(vex::triport::port&)
+                0x038440b4       0x90 build/src/main.o
+                0x038440b4                LineCounter::LineCounter(vex::triport::port&)
  .text._ZNSt6vectorI3RefIN3vex7triport4portEESaIS4_EED2Ev
-                0x03844140       0x24 build/src/main.o
-                0x03844140                std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >::~vector()
+                0x03844144       0x24 build/src/main.o
+                0x03844144                std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >::~vector()
  .text._ZNSt6vectorI3RefIN3vex7triport4portEESaIS4_EEC2ERKS6_
-                0x03844164       0x6c build/src/main.o
-                0x03844164                std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >::vector(std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > > const&)
+                0x03844168       0x6c build/src/main.o
+                0x03844168                std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >::vector(std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > > const&)
  .text._ZNSt6vectorIdSaIdEEC2ESt16initializer_listIdERKS0_
-                0x038441d0       0x58 build/src/main.o
-                0x038441d0                std::vector<double, std::allocator<double> >::vector(std::initializer_list<double>, std::allocator<double> const&)
+                0x038441d4       0x58 build/src/main.o
+                0x038441d4                std::vector<double, std::allocator<double> >::vector(std::initializer_list<double>, std::allocator<double> const&)
  .text._ZN10PositionerC2ESt6vectorI3RefIN3vex7triport4portEESaIS5_EES7_S0_IdSaIdEES9_S9_S9_ddd
-                0x03844228      0x30c build/src/main.o
-                0x03844228                Positioner::Positioner(std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >, std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, double, double, double)
+                0x0384422c      0x30c build/src/main.o
+                0x0384422c                Positioner::Positioner(std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >, std::vector<Ref<vex::triport::port>, std::allocator<Ref<vex::triport::port> > >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, std::vector<double, std::allocator<double> >, double, double, double)
  .text._ZN10PositionerD2Ev
-                0x03844534       0x94 build/src/main.o
-                0x03844534                Positioner::~Positioner()
+                0x03844538       0x94 build/src/main.o
+                0x03844538                Positioner::~Positioner()
  .text._ZN9GPS_ShareD2Ev
-                0x038445c8       0x3c build/src/main.o
-                0x038445c8                GPS_Share::~GPS_Share()
+                0x038445cc       0x3c build/src/main.o
+                0x038445cc                GPS_Share::~GPS_Share()
  .text._ZN16Omni_6ControllerC2ERN3vex5motorES2_S2_S2_S2_S2_R9GPS_Share
-                0x03844604      0x120 build/src/main.o
-                0x03844604                Omni_6Controller::Omni_6Controller(vex::motor&, vex::motor&, vex::motor&, vex::motor&, vex::motor&, vex::motor&, GPS_Share&)
+                0x03844608      0x120 build/src/main.o
+                0x03844608                Omni_6Controller::Omni_6Controller(vex::motor&, vex::motor&, vex::motor&, vex::motor&, vex::motor&, vex::motor&, GPS_Share&)
  .text._ZN20BasicWheelControllerD2Ev
-                0x03844724      0x108 build/src/main.o
-                0x03844724                BasicWheelController::~BasicWheelController()
+                0x03844728      0x108 build/src/main.o
+                0x03844728                BasicWheelController::~BasicWheelController()
  .text._ZNSt10_List_baseISt8functionIFvvEESaIS2_EED2Ev
-                0x0384482c       0x18 build/src/main.o
-                0x0384482c                std::_List_base<std::function<void ()>, std::allocator<std::function<void ()> > >::~_List_base()
- *fill*         0x03844844        0x4 
+                0x03844830       0x18 build/src/main.o
+                0x03844830                std::_List_base<std::function<void ()>, std::allocator<std::function<void ()> > >::~_List_base()
  .text._Z14updateBotAngleb
                 0x03844848      0x258 build/src/main.o
                 0x03844848                updateBotAngle(bool)
@@ -7614,6 +7474,9 @@ Linker script and memory map
                 0x03857a64                __exidx_start = .
  *(.ARM.exidx*)
  .ARM.exidx.text._Z13windowsLoaderv
+                0x03857a6c        0x0 build/src/main.o
+                                  0x8 (size before relaxing)
+ .ARM.exidx.text._Z1si
                 0x03857a6c        0x0 build/src/main.o
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZlsRSoR7PVector
