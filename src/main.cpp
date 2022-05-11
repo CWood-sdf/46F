@@ -271,20 +271,20 @@ void brainOS() {
 }
 //}
 bool init = false;
-struct EMA_PID_Mgr : PID_Extension {
-  EMA dFilter = EMA(0.9, 0);
+// struct EMA_PID_Mgr : PID_Extension {
+//   EMA dFilter = EMA(0.9, 0);
   
-  void manageD(double &d) override {
-    dFilter.update(d);
-    double newValue = dFilter.value();
-    d = newValue;
-  }
-  PID_Extension * getCopy() override {
-    auto ret = new EMA_PID_Mgr();
-    ret->dFilter = this->dFilter;
-    return ret;
-  };
-};
+//   void manageD(double &d) override {
+//     dFilter.update(d);
+//     double newValue = dFilter.value();
+//     d = newValue;
+//   }
+//   PID_Extension * getCopy() override {
+//     auto ret = new EMA_PID_Mgr();
+//     ret->dFilter = this->dFilter;
+//     return ret;
+//   };
+// };
 int main() {
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
