@@ -1,3 +1,19 @@
+/*********************
+ _______   _______  ____    _______
+ |__  __|  | __  |  |   \   | __  |
+   | |     | | | |  | |\ \  | | | |
+   | |     | |_| |  | |/ /  | |_| |
+   |_|     |_____|  |___/   |_____|
+
+  Test all lvgl
+  Finish writing vision util
+  Write flywheel util
+  Look at github and test everything new since states
+  Why this prog so big
+  Test EMA
+  I feel like this will all crash when I run it
+
+**********************/
 //main.cpp
 #include "updaters.h"
 #include "AutonInit/Init.h"
