@@ -1,7 +1,8 @@
 //main.cpp
 #include "updaters.h"
 #include "AutonInit/Init.h"
-#include "BrainOS/Manager.h"
+#include "BrainOS/BotTracker.h"
+#include "lv_conf.h"
 using namespace ClassFns;
 using namespace vex;
 
@@ -189,7 +190,7 @@ void drivercontrol (){
 
 //Brain Drawing Stuff {
 
-void printVars() {
+void printVars(bool) {
   Brain.Screen.waitForRefresh();
   Brain.Screen.clearScreen(black);
   Brain.Screen.setFillColor(black);
@@ -200,19 +201,7 @@ void printVars() {
   Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
   Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
 }
-void displayTilt(){
-  s(100);
-  Brain.Screen.waitForRefresh();
-  Brain.Screen.clearScreen(black);
-  PVector start = PVector(160, 100);
-  PVector v = PVector(0,80);
-  v.rotate(tiltAngle);
-  v += start;
-  Brain.Screen.setFillColor(red);
-  Brain.Screen.drawCircle(start.x, start.y, 5);
-  Brain.Screen.drawCircle(v.x, v.y, 5);
-}
-void drawPath(){
+void drawPath(bool){
   s(100);
   PVector off = PVector(100, 100);
   Brain.Screen.waitForRefresh();
@@ -235,28 +224,44 @@ const color lightGreen = color(100, 255, 100);
 
 const color darkGreen = color(ClrDarkGreen);
 
-
-
+void displayBot(bool);
+#define V5_LVGL_RATE    4
+void  vexTaskSleep( uint32_t time );
 void brainOS() {
   bos::bosFns.push_back(windowsLoader);
-  bos::bosFns.push_back(windowsLoader);
   bos::bosFns.push_back(printVars);
-  bos::bosFns.push_back(displayTilt);
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(Auton::selectAuton);
+  bos::bosFns.push_back(bos::BosFn(displayBot, true));
   
   int state = 0;		
   int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, -30, -30, black, ">");		
+  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   while (1) {		
     if(bos::bosFns.size(0)){
       cout << "bosFns is empty for some reason" << endl;
       break;
     }
-    auto result = bos::bosFns.getCurrent()->call();
+    // this just increments internal counter, may as well put here to simplify
+    lv_tick_inc(V5_LVGL_RATE);
+
+    auto result = bos::bosFns.getCurrent()->call(false);
+    if(bos::bosFns.getCurrent()->lvgl()){
+      lv_task_handler();
+    }
     if(result){
+      if(bos::bosFns.getCurrent()->lvgl()){
+        //Remove all objects
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
+      }
       bos::bosFns.popCurrent();
+      if(bos::bosFns.getCurrent()->lvgl()){
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
     }
     screenLeft.draw();		
     screenRight.draw();	
@@ -266,6 +271,9 @@ void brainOS() {
     else if (screenRight.clicked()) {	
       bos::bosFns.moveCurrentRight();
     }	
+
+    // Allow other tasks to run
+    vex::task::sleep(V5_LVGL_RATE);
     Brain.Screen.waitForRefresh();
   }	
 }

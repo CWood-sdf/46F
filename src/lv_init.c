@@ -46,20 +46,20 @@ touch_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 /*----------------------------------------------------------------------------*/
 /* Task to refresh internal lvgl counters and allow display updates           */
 /*----------------------------------------------------------------------------*/
-#define V5_LVGL_RATE    4
+// #define V5_LVGL_RATE    4
 
-int
-lvgltask() {
-  while(1) {
-      // this just increments internal counter, may as well put here to simplify
-      lv_tick_inc(V5_LVGL_RATE);
-      lv_task_handler();
+// int
+// lvgltask() {
+//   while(1) {
+//       // this just increments internal counter, may as well put here to simplify
+//       lv_tick_inc(V5_LVGL_RATE);
+//       lv_task_handler();
 
-      // Allow other tasks to run
-      vexTaskSleep(V5_LVGL_RATE);
-  }
-  return(0);
-}
+//       // Allow other tasks to run
+//       vexTaskSleep(V5_LVGL_RATE);
+//   }
+//   return(0);
+// }
 
 /*----------------------------------------------------------------------------*/
 /* Initialize lvgl for V5 running VEXcode projects                            */
@@ -107,5 +107,5 @@ v5_lv_init() {
     lv_scr_load(page);
 
     // add the update task
-    vexTaskAdd( lvgltask, 2, "LVGL" );
+    //vexTaskAdd( lvgltask, 2, "LVGL" );
 }

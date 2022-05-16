@@ -1,4 +1,6 @@
 #include "vex.h"
+#ifndef KILL_THREAD_H
+#define KILL_THREAD_H
 struct KillThread {
   static inline vector<thread*> instances;
   thread* t;
@@ -24,3 +26,4 @@ struct KillThread {
     instances.clear();
   }
 };
+#endif

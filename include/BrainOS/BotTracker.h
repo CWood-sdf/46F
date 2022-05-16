@@ -53,7 +53,7 @@ void animCallback(void* a, int32_t param) {
 }
 
 lv_obj_t* glblObj;
-void cool() {
+void displayBot(bool) {
 
     short gridHeight = LV_VER_RES;
     short sixthHeight = (LV_VER_RES / 6);
@@ -180,9 +180,5 @@ void cool() {
     lv_anim_set_values(&anim, 0, 100);
     lv_anim_set_repeat_count(&anim, LV_ANIM_REPEAT_INFINITE);
     lv_anim_start(&anim);
-    /*lv_obj_t* label;
-    lv_obj_t* btnRight = lv_btn_create(lv_scr_act());
-    lv_obj_align(btnRight, LV_ALIGN_BOTTOM_RIGHT, -50, -50);
-    label = lv_label_create(btnRight);
-    lv_label_set_text(label, ">");*/
+
 }

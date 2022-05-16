@@ -64,7 +64,7 @@ public:
     return refList;
   }
   //Returns true when done
-  static inline bool selectAuton(){
+  static inline bool selectAuton(bool remake){
     //Create button list 
     if(buttons.size() == 0 && refList.size() != 0 && !autonSelected){
       int buttonWidthCount = refList.size() - refList.size() / 2;

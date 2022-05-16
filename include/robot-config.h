@@ -1,4 +1,6 @@
 //#include "EPA_Tracker.h"
+#ifndef ROBOT_CONFIG_H
+#define ROBOT_CONFIG_H
 #include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
 #include "Sensors/Distance.h"
@@ -126,3 +128,4 @@ void testMotorConnection(){
 void vexcodeInit(void){
   // wheels.set(hold);
 }
+#endif
