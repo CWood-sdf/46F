@@ -128,7 +128,7 @@ class VisionOdom {
     widthAngle = 56 * DEG_TO_RAD,
     heightAngle = 46 * DEG_TO_RAD, 
     backDist = 0.5 * screenWidth / _tan(widthAngle / 2.0);
-  PVector estimateRelPos(int pixelX, int pixelY){
+  pair<PVector, double> estimateRelPos(int pixelX, int pixelY){
     // cout << object.centerX << ", " << object.centerY << endl;
     PVector ret;
     // cout << (screenHeight / 2.0 - object.centerY) << endl;
@@ -142,12 +142,10 @@ class VisionOdom {
     double dx = h2 * tan(angleX);
     ret = PVector(dx, dy);
     
-    return ret;
+    return {ret, angleX};
   }
   PVector estimatePos(vision::object& object){
-    
-    // cout << object.centerX << ", " << object.centerY << endl;
-    PVector ret = estimateRelPos(object.centerX, object.centerY);
+    PVector ret = estimateRelPos(object.originX, object.originY).first;
     PVector rCopy = relPos;
     ret
       .rotate(mountRotation + share.heading())
@@ -157,11 +155,11 @@ class VisionOdom {
   }
   PVector estimateRelTopMid(vision::object& object){
     
-    PVector ret = estimateRelPos(object.centerX, object.originY);
+    PVector ret = estimateRelPos(object.centerX, object.originY).first;
     return ret;
   }
   PVector estimateRelBtmMid(vision::object& object){
-    PVector ret = estimateRelPos(object.centerX, object.originY + object.height);
+    PVector ret = estimateRelPos(object.centerX, object.originY + object.height).first;
     return ret;
   }
 public:
@@ -208,6 +206,12 @@ public:
       }
     }
     return c;
+  }
+  PVector getEstimatePos(vision::object& object, CircFieldObject& obj){
+    auto topLeft = estimateRelPos(object.originX, object.originY);
+    auto btmRight = estimateRelPos(object.originX + object.width, object.originY + object.height);
+    PVector ret = Refine::getRelPosLocation(topLeft.first, btmRight.first, mountHeight, topLeft.second, btmRight.second, obj);
+    return ret;
   }
   safearray<PVector, VISION_MAX_OBJECTS> fromArr(safearray<vision::object, VISION_MAX_OBJECTS>& arr);
   safearray<PVector, VISION_MAX_OBJECTS> fromMap(ObjectMap& objects);
