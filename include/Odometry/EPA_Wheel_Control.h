@@ -136,6 +136,7 @@ private: // General path follower
   size_t getNearest(VectorArr arr, PVector obj, size_t start);
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg);
+  virtual void ramseteTo(FieldCoord pose);
 public: // Path following implementations
   virtual void followPath(VectorArr arr);
   virtual void backwardsFollow(VectorArr arr);

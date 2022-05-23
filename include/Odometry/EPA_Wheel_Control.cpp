@@ -288,6 +288,9 @@ size_t BasicWheelController::getNearest(VectorArr arr, PVector obj, size_t start
   }
   return i;
 }
+void BasicWheelController::ramseteTo(FieldCoord pose){
+  
+}
 //The beefiest function in this file
 void BasicWheelController::followPath(VectorArr arr, bool isNeg){
   
