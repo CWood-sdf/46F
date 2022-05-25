@@ -43,6 +43,12 @@ class FlywheelTBH {
   double gain = 80;
   Settled velCheck = Settled(100, 100 * 100, 500);
   int target;
+  struct {
+    double error;
+    double measuredVel;
+    double filterVel;
+    double targetVel;
+  } debug;
 public:
   FlywheelTBH(NewMotor<> m, vex::triport::port& p);
   void setTarget(int i);
