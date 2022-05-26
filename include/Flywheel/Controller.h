@@ -2,6 +2,7 @@
 #include "Odometry/PID.h"
 #include <cstdint>
 #include <algorithm>
+
 //Flywheel with TBH control
 class Settled {
   double maxDeriv;
@@ -33,7 +34,31 @@ public:
     return lastTimeStep;
   }
 };
-class FlywheelTBH {
+struct FlywheelDebugLog {
+  double error;
+  double measuredVel;
+  double filterVel;
+  double targetVel;
+  static const int size;
+  void set(double err, double raw, double filtRetVal, double targ){
+    error = err;
+    measuredVel = raw;
+    filterVel = filtRetVal;
+    targetVel = targ;
+  }
+  //Sussy version
+  void set(double arr[size]){
+    for(int i = 0; i < size; i++){
+      ((double*)this)[i] = arr[i];
+    }
+  }
+};
+const int FlywheelDebugLog::size = sizeof(FlywheelDebugLog) / sizeof(double);
+class Empty {
+  public:
+  virtual void step();
+};
+class FlywheelTBH : Empty {
   encoder en;
   NewMotor<> mots;
   EMA filter;
@@ -43,17 +68,13 @@ class FlywheelTBH {
   double gain = 80;
   Settled velCheck = Settled(100, 100 * 100, 500);
   int target;
-  struct {
-    double error;
-    double measuredVel;
-    double filterVel;
-    double targetVel;
-  } debug;
+  FlywheelDebugLog debug;
 public:
   FlywheelTBH(NewMotor<> m, vex::triport::port& p);
   void setTarget(int i);
   void addTarget(double t);
-  void step();
+  void step() override;
+  void graph(bool);
 };
 class EMA_D : public PIDF_Extension {
   EMA dFilter = EMA(0.7, 0);
@@ -63,7 +84,7 @@ public:
     d = dFilter.value();
   }
 };
-class FlywheelPID {
+class FlywheelPID : Empty {
   encoder en;
   NewMotor<> mots;
   EMA filter;
@@ -71,9 +92,11 @@ class FlywheelPID {
   Settled velCheck = Settled(100, 100 * 100, 500);
   EMA_D manager;
   PIDF ctrl = PIDF(0.1, 0.1, 0.1, manager);
+  FlywheelDebugLog debug;
   int target;
 public:
   FlywheelPID(NewMotor<> m, vex::triport::port& p);
   void setTarget(int i);
-  void step();
+  void step() override;
+  void graph(bool);
 };

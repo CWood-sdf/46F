@@ -61,6 +61,7 @@ void FlywheelTBH::step(){
   if(velSent > 100){
     velSent = 100;
   }
+  debug.set(err, speedEst, speed, desiredVel);
   prevErr = err;
   mots.spin(fwd, velSent);
   lastVel = velSent;
@@ -90,6 +91,20 @@ void FlywheelPID::step(){
   double speed = filter.value();
   double err = speed - desiredVel;
   bool settled = velCheck.settled(err);
-
+  debug.set(err, speedEst, speed, desiredVel);
   mots.spin(fwd, ctrl.getVal(err));
+}
+void FlywheelPID::graph(bool remake){
+  static lv_obj_t* chart;
+  static lv_chart_series_t* serTarg;
+  static lv_chart_series_t* serMeas;
+  static lv_chart_series_t* serFilt;
+  static lv_chart_series_t* serErr;
+  if(remake){
+    lv_obj_t* chart = lv_obj_create(lv_scr_act());
+    lv_chart_series_t* serTarg = lv_chart_add_series(chart, lv_color_black(), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_series_t* serMeas = lv_chart_add_series(chart, lv_color_make(255, 0, 0), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_series_t* serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_series_t* serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_SECONDARY_Y);
+  }
 }

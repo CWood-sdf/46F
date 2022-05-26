@@ -255,6 +255,7 @@ void brainOS() {
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, -30, -30, black, ">");		
   lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
+  bos::bosFns.getCurrent()->call(true);
   while (1) {		
     if(bos::bosFns.size(0)){
       cout << "bosFns is empty for some reason" << endl;
