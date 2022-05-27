@@ -1,4 +1,7 @@
+#ifndef PID_H
+#define PID_H
 #include "vex.h"
+
 //PID.h -- use this file for a PID class
 class PIDF;
 //Stores numbers to add to a PID's KVals
@@ -227,4 +230,5 @@ ostream& operator<<(ostream& cout, PIDF& p){
 #else 
 ostream& operator<<(ostream& cout, PIDF&& v);
 ostream& operator<<(ostream& cout, PIDF& p);
+#endif
 #endif

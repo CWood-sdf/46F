@@ -200,7 +200,12 @@ void drivercontrol (){
     
   }
 }
-
+void runFlywheel(){
+  while(1){
+    currentFlywheel->step();
+    s(50);
+  }
+}
 //}
 
 
@@ -249,7 +254,8 @@ void brainOS() {
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(Auton::selectAuton);
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
-  
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   int state = 0;		
   int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
@@ -327,6 +333,8 @@ int main() {
   //WINDOWS LOADER: YEET BURGER
   thread loader = thread(brainOS);
   
+  thread flywheelControl = thread(runFlywheel);
+
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
   

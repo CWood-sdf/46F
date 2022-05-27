@@ -69,13 +69,13 @@ struct FlywheelDebugLog {
   }
 };
 
-const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
+
 class Empty {
   public:
   virtual void step();
 };
-class FlywheelTBH : Empty {
-  encoder en;
+class FlywheelTBH : public Empty {
+  encoder* en;
   NewMotor<> mots;
   EMA filter;
   vector<double> velTargets;
@@ -86,7 +86,7 @@ class FlywheelTBH : Empty {
   int target;
   FlywheelDebugEl debug;
 public:
-  FlywheelTBH(NewMotor<> m, vex::triport::port& p);
+  FlywheelTBH(NewMotor<> m, vex::encoder& e);
   void setTarget(int i);
   void addTarget(double t);
   void step() override;
@@ -100,8 +100,8 @@ public:
     d = dFilter.value();
   }
 };
-class FlywheelPID : Empty {
-  encoder en;
+class FlywheelPID : public Empty {
+  encoder* en;
   NewMotor<> mots;
   EMA filter;
   vector<double> velTargets;
@@ -111,7 +111,7 @@ class FlywheelPID : Empty {
   FlywheelDebugEl debug;
   int target;
 public:
-  FlywheelPID(NewMotor<> m, vex::triport::port& p);
+  FlywheelPID(NewMotor<> m, vex::encoder& e);
   void setTarget(int i);
   void step() override;
   void graph(bool);

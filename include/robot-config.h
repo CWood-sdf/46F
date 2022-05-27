@@ -6,6 +6,7 @@
 #include "Sensors/Distance.h"
 #include "Sensors/VisionOdom.h"
 #include "Odometry/EPA_Wheel_Control.h"
+#include "Flywheel/Controller.h"
 /*************************************
 
 Motors
@@ -27,13 +28,19 @@ motor MR = motor(PORT13, gearSetting::ratio18_1,!true);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
+motor flyWheelMot = motor(PORT13, gearSetting::ratio6_1, true);
 
+encoder flySensor = encoder(Brain.ThreeWirePort.A);
+FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
+FlywheelTBH flyTBH = FlywheelTBH(flyWheelMot, flySensor);
+Empty* currentFlywheel = &flyPID;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 NewMotor<> wheels = NewMotor<>(FL, ML, BL, FR, MR, BR);
 NewMotor<> leftWhls = NewMotor<>(BL, FL, ML);
 NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
+
 /*************************************
 
 Pneumatics
@@ -46,9 +53,7 @@ Pneumatics
 Sensors
 
 *************************************/
-//Front Goal Switch
-LineCounter frontCounter(Brain.ThreeWirePort.C);
-// LineCounter backCounter(Brain.ThreeWirePort.F);
+
 
 //Three wire expander
 triport Expander = triport(PORT9);
@@ -60,14 +65,6 @@ inertial angler = inertial(PORT11);
 gps GPS = gps(PORT18, -6.0, 0.0, inches, -90);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
-
-
-//PotDials
-// PotDial skillsOrSide = PotDial(Brain.ThreeWirePort.C, 3);
-// PotDial centerGoals = PotDial(Brain.ThreeWirePort.D, 4);
-// PotDial autonGoals = PotDial(Brain.ThreeWirePort.E, 2);
-// PotDial::Controller<function<void()>> autonMap = 
-//     PotDial::Controller<function<void()>>(skillsOrSide, centerGoals, autonGoals);
 
 
 /*************************************
@@ -99,7 +96,18 @@ Omni_6Controller wc = Omni_6Controller(BL, BR, FL, FR, ML, MR, share);
 Autonomous System Controllers
 
 *************************************/
-
+void graphFlywheelPID(bool remake){
+  if(remake){
+    currentFlywheel = &flyPID;    
+  }
+  flyPID.graph(remake);
+}
+void graphFlywheelTBH(bool remake){
+  if(remake){
+    currentFlywheel = &flyTBH;
+  }
+  flyTBH.graph(remake);
+}
 
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
 void testMotorConfiguration(){

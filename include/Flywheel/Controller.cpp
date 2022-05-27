@@ -1,6 +1,6 @@
 #define NO_MAKE
 #include "Flywheel/Controller.h"
-
+const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
 void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown) {
   //Create primary container and set padding
   lv_obj_t* keyCont = lv_obj_create(key);
@@ -83,7 +83,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
 void FlywheelTBH::graph(bool remake){
   basicGraph(remake, "TBH ctrl", debug);
 }
-FlywheelTBH::FlywheelTBH(NewMotor<> m, vex::triport::port& p) : en(p), filter(0.7){
+FlywheelTBH::FlywheelTBH(NewMotor<> m, vex::encoder& p) : en(&p), filter(0.7){
   mots = m;
   filter.seed(0);
 }
@@ -108,7 +108,7 @@ void FlywheelTBH::step(){
   bool calcTbh = true;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = en.rotation(rotationUnits::rev);
+  double rotation = en->rotation(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / (double)timeStep * 60.0;
   lastRotation = rotation;
   filter.update(speedEst);
@@ -151,7 +151,7 @@ void FlywheelTBH::step(){
 }
 
 
-FlywheelPID::FlywheelPID(NewMotor<> m, vex::triport::port& p) : en(p), filter(0.7){
+FlywheelPID::FlywheelPID(NewMotor<> m, vex::encoder& p) : en(&p), filter(0.7){
   mots = m;
   filter.seed(0);
 }
@@ -167,7 +167,7 @@ void FlywheelPID::step(){
   static double lastRotation = 0;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = en.rotation(rotationUnits::rev);
+  double rotation = en->rotation(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / (double)timeStep * 60.0;
   lastRotation = rotation;
   filter.update(speedEst);
