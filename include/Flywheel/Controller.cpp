@@ -115,8 +115,9 @@ void FlywheelTBH::step(){
   double speed = filter.value();
   double err = speed - desiredVel;
   bool settled = velCheck.settled(err);
+  //Leave this empty until TBH is working
   if(settled){
-    calcTbh = false;
+    //calcTbh = false;
   }
   if(desiredVel != lastDesiredVel){
     calcTbh = false;

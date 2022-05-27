@@ -3,7 +3,9 @@
 #include <cstdint>
 #include <algorithm>
 
-//Flywheel with TBH control
+//Determines if a flywheel is at the proper velocity
+//Also calculates time between steps so that I don't have to 
+//  Manage it elsewhere in the program
 class Settled {
   double maxDeriv;
   uint32_t lastTime = 0;
