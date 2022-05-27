@@ -362,6 +362,18 @@ Discarded input sections
  .llvm_addrsig  0x00000000       0x9c build/src/main.o
  .llvm_addrsig  0x00000000        0x5 build/src/lv_init.o
  .text          0x00000000        0x0 build/include/Flywheel/Controller.o
+ .text._Z11makeKeyContP9_lv_obj_tPKc12lv_color32_ts
+                0x00000000      0x138 build/include/Flywheel/Controller.o
+ .ARM.exidx.text._Z11makeKeyContP9_lv_obj_tPKc12lv_color32_ts
+                0x00000000        0x8 build/include/Flywheel/Controller.o
+ .text._Z10basicGraphbPKc15FlywheelDebugEl
+                0x00000000      0x2b0 build/include/Flywheel/Controller.o
+ .ARM.exidx.text._Z10basicGraphbPKc15FlywheelDebugEl
+                0x00000000        0x8 build/include/Flywheel/Controller.o
+ .text._ZN11FlywheelTBH5graphEb
+                0x00000000       0x54 build/include/Flywheel/Controller.o
+ .ARM.exidx.text._ZN11FlywheelTBH5graphEb
+                0x00000000        0x8 build/include/Flywheel/Controller.o
  .text._ZN11FlywheelTBHC2E8NewMotorIN3vex5motorEERNS1_7triport4portE
                 0x00000000       0xc0 build/include/Flywheel/Controller.o
  .ARM.exidx.text._ZN11FlywheelTBHC2E8NewMotorIN3vex5motorEERNS1_7triport4portE
@@ -406,7 +418,7 @@ Discarded input sections
  .ARM.exidx.text._ZN11FlywheelPID4stepEv
                 0x00000000        0x8 build/include/Flywheel/Controller.o
  .text._ZN11FlywheelPID5graphEb
-                0x00000000       0xd8 build/include/Flywheel/Controller.o
+                0x00000000       0x54 build/include/Flywheel/Controller.o
  .ARM.exidx.text._ZN11FlywheelPID5graphEb
                 0x00000000        0x8 build/include/Flywheel/Controller.o
  .group         0x00000000        0xc build/include/Flywheel/Controller.o
@@ -487,6 +499,12 @@ Discarded input sections
                 0x00000000        0x8 build/include/Flywheel/Controller.o
  .rodata._ZN15FlywheelDebugEl4sizeE
                 0x00000000        0x4 build/include/Flywheel/Controller.o
+ .bss._ZZ10basicGraphbPKc15FlywheelDebugElE10chartLabel
+                0x00000000        0x4 build/include/Flywheel/Controller.o
+ .bss._ZZ10basicGraphbPKc15FlywheelDebugElE3key
+                0x00000000        0x4 build/include/Flywheel/Controller.o
+ .rodata.str1.1
+                0x00000000       0x41 build/include/Flywheel/Controller.o
  .rodata._ZTV11FlywheelTBH
                 0x00000000        0xc build/include/Flywheel/Controller.o
  .bss._ZZN11FlywheelTBH4stepEvE12lastRotation
@@ -507,9 +525,7 @@ Discarded input sections
  .group         0x00000000        0x8 build/include/Flywheel/Controller.o
  .rodata._ZTV14PIDF_Extension
                 0x00000000       0x20 build/include/Flywheel/Controller.o
- .rodata.str1.1
-                0x00000000       0x1c build/include/Flywheel/Controller.o
- .llvm_addrsig  0x00000000        0x3 build/include/Flywheel/Controller.o
+ .llvm_addrsig  0x00000000        0x4 build/include/Flywheel/Controller.o
  .text          0x00000000        0x0 build/include/Odometry/EPA_Tracker.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Tracker.o
  .text._ZN10Positioner6getPosEv
