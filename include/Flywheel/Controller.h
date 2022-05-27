@@ -34,7 +34,7 @@ public:
     return lastTimeStep;
   }
 };
-struct FlywheelDebugLog {
+struct FlywheelDebugEl {
   double error;
   double measuredVel;
   double filterVel;
@@ -53,7 +53,23 @@ struct FlywheelDebugLog {
     }
   }
 };
-const int FlywheelDebugLog::size = sizeof(FlywheelDebugLog) / sizeof(double);
+struct FlywheelDebugLog {
+  vector<FlywheelDebugEl> arr;
+  void flush(){
+    flushing = true;
+    arr.clear();
+    flushing = false;
+  }
+  bool flushing = false;
+  void add(FlywheelDebugEl el){
+    while(flushing){
+      s(10);
+    }
+    arr.push_back(el);
+  }
+};
+
+const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
 class Empty {
   public:
   virtual void step();
@@ -68,7 +84,7 @@ class FlywheelTBH : Empty {
   double gain = 80;
   Settled velCheck = Settled(100, 100 * 100, 500);
   int target;
-  FlywheelDebugLog debug;
+  FlywheelDebugEl debug;
 public:
   FlywheelTBH(NewMotor<> m, vex::triport::port& p);
   void setTarget(int i);
@@ -92,7 +108,7 @@ class FlywheelPID : Empty {
   Settled velCheck = Settled(100, 100 * 100, 500);
   EMA_D manager;
   PIDF ctrl = PIDF(0.1, 0.1, 0.1, manager);
-  FlywheelDebugLog debug;
+  FlywheelDebugEl debug;
   int target;
 public:
   FlywheelPID(NewMotor<> m, vex::triport::port& p);

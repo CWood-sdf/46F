@@ -105,6 +105,13 @@ void FlywheelPID::graph(bool remake){
     lv_chart_series_t* serTarg = lv_chart_add_series(chart, lv_color_black(), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_series_t* serMeas = lv_chart_add_series(chart, lv_color_make(255, 0, 0), LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_series_t* serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
-    lv_chart_series_t* serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_SECONDARY_Y);
+    lv_chart_series_t* serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_set_point_count(chart, 200);
+    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -100, 1000);
+    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
+    lv_obj_set_size(chart, lv_obj_get_width(lv_scr_act()), lv_obj_get_height(lv_scr_act()));
+    lv_obj_center(chart);
   }
+  FlywheelDebugEl out = debug;
+  //lv_chart_set_next_value(chart, serTarg, out.)
 }
