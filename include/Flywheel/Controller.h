@@ -8,7 +8,7 @@
 //  Manage it elsewhere in the program
 class Settled {
   double maxDeriv;
-  uint32_t lastTime = 0;
+  timer time;
   double maxErr;
   double prevErr;
   double maxSleep = 500;
@@ -20,15 +20,14 @@ public:
     maxSleep = ms;
   }
   bool settled(double err){
-    if(Brain.Timer.system() - lastTime > 1000){
+    if(time.time() > 1000){
       return false;
     }
-    auto time = Brain.Timer.system();
-    if(time < 30){
+    if(time.time() < 30){
       return false;
     }
     lastTimeStep = time;
-    uint32_t timeStep = time - lastTime;
+    uint32_t timeStep = time;
     double deriv = (err - prevErr) / (double)timeStep;
     return deriv < maxDeriv && err < maxErr;
   }

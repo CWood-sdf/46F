@@ -67,6 +67,8 @@ private:
   double distFromCenterX;
   double distFromCenterY;
 
+  timer time;
+
   xEncoderArr EncodersX; // Make the x encoder array
   yEncoderArr EncodersY;
   double lastLeft = 0.0, lastRight = 0.0;
@@ -86,7 +88,6 @@ private:
   //double updates_p_second = 500;
   //double& ups = updates_p_second;
   double speed = 0.0;
-  uint64_t lastTime = Brain.Timer.systemHighResolution();
   //The main functions: constructor, updater...
   Positioner(xDoubleArr mX, yDoubleArr mY, xDoubleArr mNX, yDoubleArr mNY, double cDistX, double cDistY, double rad){
     wheelRad = rad;
@@ -136,7 +137,7 @@ public:
   }
   //Function that updates the position
   //80+ lines of trig, vector math, and some sensor stuff
-  PVector update(bool run, int microSec = 1);
+  PVector update();
   PVector getPos();
   double xPosition(distanceUnits=inches);
   double yPosition(distanceUnits=inches);

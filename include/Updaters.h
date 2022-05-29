@@ -104,7 +104,6 @@ void executeThreads(){
 void updateSharePos(){
   while(1){
     updateBotAngle();
-    positioner.update(false, 10);
     share.update();
   }
 }

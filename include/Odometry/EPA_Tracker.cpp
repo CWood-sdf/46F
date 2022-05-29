@@ -24,7 +24,7 @@ double posNeg180(double ang){
 
 //Function that updates the position
 //80+ lines of trig, vector math, and some sensor stuff
-PVector Positioner::update(bool run, int microSec){
+PVector Positioner::update(){
   static double lostDist = 0.0;
   static PVector last = PVector(1, 1);
   //Vector of the wheel angles
@@ -107,12 +107,8 @@ PVector Positioner::update(bool run, int microSec){
 
   //Get the change in the position
   PVector deltaPos = deltaAngles;
-  if(deltaPos.dist2D() != 0){
-    // cout << "ok" << endl;
-  }
-  //Random velocity stuff
-  double time = microSec * 1.0e-6;
-  speed = deltaPos.dist2D() / time;
+
+  speed = deltaPos.dist2D() / (time.time(seconds));
   pos += deltaPos; // Add deltaPos to pos
   return pos; // Return pos so it can be used
 }
@@ -135,11 +131,11 @@ bool Positioner::moving (){
   //If the velocity is greater than 0.01 in/s or 
   //its been less a second since the last call to clearMove
   return abs(speed) > 0.01 || 
-          Brain.Timer.systemHighResolution() - lastTime < 1e6;
+          time.time(timeUnits::sec) < 1;
 }
 double Positioner::velocity(){
   return speed;
 }
 void Positioner::clearMove(){
-  lastTime = Brain.Timer.systemHighResolution();
+  time.clear();
 }

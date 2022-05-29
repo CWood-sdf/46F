@@ -324,7 +324,6 @@ int main() {
     gyroInit(GPS);
     init = true;
   });
-
   KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently

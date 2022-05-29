@@ -1,7 +1,7 @@
-#include "Odometry/EPA_Tracker.h"
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
-//template <class Odom>
+#include "Odometry/EPA_Tracker.h"
+//Sleeps itself because it is top level odometry math
 class GPS_Share {
   Positioner& odom;
   gps& GPS;
@@ -14,6 +14,8 @@ class GPS_Share {
   bool isFirstBad = false;
   static const int sleepTime = 10;
   static const int badTime = 200;
+  //returns true if it's first call since reading gone bad
+  //Resets when a good reading is obtained
   bool firstBad(){
     if(isFirstBad){
       isFirstBad = false;
@@ -23,6 +25,7 @@ class GPS_Share {
   }
   bool readingBad(){
     FieldCoord startPos = gpsReadings.getBase();
+    //If the last time the readingBad() returned bad, the set the firstBad flag
     if(!lastBad){
       isFirstBad = true;
       lastBad = true;
@@ -58,6 +61,8 @@ public:
     return GPS.quality() != 100 || !GPS.installed();
   }
   void update(){
+    odom.update();
+
     //Get the odometry position
     FieldCoord currentOdom = odom.fullPos();
     

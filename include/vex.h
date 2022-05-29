@@ -50,6 +50,8 @@ extern controller Beethoven;
 
 #endif
 
+#define V5_SENSOR_REFRESH 10 /*msec*/
+
 #include "lvgl_inc.h"
 //Include my epicly epic background files
 #define BASE BASE_FILE
