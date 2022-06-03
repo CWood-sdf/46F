@@ -79,7 +79,7 @@ class FlywheelTBH : public Empty {
   encoder* en;
   NewMotor<> mots;
   EMA filter;
-  vector<double> velTargets;
+  vector<double> velTargets = {50};
   vector<double> initialTbh;
   double tbh = 0;
   double gain = 80;
@@ -105,12 +105,12 @@ class FlywheelPID : public Empty {
   encoder* en;
   NewMotor<> mots;
   EMA filter;
-  vector<double> velTargets;
+  vector<double> velTargets = {10};
   Settled velCheck = Settled(100, 100 * 100, 500);
   EMA_D manager;
   PIDF ctrl = PIDF(0.1, 0.1, 0.1, manager);
   FlywheelDebugEl debug;
-  int target;
+  int target = 0;
 public:
   FlywheelPID(NewMotor<> m, vex::encoder& e);
   void setTarget(int i);

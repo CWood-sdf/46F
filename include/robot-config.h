@@ -33,7 +33,7 @@ motor flyWheelMot = motor(PORT13, gearSetting::ratio6_1, true);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
 FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
 FlywheelTBH flyTBH = FlywheelTBH(flyWheelMot, flySensor);
-Empty* currentFlywheel = &flyPID;
+bool flywheelPID = false;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
@@ -98,13 +98,13 @@ Autonomous System Controllers
 *************************************/
 void graphFlywheelPID(bool remake){
   if(remake){
-    currentFlywheel = &flyPID;    
+    flywheelPID = true;
   }
   flyPID.graph(remake);
 }
 void graphFlywheelTBH(bool remake){
   if(remake){
-    currentFlywheel = &flyTBH;
+    flywheelPID = false;
   }
   flyTBH.graph(remake);
 }

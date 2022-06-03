@@ -69,12 +69,13 @@ public:
     if(buttons.size() == 0 && refList.size() != 0 && !autonSelected){
       int buttonWidthCount = refList.size() - refList.size() / 2;
       bool isOddCount = refList.size() % 2 == 1;
-      double buttonWidth = (double)buttonWidthCount / (double)BRAIN_WIDTH;
+      double buttonWidth = (double)BRAIN_WIDTH / (double)buttonWidthCount;
       double buttonHeight = (double)BRAIN_HEIGHT / 2.0;
       for(int i = 0; i < refList.size(); i++){
         buttons.push_back(new Button(Brain, (i / 2) * buttonWidth, (i % 2) * buttonHeight, buttonWidth, buttonHeight, vex::blue, vex::purple, refList[i]->name, -30, -30));
       }
     }
+    Brain.Screen.clearScreen(black);
     if(!autonSelected){
       for(int i = 0; i < buttons.size(); i++){
         buttons[i]->draw();

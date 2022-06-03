@@ -14,6 +14,7 @@
   I feel like this will all crash when I run it
 
 **********************/
+
 //main.cpp
 #include "updaters.h"
 #include "AutonInit/Init.h"
@@ -24,7 +25,7 @@ using namespace vex;
 
 competition Competition;//
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
-bool isPressing(controller::button& btn){
+bool isPressing(const controller::button& btn){
   if(btn.pressing()){
     while(btn.pressing()){
       s(10);
@@ -35,7 +36,7 @@ bool isPressing(controller::button& btn){
   return false;
 }
 //Similar to isPressing(controller::button&), but only does it if a joystick axis is going in a certain direction
-bool isPressing(controller::axis& joystick, int mult){
+bool isPressing(const controller::axis& joystick, int mult){
   if(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
     while(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
       s(10);
@@ -132,9 +133,9 @@ class ButtonLatch {
   bool isPressing = false;
   int state = 0;
   int stateLim;
-  controller::button& b;
+  const controller::button& b;
 public:
-  ButtonLatch(controller::button& b, int stateLim = 2) : stateLim(stateLim), b(b){
+  ButtonLatch(const controller::button& b, int stateLim = 2) : stateLim(stateLim), b(b){
 
   }
   ButtonLatch() = delete;
@@ -202,7 +203,12 @@ void drivercontrol (){
 }
 void runFlywheel(){
   while(1){
-    currentFlywheel->step();
+    if(flywheelPID){
+      flyPID.step();
+    }
+    else {
+      flyTBH.step();
+    }
     s(50);
   }
 }
@@ -248,19 +254,24 @@ const color darkGreen = color(ClrDarkGreen);
 void displayBot(bool);
 #define V5_LVGL_RATE    4
 void  vexTaskSleep( uint32_t time );
+bool init = false;
 void brainOS() {
+  while(!init){
+
+  }
   bos::bosFns.push_back(windowsLoader);
+  
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.push_back(printVars);
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(Auton::selectAuton);
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   int state = 0;		
   int maxState = 3; 
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, -30, -30, black, "<");		
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, -30, -30, black, ">");		
-  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
+  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<");		
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">");		
+  //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
   while (1) {		
     if(bos::bosFns.size(0)){
@@ -277,8 +288,8 @@ void brainOS() {
     if(result){
       if(bos::bosFns.getCurrent()->lvgl()){
         //Remove all objects
-        lv_obj_clean(lv_scr_act());
-        lv_anim_del_all();
+        //lv_obj_clean(lv_scr_act());
+        //lv_anim_del_all();
       }
       bos::bosFns.popCurrent();
       if(bos::bosFns.getCurrent()->lvgl()){
@@ -289,10 +300,32 @@ void brainOS() {
     screenLeft.draw();		
     screenRight.draw();	
     if (screenLeft.clicked()) {	
+      if(bos::bosFns.getCurrent()->lvgl()){
+        //Remove all objects
+        //lv_obj_clean(lv_scr_act());
+        //lv_anim_del_all();
+      }
+      auto oldPtr = &bos::bosFns.getCurrent();
       bos::bosFns.moveCurrentLeft();
+      auto newPtr = &bos::bosFns.getCurrent();
+      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
     }	
     else if (screenRight.clicked()) {	
+      if(bos::bosFns.getCurrent()->lvgl()){
+        //Remove all objects
+        //lv_obj_clean(lv_scr_act());
+        //lv_anim_del_all();
+      }
+      auto oldPtr = &bos::bosFns.getCurrent();
       bos::bosFns.moveCurrentRight();
+      auto newPtr = &bos::bosFns.getCurrent();
+      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
     }	
 
     // Allow other tasks to run
@@ -301,7 +334,7 @@ void brainOS() {
   }	
 }
 //}
-bool init = false;
+
 // struct EMA_PID_Mgr : PID_Extension {
 //   EMA dFilter = EMA(0.9, 0);
   
@@ -324,18 +357,24 @@ int main() {
     gyroInit(GPS);
     init = true;
   });
-  KillThread gpsUpdate = thread(updateSharePos);
+  //KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
-  KillThread otherThreads = thread(executeThreads);
+  //KillThread otherThreads = thread(executeThreads);
 
   //WINDOWS LOADER: YEET BURGER
-  thread loader = thread(brainOS);
+  //thread loader = thread(brainOS);
   
-  thread flywheelControl = thread(runFlywheel);
-
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(drivercontrol);
+  //thread flywheelControl = thread(runFlywheel);
+  
+  s(1000);
+  cout << "Ok" << endl;
+  lv_obj_t* ok;
+  ok = lv_obj_create(lv_scr_act());
+  lv_obj_set_style_bg_color(ok, lv_color_make(255, 0, 0), 0);
+  lv_obj_set_size(ok, 100, 100);
+  //Competition.autonomous(autonomous);
+  //Competition.drivercontrol(drivercontrol);
   
   //Prevent main from exiting
   while(1){

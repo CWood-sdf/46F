@@ -1,6 +1,8 @@
 #include "v5.h"
 #include "lv_conf.h"
 #include "lvgl_inc.h"
+#include "stdio.h"
+//#include <iostream>
 
 // necessary private V5 API functions
 void  vexTaskAdd( int (* callback)(void), int interval, char const *label );
@@ -46,20 +48,24 @@ touch_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 /*----------------------------------------------------------------------------*/
 /* Task to refresh internal lvgl counters and allow display updates           */
 /*----------------------------------------------------------------------------*/
-// #define V5_LVGL_RATE    4
+#define V5_LVGL_RATE    4
 
-// int
-// lvgltask() {
-//   while(1) {
-//       // this just increments internal counter, may as well put here to simplify
-//       lv_tick_inc(V5_LVGL_RATE);
-//       lv_task_handler();
+int
+lvgltask() {
+  int i = 0;
+  while(1) {
+      // this just increments internal counter, may as well put here to simplify
+      lv_tick_inc(V5_LVGL_RATE);
+      lv_task_handler();
 
-//       // Allow other tasks to run
-//       vexTaskSleep(V5_LVGL_RATE);
-//   }
-//   return(0);
-// }
+      // Allow other tasks to run
+      vexTaskSleep(V5_LVGL_RATE);
+      i++;
+      if(i % 250 == 0)
+        printf("ok\r\n");
+  }
+  return(0);
+}
 
 /*----------------------------------------------------------------------------*/
 /* Initialize lvgl for V5 running VEXcode projects                            */
@@ -79,7 +85,7 @@ v5_lv_init() {
     lv_disp_draw_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * LV_VER_RES_MAX);
 
     // create display driver
-    lv_disp_drv_t disp_drv;
+    static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
     
     // Set the resolution of the display
@@ -92,20 +98,21 @@ v5_lv_init() {
     // Set a display buffer
     disp_drv.draw_buf = &disp_buf_2;
 
+    static lv_disp_t* disp;
     // register the driver
-    lv_disp_drv_register(&disp_drv);
+    disp = lv_disp_drv_register(&disp_drv);
 
     // touch screen input
-    lv_indev_drv_t indev_drv;
+    static lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = touch_read;
     lv_indev_drv_register(&indev_drv);
 
     lv_obj_t* page = lv_obj_create(NULL);
-    lv_obj_set_size(page, 480, 240);
+    lv_obj_set_size(page, 400, 200);
     lv_scr_load(page);
 
     // add the update task
-    //vexTaskAdd( lvgltask, 2, "LVGL" );
+    vexTaskAdd( lvgltask, 2, "LVGL" );
 }

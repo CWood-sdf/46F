@@ -97,11 +97,11 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
 
     /*Run all timer from the list*/
     lv_timer_t * next;
-    do {
+    //do {
         timer_deleted             = false;
         timer_created             = false;
         LV_GC_ROOT(_lv_timer_act) = _lv_ll_get_head(&LV_GC_ROOT(_lv_timer_ll));
-        while(LV_GC_ROOT(_lv_timer_act)) {
+        //while(LV_GC_ROOT(_lv_timer_act)) {
             /*The timer might be deleted if it runs only once ('repeat_count = 1')
              *So get next element until the current is surely valid*/
             next = _lv_ll_get_next(&LV_GC_ROOT(_lv_timer_ll), LV_GC_ROOT(_lv_timer_act));
@@ -110,17 +110,17 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
                 /*If a timer was created or deleted then this or the next item might be corrupted*/
                 if(timer_created || timer_deleted) {
                     TIMER_TRACE("Start from the first timer again because a timer was created or deleted");
-                    break;
+                    //break;
                 }
             }
 
             LV_GC_ROOT(_lv_timer_act) = next; /*Load the next timer*/
-        }
-    } while(LV_GC_ROOT(_lv_timer_act));
+        //}
+    //} while(LV_GC_ROOT(_lv_timer_act));
 
     uint32_t time_till_next = LV_NO_TIMER_READY;
     next = _lv_ll_get_head(&LV_GC_ROOT(_lv_timer_ll));
-    while(next) {
+    //while(next) {
         if(!next->paused) {
             uint32_t delay = lv_timer_time_remaining(next);
             if(delay < time_till_next)
@@ -128,7 +128,7 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
         }
 
         next = _lv_ll_get_next(&LV_GC_ROOT(_lv_timer_ll), next); /*Find the next timer*/
-    }
+    //}
 
     busy_time += lv_tick_elaps(handler_start);
     uint32_t idle_period_time = lv_tick_elaps(idle_period_start);

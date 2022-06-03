@@ -41,44 +41,45 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
   static lv_obj_t* chartLabel;
   static lv_obj_t* key;
   if(remake){
-    //Make the chart
-    lv_obj_t* chart = lv_obj_create(lv_scr_act());
-    lv_chart_set_point_count(chart, 200);
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -100, 1000);
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
-    lv_obj_set_size(chart, BRAIN_WIDTH - 10, BRAIN_HEIGHT - 10);
-    lv_obj_center(chart);
+    // //Make the chart
+    // lv_obj_t* chart = lv_obj_create(lv_scr_act());
+    // lv_chart_set_point_count(chart, 200);
+    // lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -100, 1000);
+    // lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
+    // lv_obj_set_size(chart, BRAIN_WIDTH - 10, BRAIN_HEIGHT - 10);
+    // lv_obj_center(chart);
 
-    //Make the series
-    lv_chart_series_t* serTarg = lv_chart_add_series(chart, lv_color_black(), LV_CHART_AXIS_PRIMARY_Y);
-    lv_chart_series_t* serMeas = lv_chart_add_series(chart, lv_color_make(255, 0, 0), LV_CHART_AXIS_PRIMARY_Y);
-    lv_chart_series_t* serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
-    lv_chart_series_t* serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_PRIMARY_Y);
+    // //Make the series
+    // lv_chart_series_t* serTarg = lv_chart_add_series(chart, lv_color_black(), LV_CHART_AXIS_PRIMARY_Y);
+    // lv_chart_series_t* serMeas = lv_chart_add_series(chart, lv_color_make(255, 0, 0), LV_CHART_AXIS_PRIMARY_Y);
+    // lv_chart_series_t* serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
+    // lv_chart_series_t* serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_PRIMARY_Y);
 
-    //Make the label
-    chartLabel = lv_label_create(chart);
-    lv_label_set_text(chartLabel, text);
+    // //Make the label
+    // chartLabel = lv_label_create(chart);
+    // lv_label_set_text(chartLabel, text);
 
-    //Make the key bounding box
-    key = lv_obj_create(chart);
-    lv_obj_set_align(key, LV_ALIGN_BOTTOM_RIGHT);
-    lv_obj_set_style_bg_color(key, lv_color_make(200, 200, 200), 0);
-    lv_obj_set_style_pad_all(key, 0, 0);
-    lv_obj_set_content_height(key, 100);
-    lv_obj_set_content_width(key, 80);
-    lv_obj_set_style_bg_opa(key, 0, 0);
-    lv_obj_set_style_border_opa(key, 0, 0);
+    // //Make the key bounding box
+    // key = lv_obj_create(chart);
+    // lv_obj_set_align(key, LV_ALIGN_BOTTOM_RIGHT);
+    // lv_obj_set_style_bg_color(key, lv_color_make(200, 200, 200), 0);
+    // lv_obj_set_style_pad_all(key, 0, 0);
+    // lv_obj_set_content_height(key, 100);
+    // lv_obj_set_content_width(key, 80);
+    // lv_obj_set_style_bg_opa(key, 0, 0);
+    // lv_obj_set_style_border_opa(key, 0, 0);
 
-    //Make the key elements
-    makeKeyCont(key, "Err", serErr->color, 0);
-    makeKeyCont(key, "Targ", serTarg->color, 20);
-    makeKeyCont(key, "meas", serMeas->color, 40);
-    makeKeyCont(key, "Filt", serFilt->color, 60);
+    // //Make the key elements
+    // makeKeyCont(key, "Err", serErr->color, 0);
+    // makeKeyCont(key, "Targ", serTarg->color, 20);
+    // makeKeyCont(key, "meas", serMeas->color, 40);
+    // makeKeyCont(key, "Filt", serFilt->color, 60);
+    cout << remake << endl;
   }
-  lv_chart_set_next_value(chart, serTarg, out.targetVel);
-  lv_chart_set_next_value(chart, serErr, out.error);
-  lv_chart_set_next_value(chart, serMeas, out.measuredVel);
-  lv_chart_set_next_value(chart, serFilt, out.filterVel);
+  //lv_chart_set_next_value(chart, serTarg, out.targetVel);
+  // lv_chart_set_next_value(chart, serErr, out.error);
+  // lv_chart_set_next_value(chart, serMeas, out.measuredVel);
+  // lv_chart_set_next_value(chart, serFilt, out.filterVel);
 }
 void FlywheelTBH::graph(bool remake){
   basicGraph(remake, "TBH ctrl", debug);
@@ -108,7 +109,7 @@ void FlywheelTBH::step(){
   bool calcTbh = true;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = en->rotation(rotationUnits::rev);
+  double rotation = mots[0].rotation(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / (double)timeStep * 60.0;
   lastRotation = rotation;
   filter.update(speedEst);
@@ -168,7 +169,7 @@ void FlywheelPID::step(){
   static double lastRotation = 0;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = en->rotation(rotationUnits::rev);
+  double rotation = mots[0].rotation(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / (double)timeStep * 60.0;
   lastRotation = rotation;
   filter.update(speedEst);
