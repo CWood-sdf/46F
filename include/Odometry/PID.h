@@ -110,7 +110,7 @@ class PIDF {
   //Variables
   double target = 0.0, error = 0.0, lastError = 0.0, iCap = 0.0, iGrowth = 0.0, iZero = 0.0;
 public:
-  std::unique_ptr<PIDF_Extension> manager = std::unique_ptr<PIDF_Extension>();
+  std::shared_ptr<PIDF_Extension> manager = std::shared_ptr<PIDF_Extension>();
   PIDF(){
 
   }
@@ -152,6 +152,11 @@ public:
     }
     manager.reset(v.manager->getCopy());
   }
+  PIDF& operator=(PIDF&& s){
+    k = s.k;
+    manager = s.manager;
+    return *this;
+  }
   //Get the error
   double getError(){
     return error;
@@ -175,7 +180,7 @@ public:
     if(abs(error) <= iGrowth && iGrowth != 0.0){
       i += error;
     }
-    if(i > iCap && iCap != 0.0){
+    if(abs(i) > abs(iCap) && abs(iCap) > 1.0){
       i = iCap;
     }
     if(abs(error) <= iZero && iZero != 0.0){

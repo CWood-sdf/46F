@@ -293,7 +293,8 @@ void BasicWheelController::ramseteTo(FieldCoord pose){
 }
 //The beefiest function in this file
 void BasicWheelController::followPath(VectorArr arr, bool isNeg){
-  
+  cout << "cosdf" << endl;
+  s(1000);
   double purePursuitDist = 16.0; // Distance to pure pursuit target
   VectorArr bezier;
 
@@ -306,6 +307,8 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
       a *= -1.0;
     }
   }
+  cout << "cosdffsdf" << endl;
+  s(1000);
   auto arrCopy = arr;
   
   //Simple initialization and turn to first point
@@ -336,6 +339,8 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
     afterTurn();
     afterTurn = [](){};
   }
+  cout << "csdfafadfosdf" << endl;
+  s(1000);
   //Remake bezier, get curvatures, set target speeds
   vector<double> targetSpeeds;
   {

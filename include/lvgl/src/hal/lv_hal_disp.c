@@ -22,7 +22,7 @@
 #include "../draw/sdl/lv_draw_sdl.h"
 #include "../draw/stm32_dma2d/lv_gpu_stm32_dma2d.h"
 #include "../draw/arm2d/lv_gpu_arm2d.h"
-
+#include "stdio.h"
 #if LV_USE_THEME_DEFAULT
     #include "../extra/themes/default/lv_theme_default.h"
 #endif

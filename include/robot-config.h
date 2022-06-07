@@ -13,17 +13,17 @@ Motors
 
 *************************************/
 //Front Left Wheel (FL)
-motor FL = motor(PORT12,gearSetting::ratio18_1,!false);
+motor FL = motor(PORT1,gearSetting::ratio18_1,true);
 //Front Right Wheel (FR)
-motor FR = motor(PORT19, gearSetting::ratio18_1,!true);
+motor FR = motor(PORT5, gearSetting::ratio18_1,false);
 //Back Left Wheel (BL)
-motor BL = motor(PORT16, gearSetting::ratio18_1,!false);
+motor BL = motor(PORT3, gearSetting::ratio18_1,true);
 //Back Right Wheel (BR)
-motor BR = motor(PORT9, gearSetting::ratio18_1,!true);
+motor BR = motor(PORT9, gearSetting::ratio18_1,false);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT14, gearSetting::ratio18_1,!false);
+motor ML = motor(PORT2, gearSetting::ratio18_1,true);
 //Middle Right Wheel (MR)
-motor MR = motor(PORT13, gearSetting::ratio18_1,!true);
+motor MR = motor(PORT8, gearSetting::ratio18_1,false);
 
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
@@ -62,7 +62,7 @@ triport Expander = triport(PORT9);
 inertial angler = inertial(PORT11);
 
 //gps
-gps GPS = gps(PORT18, -6.0, 0.0, inches, -90);
+gps GPS = gps(PORT10, -6.0, 0.0, inches, -90);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 

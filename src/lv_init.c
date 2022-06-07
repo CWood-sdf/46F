@@ -26,7 +26,7 @@ disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_
 /* Return false if no more data read; true for ready again                    */
 /*----------------------------------------------------------------------------*/
 //
-static bool
+static void
 touch_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 {
   V5_TouchStatus status;
@@ -42,7 +42,7 @@ touch_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
   data->point.y = status.lastYpos;
 
   // false: no more data to read because we are not buffering
-  return false;   
+  //return false;   
 }
 
 /*----------------------------------------------------------------------------*/
@@ -60,9 +60,7 @@ lvgltask() {
 
       // Allow other tasks to run
       vexTaskSleep(V5_LVGL_RATE);
-      i++;
-      if(i % 250 == 0)
-        printf("ok\r\n");
+      
   }
   return(0);
 }
@@ -84,6 +82,7 @@ v5_lv_init() {
     // Initialize the display buffer
     lv_disp_draw_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * LV_VER_RES_MAX);
 
+    
     // create display driver
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
@@ -114,5 +113,5 @@ v5_lv_init() {
     lv_scr_load(page);
 
     // add the update task
-    vexTaskAdd( lvgltask, 2, "LVGL" );
+    //vexTaskAdd( lvgltask, 2, "LVGL" );
 }

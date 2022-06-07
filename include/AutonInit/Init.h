@@ -113,6 +113,9 @@ public:
     potGet.attachFn(fn);
     return *this;
   }
+  static bool isDone(){
+    return ready;
+  }
 };
 Auton operator "" _afn(const char* s){
   return Auton(s, [](){});

@@ -20,16 +20,17 @@ public:
     maxSleep = ms;
   }
   bool settled(double err){
-    if(time.time() > 1000){
-      return false;
-    }
-    if(time.time() < 30){
-      return false;
-    }
     lastTimeStep = time;
     uint32_t timeStep = time;
+    time.reset();
     double deriv = (err - prevErr) / (double)timeStep;
-    return deriv < maxDeriv && err < maxErr;
+    if(timeStep > 1000){
+      return false;
+    }
+    if(timeStep < 30){
+      return false;
+    }
+    return abs(deriv) < maxDeriv && abs(err) < maxErr;
   }
   uint32_t timeStep(){
     return lastTimeStep;
@@ -77,43 +78,47 @@ class Empty {
 };
 class FlywheelTBH : public Empty {
   encoder* en;
-  NewMotor<> mots;
-  EMA filter;
-  vector<double> velTargets = {50};
-  vector<double> initialTbh;
+  motor& mots;
+  EMA filter = EMA(0.01, 0);
+  vector<double> velTargets = {600};
+  vector<double> initialTbh = {10};
   double tbh = 0;
-  double gain = 80;
-  Settled velCheck = Settled(100, 100 * 100, 500);
+  double gain;
+  Settled velCheck = Settled(10, 10, 500);
   int target;
+  double maxRateDrop = 5;
+  double maxRateGain = 2;
   FlywheelDebugEl debug;
 public:
-  FlywheelTBH(NewMotor<> m, vex::encoder& e);
+  FlywheelTBH(motor& m, vex::encoder& e);
   void setTarget(int i);
   void addTarget(double t);
   void step() override;
   void graph(bool);
+  void init();
 };
 class EMA_D : public PIDF_Extension {
   EMA dFilter = EMA(0.7, 0);
 public:
   void manageD(double &d) override {
     dFilter.update(d);
-    d = dFilter.value();
+    //d = dFilter.value();
   }
 };
 class FlywheelPID : public Empty {
   encoder* en;
-  NewMotor<> mots;
-  EMA filter;
-  vector<double> velTargets = {10};
+  motor& mots;
+  EMA filter = EMA(0.1, 0);
+  vector<double> velTargets = {100};
   Settled velCheck = Settled(100, 100 * 100, 500);
   EMA_D manager;
-  PIDF ctrl = PIDF(0.1, 0.1, 0.1, manager);
+  PIDF ctrl;
   FlywheelDebugEl debug;
   int target = 0;
 public:
-  FlywheelPID(NewMotor<> m, vex::encoder& e);
+  FlywheelPID(motor& m, vex::encoder& e);
   void setTarget(int i);
   void step() override;
   void graph(bool);
+  void initPID();
 };

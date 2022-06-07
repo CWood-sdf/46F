@@ -111,11 +111,17 @@ Auton leftA = "Left" + [](){
 Auton rightA = "Right" + [](){
   cout << "r" << endl;
 };
+Auton coolA = "Cool" + [](){
+  cout << "cool" << endl;
+};
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;
 }
 void autonomous(){
+  while(!Auton::isDone()){
+    s(100);
+  }
   //Auton timer system, used in testing
   auto startTime = Brain.Timer.system();
   autonInit();
@@ -202,12 +208,28 @@ void drivercontrol (){
   }
 }
 void runFlywheel(){
+  flyPID.setTarget(0);
+  flyTBH.setTarget(0);
+  timer ok;
+  int count = 0;
   while(1){
     if(flywheelPID){
       flyPID.step();
     }
     else {
       flyTBH.step();
+    }
+    if(ok > 10000 && count == 1){
+      flyTBH.addTarget(500);
+      flyTBH.setTarget(2);
+      count++;
+      ok.reset();
+    }
+    if(ok > 20000 && count == 0){
+      flyTBH.addTarget(300);
+      flyTBH.setTarget(1);
+      ok.reset();
+      count++;
     }
     s(50);
   }
@@ -259,10 +281,10 @@ void brainOS() {
   while(!init){
 
   }
-  bos::bosFns.push_back(windowsLoader);
   
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
   bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
+  bos::bosFns.push_back(windowsLoader);
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
   bos::bosFns.push_back(printVars);
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(Auton::selectAuton);
@@ -278,21 +300,22 @@ void brainOS() {
       cout << "bosFns is empty for some reason" << endl;
       break;
     }
-    // this just increments internal counter, may as well put here to simplify
-    lv_tick_inc(V5_LVGL_RATE);
 
     auto result = bos::bosFns.getCurrent()->call(false);
     if(bos::bosFns.getCurrent()->lvgl()){
+      lv_tick_inc(V5_LVGL_RATE);
       lv_task_handler();
     }
     if(result){
       if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
         //Remove all objects
-        //lv_obj_clean(lv_scr_act());
-        //lv_anim_del_all();
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
       }
       bos::bosFns.popCurrent();
       if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "remake" << endl;
         //Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
@@ -301,28 +324,32 @@ void brainOS() {
     screenRight.draw();	
     if (screenLeft.clicked()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
         //Remove all objects
-        //lv_obj_clean(lv_scr_act());
-        //lv_anim_del_all();
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
       }
       auto oldPtr = &bos::bosFns.getCurrent();
       bos::bosFns.moveCurrentLeft();
       auto newPtr = &bos::bosFns.getCurrent();
       if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        cout << "remake" << endl;
         //Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
     }	
     else if (screenRight.clicked()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
         //Remove all objects
-        //lv_obj_clean(lv_scr_act());
-        //lv_anim_del_all();
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
       }
       auto oldPtr = &bos::bosFns.getCurrent();
       bos::bosFns.moveCurrentRight();
       auto newPtr = &bos::bosFns.getCurrent();
       if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        cout << "remake" << endl;
         //Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
@@ -357,24 +384,19 @@ int main() {
     gyroInit(GPS);
     init = true;
   });
-  //KillThread gpsUpdate = thread(updateSharePos);
+  KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
-  //KillThread otherThreads = thread(executeThreads);
+  KillThread otherThreads = thread(executeThreads);
 
   //WINDOWS LOADER: YEET BURGER
-  //thread loader = thread(brainOS);
-  
-  //thread flywheelControl = thread(runFlywheel);
-  
+  thread loader = thread(brainOS);
   s(1000);
-  cout << "Ok" << endl;
-  lv_obj_t* ok;
-  ok = lv_obj_create(lv_scr_act());
-  lv_obj_set_style_bg_color(ok, lv_color_make(255, 0, 0), 0);
-  lv_obj_set_size(ok, 100, 100);
-  //Competition.autonomous(autonomous);
-  //Competition.drivercontrol(drivercontrol);
+  wc.followPath({PVector(-48.0, 0.0), PVector(-48.0, 48.0)});
+  // thread flywheelControl = thread(runFlywheel);
+  //autonomous();
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
   
   //Prevent main from exiting
   while(1){

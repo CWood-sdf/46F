@@ -11,6 +11,7 @@
 #include "lv_mem.h"
 #include "lv_ll.h"
 #include "lv_gc.h"
+#include "stdio.h"
 
 /*********************
  *      DEFINES
@@ -67,7 +68,6 @@ void _lv_timer_core_init(void)
 LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
 {
     TIMER_TRACE("begin");
-
     /*Avoid concurrent running of the timer handler*/
     static bool already_running = false;
     if(already_running) {
@@ -85,7 +85,7 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
     static uint32_t busy_time         = 0;
 
     uint32_t handler_start = lv_tick_get();
-
+    //printf("sdfokok\r\n");
     if(handler_start == 0) {
         static uint32_t run_cnt = 0;
         run_cnt++;
@@ -97,11 +97,11 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
 
     /*Run all timer from the list*/
     lv_timer_t * next;
-    //do {
+    do {
         timer_deleted             = false;
         timer_created             = false;
         LV_GC_ROOT(_lv_timer_act) = _lv_ll_get_head(&LV_GC_ROOT(_lv_timer_ll));
-        //while(LV_GC_ROOT(_lv_timer_act)) {
+        while(LV_GC_ROOT(_lv_timer_act)) {
             /*The timer might be deleted if it runs only once ('repeat_count = 1')
              *So get next element until the current is surely valid*/
             next = _lv_ll_get_next(&LV_GC_ROOT(_lv_timer_ll), LV_GC_ROOT(_lv_timer_act));
@@ -110,13 +110,13 @@ LV_ATTRIBUTE_TIMER_HANDLER uint32_t lv_timer_handler(void)
                 /*If a timer was created or deleted then this or the next item might be corrupted*/
                 if(timer_created || timer_deleted) {
                     TIMER_TRACE("Start from the first timer again because a timer was created or deleted");
-                    //break;
+                    break;
                 }
             }
 
             LV_GC_ROOT(_lv_timer_act) = next; /*Load the next timer*/
-        //}
-    //} while(LV_GC_ROOT(_lv_timer_act));
+        }
+    } while(LV_GC_ROOT(_lv_timer_act));
 
     uint32_t time_till_next = LV_NO_TIMER_READY;
     next = _lv_ll_get_head(&LV_GC_ROOT(_lv_timer_ll));
