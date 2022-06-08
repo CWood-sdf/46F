@@ -488,12 +488,12 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
       cout << "Stop Exit" << endl;
       break;
     }
-    //Get the speed of the robot
+    //Get the target speed of the robot
     double speed = ctrl.getVal(abs(dist)) * (isNeg * 2.0 - 1.0);
     
     //Use the distFns for the current dist
     useDistFns(botPos().dist2D(bezier.last()));
-    //The point extended beyond the path to make sure normAngle doesn't balloon near the target
+    //The point extended beyond the path to make sure normAngle doesn't get big near the target
     PVector virtualPursuit = pursuit;
     if(botPos().dist2D(pursuit) < purePursuitDist && pursuit == bezier.last()){
       //A vector that is parallel wih last point
@@ -533,10 +533,13 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
 
     /**** IF THE DATE IS NOT FRIDAY, FEB 4, 2022, DON'T TOUCH THE NEXT LINE ***/
     //Get the turn speed and divide by 2 because it is being applied to both wheels
-    double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0 - 10.0;
+    double rightExtra = -slaveCtrl.getVal(normAngle) / 4.0;// - 10.0;
     PVector currentPos = botPos();
+    //Where will the robot be in 100 ms
     PVector estimateIn100 = (currentPos - lastPos) * (100.0 / (double)sleepTime) + currentPos;
+    //Whats the index of the path point in 100 ms
     int indexIn100 = getNearest(extendedPath, estimateIn100);
+    //If it's supposed to be on the path in 100 ms, don't turn the robot
     if(bezier[indexIn100].dist2D(estimateIn100) < pathRadius){
       rightExtra = 0;
 

@@ -95,14 +95,14 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
 }
 void FlywheelTBH::init(){
   gain = 0.025;
-  maxRateGain = 2;
-  maxRateDrop = 0.5;
-  velCheck = Settled(10, 0.05, 500);
+  maxRateGain = 1.5;
+  maxRateDrop = 2;
+  velCheck = Settled(10, 0.2, 500);
 }
 void FlywheelTBH::graph(bool remake){
   basicGraph(remake, "TBH ctrl", debug);
 }
-FlywheelTBH::FlywheelTBH(motor& m, vex::encoder& p) : en(&p), mots(m), filter(0.7){
+FlywheelTBH::FlywheelTBH(NewMotor<>& m, vex::encoder& p) : en(&p), mots(m), filter(0.15){
   mots = m;
   init();
   filter.seed(0);
@@ -118,18 +118,19 @@ void FlywheelTBH::setTarget(int i){
 }
 void FlywheelTBH::addTarget(double t){
   velTargets.push_back(t);
-  initialTbh.push_back(0);
+  initialTbh.push_back(t / 6.0);
 }
 void FlywheelTBH::step(){
   static double lastRotation = 0;
   static double lastVel;
   static double lastDesiredVel = 0;
   static double prevErr = 0;
+  static int settledCount = 0;
   double velSent = 10;
   bool calcTbh = true;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = mots.rotation(rotationUnits::rev);
+  double rotation = mots[0].rotation(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
   lastRotation = rotation;
   filter.update(speedEst);
@@ -140,13 +141,24 @@ void FlywheelTBH::step(){
   //Leave this empty until TBH is working
   if(settled){
     calcTbh = false;
+    settledCount++;
+    if(settledCount > 1000/50){
+      settledCount = 1000/50;
+    }
+  }
+  else {
+    settledCount--;
+    if(settledCount > 0){
+      calcTbh = false;
+    }
   }
   if(desiredVel != lastDesiredVel){
     calcTbh = false;
+    settledCount = 0;
   }
   lastDesiredVel = desiredVel;
   if(abs(err) < 60){
-    gain = 0.1;
+    gain = 0.07;
   }
   else {
     gain = 0.01;

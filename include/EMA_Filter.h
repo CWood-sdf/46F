@@ -35,6 +35,7 @@ public:
   }
   BasicEMA<Get_T>& operator=(const BasicEMA<Get_T>& input){
     val = input.val;
+    alpha = input.alpha;
     return *this;
   }
 };

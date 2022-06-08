@@ -7,7 +7,7 @@
 //  3 - PID Controllers - To direct the bot's speed along the path
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
-
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #include "Odometry/PID.h"
 #include "Odometry/GPS_Share.h"
 #include <deque>
@@ -190,6 +190,9 @@ public: // Import variables, functions + add constructor
 
 class MechWheelController : public Omni_4Controller{
 public: // Import variables + constructor
+  using Omni_4Controller::driveTo;
+  using Omni_4Controller::backInto;
+  using Omni_4Controller::backwardsFollow;
   motor* BL;
   motor* BR;
   motor* FL;

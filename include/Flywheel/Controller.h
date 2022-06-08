@@ -78,9 +78,9 @@ class Empty {
 };
 class FlywheelTBH : public Empty {
   encoder* en;
-  motor& mots;
-  EMA filter = EMA(0.01, 0);
-  vector<double> velTargets = {600};
+  NewMotor<>& mots;
+  EMA filter;
+  vector<double> velTargets = {550};
   vector<double> initialTbh = {10};
   double tbh = 0;
   double gain;
@@ -90,7 +90,7 @@ class FlywheelTBH : public Empty {
   double maxRateGain = 2;
   FlywheelDebugEl debug;
 public:
-  FlywheelTBH(motor& m, vex::encoder& e);
+  FlywheelTBH(NewMotor<>& m, vex::encoder& e);
   void setTarget(int i);
   void addTarget(double t);
   void step() override;

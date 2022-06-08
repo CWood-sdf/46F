@@ -1,8 +1,6 @@
 #include "EMA_Filter.h"
 #include "FieldObject.h"
-bool toBool(double v){
-  return (bool)(int)(v + 0.5);
-}
+bool toBool(double v);
 struct BasicObject {
   typedef BasicEMA<bool, double, toBool> BoolEMA;
   BasicEMA<PVector> origin = BasicEMA<PVector>(0.9);

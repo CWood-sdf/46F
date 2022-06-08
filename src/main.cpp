@@ -5,13 +5,8 @@
    | |     | |_| |  | |/ /  | |_| |
    |_|     |_____|  |___/   |_____|
 
-  Test all lvgl
   Finish writing vision util
-  Write flywheel util
   Look at github and test everything new since states
-  Why this prog so big
-  Test EMA
-  I feel like this will all crash when I run it
 
 **********************/
 
@@ -112,7 +107,10 @@ Auton rightA = "Right" + [](){
   cout << "r" << endl;
 };
 Auton coolA = "Cool" + [](){
-  cout << "cool" << endl;
+  //sdf
+};
+Auton csdf = "sdfff" + [](){
+  
 };
 void autonInit(){
   cout << "Auton Init" << endl;
@@ -208,28 +206,18 @@ void drivercontrol (){
   }
 }
 void runFlywheel(){
+  int index = 0;
   flyPID.setTarget(0);
   flyTBH.setTarget(0);
+  flyTBH.addTarget(500);
+  flyTBH.setTarget(1);
   timer ok;
-  int count = 0;
   while(1){
     if(flywheelPID){
       flyPID.step();
     }
     else {
       flyTBH.step();
-    }
-    if(ok > 10000 && count == 1){
-      flyTBH.addTarget(500);
-      flyTBH.setTarget(2);
-      count++;
-      ok.reset();
-    }
-    if(ok > 20000 && count == 0){
-      flyTBH.addTarget(300);
-      flyTBH.setTarget(1);
-      ok.reset();
-      count++;
     }
     s(50);
   }
@@ -282,13 +270,14 @@ void brainOS() {
 
   }
   
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
+  
   bos::bosFns.push_back(windowsLoader);
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelPID, true));
+  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.push_back(printVars);
   bos::bosFns.push_back(drawPath);
-  bos::bosFns.push_back(Auton::selectAuton);
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
+  
+  bos::bosFns.push_back(Auton::selectAuton);
   int state = 0;		
   int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<");		
@@ -322,7 +311,7 @@ void brainOS() {
     }
     screenLeft.draw();		
     screenRight.draw();	
-    if (screenLeft.clicked()) {	
+    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
         //Remove all objects
@@ -338,7 +327,7 @@ void brainOS() {
         bos::bosFns.getCurrent()->call(true);
       }
     }	
-    else if (screenRight.clicked()) {	
+    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
         //Remove all objects
@@ -377,13 +366,21 @@ void brainOS() {
 //   };
 // };
 int main() {
+  
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
     v5_lv_init();
+    cout << "Cool" << endl;
+    s(100);
     gyroInit(angler);
+    cout << "sdfdf" << endl;
+    s(500);
     gyroInit(GPS);
     init = true;
   });
+  while(!init){
+    s(100);
+  }
   KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
@@ -391,9 +388,9 @@ int main() {
 
   //WINDOWS LOADER: YEET BURGER
   thread loader = thread(brainOS);
-  s(1000);
-  wc.followPath({PVector(-48.0, 0.0), PVector(-48.0, 48.0)});
-  // thread flywheelControl = thread(runFlywheel);
+  //s(1000);
+  // wc.followPath({PVector(-48.0, 0.0), PVector(-48.0, 48.0)});
+  thread flywheelControl = thread(runFlywheel);
   //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
