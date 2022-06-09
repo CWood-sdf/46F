@@ -49,10 +49,9 @@ touch_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 /* Task to refresh internal lvgl counters and allow display updates           */
 /*----------------------------------------------------------------------------*/
 #define V5_LVGL_RATE    4
-
+int main();
 int
 lvgltask() {
-  int i = 0;
   while(1) {
       // this just increments internal counter, may as well put here to simplify
       lv_tick_inc(V5_LVGL_RATE);

@@ -20,7 +20,7 @@ using namespace vex;
 
 competition Competition;//
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
-bool isPressing(const controller::button& btn){
+bool isPressing(controller::button& btn){
   if(btn.pressing()){
     while(btn.pressing()){
       s(10);
@@ -31,7 +31,7 @@ bool isPressing(const controller::button& btn){
   return false;
 }
 //Similar to isPressing(controller::button&), but only does it if a joystick axis is going in a certain direction
-bool isPressing(const controller::axis& joystick, int mult){
+bool isPressing(controller::axis& joystick, int mult){
   if(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
     while(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
       s(10);
@@ -140,9 +140,9 @@ class ButtonLatch {
   bool isPressing = false;
   int state = 0;
   int stateLim;
-  const controller::button& b;
+  controller::button& b;
 public:
-  ButtonLatch(const controller::button& b, int stateLim = 2) : stateLim(stateLim), b(b){
+  ButtonLatch(controller::button& b, int stateLim = 2) : stateLim(stateLim), b(b){
 
   }
   ButtonLatch() = delete;
