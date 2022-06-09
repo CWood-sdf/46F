@@ -112,6 +112,9 @@ Auton coolA = "Cool" + [](){
 Auton csdf = "sdfff" + [](){
   
 };
+Auton scsdf = "sdffsdff" + [](){
+  
+};
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;
@@ -165,44 +168,71 @@ public:
 void drivercontrol (){
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
   static bool driveReversed = false;
+  static bool allEmpty = false;
+  static vector<pair<bool, bool*>> countsExist = {};
+  cout << countsExist.size() << endl;
   //int wheelsMove = 0;
   // backLiftCtrllr.disable();
-  KillThread::killAll();
+  //KillThread::killAll();
+  static int count = 0;
+  
+  bool primary = count == 0 || allEmpty ? true : false;
+  countsExist.push_back({true, &primary});
+  int localCount = count;
+  count++;
   while(1){
-    //Drive control, uses quotient/square for smoothness
-    double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
-    double Y2 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
-    // Y1 /= 10;
-    // Y1 *= Y1;
-    // Y2 /= 10;
-    // Y2 *= Y2;
-    // Y1 *= Greg.Axis2.value() != 0 ? Greg.Axis2.value() / abs(Greg.Axis2.value()) : 1;
-    // Y2 *= Greg.Axis3.value() != 0 ? Greg.Axis3.value() / abs(Greg.Axis3.value()) : 1;
-    
-    double s1 = Y2;
-    double s2 = Y1;
-    if(driveReversed){
-      FL.spin(vex::reverse, s2, pct);
-      ML.spin(vex::reverse, s2, pct);
-      BL.spin(vex::reverse, s2, pct);
-      FR.spin(vex::reverse, s1, pct);
-      MR.spin(vex::reverse, s1, pct);
-      BR.spin(vex::reverse, s1, pct);
+    if(primary){
+      cout << "Good" << endl;
+      //Drive control, uses quotient/square for smoothness
+      double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
+      double Y2 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
+      // Y1 /= 10;
+      // Y1 *= Y1;
+      // Y2 /= 10;
+      // Y2 *= Y2;
+      // Y1 *= Greg.Axis2.value() != 0 ? Greg.Axis2.value() / abs(Greg.Axis2.value()) : 1;
+      // Y2 *= Greg.Axis3.value() != 0 ? Greg.Axis3.value() / abs(Greg.Axis3.value()) : 1;
+      
+      double s1 = Y2;
+      double s2 = Y1;
+      if(driveReversed){
+        FL.spin(vex::reverse, s2, pct);
+        ML.spin(vex::reverse, s2, pct);
+        BL.spin(vex::reverse, s2, pct);
+        FR.spin(vex::reverse, s1, pct);
+        MR.spin(vex::reverse, s1, pct);
+        BR.spin(vex::reverse, s1, pct);
+      }
+      else {
+        FL.spin(fwd, s1, pct);
+        ML.spin(fwd, s1, pct);
+        BL.spin(fwd, s1, pct);
+        FR.spin(fwd, s2, pct);
+        MR.spin(fwd, s2, pct);
+        BR.spin(fwd, s2, pct);
+      }
+
+      if(BLatch.pressing()){
+        driveReversed = !driveReversed;
+      }
     }
     else {
-      FL.spin(fwd, s1, pct);
-      ML.spin(fwd, s1, pct);
-      BL.spin(fwd, s1, pct);
-      FR.spin(fwd, s2, pct);
-      MR.spin(fwd, s2, pct);
-      BR.spin(fwd, s2, pct);
-    }
-
-    if(BLatch.pressing()){
-      driveReversed = !driveReversed;
+      cout << "Bad" << endl;
     }
     s(10);
+
     
+  }
+  countsExist[localCount].first = false;
+  for(auto [exist, ptr] : countsExist){
+    if(exist){
+      *ptr = true;
+      allEmpty = false;
+      break;
+    }
+    else {
+      allEmpty = true;
+    }
   }
 }
 void runFlywheel(){
@@ -394,7 +424,7 @@ int main() {
   //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
-  
+
   //Prevent main from exiting
   while(1){
     s(300);
