@@ -4,17 +4,14 @@
 VERBOSE = 0
 
 # include toolchain options
-include lvgl-mk/mkenv.mk
+include vex/mkenv.mk
 
 # location of the project source cpp and c files
-# SRC_C = $(wildcard src/*.cpp)
-SRC_C = $(wildcard src/*.c)
-SRC_C += $(wildcard src/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*.c) 
-SRC_C += $(wildcard include/lvgl/src/*/*.c) 
-SRC_C += $(wildcard include/lvgl/src/*/*/*.c) 
-SRC_C += $(wildcard include/lvgl/src/*/*/*/*.c)
-SRC_C += $(wildcard include/lvgl/src/*/*/*/*/*.c)  
+SRC_C  = $(wildcard src/*.cpp) 
+SRC_C += $(wildcard src/*/*.cpp) 
+SRC_C += $(wildcard include/*.cpp)
+SRC_C += $(wildcard include/*/*.cpp)
+SRC_C += $(wildcard include/*/*/*.cpp)
 
 OBJA = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
 OBJ = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
@@ -49,7 +46,7 @@ $(BUILD)/include/%: %
 vpath %.h include/lvgl/ include/
 
 # override proj name
-PROJECTLIB = liblvgl
+PROJECTLIB = lib46f
 
 # build targets
 all: $(BUILD)/$(PROJECT).bin $(BUILD)/$(PROJECTLIB).a inc
@@ -60,4 +57,4 @@ inc: $(LV_DST_H)
 	$(ECHO) "Copy headers to build folder"
 
 # include build rules
-include lvgl-mk/mkrules.mk
+include vex/mkrules.mk
