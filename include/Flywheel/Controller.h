@@ -13,6 +13,7 @@ class Settled {
   double prevErr;
   double maxSleep = 500;
   uint32_t lastTimeStep;
+  bool isSettled;
 public:
   Settled(double me, double md, double ms = 500){
     maxErr = me;
@@ -24,13 +25,18 @@ public:
     uint32_t timeStep = time;
     time.reset();
     double deriv = (err - prevErr) / (double)timeStep;
+    isSettled = false;
     if(timeStep > 1000){
       return false;
     }
     if(timeStep < 30){
       return false;
     }
+    isSettled = abs(deriv) < maxDeriv && abs(err) < maxErr;
     return abs(deriv) < maxDeriv && abs(err) < maxErr;
+  }
+  bool settled(){
+    return isSettled;
   }
   uint32_t timeStep(){
     return lastTimeStep;
@@ -96,6 +102,7 @@ public:
   void step() override;
   void graph(bool);
   void init();
+  bool ready();
 };
 class EMA_D : public PIDF_Extension {
   EMA dFilter = EMA(0.7, 0);

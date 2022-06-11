@@ -210,6 +210,9 @@ void FlywheelTBH::step(){
   mots.spin(fwd, velSent, pct);
   lastVel = velSent;
 }
+bool FlywheelTBH::ready(){
+  return velCheck.settled();
+}
 void FlywheelPID::initPID(){
   ctrl = PIDF(0.1, 0.02, 0.00, manager, 0, 0, 5);
 }
@@ -244,7 +247,7 @@ void FlywheelPID::step(){
   bool settled = velCheck.settled(err);
   debug.set(err, speedEst, speed, desiredVel);
   
-  mots.spin(fwd, ctrl.getVal(err));
+  mots.spin(fwd, ctrl.getVal(err), pct);
 }
 
 void FlywheelPID::graph(bool remake){
