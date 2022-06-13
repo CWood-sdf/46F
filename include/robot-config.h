@@ -30,6 +30,9 @@ extern motor_group Right;
 
 extern motor flyWheelMot;
 extern motor flywheel2;
+
+extern NewMotor<> intake;
+
 extern NewMotor<> flywheelNm;
 extern FlywheelPID flyPID;
 extern FlywheelTBH flyTBH;
@@ -63,6 +66,10 @@ extern inertial angler;
 
 //gps
 extern gps GPS;
+
+extern optical rachetColor; 
+
+extern LineCounter rachetDetector;
 // Distance goalFront;
 // Distance goalBack;
 

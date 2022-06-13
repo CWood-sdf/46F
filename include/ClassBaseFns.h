@@ -44,6 +44,33 @@ string parseInt(vision::signature& c){
 
 //All the functions that are based on classes
 namespace ClassFns {
-  
+  bool targetRed = false;
+  FN_WITH_APA_SIG_NO_ARG(spinRoller)
+    bool isRed = rachetColor.hue() > 300 && rachetColor.hue() < 60;
+    bool lastRed = isRed;
+    while(1){
+      if(isRed != lastRed && isRed == targetRed){
+        break;
+      }
+      intake.spin(fwd, 100);
+      auto hue = rachetColor.hue();
+      lastRed = isRed;
+      isRed = hue > 300 && hue < 60;
+      if(!isRed){
+        if(abs(hue - 240) < 60){
+          isRed = false;
+        }
+        else {
+          //Ambiguous colors, set isRed to lastRed to prevent exit
+          isRed = lastRed;
+        }
+      }
+
+      s(50);
+    }
+    intake.stop(hold);
+    //Give the system some time to clear momentum
+    s(300);
+  }
 
 }

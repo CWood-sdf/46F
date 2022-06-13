@@ -16,6 +16,8 @@ motor MR = motor(PORT8, gearSetting::ratio18_1,false);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
+motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
+
 motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, true);
 motor flywheel2 = motor(PORT6, ratio6_1, false);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
@@ -29,6 +31,8 @@ bool flywheelPID = false;
 NewMotor<> wheels = NewMotor<>(FL, ML, BL, FR, MR, BR);
 NewMotor<> leftWhls = NewMotor<>(BL, FL, ML);
 NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
+
+NewMotor<> intake = NewMotor<>(intakeMot);
 
 /*************************************
 
@@ -52,6 +56,10 @@ inertial angler = inertial(PORT11);
 
 //gps
 gps GPS = gps(PORT10, -6.0, 0.0, inches, -90);
+
+optical rachetColor = optical(PORT8);
+
+LineCounter rachetDetector (Brain.ThreeWirePort.A);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
