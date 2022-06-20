@@ -38,6 +38,44 @@ protected: // PID variables + other random things
   PID turnCtrl = PID(2.42, 0.2, 1.35, 0, 20, 4);
 
   double trackWidth = 0.0;
+  double gearRatio = 1.0;
+  double wheelRad = 0.0;
+  gearSetting cartridge = gearSetting::ratio18_1;
+
+  //converts pct to in/s
+  double pctToReal(double speed){
+    //rpm
+    double motorVel;
+    switch(cartridge){
+      case vex::gearSetting::ratio18_1:
+        motorVel = 200;
+        break;
+      case vex::gearSetting::ratio36_1:
+        motorVel = 100;
+        break;
+      case vex::gearSetting::ratio6_1:
+        motorVel = 600;
+        break;
+    }
+    return motorVel * speed / 100.0 / gearRatio * 2.0 * M_PI / 60.0/*rad/s*/
+           * wheelRad;
+  }
+  double realToPct(double speed){
+    //rpm
+    double motorVel;
+    switch(cartridge){
+      case vex::gearSetting::ratio18_1:
+        motorVel = 200;
+        break;
+      case vex::gearSetting::ratio36_1:
+        motorVel = 100;
+        break;
+      case vex::gearSetting::ratio6_1:
+        motorVel = 600;
+        break;
+    }
+    return speed / motorVel * 100.0 * gearRatio / 2.0 / M_PI * 60.0 / wheelRad;
+  }
   map<double, std::function<void()>> distFns, oldFns;
   bool callingInDrive = false;
 public: // Some variables
@@ -137,6 +175,7 @@ private: // General path follower
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg);
   virtual void ramseteTo(FieldCoord pose);
+  virtual void purePursuitFollow(VectorArr arr, bool isNeg);
 public: // Path following implementations
   virtual void followPath(VectorArr arr);
   virtual void backwardsFollow(VectorArr arr);
