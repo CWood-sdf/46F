@@ -22,6 +22,10 @@ SRC_H += $(wildcard include/*/*.h)
 SRC_H += $(wildcard include/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*/*.h)
+SRC_H += $(wildcard include/*/*/*/*/*/*.h)
+SRC_H += $(wildcard include/*/*/*/*/*/*/*.h)
+SRC_H += $(wildcard include/*/*/*/*/*/*/*/*.h)
+
 
 # additional dependancies
 SRC_A  = makefile

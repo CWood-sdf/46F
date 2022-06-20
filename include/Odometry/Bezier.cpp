@@ -1,7 +1,6 @@
 #define NO_MAKE
 #include "Odometry/Bezier.h"
 #include "Odometry/GPS_Share.h"
-
 //Constructor
 VectorArr::VectorArr(std::initializer_list<PVector> list){
   for(PVector v : list){
@@ -125,26 +124,58 @@ pair<VectorArr, VectorArr> bezierCurveNormalLR(VectorArr ptArr, double dist, dou
     i.normalize();
   }
   for(int i = 0; i < derivative.size(); i++){
-    ret.first.push(derivative[i].get().rotate(-90).mult(dist).add(bezier[i]));
-    ret.second.push(derivative[i].get().rotate(90).mult(dist).add(bezier[i]));
+    ret.first.push(
+      derivative[i]
+        .get()
+        .rotate(-90)
+        .mult(dist)
+        .add(bezier[i])
+    );
+    ret.second.push(
+      derivative[i]
+        .get()
+        .rotate(90)
+        .mult(dist)
+        .add(bezier[i])
+    );
   }
   return ret;
 }
 vector<double> bezierCurvature(VectorArr ptArr, double inc){
   vector<double> ret;
-  VectorArr derivative = bezierDerivative(ptArr, inc);
-  VectorArr acc = bezierAcc(ptArr, inc);
-  for(int i = 0; i < derivative.size(); i++){
-    Matrix<double, 2, 2> combo;
-    combo[0][0] = derivative[i].x;
-    combo[0][1] = derivative[i].y;
-    combo[1][0] = acc[i].x;
-    combo[1][1] = acc[i].y;
-    double denominator = pow(derivative[i].mag(), 3);
-    if(denominator != 0)
-      ret.push_back(combo.determinant() / denominator);
-    else
-      ret.push_back(1e99);
+  auto curve = bezierCurve(ptArr, inc);
+  ret.push_back(0.0000001);
+  for(int i = 1; i < curve.size() - 1; i++){
+    auto p = curve[i];
+    auto q = curve[i - 1];
+    auto r = curve[i + 1];
+    double y1 = p.y;
+    double x1 = p.x;
+    double x2 = q.x;
+    double y2 = q.y;
+    double x3 = r.x;
+    double y3 = r.y;
+    double k1 = 0.5 * (pow(x1, 2) + pow(y1, 2) - pow(x2, 2) - pow(y2, 2)) / (x1 - x2);
+    double k2 = (y1 - y2) / (x1 - x2);
+    double b = 0.5 * (pow(x2,2) - 2.0*x2*k1 + pow(y2,2) - pow(x3,2) + 2.0*x3*k1 - pow(y3,2)) / (x3*k2 - y3 + y2 - x2*k2);
+    double a = k1 - k2 * b;
+    double rad = sqrt(pow(x1-a, 2) + pow(y1-b, 2));
+    ret.push_back(1.0 / rad);
   }
+  ret.push_back(0.00000001);
+  // VectorArr derivative = bezierDerivative(ptArr, inc);
+  // VectorArr acc = bezierAcc(ptArr, inc);
+  // for(int i = 0; i < derivative.size(); i++){
+  //   Matrix<double, 2, 2> combo;
+  //   combo[0][0] = derivative[i].x;
+  //   combo[0][1] = derivative[i].y;
+  //   combo[1][0] = acc[i].x;
+  //   combo[1][1] = acc[i].y;
+  //   double denominator = pow(derivative[i].mag(), 3);
+  //   if(denominator != 0)
+  //     ret.push_back(combo.determinant() / denominator);
+  //   else
+  //     ret.push_back(1e99);
+  // }
   return ret;
 }

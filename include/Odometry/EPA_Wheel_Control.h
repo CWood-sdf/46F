@@ -37,7 +37,7 @@ protected: // PID variables + other random things
   //PID purePursuitCtrl = PID(5.5, 0.0, 3.4);
   PID turnCtrl = PID(2.42, 0.2, 1.35, 0, 20, 4);
 
- 
+  double trackWidth = 0.0;
   map<double, std::function<void()>> distFns, oldFns;
   bool callingInDrive = false;
 public: // Some variables
