@@ -125,6 +125,7 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc){
   //   angle += 90;
   // }
   int timeIn = 0;
+  [[maybe_unused]]
   int i = 0;
   //Get the normAngle
   double normAngle = posNeg180(angle - posNeg180(botAngle()));
@@ -291,6 +292,329 @@ size_t BasicWheelController::getNearest(VectorArr arr, PVector obj, size_t start
 void BasicWheelController::ramseteTo(FieldCoord pose){
   
 }
+void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg){
+  double ramseteDist = 16.0; // Distance to pure pursuit target
+  VectorArr bezier;
+  vector<double> targetSpeeds;
+  vector<double> targetAngles;
+  vector<double> curvatures;
+  {
+    arr.push_front(botPos());
+    bezier = bezierCurve(arr);
+    auto deriv = bezierDerivative(arr);
+    for(auto i : deriv){
+      targetAngles.push_back(i.heading2D());
+    }
+    curvatures = bezierCurvature(arr);
+    targetSpeeds = vector<double>();
+    
+    for(int i = 0; i < bezier.size(); i++){
+      targetSpeeds.push_back(abs(min(speedLimit, kConst / curvatures[i])));
+      if(targetSpeeds.back() > 100){
+        targetSpeeds.back() = 100;
+      }
+    }
+    //Smooth targetSpeeds
+    //vf^2 = vi^2 + 2ad
+    double startVel = 30;
+    targetSpeeds[0] = startVel;
+    targetSpeeds.push_back(40);
+    for(int i = 1; i < bezier.size(); i++){
+      //I think this math of converting inches to percent works
+      double d = bezier[i].dist2D(bezier[i - 1]);
+      double a = maxAcc;
+      if(startVel < targetSpeeds[i]){
+        startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
+        if(startVel > targetSpeeds[i + 1]){
+          startVel = targetSpeeds[i + 1];
+        }
+      }
+      else if(startVel > targetSpeeds[i]){
+        int startI = i;
+        //Go backwards until reached speed
+        do {
+          startVel = targetSpeeds[i];
+          i--;
+          double a = maxDAcc;
+          double d = bezier[i].dist2D(bezier[i + 1]);
+          startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
+        } while(startVel < targetSpeeds[i - 1]);
+        i = startI;
+        startVel = targetSpeeds[i];
+      }
+    }
+  }
+
+  
+  //The index of the pursuit target
+  int bezierIndex = 0;
+  //The pursuit target
+  PVector pursuit = bezier[bezierIndex];
+  //Lots variables
+
+  //Allow the array to be drawn
+  this->drawArr = true;
+  this->path = bezier;
+  //The last dist
+  // double lastDist = 12 * 2 * 24;
+  //A timer
+  timer t = timer();
+
+  [[maybe_unused]]
+  int time = 0, //Counts the time in loop iterations
+  timeIn = 0, // The amount of time spent near the target
+  maxTimeIn = 5, // The time needed before exit
+  sleepTime = 10, // The sleep time
+  g = 0; // A debug output counter
+
+  // double normAngle = 0.0, //The normAngle
+  //Going with an hopefully possible 1 in accuracy
+  double minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
+  // cout << minAllowedDist << endl;
+  #undef DEBUG
+  #ifdef DEBUG  
+  struct {
+    vector<double> outSpeeds, encSpeeds, targSpeeds, angles, cp, cd, sp, sd;
+    vector<PVector> pos, pursuit;
+    void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit){
+      outSpeeds.push_back(out);
+      encSpeeds.push_back(enc);
+      targSpeeds.push_back(targ);
+      pos.push_back(p);
+      angles.push_back(angle);
+      cp.push_back(acp);
+      cd.push_back(acd);
+      sp.push_back(asp);
+      sd.push_back(asd);
+      pursuit.push_back(apursuit);
+    }
+  } realTime;
+  #endif
+  
+  //Save the current distance fns
+  setOldDistFns();
+  int timesStopped = 0;
+  moving = true;
+  PVector lastPos = botPos();
+  int lastIndex = 0;
+  
+
+  //Loop
+  while(timeIn * sleepTime < maxTimeIn){
+    //Get the nearest pure pursuit position
+    int nearestIndex = getNearest(bezier, botPos(), lastIndex);
+    lastIndex = nearestIndex;
+    if(exitEarly){
+      cout << "Exit due to external thread request" << endl;
+      exitEarly = false;
+      break;
+    }
+    double targetAngle = targetAngles[bezierIndex];
+    // Keep the Pure Pursuit target purePursuitDist inches away from the bot
+    while(pursuit.dist2D(botPos()) < ramseteDist && pursuit != bezier.last()){
+      pursuit = bezier[++bezierIndex];
+      targetAngle = targetAngles[bezierIndex];
+    }
+    
+    //Near the target, increment timeIn
+    if(botPos().dist2D(bezier.last()) < minAllowedDist && pursuit == bezier.last()){
+      timeIn++;
+      
+    }
+    else {
+      timeIn = 0;
+    }
+    
+    
+    //If the bot's not moving, and it's not currently accelerating
+    if(pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000){
+      timesStopped++;
+    }
+    else {
+      timesStopped = 0;
+    }
+    //50 ms not moving -> exit
+    if(timesStopped * sleepTime > 50 && !stopExitPrev){
+      cout << "Stop Exit" << endl;
+      break;
+    }
+    
+    //Use the distFns for the current dist
+    useDistFns(botPos().dist2D(bezier.last()));
+    
+    
+    PVector currentPos = botPos();
+    //Where will the robot be in 100 ms
+    PVector estimateIn100 = (currentPos - lastPos) * (100.0 / (double)sleepTime) + currentPos;
+    //Whats the index of the path point in 100 ms
+    int indexIn100 = getNearest(path, estimateIn100);
+    double theta = botAngle();
+    PVector pos = botPos();
+    
+    Matrix<double, 3, 3> transformation = {
+      { cos(theta), sin(theta), 0},
+      {-sin(theta), cos(theta), 0},
+      {    0,            0,     1}
+    };
+    Matrix<double, 3, 1> globalErr = {
+      {pursuit.x - pos.x},
+      {pursuit.y - pos.y},
+      {targetAngle - theta}
+    };
+    double vd = targetSpeeds[bezierIndex];
+    double Wd = vd * curvatures[bezierIndex];
+    Matrix<double, 3, 1> error = transformation * globalErr;
+    double k = 2.0 * ramseteVars.zeta * sqrt(Wd * Wd + ramseteVars.beta * vd * vd);
+    double eTheta = error(2, 0);
+    double speed = vd * cos(eTheta) + k * error(0, 0);
+    double turnVel = Wd + k * eTheta + ramseteVars.beta * vd * sin(eTheta) / eTheta * error(1, 0);
+    //W = (L - R) / T
+    //L = V - re
+    //R = V + re
+    //W = -2re / T
+    double extraSpeed = turnVel * trackWidth / -2.0;
+    //If it's supposed to be on the path in 100 ms, don't turn the robot
+    if(bezier[indexIn100].dist2D(estimateIn100) < pathRadius){
+      extraSpeed = 0;
+
+    }
+
+    /*Uncomment when done
+    //Slew speed
+    if(abs(speed) > targetSpeeds[nearestIndex]){
+      double orgSpeed = speed;
+      speed = targetSpeeds[nearestIndex];
+      //Change extraSpeed to match original speed : extraSpeed ratio
+      extraSpeed *= orgSpeed / speed / 2.0;
+    }
+    if(abs(speed) > speedLimit){
+      speed /= abs(speed);
+      speed *= speedLimit;
+    }*/
+    //Mindblowing lines right here
+    //Move the robot
+    moveRight(abs(speed - extraSpeed), isNeg ? reverse : fwd);
+    moveLeft(abs(speed + extraSpeed), isNeg ? reverse : fwd);
+    lastPos = botPos();
+    //Sleep (WOW, HE'S A GENIUS)
+    s(sleepTime);
+    
+    #ifdef DEBUG
+    realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
+    #endif
+  }
+  moving = false;
+  //Stop drawing the path
+  //De-init code
+  {
+    //Set the last target for external stuff
+    lastTarget = bezier.last();
+    //Stop the bot
+    switch(BrakeMode){
+      case exitMode::normal:
+        hardBrake();
+        break;
+      case exitMode::coast:
+        coastBrake();
+        break;
+      case exitMode::nothing:
+        break;
+    }
+    this->drawArr = false;
+    cout << "Path stop" << endl;
+    //Print postion and target position
+    cout << botPos() << ", " << bezier.last() << endl;
+    exitDist = 0.0;
+  }
+  stopExitPrev = false;
+  //Print all the lists
+  #ifdef DEBUG
+    s(1000);
+    cout << endl << endl;
+    cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";
+    cout << "main.inputData([";
+    int line = 0;
+    for(auto i : bezier){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+
+    }
+    s(100);
+    cout << "]);";
+    cout << "\nmain.auxiliaryData.pos = [";
+    for(auto i : realTime.pos){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "];\n\nmain.auxiliaryData.angle = [";
+    for(auto i : realTime.angles){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "];\n\nmain.auxiliaryData.pursuit = [";
+    for(auto i : realTime.pursuit){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "];\n";
+    cout << "main.resetI();main.setHighlight(0);\n";
+    cout << "outputVel.inputData([" << flush;
+    s(100);
+    for(auto i : realTime.outSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "encVel.inputData([";
+    for(auto i : realTime.encSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "targetVel.inputData([";
+    for(auto i : realTime.targSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "slaveP.inputData([";
+    for(auto i : realTime.sp){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "slaveD.inputData([";
+    for(auto i : realTime.sd){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "ctrlP.inputData([";
+    for(auto i : realTime.cp){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "ctrlD.inputData([";
+    for(auto i : realTime.cd){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
+    cout << endl;
+  #endif
+}
 //The beefiest function in this file
 void BasicWheelController::followPath(VectorArr arr, bool isNeg){
   cout << "cosdf" << endl;
@@ -410,16 +734,17 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
   this->drawArr = true;
   this->path = bezier;
   //The last dist
-  double lastDist = 12 * 2 * 24;
+  //double lastDist = 12 * 2 * 24;
   //A timer
   timer t = timer();
+  [[maybe_unused]]
   int time = 0, //Counts the time in loop iterations
   timeIn = 0, // The amount of time spent near the target
   maxTimeIn = 5, // The time needed before exit
   sleepTime = 10, // The sleep time
   g = 0; // A debug output counter
 
-  double normAngle = 0.0, //The normAngle
+  double 
   //Going with an hopefully possible 1 in accuracy
   minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
   cout << minAllowedDist << endl;
@@ -502,7 +827,7 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
       double addDist = purePursuitDist - botPos().dist2D(pursuit);
       //Make last to be proper size
 
-      last *= purePursuitDist / last.mag();
+      last *= purePursuitDist / last.mag() * addDist;
       virtualPursuit += last;
     }
     //Angle of robot to target
@@ -816,16 +1141,17 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
   this->drawArr = true;
   this->path = bezier;
   //The last dist
-  double lastDist = 12 * 2 * 24;
+  //double lastDist = 12 * 2 * 24;
   //A timer
   timer t = timer();
+  [[maybe_unused]]
   int time = 0, //Counts the time in loop iterations
   timeIn = 0, // The amount of time spent near the target
   maxTimeIn = 5, // The time needed before exit
   sleepTime = 10, // The sleep time
   g = 0; // A debug output counter
 
-  double normAngle = 0.0, //The normAngle
+  double 
   //Going with an hopefully possible 1 in accuracy
   minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
   cout << minAllowedDist << endl;
@@ -908,7 +1234,7 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
       double addDist = purePursuitDist - botPos().dist2D(pursuit);
       //Make last to be proper size
 
-      last *= purePursuitDist / last.mag();
+      last *= purePursuitDist / last.mag() * addDist;
       virtualPursuit += last;
     }
     //Angle of robot to target
@@ -981,7 +1307,7 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
     }
     //Slew speed
     if(abs(speed) > targetSpeeds[nearestIndex]){
-      double orgSpeed = speed;
+      //double orgSpeed = speed;
       speed = targetSpeeds[nearestIndex];
     }
     if(abs(speed) > speedLimit){
@@ -1140,21 +1466,22 @@ void BasicWheelController::backInto(PVector pos){
 
 }
 void BasicWheelController::basicPIDDrive(double targetDist, bool isNeg){
-  double purePursuitDist = 16.0; // Distance to pure pursuit target
+  //double purePursuitDist = 16.0; // Distance to pure pursuit target
   
   PVector startPos = botPos();
   double startAngle = botAngle();
   //The last dist
-  double lastDist = 12 * 2 * 24;
+  //double lastDist = 12 * 2 * 24;
   //A timer
   timer t = timer();
+  [[maybe_unused]]
   int time = 0, //Counts the time in loop iterations
   timeIn = 0, // The amount of time spent near the target
   maxTimeIn = 5, // The time needed before exit
   sleepTime = 10, // The sleep time
   g = 0; // A debug output counter
 
-  double normAngle = 0.0, //The normAngle
+  double 
   //Going with an hopefully possible 1 in accuracy
   minAllowedDist = exitDist == 0.0 ? 1.0 : exitDist; // The maximum distance from target before starting timeIn count
   cout << minAllowedDist << endl;
@@ -1290,91 +1617,27 @@ void BasicWheelController::coastBrake(){
 
 
 void MechWheelController::moveAt(double angle, double speed, double turnSpeed){
-  double Y1 = cos(angle * DEG_TO_RAD) * speed;
-  double Y2 = cos(angle * DEG_TO_RAD) * speed;
-  double X1 = sin(angle * DEG_TO_RAD) * speed;
-  double X2 = sin(angle * DEG_TO_RAD) * speed;
-  double FLS = Y1 + X1;
-  double BLS = Y1 - X1;
-  double FRS = Y2 - X2;
-  double BRS = Y2 + X2;
-  FLS += turnSpeed;
-  BLS += turnSpeed;
-  FRS -= turnSpeed;
-  BRS -= turnSpeed;
-  //Spin da motors
-  BL->spin(vex::forward, BLS, velocityUnits::pct);
-  BR->spin(vex::forward, BRS, velocityUnits::pct);
-  FL->spin(vex::forward, FLS, velocityUnits::pct);
-  FR->spin(vex::forward, FRS, velocityUnits::pct);
+  //There are actual equations governing this
+  // double Y1 = cos(angle * DEG_TO_RAD) * speed;
+  // double Y2 = cos(angle * DEG_TO_RAD) * speed;
+  // double X1 = sin(angle * DEG_TO_RAD) * speed;
+  // double X2 = sin(angle * DEG_TO_RAD) * speed;
+  // double FLS = Y1 + X1;
+  // double BLS = Y1 - X1;
+  // double FRS = Y2 - X2;
+  // double BRS = Y2 + X2;
+  // FLS += turnSpeed;
+  // BLS += turnSpeed;
+  // FRS -= turnSpeed;
+  // BRS -= turnSpeed;
+  // //Spin da motors
+  // BL->spin(vex::forward, BLS, velocityUnits::pct);
+  // BR->spin(vex::forward, BRS, velocityUnits::pct);
+  // FL->spin(vex::forward, FLS, velocityUnits::pct);
+  // FR->spin(vex::forward, FRS, velocityUnits::pct);
 }
 void MechWheelController::followPath(VectorArr arr, double targetAngle){
-  //Add the bot position to the front so that it has a smoother start
-  arr.push_front(botPos());
-  VectorArr bezier = bezierCurve(arr);
-  this->drawArr = true;
-  this->path = bezier;
-  PVector pursuit = bezier.first();
-  int i = 0;
-  double lastDist = 12 * 2 * 24;
-  timer t = timer();
-  int time = 0;
-  int speedLimit = 70;
-  double angle = botAngle();
-  int bezierIndex = 0;
-  double normAngle = posNeg180(angle - posNeg180(botAngle()));
-  double sign = 1.0;
-  double startSign = normAngle > 0.0 ? 1.0 : -1.0;
-  setOldDistFns();
-  double lastTurnAngle = 0;
-  int g = 0;
-  while(pursuit != bezier.last() || botPos().dist2D(pursuit) > 2.0){
-    //Maintain distance of 8 inches to Pure Pursuit target
-    while(pursuit.dist2D(botPos()) < 8.0 && i < bezier.size()){
-      
-      pursuit = bezier[bezierIndex];
-      
-      ++bezierIndex;
-    }
-    double dist = botPos().dist2D(pursuit);
-    if(abs(dist - lastDist) <= 0.4 && t.time(timeUnits::msec) > 700 && time++ * 10 > 700){
-      cout << "Stop Exit" << endl;
-      break;
-    }
-    double speed = -ctrl.getVal(dist);// * (bezier.size() - i) * 0.1;
-    useDistFns(botPos().dist2D(bezier.last()));
-    //Impose speed limit
-    if(speed > speedLimit){
-      speed = speedLimit;
-    }
-    //Angle between bot position and pursuit target
-    angle = baseAngle(botPos().angleTo(pursuit));
-    //The angle that it needs to travel at
-    double normAngle = posNeg180(angle - botAngle());
-
-    //The angle that it needs to turn to
-    double normAngle2 = posNeg180(targetAngle - botAngle());
-
-    double newSign = normAngle2 > 0.0 ? 1.0 : -1.0;
-    // if(newSign / startSign == -1.0){
-    //   slaveCtrl.setTarget(0.0);
-    //   startSign = newSign;
-    // }
-    double turnSpeed = -turnCtrl.getVal(normAngle2);
-    if(lastTurnAngle != 0 && abs(normAngle2) - 0.01 > abs(lastTurnAngle)){
-      //turnSpeed *= 2.0;
-    }
-    
-    lastTurnAngle = normAngle2;
-    moveAt(normAngle, speed, turnSpeed / 4.0);
-    s(1);
-
-  }
-  hardBrake();
-  s(1500);
-  this->drawArr = false;
-  cout << botPos() << ", " << bezier.last() << endl;
-  cout << botAngle() << endl;
+  
 
 }
 void MechWheelController::driveTo(PVector pos, double finalAngle){
@@ -1390,71 +1653,7 @@ void MechWheelController::backInto(PVector pos, double finalAngle){
   backwardsFollow({ pos }, finalAngle);
 }
 void MechWheelController::backwardsFollow(VectorArr arr, double targetAngle){
-  arr.push_front(botPos());
-  VectorArr bezier = bezierCurve(arr);
-  this->drawArr = true;
-  this->path = bezier;
-  PVector pursuit = bezier.first();
-  int i = 0;
-  double lastDist = 12 * 2 * 24;
-  timer t = timer();
-  int time = 0;
-  int speedLimit = 70;
-  double angle = botAngle();
-  double normAngle = posNeg180(angle - posNeg180(botAngle()));
-  double sign = 1.0;
-  double startSign = normAngle > 0.0 ? 1.0 : -1.0;
-  setOldDistFns();
-  double lastTurnAngle = 0;
-  int g = 0;
-  int bezierIndex = 0;
-  while(pursuit != bezier.last() || botPos().dist2D(pursuit) > 2.0){
-    //Maintain distance of 8 inches to Pure Pursuit target
-    while(pursuit.dist2D(botPos()) < 8.0 && i < bezier.size()){
-      
-      pursuit = bezier[bezierIndex];
-      
-      ++bezierIndex;
-    }
-    double dist = botPos().dist2D(pursuit);
-    if(abs(dist - lastDist) <= 0.4 && t.time(timeUnits::msec) > 700 && time++ * 10 > 700){
-      cout << "Stop Exit" << endl;
-      break;
-    }
-    double speed = -ctrl.getVal(dist);// * (bezier.size() - i) * 0.1;
-    useDistFns(botPos().dist2D(bezier.last()));
-    //Impose speed limit
-    if(speed > speedLimit){
-      speed = speedLimit;
-    }
-    //Angle between bot position and pursuit target
-    angle = baseAngle(botPos().angleTo(pursuit));
-    //The angle that it needs to travel at
-    double normAngle = posNeg180(angle - botAngle());
-
-    //The angle that it needs to turn to
-    double normAngle2 = posNeg180(targetAngle - botAngle());
-
-    double newSign = normAngle2 > 0.0 ? 1.0 : -1.0;
-    // if(newSign / startSign == -1.0){
-    //   slaveCtrl.setTarget(0.0);
-    //   startSign = newSign;
-    // }
-    double turnSpeed = -turnCtrl.getVal(normAngle2);
-    if(lastTurnAngle != 0 && abs(normAngle2) - 0.01 > abs(lastTurnAngle)){
-      //turnSpeed *= 2.0;
-    }
-    
-    lastTurnAngle = normAngle2;
-    moveAt(normAngle, -speed, turnSpeed / 4.0);
-    s(1);
-
-  }
-  hardBrake();
-  s(1500);
-  this->drawArr = false;
-  cout << botPos() << ", " << bezier.last() << endl;
-  cout << botAngle() << endl;
+  
 
 
   

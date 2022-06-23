@@ -78,7 +78,7 @@ class VisionOdom {
       }
       farthestPt.rotateXZ(-angleFromSensor);
       double dist = PVector(est, distEst).mag();
-      double hypotenuse = PVector(dist, sensorHeight).mag();
+      //double hypotenuse = PVector(dist, sensorHeight).mag();
       double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
       PVector endPt = {est, distEst};
       PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
@@ -97,7 +97,7 @@ class VisionOdom {
       }
       farthestPt.rotateXZ(angleFromSensor);
       double dist = PVector(est, distEst).mag();
-      double hypotenuse = PVector(dist, sensorHeight).mag();
+      //double hypotenuse = PVector(dist, sensorHeight).mag();
       double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
       PVector endPt = {est, distEst};
       PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
@@ -193,7 +193,7 @@ public:
     vector<PVector> arr;
     for(int i = 0; i < sensor->objects.getLength(); i++){
       if(sensor->objects[i].exists){
-        auto pos = estimatePos(sensor->objects[i]);
+        //auto pos = estimatePos(sensor->objects[i]);
         arr.push_back(estimatePos(sensor->objects[i]));
       }
     }

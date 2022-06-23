@@ -85,7 +85,7 @@ PVector bezierInterpolate(VectorArr ptArr, double t){
 }
 //Create a bezier curve
 VectorArr bezierCurve(VectorArr ptArr, double inc){
-  double spacing = 1.0;
+  //double spacing = 1.0;
   //Return value
   VectorArr ret;
   //Go through multiple rounds of interpolation

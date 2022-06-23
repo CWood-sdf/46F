@@ -244,7 +244,7 @@ void FlywheelPID::step(){
   double speed = filter.value();
   //cout << speed << endl << endl;
   double err = speed - desiredVel;
-  bool settled = velCheck.settled(err);
+  //bool settled = velCheck.settled(err);
   debug.set(err, speedEst, speed, desiredVel);
   
   mots.spin(fwd, ctrl.getVal(err), pct);

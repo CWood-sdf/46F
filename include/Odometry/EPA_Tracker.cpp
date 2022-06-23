@@ -25,8 +25,8 @@ double posNeg180(double ang){
 //Function that updates the position
 //80+ lines of trig, vector math, and some sensor stuff
 PVector Positioner::update(){
-  static double lostDist = 0.0;
-  static PVector last = PVector(1, 1);
+  //static double lostDist = 0.0;
+  //static PVector last = PVector(1, 1);
   //Vector of the wheel angles
   PVector angles = PVector();
 

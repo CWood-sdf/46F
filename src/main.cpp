@@ -236,7 +236,7 @@ void drivercontrol (){
   }
 }
 void runFlywheel(){
-  int index = 0;
+  //int index = 0;
   flyPID.setTarget(0);
   flyTBH.setTarget(0);
   flyTBH.addTarget(500);
@@ -308,8 +308,8 @@ void brainOS() {
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
   
   bos::bosFns.push_back(Auton::selectAuton);
-  int state = 0;		
-  int maxState = 3; 
+  //int state = 0;		
+  //int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<");		
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">");		
   //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
@@ -411,9 +411,11 @@ int main() {
   while(!init){
     s(100);
   }
+  [[maybe_unused]]
   KillThread gpsUpdate = thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
+  [[maybe_unused]]
   KillThread otherThreads = thread(executeThreads);
 
   //WINDOWS LOADER: YEET BURGER

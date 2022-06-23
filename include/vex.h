@@ -9,7 +9,7 @@
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
-#pragma GCC diagnostic ignored "-Wunused-variable"
+//#pragma GCC diagnostic ignored "-Wunused-variable"
 #define _USE_MATH_DEFINES
 //Include a few basic files
 #include <list>

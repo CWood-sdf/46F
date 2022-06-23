@@ -147,6 +147,20 @@ private: // followPath vars
   bool moving = false;
   bool stopExitPrev = false;
   double pathRadius = 1.0;
+  struct {
+
+  } purePursuitVars;
+  struct {
+    //beta ~ p-term 
+    //[b > 0]
+    double beta = 1;
+    //zeta ~ d-term
+    //[0 < zeta < 1]
+    double zeta = 0.5;
+  } ramseteVars;
+  struct {
+    
+  } pathGenVars;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -154,6 +168,7 @@ public: // exitMode
     coast,
     nothing
   };
+  
 public: // followPath var editors
   bool isMoving();
   chain_method estimateStartPos(PVector v, double a);
@@ -175,6 +190,7 @@ private: // General path follower
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg);
   virtual void ramseteTo(FieldCoord pose);
+  virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
 public: // Path following implementations
   virtual void followPath(VectorArr arr);
