@@ -6,6 +6,8 @@ It contains many parts
 <h1>Wheelbase controls</h1>
 <h2>Pure Pursuit</h2>
 Use pure pursuit to control the robot along curve paths
+<h2>Ramsete</h2>
+Also use ramsete to move the robot along curves
 <h2>PID</h2>
 Use a basic PID loop to move the robot in straight lines
 <h1>Sensors</h1>
