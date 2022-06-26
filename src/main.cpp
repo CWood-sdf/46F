@@ -136,6 +136,8 @@ void autonomous(){
 #define sensitivity 12 
 
 //Drivercontrol + automation {
+
+//This class allows a button latch to exist
 class ButtonLatch {
   bool isPressing = false;
   int state = 0;
@@ -168,21 +170,26 @@ public:
 void drivercontrol (){
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
   static bool driveReversed = false;
+  //Protection from multiple instances of drivercontrol running
+  //Is true if there is no instance of drivercontrol running
   static bool allEmpty = false;
+  //An array of the current and past instances of drivercontrol
+  //The pair::first is whether the instance has exited or not
+  //The pair::second is a pointer to the primary bool a few lines down
   static vector<pair<bool, bool*>> countsExist = {};
-  cout << countsExist.size() << endl;
-  //int wheelsMove = 0;
-  // backLiftCtrllr.disable();
-  //KillThread::killAll();
+  //The count of drivercontrol instances
   static int count = 0;
   
+  //Is true if this drivercontrol instance should be running
   bool primary = count == 0 || allEmpty ? true : false;
+  //Push back the array
   countsExist.push_back({true, &primary});
+  //The index of this drivercontrol instance in countsExist
   int localCount = count;
   count++;
   while(1){
+    //Place driver code in here
     if(primary){
-      cout << "Good" << endl;
       //Drive control, uses quotient/square for smoothness
       double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
       double Y2 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
@@ -216,14 +223,15 @@ void drivercontrol (){
         driveReversed = !driveReversed;
       }
     }
-    else {
-      cout << "Bad" << endl;
-    }
+    else {    }
     s(10);
 
     
   }
+  //Let other instances know that this drivercontrol can't run
   countsExist[localCount].first = false;
+  //Search for a working drivercontrol instance, and set it to working
+  //If it's not working, allEmpty will be true
   for(auto [exist, ptr] : countsExist){
     if(exist){
       *ptr = true;
@@ -381,31 +389,18 @@ void brainOS() {
 }
 //}
 
-// struct EMA_PID_Mgr : PID_Extension {
-//   EMA dFilter = EMA(0.9, 0);
-  
-//   void manageD(double &d) override {
-//     dFilter.update(d);
-//     double newValue = dFilter.value();
-//     d = newValue;
-//   }
-//   PID_Extension * getCopy() override {
-//     auto ret = new EMA_PID_Mgr();
-//     ret->dFilter = this->dFilter;
-//     return ret;
-//   };
-// };
+
 int main() {
   
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
     v5_lv_init();
-    cout << "Cool" << endl;
+    cout << "Lvgl initialized" << endl;
     s(100);
     gyroInit(angler);
-    cout << "sdfdf" << endl;
     s(500);
     gyroInit(GPS);
+    //Gyro's initialized
     init = true;
   });
   while(!init){
@@ -418,10 +413,10 @@ int main() {
   [[maybe_unused]]
   KillThread otherThreads = thread(executeThreads);
 
-  //WINDOWS LOADER: YEET BURGER
+  //Awesome brain screen control thread
   thread loader = thread(brainOS);
-  //s(1000);
-  // wc.followPath({PVector(-48.0, 0.0), PVector(-48.0, 48.0)});
+
+  
   thread flywheelControl = thread(runFlywheel);
   //autonomous();
   Competition.autonomous(autonomous);
