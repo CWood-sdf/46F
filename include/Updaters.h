@@ -61,6 +61,7 @@ void microWait(uint time);
 void programWrite(bool start = true);
 
 //Allows a program reset at a new spot if there is limited tile space
+[[deprecated]]
 void waitForReset(){
   PVector pos = wc.botPos();
   cout << "start" << endl;

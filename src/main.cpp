@@ -1,12 +1,12 @@
 /*********************
- _______   _______  ____    _______
- |__  __|  | __  |  |   \   | __  |
-   | |     | | | |  | |\ \  | | | |
-   | |     | |_| |  | |/ /  | |_| |
-   |_|     |_____|  |___/   |_____|
+._______   _______  ____    _______
+.|__  __|  | __  |  |   \   | __  |
+.  | |     | | | |  | |\ \  | | | |
+.  | |     | |_| |  | |/ /  | |_| |
+.  |_|     |_____|  |___/   |_____|
 
-  Finish writing vision util
-  Look at github and test everything new since states
+. Finish writing vision util
+. Look at github and test everything new since states
 
 **********************/
 
