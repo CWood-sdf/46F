@@ -47,13 +47,13 @@ struct PIDF_Extension {
 };
 //Some nice simple math
 /********************************
-                      ____   ___    ______
+.                     ____   ___    ______
 ENSURE THAT THERE ARE |   \  | |   |  __  |
-                      | |\ \ | |   | |  | |
-                      | | \ \| |   | |__| |
-                      |_|  \___|   |______|
+.                     | |\ \ | |   | |  | |
+.                     | | \ \| |   | |__| |
+.                     |_|  \___|   |______|
 NON-DOUBLE TYPE VARIABLES BEFORE THE DOUBLE TYPE VARIABLES 
-    (This is for hacky copy constructor)
+    (This is for hacky pointer copy constructor)
 ********************************/
 class PIDF {
   public:
@@ -144,12 +144,14 @@ public:
 
   }
   PIDF(const PIDF& v){
+    //i hate this but it should work
     double* doubles = (double*)&v;
     double* thisPtr = (double*)this;
     int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
     for(int i = 0; i < size; i++){
       thisPtr[i] = doubles[i];
     }
+    resetVals();
     manager.reset(v.manager->getCopy());
   }
   PIDF& operator=(PIDF&& s){

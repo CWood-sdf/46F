@@ -1,10 +1,6 @@
 //EPA_WheelControl.h -- Use this file to control the wheel base
 //     to go to specified positions
 
-//A few major ideas working in this file:
-//  1 - Bezier Curves - To make beautifully smooth paths
-//  2 - Pure Pursuit - To direct the bot's motion along Bezier paths
-//  3 - PID Controllers - To direct the bot's speed along the path
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"

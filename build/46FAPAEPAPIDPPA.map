@@ -904,7 +904,7 @@ Discarded input sections
                 0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .text._ZN4PIDFC2ERKS_
-                0x00000000       0x5c build/include/Odometry/EPA_Wheel_Control.o
+                0x00000000       0x80 build/include/Odometry/EPA_Wheel_Control.o
  .ARM.exidx.text._ZN4PIDFC2ERKS_
                 0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .text._ZN20BasicWheelController8getSlaveEv

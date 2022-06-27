@@ -416,7 +416,6 @@ int main() {
   //Awesome brain screen control thread
   thread loader = thread(brainOS);
 
-  
   thread flywheelControl = thread(runFlywheel);
   //autonomous();
   Competition.autonomous(autonomous);
