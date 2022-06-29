@@ -1,11 +1,10 @@
 //EPA_WheelControl.h -- Use this file to control the wheel base
 //     to go to specified positions
-
+//Todo: clean up stuff
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
-#include "Odometry/PID.h"
-#include "Odometry/GPS_Share.h"
+#include "Odometry/Chassis.h"
 #include <deque>
 #ifdef DEBUG
 #warning "DEBUG already defined"
@@ -80,7 +79,8 @@ public: // Some variables
   //A public path for drawing
   VectorArr path;
   bool drawArr = false;
-  bool isOmniDir = false;
+
+  //Is true if afterTurn exists
   bool hasFn = false;
   //Function to be called between turning and driving
   std::function<void()> afterTurn = [](){}; 
