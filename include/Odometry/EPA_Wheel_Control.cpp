@@ -265,8 +265,8 @@ BasicWheelController::chain_method BasicWheelController::setPathRadius(double r)
   pathRadius = r;
   CHAIN
 }
-
-size_t BasicWheelController::getNearest(VectorArr arr, PVector obj){
+template<class Arr>
+size_t BasicWheelController::getNearest(Arr arr, PVector obj){
   size_t i = 0;
   double minDist = obj.dist2D(arr[0]);
   for(int j = 1; j < arr.size(); j++){
@@ -276,7 +276,8 @@ size_t BasicWheelController::getNearest(VectorArr arr, PVector obj){
   }
   return i;
 }
-size_t BasicWheelController::getNearest(VectorArr arr, PVector obj, size_t start){
+template<class Arr>
+size_t BasicWheelController::getNearest(Arr arr, PVector obj, size_t start){
   size_t i = 0;
   double minDist = obj.dist2D(arr[start]);
   if(start == arr.size() - 1){
@@ -354,7 +355,7 @@ void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg){
 
   //Allow the array to be drawn
   this->drawArr = true;
-  this->path = bezier;
+  this->publicPath = bezier;
   //The last dist
   // double lastDist = 12 * 2 * 24;
   //A timer
@@ -447,7 +448,7 @@ void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg){
     //Where will the robot be in 100 ms
     PVector estimateIn100 = (currentPos - lastPos) * (100.0 / (double)sleepTime) + currentPos;
     //Whats the index of the path point in 100 ms
-    int indexIn100 = getNearest(path, estimateIn100);
+    int indexIn100 = getNearest(bezier, estimateIn100);
     double theta = botAngle();
     PVector pos = botPos();
     
@@ -465,7 +466,7 @@ void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg){
     double Wd = vd * curvatures[bezierIndex];
     Matrix<double, 3, 1> error = transformation * globalErr;
     double k = 2.0 * ramseteVars.zeta * sqrt(Wd * Wd + ramseteVars.beta * vd * vd);
-    double eTheta = error(2, 0);
+    double eTheta = posNeg180(error(2, 0));
     double speed = vd * cos(eTheta) + k * error(0, 0);
     double turnVel = Wd + k * eTheta + ramseteVars.beta * vd * sin(eTheta) / eTheta * error(1, 0);
     //W = (L - R) / T
@@ -644,7 +645,7 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
     bezier = bezierCurve(arr);
     //Copy the array for future use
     arrCopy = arr;
-    this->path = bezier;
+    this->publicPath = bezier;
     //Turn to the first point purePursuitDist away
     // get first point
     double dist = botPos().dist2D(bezier[0]);
@@ -732,7 +733,7 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
 
   //Allow the array to be drawn
   this->drawArr = true;
-  this->path = bezier;
+  this->publicPath = bezier;
   //The last dist
   //double lastDist = 12 * 2 * 24;
   //A timer
@@ -1022,6 +1023,408 @@ void BasicWheelController::followPath(VectorArr arr, bool isNeg){
   
 
 }
+/***
+Random thoughts 
+
+the general follow function should manage the target point
+it should find the closest path point
+all that info needs to be sent to the controller, maybe a struct in controller
+probably have some option to call turnTo at the start
+follow should manage the exiting
+controller should prolly have some deInit function
+follow should call spin the wheels
+all controller should do is just to take target and nearest point data and return wheel speed
+chassis should manage wheel spinning nitty gritty
+**/
+void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, bool isNeg){
+  double purePursuitDist = 16.0; // Distance to pure pursuit target
+
+  #ifndef USE_GAME_SPECIFIC
+  #warning GSD (Auton position reverse)
+  #endif
+  //Change to new game dependency
+  if(reversed){
+    for(auto& a : arr){
+      a *= -1.0;
+    }
+  }
+  
+  if(controller->turnAtStart)
+  //Simple initialization and turn to first point
+  {
+    //Allow the array to be drawn
+    this->drawArr = true;
+    arr.push_front(botPos());
+    //Construct the original bezier
+    VectorArr bezier = bezierCurve(arr);
+    this->publicPath = bezier;
+    //Turn to the first point purePursuitDist away
+    // get first point
+    double dist = botPos().dist2D(bezier[0]);
+    int i = 0;
+    while(dist < purePursuitDist){
+      dist += bezier[i].dist2D(bezier[i + 1]);
+      i++;
+    }
+    if(!turnPrevent){
+      callingInDrive = true;
+      turnTo(botPos().angleTo(bezier[i - 1]) + 180.0 * isNeg);
+      callingInDrive = false;
+    }
+    turnPrevent = false;
+    cout << "Turn Done" << endl;
+    afterTurn();
+    afterTurn = [](){};
+  }
+
+  path.make(arr, chassis);
+  //Make extended path
+  auto bezier = path.getBezier();
+  VectorArr extendedPath;
+  {
+    extendedPath = bezier;
+    PVector ext = (PVector)bezier.last() - bezier[bezier.size() - 2];
+    double extraDist = 0.7;
+    for(int i = 1; i < 24.0 / extraDist; i++){
+      extendedPath.push((PVector)bezier.last() + ext * extraDist * i);
+    }
+  }
+
+  //The index of the pursuit target
+  int bezierIndex = 0;
+  //The pursuit target
+  PVector pursuit = path[bezierIndex];
+  //Lots variables
+
+  //Allow the array to be drawn
+  this->drawArr = true;
+  this->publicPath = bezier;
+  //The last dist
+  //double lastDist = 12 * 2 * 24;
+  //A timer
+  timer t = timer();
+  [[maybe_unused]]
+  int time = 0, //Counts the time in loop iterations
+  timeIn = 0, // The amount of time spent near the target
+  maxTimeIn = 5, // The time needed before exit
+  sleepTime = 10, // The sleep time
+  g = 0; // A debug output counter
+
+  double 
+  //Going with an hopefully possible 1 in accuracy
+  minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
+  cout << minAllowedDist << endl;
+  #undef DEBUG
+  #ifdef DEBUG  
+  struct {
+    vector<double> outSpeeds, encSpeeds, targSpeeds, angles, cp, cd, sp, sd;
+    vector<PVector> pos, pursuit;
+    void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit){
+      outSpeeds.push_back(out);
+      encSpeeds.push_back(enc);
+      targSpeeds.push_back(targ);
+      pos.push_back(p);
+      angles.push_back(angle);
+      cp.push_back(acp);
+      cd.push_back(acd);
+      sp.push_back(asp);
+      sd.push_back(asd);
+      pursuit.push_back(apursuit);
+    }
+  } realTime;
+  #endif
+  
+  //Save the current distance fns
+  setOldDistFns();
+  int timesStopped = 0;
+  moving = true;
+  PVector lastPos = botPos();
+  int lastIndex = 0;
+  //Loop
+  while(timeIn * sleepTime < maxTimeIn){
+    //Get the nearest pure pursuit position
+    int nearestIndex = getNearest(path, botPos(), lastIndex);
+    lastIndex = nearestIndex;
+    if(exitEarly){
+      cout << "Exit due to external thread request" << endl;
+      exitEarly = false;
+      break;
+    }
+    // Keep the Pure Pursuit target purePursuitDist inches away from the bot
+    while(pursuit.dist2D(botPos()) < purePursuitDist && pursuit != path.last()){
+      pursuit = path[bezierIndex];
+      ++bezierIndex;
+    }
+    
+    //Near the target, increment timeIn
+    if(botPos().dist2D(path.last()) < minAllowedDist && pursuit == path.last()){
+      timeIn++;
+      
+    }
+    else {
+      timeIn = 0;
+    }
+    //The distance to the pursuit target
+    double dist = botPos().dist2D(pursuit);
+    
+    //If the bot's not moving, and it's not currently accelerating
+    if(pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000){
+      timesStopped++;
+    }
+    else {
+      timesStopped = 0;
+    }
+    //50 ms not moving -> exit
+    if(timesStopped * sleepTime > 50 && !stopExitPrev){
+      cout << "Stop Exit" << endl;
+      break;
+    }
+    //Use the distFns for the current dist
+    useDistFns(botPos().dist2D(path.last()));
+    //The point extended beyond the path to make sure normAngle doesn't get big near the target
+    PVector virtualPursuit = pursuit;
+    if(botPos().dist2D(pursuit) < purePursuitDist && pursuit == path.last()){
+      //A vector that is parallel wih last point
+      PVector last = (PVector)path.last() - path[path.size() - 4];
+      //Distance to be added so that virtualPursuit is still purePursuitDist away from bot
+      double addDist = purePursuitDist - botPos().dist2D(pursuit);
+      //Make last to be proper size
+
+      last *= purePursuitDist / last.mag() * addDist;
+      virtualPursuit += last;
+    }
+    //Angle of robot to target
+    double angle = baseAngle(botPos().angleTo(virtualPursuit));
+    
+    //The angle that it needs to travel at
+    double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
+    
+    Controller::Input input;
+    input.angleTarget = angle;
+    input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
+    input.target = path[bezierIndex];
+    input.position = botPos();
+    input.dist = dist;
+    input.targetPt = path[bezierIndex];
+    input.chassis = chassis;
+    /*** NOTHING HAPPENING IN NEXT TWO BLOCKS ***/
+    //So that the robot can take tight turns, 
+    //if the turn is too tight, then the robot direction of travel will flip
+    //Also if it's basically at the end, 
+    //  then the robot will take the more efficient path backwards to the target
+    //  rather than turn around
+    if(abs(normAngle) >= 150){
+      //isNeg = !isNeg;
+      // cout << botPos() << ", " << pursuit << endl;
+      // cout << normAngle << endl;
+      // cout << "Reverse Neg" << endl;
+      //Decrease timeIn because we aren't doing any sleeping this round
+      if(timeIn > 0){
+        //timeIn--;
+      }
+      //Send it back up top to recalibrate the speeds without sleeping
+      //continue;
+    }
+
+    auto speeds = controller->followTo(input);
+    // double travelCurvature;
+    // {
+    //   auto rPos = botPos();
+    //   auto lPos = pursuit;
+    //   double 
+    //     side = 
+    //       sign(
+    //         sin(botAngle()) * (lPos.x - rPos.x)
+    //         - cos(botAngle()) * (lPos.y - rPos.y)
+    //       ),
+    //     a = -tan(botAngle()),
+    //     b = 1.0,
+    //     c = tan(botAngle()) * rPos.x - rPos.y;
+      
+    //   double x = abs(a * lPos.x + b * lPos.y + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
+    //   travelCurvature = 2.0 * x / pow(dist, 2);
+    // }
+    
+    // //normAngle is too big for program to handle -> exit
+    // if(abs(normAngle) > 70){
+    //   cout << "Ok exit" << endl;
+    //   break;
+    // }
+    double speed = 0;
+    switch(speeds.first.second){
+    case Controller::FwdVelTps::inps:
+      speed = chassis->realToPct(speeds.first.first);
+      break;
+    case Controller::FwdVelTps::pct:
+      speed = speeds.first.first;
+      break;
+    }
+    speed *= isNeg * 2.0 - 1;
+
+    if(g++ == 2){
+      //cout << normAngle << ", " << extraSpeed << endl;
+      // cout << extraSpeed << ", " << normAngle << endl;
+      // cout << speed << ", " << dist << endl;
+      g = 0;
+    }
+    
+    double targetVel = abs(speed);
+    double rightExtra;
+    {
+      double targetRobotVel = pctToReal(targetVel);
+      switch(speeds.second.second){
+      case Controller::AngularVelTps::curvature:
+        rightExtra = realToPct(speeds.second.first * (trackWidth + 3.0) * targetRobotVel / 2.0);
+        break;
+      case Controller::AngularVelTps::pctDiff:
+        rightExtra = speeds.second.first;
+        break;
+      case Controller::AngularVelTps::radps:
+        rightExtra = speeds.second.first * chassis->trackWidth / -2.0;
+        break;
+      }
+      
+    }
+    double orgSpeed = speed + 0.000000001;
+    //Slew speed
+    if(abs(speed) > path[nearestIndex].targetSpeed){
+      orgSpeed = speed;
+      speed = path[nearestIndex].targetSpeed;
+    }
+    if(abs(speed) > speedLimit){
+      orgSpeed = speed;
+      speed /= abs(speed);
+      speed *= speedLimit;
+    }
+    rightExtra *= speed / orgSpeed;
+    if(isNeg){
+      rightExtra *= -1;
+      
+    }
+    //Mindblowing lines right here
+    //Move the robot
+    chassis->driveFromDiff(speed, rightExtra, isNeg ? reverse : fwd);
+    lastPos = botPos();
+    //Sleep (WOW, HE'S A GENIUS)
+    s(sleepTime);
+    
+    #ifdef DEBUG
+    realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
+    #endif
+  }
+  moving = false;
+  //Stop drawing the path
+  //De-init code
+  {
+    //Set the last target for external stuff
+    lastTarget = bezier.last();
+    //Stop the bot
+    switch(BrakeMode){
+      case exitMode::normal:
+        hardBrake();
+        break;
+      case exitMode::coast:
+        coastBrake();
+        break;
+      case exitMode::nothing:
+        break;
+    }
+    this->drawArr = false;
+    cout << "Path stop" << endl;
+    //Print postion and target position
+    cout << botPos() << ", " << bezier.last() << endl;
+    exitDist = 0.0;
+  }
+  stopExitPrev = false;
+  //Print all the lists
+  #ifdef DEBUG
+    s(1000);
+    cout << endl << endl;
+    cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";
+    cout << "main.inputData([";
+    int line = 0;
+    for(auto i : bezier){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+
+    }
+    s(100);
+    cout << "]);";
+    cout << "\nmain.auxiliaryData.pos = [";
+    for(auto i : realTime.pos){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "];\n\nmain.auxiliaryData.angle = [";
+    for(auto i : realTime.angles){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "];\n\nmain.auxiliaryData.pursuit = [";
+    for(auto i : realTime.pursuit){
+      cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "];\n";
+    cout << "main.resetI();main.setHighlight(0);\n";
+    cout << "outputVel.inputData([" << flush;
+    s(100);
+    for(auto i : realTime.outSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "encVel.inputData([";
+    for(auto i : realTime.encSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(20);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "targetVel.inputData([";
+    for(auto i : realTime.targSpeeds){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "slaveP.inputData([";
+    for(auto i : realTime.sp){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "slaveD.inputData([";
+    for(auto i : realTime.sd){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "ctrlP.inputData([";
+    for(auto i : realTime.cp){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "ctrlD.inputData([";
+    for(auto i : realTime.cd){
+      cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+      s(10);
+    }
+    s(100);
+    cout << "]);\n";
+    cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
+    cout << endl;
+  #endif
+  
+}
 //The beefiest function in this file
 void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
   cout << "cosdf" << endl;
@@ -1051,7 +1454,7 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
     bezier = bezierCurve(arr);
     //Copy the array for future use
     arrCopy = arr;
-    this->path = bezier;
+    this->publicPath = bezier;
     //Turn to the first point purePursuitDist away
     // get first point
     double dist = botPos().dist2D(bezier[0]);
@@ -1139,7 +1542,7 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
 
   //Allow the array to be drawn
   this->drawArr = true;
-  this->path = bezier;
+  this->publicPath = bezier;
   //The last dist
   //double lastDist = 12 * 2 * 24;
   //A timer

@@ -1,7 +1,7 @@
 /*********************
 ._______   _______  ____    _______
 .|__  __|  | __  |  |   \   | __  |
-.  | |     | | | |  | |\ \  | | | |
+.  | |     | | | |  | |\ \  | | | | 
 .  | |     | |_| |  | |/ /  | |_| |
 .  |_|     |_____|  |___/   |_____|
 
@@ -284,7 +284,7 @@ void drawPath(bool){
   
   if(wc.drawArr){
     Brain.Screen.setFillColor(blue);
-    for(auto v : wc.path){
+    for(auto v : wc.publicPath){
       v *= 2.0;
       v += off;
       Brain.Screen.drawCircle(v.x, v.y, 2);

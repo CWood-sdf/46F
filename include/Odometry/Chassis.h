@@ -1,10 +1,13 @@
 #include "Odometry/PID.h"
 #include "Odometry/GPS_Share.h"
+#include "Bezier.h"
 struct Chassis {
   double speedLimit = 100;
+  double maxAcc = 500; // in/s^2
+  double maxDAcc = 360; // in/s^2
   NewMotor<> leftWheels;
   NewMotor<> rightWheels;
-  //GPS_Share& pos;
+  GPS_Share& pos;
   double trackWidth = 0.0;
   double gearRatio = 1.0;
   double wheelRad = 0.0;
@@ -48,4 +51,9 @@ struct Chassis {
   void driveFromCurvature(double speed, double curvature);
   void driveFromAngular(double speed, double angularVel);
   void driveFromLR(double left, double right);
+  void driveFromDiff(double speed, double diff, directionType d){
+    leftWheels.spinVolt(d, speed + diff);
+    rightWheels.spinVolt(d, speed - diff);
+  }
+  Chassis(GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 };

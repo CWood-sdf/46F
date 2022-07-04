@@ -4,15 +4,14 @@
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
-#include "Odometry/Chassis.h"
+#include "Odometry/Controllers.h"
 #include <deque>
 #ifdef DEBUG
 #warning "DEBUG already defined"
 #else
 #define DEBUG
 #endif
-#include "Bezier.h"
-double sign(double v);
+
 //The basic wheel controller 
 class BasicWheelController {
 protected: // PID variables + other random things
@@ -77,7 +76,7 @@ public: // Some variables
 
   
   //A public path for drawing
-  VectorArr path;
+  VectorArr publicPath;
   bool drawArr = false;
 
   //Is true if afterTurn exists
@@ -180,14 +179,18 @@ public: // followPath var editors
   chain_method prevStopExit();
   chain_method setPathRadius(double r);
 private: // General path follower
-
-  size_t getNearest(VectorArr arr, PVector obj);
-  size_t getNearest(VectorArr arr, PVector obj, size_t start);
+  Path path;
+  Chassis* chassis;
+  template<class Arr>
+  size_t getNearest(Arr arr, PVector obj);
+  template<class Arr>
+  size_t getNearest(Arr arr, PVector obj, size_t start);
   //The beefiest function in this file
   virtual void followPath(VectorArr arr, bool isNeg);
   virtual void ramseteTo(FieldCoord pose);
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
+  virtual void generalFollow(VectorArr arr, Controller* controller, bool isNeg);
 public: // Path following implementations
   virtual void followPath(VectorArr arr);
   virtual void backwardsFollow(VectorArr arr);
