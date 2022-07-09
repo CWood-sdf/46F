@@ -75,31 +75,31 @@ void turnLeft(int t){
 }
 //Autonomous Stuff {
 
-void addPids(){
-  cout << "Turn P" << endl;
-  while(1){
-    if(isPressing(Greg.ButtonA)){
-      wc.addTurnPid(0, 0, 0);
-      break;
-    }
-    if(isPressing(Greg.ButtonB)){
-      wc.addTurnPid(0.1, 0, 0.0);
-      break;
-    }
-  }
-  cout << "Turn D" << endl;
-  while(1){
-    if(isPressing(Greg.ButtonA)){
-      break;
-    }
-    if(isPressing(Greg.ButtonB)){
-      wc.addTurnPid(0.0, 0, 0.05);
-      break;
-    }
-  }
+// void addPids(){
+//   cout << "Turn P" << endl;
+//   while(1){
+//     if(isPressing(Greg.ButtonA)){
+//       wc.addTurnPid(0, 0, 0);
+//       break;
+//     }
+//     if(isPressing(Greg.ButtonB)){
+//       wc.addTurnPid(0.1, 0, 0.0);
+//       break;
+//     }
+//   }
+//   cout << "Turn D" << endl;
+//   while(1){
+//     if(isPressing(Greg.ButtonA)){
+//       break;
+//     }
+//     if(isPressing(Greg.ButtonB)){
+//       wc.addTurnPid(0.0, 0, 0.05);
+//       break;
+//     }
+//   }
   
-  cout << "Done" << endl;
-}
+//   cout << "Done" << endl;
+// }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
 };

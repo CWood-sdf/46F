@@ -2,6 +2,7 @@
 #include "Odometry/GPS_Share.h"
 #include "Bezier.h"
 struct Chassis {
+  typedef Chassis& chain_method;
   double speedLimit = 100;
   double maxAcc = 500; // in/s^2
   double maxDAcc = 360; // in/s^2
@@ -12,7 +13,7 @@ struct Chassis {
   double gearRatio = 1.0;
   double wheelRad = 0.0;
   gearSetting cartridge = gearSetting::ratio18_1;
-  double botAngle ();
+  double botAngle();
   PVector& botPos();
   //converts pct to in/s
   double pctToReal(double speed){
@@ -55,5 +56,15 @@ struct Chassis {
     leftWheels.spinVolt(d, speed + diff);
     rightWheels.spinVolt(d, speed - diff);
   }
-  Chassis(GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
+  void hardBrake();
+  void coastBrake();
+  void turnLeft(double speed);
+  void turnRight(double speed);
+  void moveLeftSide(double speed, directionType d);
+  void moveRightSide(double speed, directionType d);
+  void move(double speed, directionType d);
+  chain_method setMaxAcc(double v);
+  chain_method setMaxDAcc(double v);
+  chain_method setSpeedLimit(double v);
+  Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 };

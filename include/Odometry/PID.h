@@ -140,6 +140,7 @@ public:
     iZero = iZeroRange;
   }
   PIDF(double p, double i, double d, double f) : PIDF(KVals({p, i, d, f})){}
+  PIDF(double p, double i, double d) : PIDF(KVals({p, i, d, 0.0})){}
   PIDF(KVals vals) : k(vals){
 
   }
@@ -153,11 +154,6 @@ public:
     }
     resetVals();
     manager.reset(v.manager->getCopy());
-  }
-  PIDF& operator=(PIDF&& s){
-    k = s.k;
-    manager = s.manager;
-    return *this;
   }
   //Get the error
   double getError(){
@@ -215,6 +211,24 @@ public:
   PIDF& operator-= (PidfAdder a){
     k -= a;
     return *this;
+  }
+  PIDF& operator=(PIDF&& a){
+    return operator=(a);
+  }
+  //Directly taken from the copy constructor
+  PIDF& operator=(const PIDF& a){
+    //i hate this but it should work
+    double* doubles = (double*)&a;
+    double* thisPtr = (double*)this;
+    int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
+    for(int i = 0; i < size; i++){
+      thisPtr[i] = doubles[i];
+    }
+
+    //Clear any error build up
+    resetVals();
+    manager.reset(a.manager->getCopy());
+    CHAIN
   }
   KVals getKVals(){
     return k;

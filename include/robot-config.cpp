@@ -34,6 +34,8 @@ NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
 
 NewMotor<> intake = NewMotor<>(intakeMot);
 
+
+
 /*************************************
 
 Pneumatics
@@ -63,7 +65,6 @@ LineCounter rachetDetector (Brain.ThreeWirePort.A);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
-
 /*************************************
 
 Odometry
@@ -84,8 +85,13 @@ posTp positioner = posTp(arrX, arrY,
 GPS_Share share = GPS_Share(positioner, GPS);
 
 //Wheel controller
-Omni_6Controller wc = Omni_6Controller(BL, BR, FL, FR, ML, MR, share);
 
+Chassis chassis = Chassis({BL, ML, FL}, {BR, MR, FR}, share, 15, 1, 3.75, gearSetting::ratio18_1);
+PurePursuitController purePursuit = PurePursuitController(6.25, 0.001, 2.4325, 0, 8, 1);
+RamseteController ramsete = RamseteController(1.0, 0.5);
+BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
+
+Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, 1.0);
 
 /*************************************
 

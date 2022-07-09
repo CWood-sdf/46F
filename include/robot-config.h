@@ -44,6 +44,11 @@ extern NewMotor<> wheels;
 extern NewMotor<> leftWhls;
 extern NewMotor<> rghtWhls;
 
+extern Chassis chassis;
+extern PurePursuitController purePursuit;
+extern RamseteController ramsete;
+extern BasicPidController pidController;
+
 /*************************************
 
 Pneumatics
