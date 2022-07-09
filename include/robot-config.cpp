@@ -91,7 +91,7 @@ PurePursuitController purePursuit = PurePursuitController(6.25, 0.001, 2.4325, 0
 RamseteController ramsete = RamseteController(1.0, 0.5);
 BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
 
-Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, 1.0);
+Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, PID(2.42, 0.2, 1.35, 0, 20, 4), 1.0);
 
 /*************************************
 

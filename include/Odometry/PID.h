@@ -155,6 +155,9 @@ public:
     resetVals();
     manager.reset(v.manager->getCopy());
   }
+  PIDF(PIDF&& v) {
+    *this = std::move(v);
+  }
   //Get the error
   double getError(){
     return error;
