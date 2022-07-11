@@ -7,6 +7,7 @@ Path::chain_method Path::setK(double s){
   CHAIN
 }
 void Path::make(VectorArr arr, Chassis* chassis){
+  this->path.clear();
   this->arr = arr;
   auto arrCopy = arr;
   arrCopy.push_front(chassis->botPos());

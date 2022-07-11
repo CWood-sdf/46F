@@ -33,7 +33,7 @@ public:
 double sign(double v);
 class Controller {
   bool turnAtStart = false;
-  bool defaultTurn = false;
+  bool defaultTurn = true;
 public:  
   bool isTurnAtStart(){
     return turnAtStart;

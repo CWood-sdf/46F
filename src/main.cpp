@@ -100,6 +100,11 @@ void turnLeft(int t){
   
 //   cout << "Done" << endl;
 // }
+void randomAutonTest(){
+  wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &ramsete, false);
+  wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &purePursuit, false);
+  wc.generalFollow({PVector(48, 48)}, &pidController, false);
+}
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
 };
