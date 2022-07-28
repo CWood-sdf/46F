@@ -215,12 +215,12 @@ size_t BasicWheelController::getNearest(Arr arr, PVector obj){
 }
 template<class Arr>
 size_t BasicWheelController::getNearest(Arr arr, PVector obj, size_t start){
-  size_t i = 0;
+  size_t i = start;
   double minDist = obj.dist2D(arr[start]);
   if(start == arr.size() - 1){
     return start;
   }
-  for(int j = start + 1; j < arr.size(); j++){
+  for(int j = start; j < arr.size(); j++){
     if(obj.dist2D(arr[j]) < minDist){
       i = j;
     }
@@ -366,7 +366,9 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       pursuit = path[bezierIndex];
       ++bezierIndex;
     }
-    
+    if (bezierIndex >= path.size()) {
+        bezierIndex = path.size() - 1;
+    }
     //Near the target, increment timeIn
     if(botPos().dist2D(path.last()) < minAllowedDist && pursuit == path.last()){
       timeIn++;
@@ -401,9 +403,10 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       double addDist = purePursuitDist - botPos().dist2D(pursuit);
       //Make last to be proper size
 
-      last *= purePursuitDist / last.mag() * addDist;
+      last *= addDist / last.mag();
       virtualPursuit += last;
     }
+    dist = botPos().dist2D(virtualPursuit);
     //Angle of robot to target
     double angle = baseAngle(botPos().angleTo(virtualPursuit));
     
@@ -413,10 +416,12 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     Controller::Input input;
     input.angleTarget = angle;
     input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
-    input.target = path[bezierIndex];
+    input.target = virtualPursuit;
     input.position = botPos();
     input.dist = dist;
-    input.targetPt = path[bezierIndex];
+    auto copy = path[bezierIndex];
+    copy.bezierPt = virtualPursuit;
+    input.targetPt = copy;
     input.chassis = chassis;
     /*** NOTHING HAPPENING IN NEXT TWO BLOCKS ***/
     //So that the robot can take tight turns, 
@@ -447,7 +452,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       speed = speeds.first.first;
       break;
     }
-    speed *= isNeg * 2.0 - 1;
+    //speed *= -(isNeg * 2.0 - 1);
 
     if(g++ == 2){
       //cout << normAngle << ", " << extraSpeed << endl;
@@ -455,24 +460,8 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       // cout << speed << ", " << dist << endl;
       g = 0;
     }
+    // double targetVel = abs(speed);
     
-    double targetVel = abs(speed);
-    double rightExtra;
-    {
-      double targetRobotVel = chassis->pctToReal(targetVel);
-      switch(speeds.second.second){
-      case Controller::AngularVelTps::curvature:
-        rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
-        break;
-      case Controller::AngularVelTps::pctDiff:
-        rightExtra = speeds.second.first;
-        break;
-      case Controller::AngularVelTps::radps:
-        rightExtra = speeds.second.first * chassis->trackWidth / -2.0;
-        break;
-      }
-      
-    }
     double orgSpeed = speed + 0.000000001;
     //Slew speed
     if(abs(speed) > path[nearestIndex].targetSpeed){
@@ -484,14 +473,75 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       speed /= abs(speed);
       speed *= chassis->speedLimit;
     }
-    rightExtra *= speed / orgSpeed;
+    double rightExtra;
+    {
+      double targetRobotVel = chassis->pctToReal(speed);
+      switch (speeds.second.second) {
+      case Controller::AngularVelTps::curvature:
+        rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
+        break;
+      case Controller::AngularVelTps::pctDiff:
+        rightExtra = speeds.second.first;
+        break;
+      case Controller::AngularVelTps::radps:
+        rightExtra = speeds.second.first * chassis->trackWidth / -2.0;
+        break;
+      }
+    }
+    //This is half done, pls fix
+    // if ((abs(speed + rightExtra) > 100.0 || abs(speed - rightExtra) > 100.0) && abs(rightExtra) < 100) {
+    //   double newFwdVel = chassis->pctToReal(speed);
+    //   double left, right;
+    //   switch (speeds.second.second) {
+    //   case Controller::AngularVelTps::curvature: [[likely]]
+    //   TOP:
+    //     left = chassis->realToPct(newFwdVel * (2.0 + speeds.second.first * chassis->trackWidth) / 2.0);
+    //     right = chassis->realToPct(newFwdVel * (2.0 - speeds.second.first * chassis->trackWidth) / 2.0);
+    //     if (abs(left) > 100) {
+    //       newFwdVel = newFwdVel * 99.0 / left;
+    //       goto TOP;
+    //     }
+    //     if (abs(right) > 100) {
+    //       newFwdVel = newFwdVel * 99.0 / right;
+    //       goto TOP;
+    //     }
+    //     speed = chassis->realToPct(newFwdVel);
+    //     break;
+    //   case Controller::AngularVelTps::pctDiff:
+    //   TOP2:
+    //     left = speed + speeds.second.first;
+    //     right = speed - speeds.second.first;
+    //     if (abs(left) > 100) {
+    //       speeds.second.first = speeds.second.first * 99.0 / left;
+    //       goto TOP2;
+    //     }
+    //     if (abs(right) > 100) {
+    //       speeds.second.first = speeds.second.first * 99.0 / right;
+    //       goto TOP2;
+    //     }
+    //     break;
+    //   case Controller::AngularVelTps::radps:
+    //   TOP3:
+    //     rightExtra = chassis->pctToReal(speed) * chassis->trackWidth / -2.0;
+    //     if (abs(speed + rightExtra) > 100 || abs(speed - rightExtra) > 100) {
+    //       if (abs(speed + rightExtra) > 100) {
+    //         speed = speed * 99.0 / (speed + rightExtra);
+    //       }
+    //       if (abs(speed - rightExtra) > 100) {
+    //         speed = speed * 99.0 / (speed - rightExtra);
+    //       }
+    //       goto TOP3;
+    //     } 
+    //     break;
+    //   }
+    // }
     if(isNeg){
-      rightExtra *= -1;
-      
+      // rightExtra *= -1;
+      speed *= -1.0;
     }
     //Mindblowing lines right here
     //Move the robot
-    chassis->driveFromDiff(speed, rightExtra, isNeg ? reverse : fwd);
+    chassis->driveFromDiff(-speed, -rightExtra, fwd);
     lastPos = botPos();
     //Sleep (WOW, HE'S A GENIUS)
     s(sleepTime);

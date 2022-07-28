@@ -52,10 +52,7 @@ struct Chassis {
   void driveFromCurvature(double speed, double curvature);
   void driveFromAngular(double speed, double angularVel);
   void driveFromLR(double left, double right);
-  void driveFromDiff(double speed, double diff, directionType d){
-    leftWheels.spinVolt(d, speed + diff);
-    rightWheels.spinVolt(d, speed - diff);
-  }
+  void driveFromDiff(double speed, double diff, directionType d);
   void hardBrake();
   void coastBrake();
   void turnLeft(double speed);

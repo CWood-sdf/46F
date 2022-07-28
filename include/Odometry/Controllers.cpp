@@ -1,10 +1,21 @@
 #define NO_MAKE
 #include "Odometry/Controllers.h"
-
+#include <cstdint>
+#include <iomanip> 
+#include <algorithm>
 //That should be a sufficient path generator
 Path::chain_method Path::setK(double s){
   kConst = s;
   CHAIN
+}
+double clamp(double val, double high, double low){
+  if(val > high){
+    return high;
+  }
+  else if(val < low){
+    return low;
+  }
+  return val;
 }
 void Path::make(VectorArr arr, Chassis* chassis){
   this->path.clear();
@@ -33,13 +44,13 @@ void Path::make(VectorArr arr, Chassis* chassis){
   //vf^2 = vi^2 + 2ad
   double startVel = 30;
   targetSpeeds[0] = startVel;
-  targetSpeeds.push_back(40);
+  targetSpeeds.back() = 40;
   for(int i = 1; i < bezier.size(); i++){
     //I think this math of converting inches to percent works
     double d = bezier[i].dist2D(bezier[i - 1]);
     double a = chassis->maxAcc;
     if(startVel < targetSpeeds[i]){
-      startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
+      startVel = targetSpeeds[i] = clamp(sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI)), -abs(targetSpeeds[i]), abs(targetSpeeds[i]));
       if(startVel > targetSpeeds[i + 1]){
         startVel = targetSpeeds[i + 1];
       }
@@ -52,7 +63,7 @@ void Path::make(VectorArr arr, Chassis* chassis){
         i--;
         double a = chassis->maxDAcc;
         double d = bezier[i].dist2D(bezier[i + 1]);
-        startVel = targetSpeeds[i] = sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI));
+        startVel = targetSpeeds[i] = clamp(sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI)), -abs(targetSpeeds[i]), abs(targetSpeeds[i]));
       } while(startVel < targetSpeeds[i - 1]);
       i = startI;
       startVel = targetSpeeds[i];
@@ -106,17 +117,18 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
   {
     auto rPos = input.position;
     auto lPos = input.target;
+    double moddedAngle = input.currentAngle * DEG_TO_RAD;
     double 
       side = 
         sign(
-          sin(input.currentAngle) * (lPos.x - rPos.x)
-          - cos(input.currentAngle) * (lPos.y - rPos.y)
+          -cos(input.currentAngle) * (lPos.x - rPos.x)
+          +sin(input.currentAngle) * (lPos.y - rPos.y)
         ),
-      a = -tan(input.currentAngle),
+      a = -tan(moddedAngle),
       b = 1.0,
-      c = tan(input.currentAngle) * rPos.x - rPos.y;
+      c = tan(moddedAngle) * rPos.y - rPos.x;
     
-    double x = abs(a * lPos.x + b * lPos.y + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
+    double x = abs(a * lPos.y + b * lPos.x + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
     travelCurvature = 2.0 * x / pow(input.dist, 2);
   }
   //Get the target speed of the robot
@@ -134,10 +146,10 @@ RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double targetAngle = posNeg180(input.angleTarget);//deg
   auto pursuit = input.target;
   auto pos = input.position;
-
+  double tRad = theta * DEG_TO_RAD;
   Matrix<double, 3, 3> transformation = {
-    { cos(theta), sin(theta), 0},
-    {-sin(theta), cos(theta), 0},
+    { cos(tRad), -sin(tRad), 0},
+    { sin(tRad),  cos(tRad), 0},
     {    0,            0,     1}
   };
   Matrix<double, 3, 1> globalErr = {
@@ -150,8 +162,8 @@ RamseteController::followToRet RamseteController::followTo(Input &input)  {
   Matrix<double, 3, 1> error = transformation * globalErr;
   double k = 2.0 * zeta * sqrt(Wd * Wd/*rad^2/s^2*/ + beta * vd * vd/*rad^2/s^2*/);//1/s^2
   double eTheta = error(2, 0)/*rad*/;
-  double speed = vd * cos(eTheta) + k * error(0, 0);//inps
-  double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / eTheta * error(1, 0);
+  double speed = vd * cos(eTheta) + k * error(1, 0);//inps
+  double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / eTheta * error(0, 0);
   return {{speed, FwdVelTps::inps}, {turnVel, AngularVelTps::radps}};
 }
 RamseteController::RamseteController(double beta, double zeta) : Controller() {
