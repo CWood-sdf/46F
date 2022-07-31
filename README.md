@@ -1,5 +1,5 @@
-# 46X-APA-Actual
-This project is the main program for 46X
+# 46F
+This project is the main program for 46F
 
 It contains many parts
 
@@ -22,3 +22,4 @@ Has windows loader, data output, and auton selector. Any function can be plugged
 <h1>Future</h1>
 <h2>Vision</h2>
 EMA Filtering of vision objects
+Using vision sensor to determine an objects position relative to the vision sensor, then use odometry data to convert that to a global position
