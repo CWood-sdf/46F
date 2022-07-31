@@ -6,7 +6,9 @@
 .  |_|     |_____|  |___/   |_____|
 
 . Finish writing vision util
-. Look at github and test everything new since states
+. Match VisionOdom files to the website test
+. Check that the vector fns in website return the same
+.   - Esp. angleTo
 
 **********************/
 
