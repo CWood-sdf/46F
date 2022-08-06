@@ -10,6 +10,8 @@ Use pure pursuit to control the robot along curve paths
 Also use ramsete to move the robot along curves
 <h2>PID</h2>
 Use a basic PID loop to move the robot in straight lines
+<h2>Bezier path generation</h2>
+Bezier curves are used to produce smooth paths, then target speeds are generated to allow the robot to optimally follow the path
 <h1>Sensors</h1>
 <h2>Line Tracker</h2>
 Uses line tracker for detection of close objects
