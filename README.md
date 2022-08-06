@@ -21,5 +21,6 @@ Integrated potentiometer auton selection
 Has windows loader, data output, and auton selector. Any function can be plugged in, including those written with lvgl or regular Brain.Screen.draw[Name] controls
 <h1>Future</h1>
 <h2>Vision</h2>
-EMA Filtering of vision objects
-Using vision sensor to determine an objects position relative to the vision sensor, then use odometry data to convert that to a global position
+EMA Filtering of vision objects. 
+Using vision sensor to determine an objects position relative to the vision sensor, then use odometry data to convert that to a global position. 
+Using vision sensor looking at the goals to determine the robot's position (this would probably just be a tool to confirm the normal odometry position). 
