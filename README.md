@@ -21,6 +21,8 @@ Kalmanized distance sensor
 Integrated potentiometer auton selection
 <h1>Brain Screen</h1>
 Has windows loader, data output, and auton selector. Any function can be plugged in, including those written with lvgl or regular Brain.Screen.draw[Name] controls
+<h2>LVGL </h2>
+LVGL is archived and linked into the project already. 
 <h1>Future</h1>
 <h2>Vision</h2>
 EMA Filtering of vision objects. 
