@@ -9,8 +9,6 @@
 . Match VisionOdom files to the website test
 . Check that the vector fns in website return the same
 .   - Esp. angleTo
-. Get some sort of Dependency Inversion on GPS_Share positioning
-.   - This will line it up nicely with visual odometry
 
 **********************/
 
