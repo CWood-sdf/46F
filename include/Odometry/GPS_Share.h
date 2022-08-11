@@ -5,10 +5,10 @@
 class GPS_Share {
   Positioner& odom;
   gps& GPS;
-  LinkedList<FieldCoord> gpsReadings;
-  LinkedList<FieldCoord> odomReadings;
-  FieldCoord pos;
-  FieldCoord lastOdom;
+  LinkedList<Pose> gpsReadings;
+  LinkedList<Pose> odomReadings;
+  Pose pos;
+  Pose lastOdom;
   double speed = 0.0;
   bool lastBad = false;
   bool isFirstBad = false;
@@ -24,7 +24,7 @@ class GPS_Share {
     return false;
   }
   bool readingBad(){
-    FieldCoord startPos = gpsReadings.getBase();
+    Pose startPos = gpsReadings.getBase();
     //If the last time the readingBad() returned bad, the set the firstBad flag
     if(!lastBad){
       isFirstBad = true;
@@ -45,7 +45,7 @@ public:
 
   }
   
-  FieldCoord& fullPos(){
+  Pose& fullPos(){
     return pos;
   }
   PVector& position(){
@@ -64,10 +64,10 @@ public:
     odom.update();
 
     //Get the odometry position
-    FieldCoord currentOdom = odom.fullPos();
+    Pose currentOdom = odom.fullPos();
     
     //Get the change in the odometry position
-    FieldCoord deltaOdom = currentOdom - lastOdom;
+    Pose deltaOdom = currentOdom - lastOdom;
     //Reset the last odometry position for the next iteration
     lastOdom = currentOdom;
     //Get the speed
@@ -76,7 +76,7 @@ public:
     speed = deltaOdom.pos.mag() / (double)sleepTime * 1000.0;
 
     //Get GPS coordinate
-    FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
+    Pose gpsCoord = Pose(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
 
     //If GPS can't see position
     if(gpsBad()){

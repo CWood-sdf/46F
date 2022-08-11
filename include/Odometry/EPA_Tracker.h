@@ -142,7 +142,7 @@ public:
   double xPosition(distanceUnits=inches);
   double yPosition(distanceUnits=inches);
   double heading();
-  FieldCoord fullPos();
+  Pose fullPos();
   bool moving ();
   double velocity();
   void clearMove();
