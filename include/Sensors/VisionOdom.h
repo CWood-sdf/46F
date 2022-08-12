@@ -53,6 +53,7 @@ Angle operator "" _rev(long double);
 Angle operator "" _rad(long double);
 extern GPS_Share share;
 class VisionOdom {
+protected:
   vision* sensor;
   double mountHeight, mountAngle, mountRotation;
   PVector relPos;
@@ -63,26 +64,24 @@ class VisionOdom {
     widthAngle = 56 * DEG_TO_RAD,
     heightAngle = 46 * DEG_TO_RAD, 
     backDist = 0.5 * screenWidth / _tan(widthAngle / 2.0);
-
   PVector estimateSensorRelativePos(int pixelBottomX, int pixelBottomY, int pixelTopX, int pixelTopY, PVector bottomPoint, PVector topPoint, PVector fixedPoint){
     //The angle to the top and bottom points
-    Angle angleYBottom = getAngleY(pixelBottomY);
-    Angle angleYTop = getAngleY(pixelTopY);
+    Angle angleYBottom = getAngleY(pixelBottomY) - mountAngle;
+    Angle angleYTop = getAngleY(pixelTopY) - mountAngle;
     Angle angleXBottom = getAngleX(pixelBottomX);
     Angle angleXTop = getAngleX(pixelTopX);
-    Angle angleXAvg = (angleXBottom + angleXTop) / 2.0 + 10;
-    //TODO: Find internal angles
-    
+    Angle angleXAvg = (angleXBottom + angleXTop) / 2.0 - share.heading() - mountRotation;
+
     double topDiff = topPoint.z - mountHeight;
     double bottomDiff = bottomPoint.z - mountHeight;
 
     double distFromBottom = bottomDiff / tan(angleYBottom);
     double distFromTop = topDiff / tan(angleYTop);
-    bottomPoint = PVector(0, bottomPoint.y).rotateXY(angleXAvg);
-    topPoint = PVector(0, topPoint.y).rotateXY(angleXAvg);
-    PVector bottomEst = PVector(0, distFromBottom).rotateXY(angleXAvg);
+    bottomPoint = PVector(0, bottomPoint.y).rotateXY(-angleXAvg);
+    topPoint = PVector(0, topPoint.y).rotateXY(-angleXAvg);
+    PVector bottomEst = PVector(0, distFromBottom).rotateXY(-angleXAvg);
     bottomEst.add(bottomPoint);
-    PVector topEst = PVector(0, distFromTop).rotateXY(angleXAvg);
+    PVector topEst = PVector(0, distFromTop).rotateXY(-angleXAvg);
     topEst.add(topPoint);
     PVector ret = (bottomEst + topEst) / 2.0;
     ret.z += mountHeight;
@@ -171,4 +170,26 @@ public:
   // }
   safearray<PVector, VISION_MAX_OBJECTS> fromArr(safearray<vision::object, VISION_MAX_OBJECTS>& arr);
   safearray<PVector, VISION_MAX_OBJECTS> fromMap(ObjectMap& objects);
+};
+
+class VisionBasicOdometry : private VisionOdom, public BasicConfirmationOdom {
+  PVector currentEstimate;
+  double variance() override {
+    return 16.0;
+  }
+  void updateEstimate() override {
+    // currentEstimate = estimateSensorRelativePos(int pixelBottomX, int pixelBottomY, int pixelTopX, int pixelTopY, PVector bottomPoint, PVector topPoint, PVector fixedPoint)
+  }
+  double xPosition(distanceUnits) override {
+    return currentEstimate.x;
+  }
+  double yPosition(distanceUnits) override {
+    return currentEstimate.y;
+  }
+  int32_t quality() override {
+    return 100;
+  }
+  bool installed() override {
+    return true;
+  }
 };
