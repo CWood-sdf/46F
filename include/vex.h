@@ -5,7 +5,7 @@
 //#define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
 #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
 //Undef this macro to find all places that are game specific
-#define USE_GAME_SPECIFIC
+//#define USE_GAME_SPECIFIC
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
@@ -28,7 +28,6 @@
 
 //Eliminate vex:: and std::
 using namespace vex;
-using namespace std;
 
 #ifndef NO_MAKE
 
@@ -55,6 +54,7 @@ extern controller Beethoven;
 #include "lvgl_inc.h"
 //Include my epicly epic background files
 #define BASE BASE_FILE
+using namespace std;
 #include BASE_FILE/basefile.h>
 /*<>*/
 

@@ -58,18 +58,23 @@ protected:
   double mountHeight, mountAngle, mountRotation;
   PVector relPos;
   // static inline BasicWheelController* wc;
-  static constexpr double 
+  static constexpr double
     screenWidth = 310,
     screenHeight = 210,
     widthAngle = 56 * DEG_TO_RAD,
-    heightAngle = 46 * DEG_TO_RAD, 
+    heightAngle = 46 * DEG_TO_RAD,
     backDist = 0.5 * screenWidth / _tan(widthAngle / 2.0);
-  PVector estimateSensorRelativePos(int pixelBottomX, int pixelBottomY, int pixelTopX, int pixelTopY, PVector bottomPoint, PVector topPoint, PVector fixedPoint){
+  PVector estimateSensorRelativePos(int pixelLeftX, int pixelBottomY, int pixelRightX, int pixelTopY, PVector bottomPoint, PVector topPoint, PVector fixedPoint) {
+
+    if (pixelLeftX == 0 || pixelTopY == 0 || pixelBottomY >= screenHeight || pixelRightX >= screenWidth) {
+      return PVector(1e10, 1e10);
+    }
+    
     //The angle to the top and bottom points
     Angle angleYBottom = getAngleY(pixelBottomY) - mountAngle;
     Angle angleYTop = getAngleY(pixelTopY) - mountAngle;
-    Angle angleXBottom = getAngleX(pixelBottomX);
-    Angle angleXTop = getAngleX(pixelTopX);
+    Angle angleXBottom = getAngleX(pixelLeftX);
+    Angle angleXTop = getAngleX(pixelRightX);
     Angle angleXAvg = (angleXBottom + angleXTop) / 2.0 - share.heading() - mountRotation;
 
     double topDiff = topPoint.z - mountHeight;
@@ -88,6 +93,22 @@ protected:
     fixedPoint.z = 0;
     ret.add(fixedPoint);
     return ret;
+  }
+  PVector estimateSensorRelativePos(vision::signature* sig, PVector bottomPoint, PVector topPoint, PVector fixedPoint) {
+    sensor->takeSnapshot(*sig);
+    auto& largestObj = sensor->largestObject;
+    if (!largestObj.exists) {
+      //Return an absolutely large estimate if no object is found
+      return { 1e10, 1e10 };
+    }
+    return estimateSensorRelativePos(
+      largestObj.originX, 
+      largestObj.originY + largestObj.height, 
+      largestObj.originX + largestObj.width, 
+      largestObj.originY, 
+      bottomPoint, 
+      topPoint, 
+      fixedPoint);
   }
   PVector estimateRelativePos(int pixelLeft, int pixelRight, double radius, double objHeight){
     Angle angleXLeft = getAngleX(pixelLeft);
@@ -174,11 +195,32 @@ public:
 
 class VisionBasicOdometry : private VisionOdom, public BasicConfirmationOdom {
   PVector currentEstimate;
+  vector<tuple<vision::signature*, PVector, PVector, PVector>> fixedPoints;
+  PVector posOffCenter = PVector(0, 0, 0);
+  int currentQuality = 0;
   double variance() override {
     return 16.0;
   }
   void updateEstimate() override {
-    // currentEstimate = estimateSensorRelativePos(int pixelBottomX, int pixelBottomY, int pixelTopX, int pixelTopY, PVector bottomPoint, PVector topPoint, PVector fixedPoint)
+    //Update the current estimate from the fixed points, if the estimate is outside the 12' by 12' field, set quality = 0
+    for (auto& tuple : fixedPoints) {
+      auto& sig = get<0>(tuple);
+      auto& bottomPoint = get<1>(tuple);
+      auto& topPoint = get<2>(tuple);
+      auto& fixedPoint = get<3>(tuple);
+      PVector estimate = estimateSensorRelativePos(sig, bottomPoint, topPoint, fixedPoint);
+      currentEstimate = estimate;
+      PVector posOffCopy = posOffCenter;
+      posOffCopy.rotateXY(-share.heading());
+      currentEstimate += posOffCopy;
+      if (currentEstimate.dist2D({0, 0}) >= 12.0 * 6.0) {
+        currentQuality = 0;
+      }
+      else {
+        currentQuality = 100;
+        break;
+      }
+    }
   }
   double xPosition(distanceUnits) override {
     return currentEstimate.x;
@@ -187,9 +229,9 @@ class VisionBasicOdometry : private VisionOdom, public BasicConfirmationOdom {
     return currentEstimate.y;
   }
   int32_t quality() override {
-    return 100;
+    return currentQuality;
   }
   bool installed() override {
-    return true;
+    return sensor->installed();
   }
 };

@@ -399,7 +399,7 @@ void brainOS() {
 int main() {
   
   //Init has to be in thread, otherwise it won't work with comp switch
-  thread initThread = thread([](){
+  vex::thread initThread = vex::thread([](){
     v5_lv_init();
     cout << "Lvgl initialized" << endl;
     s(100);
@@ -413,16 +413,16 @@ int main() {
     s(100);
   }
   [[maybe_unused]]
-  KillThread gpsUpdate = thread(updateSharePos);
+  KillThread gpsUpdate = vex::thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
   [[maybe_unused]]
-  KillThread otherThreads = thread(executeThreads);
+  KillThread otherThreads = vex::thread(executeThreads);
 
   //Awesome brain screen control thread
-  thread loader = thread(brainOS);
+  vex::thread loader = vex::thread(brainOS);
 
-  thread flywheelControl = thread(runFlywheel);
+  vex::thread flywheelControl = vex::thread(runFlywheel);
   //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
