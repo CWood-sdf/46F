@@ -1,7 +1,13 @@
 {
   "ExpandedNodes": [
     "",
+    "\\build-lvgl",
+    "\\build-lvgl\\include",
+    "\\include",
+    "\\include\\Odometry",
+    "\\src",
     "\\vex"
   ],
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

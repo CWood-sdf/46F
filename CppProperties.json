@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "name": "x86-Debug",
+      "includePath": [
+        "${workspaceRoot}\\..\\..\\..\\..\\..\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\include",
+        "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\clang\\8.0.0\\include",
+        "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\gcc\\include",
+        "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\gcc\\include\\c++\\4.9.3",
+        "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\gcc\\include\\c++\\4.9.3\\arm-none-eabi\\armv7-ar\\thumb",
+        "${env.INCLUDE}",
+        "C:\\Users\\woodc\\OneDrive\\GitHub\\Libs-Actual\\Libs",
+        "${projectRoot}\\build-lvgl",
+        "${workspaceRoot}\\**"
+      ],
+      "defines": [
+        "WIN32",
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "intelliSenseMode": "linux-gcc-x86"
+    }
+  ]
+}
