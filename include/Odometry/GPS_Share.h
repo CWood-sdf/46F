@@ -1,25 +1,10 @@
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
 #include "Odometry/EPA_Tracker.h"
-/**
-A confirmation odometry system is any system that DOES NOT provide an angle
-These systems depend on accurate angle readings to function properly
-They also return the variance of their estimates
-  - The variance is required for a confidence interval on the !gps odometry
-**/
-class BasicConfirmationOdom {
-  virtual double xPosition(distanceUnits) = 0;
-  virtual double yPosition(distanceUnits) = 0;
-  virtual int32_t quality() = 0;
-  virtual bool installed() = 0;
-  virtual double variance() = 0;
-  virtual void updateEstimate() = 0;
-};
 //Sleeps itself because it is top level odometry math
 class GPS_Share {
   Positioner& odom;
   gps& GPS;
-  vector<std::unique_ptr<BasicConfirmationOdom>> confirmOdoms; 
   LinkedList<Pose> gpsReadings;
   LinkedList<Pose> odomReadings;
   Pose pos;
