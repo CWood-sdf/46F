@@ -24,7 +24,6 @@ $(BUILD)/$(PROJECT).bin: $(BUILD)/$(PROJECT).elf
 
 # create archive
 $(BUILD)/$(PROJECTLIB).a: $(OBJA)
-	$(ECHO) "Toolchain $(TOOLCHAIN)"
 	$(ECHO) "Create archive $@"
 	$(Q)$(ARCH) $(ARCH_FLAGS) $@ $^
 

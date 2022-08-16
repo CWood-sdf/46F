@@ -1,5 +1,5 @@
 #include "vex.h"
-struct Pose {
+struct Pose{
   PVector pos = PVector();
   double angle = 0.0;
 public:
