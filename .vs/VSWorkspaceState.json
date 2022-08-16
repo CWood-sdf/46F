@@ -4,10 +4,10 @@
     "\\build-lvgl",
     "\\build-lvgl\\include",
     "\\include",
-    "\\include\\AI",
+    "\\include\\Odometry",
     "\\src",
     "\\vex"
   ],
-  "SelectedNode": "\\include\\AI\\BasicAiTask.h",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

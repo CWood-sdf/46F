@@ -22,7 +22,7 @@ msvc_deps_prefix = Note: including file:
 
 rule CXX_COMPILER__46F_Debug
   deps = msvc
-  command = C:\PROGRA~2\VEXROB~1\VEXCOD~1\TOOLCH~1\vexv5\win32\clang\bin\clang.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  command = C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
   description = Building CXX object $out
 
 
