@@ -23,7 +23,8 @@ include_directories(46F "${CMAKE_SOURCE_DIR}\\include"
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-set_property(TARGET 46F PROPERTY CXX_STANDARD 17)
+set_property(TARGET 46F 
+	PROPERTY CXX_STANDARD 17)
 
 target_link_libraries(46F "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\libv5rt.a"
 						  "C:\\Program Files (x86)\\VEX Robotics\\VEXcode Pro V5\\sdk\\vexv5\\gcc\\libs\\libc.a"

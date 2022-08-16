@@ -1,9 +1,22 @@
 #pragma once
 #include "vex.h"
+class RobotState {
+public:
+  int containedDisks;
+  Pose position;
+};
 class Match {
+public:
+  class State {
+    int timeLeft = 0;
+    int otherPoints;
+    int currentPoints;
+  };
+private:
   int timeLeft = 0;
   vex::timer t;
   bool isRunning = false;
+  State state;
 public:
   Match() {
     
@@ -24,8 +37,9 @@ public:
 };
 class BasicAiTask {
 public:
-  static virtual double estimatePointValue() = 0;
-  static virtual double estimateTime() = 0;
+  virtual void setState(Match::State&) = 0;
+  virtual double estimatePointValue() = 0;
+  virtual double estimateTime() = 0;
   virtual bool fn() = 0;
   virtual void interrupt() = 0;
   virtual bool callInterrupt() = 0;
@@ -41,16 +55,17 @@ public:
 
 class AiTaskFactory {
   LinkedList<std::unique_ptr<BasicAiTaskBuilder>> builders;
-  std::unique_ptr<BasicAiTaskBuilder> selectOptimalTask() {
-    //The gain function is the point value of the task multiplied by the time it takes to complete the task.
+  BasicAiTaskBuilder* selectOptimalTask() {
+    //The gain function is the point value of the task divided by the time it takes to complete the task.
     //Select the task with the highest gain
+    //The unit on gain is points / sec
     double maxGain = 0;
-    std::unique_ptr<BasicAiTaskBuilder> maxGainTask;
+    BasicAiTaskBuilder* maxGainTask;
     for (auto& builder : builders) {
-      double gain = builder->estimatePointValue() * builder->estimateTime();
+      double gain = builder->estimatePointValue() / builder->estimateTime();
       if (gain > maxGain) {
         maxGain = gain;
-        maxGainTask = builder;
+        maxGainTask = builder.get();
       }
     }
     return maxGainTask;
