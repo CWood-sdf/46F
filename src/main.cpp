@@ -17,7 +17,6 @@
 #include "AutonInit/Init.h"
 #include "BrainOS/BotTracker.h"
 #include "lv_conf.h"
-#include "AI/BasicAiTask.h"
 using namespace ClassFns;
 using namespace vex;
 
