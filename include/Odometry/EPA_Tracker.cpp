@@ -124,8 +124,8 @@ double Positioner::yPosition(distanceUnits){
 double Positioner::heading(){
   return glblBotAngle;
 }
-Pose Positioner::fullPos(){
-  return Pose(getPos(), heading());
+FieldCoord Positioner::fullPos(){
+  return FieldCoord(getPos(), heading());
 }
 bool Positioner::moving (){
   //If the velocity is greater than 0.01 in/s or 

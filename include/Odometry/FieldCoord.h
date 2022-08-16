@@ -1,33 +1,33 @@
 #include "vex.h"
-struct Pose{
+struct FieldCoord{
   PVector pos = PVector();
   double angle = 0.0;
 public:
-  Pose(){
+  FieldCoord(){
     pos = PVector();
     angle = 0.0;
   }
-  Pose(PVector& v, double& a){
+  FieldCoord(PVector& v, double& a){
     pos = v;
     angle = a;
   }
-  Pose(PVector&& v, double&& a){
+  FieldCoord(PVector&& v, double&& a){
     pos = v;
     angle = a;
   }
-  Pose& set(PVector v, double a){
+  FieldCoord& set(PVector v, double a){
     pos = v;
     angle = a;
     CHAIN
   }
-  bool operator!=(Pose& f){
+  bool operator!=(FieldCoord& f){
     return f.pos != pos || f.angle != angle;
   }
-  bool operator==(Pose& f){
+  bool operator==(FieldCoord& f){
     return f.pos == pos && f.angle == angle;
   }
   bool en = false;
-  Pose& operator+= (Pose& f){
+  FieldCoord& operator+= (FieldCoord& f){
     if(en){
       cout << pos << "\n" << f.pos << endl;
     }
@@ -38,24 +38,24 @@ public:
     this->angle += f.angle;
     CHAIN
   }
-  Pose operator-(Pose& p){
-    return Pose(pos - p.pos, angle - p.angle);
+  FieldCoord operator-(FieldCoord& p){
+    return FieldCoord(pos - p.pos, angle - p.angle);
   }
-  Pose operator-(){
-    return Pose(-pos, angle + 180);
+  FieldCoord operator-(){
+    return FieldCoord(-pos, angle + 180);
   }
 };
 #ifndef NO_MAKE
-ostream& operator<< (ostream& cout, Pose& v){
+ostream& operator<< (ostream& cout, FieldCoord& v){
   cout << VECT_OUT(v.pos) << ", " << v.angle;
   return cout;
 }
-ostream& operator<<(ostream& cout, Pose&& v){
+ostream& operator<<(ostream& cout, FieldCoord&& v){
   return operator<<(cout, v);
 }
 
 #else 
-ostream& operator<< (ostream& cout, Pose& v);
-ostream& operator<<(ostream& cout, Pose&& v);
+ostream& operator<< (ostream& cout, FieldCoord& v);
+ostream& operator<<(ostream& cout, FieldCoord&& v);
 
 #endif
