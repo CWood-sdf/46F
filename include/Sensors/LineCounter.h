@@ -1,8 +1,4 @@
-#ifndef LINE_COUNTER_H
-#define LINE_COUNTER_H
 #include "Sensors/KillThread.h"
-
-#endif
 class LineCounter {
   
   static const KillThread updater;

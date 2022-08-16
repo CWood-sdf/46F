@@ -1,7 +1,6 @@
 //#include "EPA_Tracker.h"
 #ifndef ROBOT_CONFIG_H
 #define ROBOT_CONFIG_H
-#include "Sensors/KillThread.h"
 #include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
 #include "Sensors/Distance.h"
@@ -22,9 +21,9 @@ extern motor BL;
 //Back Right Wheel (BR)
 extern motor BR;
 //Middle Left Wheel (ML)
-// extern motor ML;
-// //Middle Right Wheel (MR)
-// extern motor MR;
+extern motor ML;
+//Middle Right Wheel (MR)
+extern motor MR;
 
 extern motor_group Left;
 extern motor_group Right;

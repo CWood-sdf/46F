@@ -1,5 +1,3 @@
-#ifndef CHASSIS_H
-#define CHASSIS_H
 #include "Odometry/PID.h"
 #include "Odometry/GPS_Share.h"
 #include "Bezier.h"
@@ -67,4 +65,3 @@ struct Chassis {
   chain_method setSpeedLimit(double v);
   Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 };
-#endif

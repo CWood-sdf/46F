@@ -1,6 +1,6 @@
 #define NO_MAKE
-#define LINE_COUNTER_CPP
 #include "Sensors/LineCounter.h"
+
 bool LineCounter::firstHit(){
   if(fHit){
     fHit = false;

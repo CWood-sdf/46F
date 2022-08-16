@@ -1,5 +1,3 @@
-#ifndef DISTANCE_H
-#define DISTANCE_H
 #include "Odometry/GPS_Share.h"
 #define TO_4(x) x*x*x*x
 #define TO_3(x) x*x*x
@@ -67,4 +65,3 @@ class Distance {
   //Sensor installed?
   bool installed();
 };
-#endif

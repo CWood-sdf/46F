@@ -1,6 +1,6 @@
 #define NO_MAKE
-#define POT_DIAL_CPP
 #include "Sensors/PotDial.h"
+
 void SelectorArr::addDial(PotDial* dial){
   for(auto p : boundDials){
     //Dial already contained in the array, abort

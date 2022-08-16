@@ -1,5 +1,4 @@
 #define NO_MAKE
-#define BEZIER_CPP
 #include "Odometry/Bezier.h"
 #include "Odometry/GPS_Share.h"
 //Constructor

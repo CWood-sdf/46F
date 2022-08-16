@@ -17,7 +17,7 @@
 #include "AutonInit/Init.h"
 #include "BrainOS/BotTracker.h"
 #include "lv_conf.h"
-// #include "AI/BasicAiTask.h"
+#include "AI/BasicAiTask.h"
 using namespace ClassFns;
 using namespace vex;
 
@@ -212,18 +212,18 @@ void drivercontrol (){
       double s2 = Y1;
       if(driveReversed){
         FL.spin(vex::reverse, s2, pct);
-        // ML.spin(vex::reverse, s2, pct);
+        ML.spin(vex::reverse, s2, pct);
         BL.spin(vex::reverse, s2, pct);
         FR.spin(vex::reverse, s1, pct);
-        // MR.spin(vex::reverse, s1, pct);
+        MR.spin(vex::reverse, s1, pct);
         BR.spin(vex::reverse, s1, pct);
       }
       else {
         FL.spin(fwd, s1, pct);
-        // ML.spin(fwd, s1, pct);
+        ML.spin(fwd, s1, pct);
         BL.spin(fwd, s1, pct);
         FR.spin(fwd, s2, pct);
-        // MR.spin(fwd, s2, pct);
+        MR.spin(fwd, s2, pct);
         BR.spin(fwd, s2, pct);
       }
 
@@ -414,16 +414,16 @@ int main() {
     s(100);
   }
   [[maybe_unused]]
-  // KillThread gpsUpdate = vex::thread(updateSharePos);
+  KillThread gpsUpdate = vex::thread(updateSharePos);
 
   //Make a thread to execute some auton tasks concurrently
   [[maybe_unused]]
-  // KillThread otherThreads = vex::thread(executeThreads);
+  KillThread otherThreads = vex::thread(executeThreads);
 
   //Awesome brain screen control thread
   vex::thread loader = vex::thread(brainOS);
 
-  // vex::thread flywheelControl = vex::thread(runFlywheel);
+  vex::thread flywheelControl = vex::thread(runFlywheel);
   //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);

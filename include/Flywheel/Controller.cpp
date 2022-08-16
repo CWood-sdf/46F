@@ -1,5 +1,4 @@
 #define NO_MAKE
-#define FLYWHEEL_CONTROLLER_CPP
 #include "Flywheel/Controller.h"
 const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
 void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown) {

@@ -1,5 +1,4 @@
 #define NO_MAKE
-#define EPA_TRACKER_CPP
 #include "Odometry/EPA_Tracker.h"
 //Shifts angle to range of [0, 360)
 double baseAngle(double ang){
