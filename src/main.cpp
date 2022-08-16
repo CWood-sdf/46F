@@ -335,9 +335,27 @@ void brainOS() {
       break;
     }
 
-    //Button::clicked() blocks control flow until the button is released
-    //Putting click detection first means that a function won't get the click
-    //When a user is trying to exit it
+    auto result = bos::bosFns.getCurrent()->call(false);
+    if(bos::bosFns.getCurrent()->lvgl()){
+      lv_tick_inc(V5_LVGL_RATE);
+      lv_task_handler();
+    }
+    if(result){
+      if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
+        //Remove all objects
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
+      }
+      bos::bosFns.popCurrent();
+      if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "remake" << endl;
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
+    }
+    screenLeft.draw();		
+    screenRight.draw();	
     if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
@@ -370,29 +388,6 @@ void brainOS() {
         bos::bosFns.getCurrent()->call(true);
       }
     }	
-
-    auto result = bos::bosFns.getCurrent()->call(false);
-    if(bos::bosFns.getCurrent()->lvgl()){
-      lv_tick_inc(V5_LVGL_RATE);
-      lv_task_handler();
-    }
-    if(result){
-      if(bos::bosFns.getCurrent()->lvgl()){
-        cout << "Clean" << endl;
-        //Remove all objects
-        lv_obj_clean(lv_scr_act());
-        lv_anim_del_all();
-      }
-      bos::bosFns.popCurrent();
-      if(bos::bosFns.getCurrent()->lvgl()){
-        cout << "remake" << endl;
-        //Tell it to remake
-        bos::bosFns.getCurrent()->call(true);
-      }
-    }
-    screenLeft.draw();		
-    screenRight.draw();	
-    
 
     // Allow other tasks to run
     vex::task::sleep(V5_LVGL_RATE);
