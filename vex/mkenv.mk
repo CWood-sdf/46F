@@ -99,7 +99,7 @@ PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group -llvgl -l46f -lv5rt -lstdc++ -lc -lm -lgcc --end-group
+LIBS =  --start-group -llvgl -lv5rt -lstdc++ -lc -lm -lgcc --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})

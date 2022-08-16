@@ -11,6 +11,7 @@
 using namespace vex;
 #include <iostream>
 struct Print {
+  static inline std::ostream& res = ([]() -> std::ostream&{ std::cout << "asdfisf" << std::endl; task::sleep(1234); return std::cout; })(); 
   Print(std::string d){
     task::sleep(5000);
     std::cout << d << std::endl;
@@ -76,23 +77,17 @@ Print sdffdsf = Print("robot config start");
 #include <string.h>
 
 
-#ifndef NO_MAKE
-Print sdfsdkfjasdfkhzxcalsk = Print("Global config start");
-//Make a brain
-brain Brain;
-
-//Make a controller and name it Greg
-controller Greg = controller();
-controller Beethoven = controller(partner);
-
-#else
-
 //Make a brain
 extern brain Brain;
 
 //Make a controller and name it Greg
 extern controller Greg;
 extern controller Beethoven;
+
+#ifndef NO_MAKE
+Print sdfsdkfjasdfkhzxcalsk = Print("Global config start");
+
+#else
 
 #endif
 
@@ -111,7 +106,7 @@ using namespace std;
 #ifndef NO_MAKE
 Print sdfsdfsdf = Print("Start");
 //A vector to store the bot angles globally
-PVector botAngles = PVector(0.0, 0.0, 0.0);
+PVector botAngles = PVector(); //PVector(0.0, 0.0, 0.0);
 //The Actual Bot Angle
 double& glblBotAngle = botAngles.x;
 double deltaBotAngle = 0.0;

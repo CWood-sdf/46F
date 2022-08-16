@@ -2,14 +2,24 @@
 #include "Sensors/PotDial.h"
 class Auton {
   friend class Init;
+  static inline Print sdfksjdak = Print("Auton init start");
   static inline size_t idSet = 0;
   static inline std::vector<Auton*> refList;
   static inline std::vector<Button*> buttons;
   static inline Auton* auton;
   static inline bool autonSelected = false;
   static inline bool ready = false;
-  static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, "Confirm");
-  static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, "Deny");
+  static inline Button* confirm;
+  static inline Button* deny;
+  static void init(){
+    static bool init = false;
+    sdfksjdak = Print("Auton init start");
+    if(!init){
+      init = true;
+      confirm = new Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, "Confirm");
+      deny = new Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, "Deny");
+    }
+  }
   string name;
   size_t index;
   function<void()> fn;
@@ -24,6 +34,7 @@ class Auton {
     CHAIN;
   }
   Auton(){
+    init();
     index = idSet++;
     refList.push_back(this);
   }
@@ -86,16 +97,16 @@ public:
       }
     }
     else if(!ready){
-      confirm.draw();
-      deny.draw();
+      confirm->draw();
+      deny->draw();
       Brain.Screen.setFillColor(black);
       Brain.Screen.printAt(BRAIN_WIDTH / 2 - 20, BRAIN_HEIGHT / 2, auton->name.data());
       //Deny first as an extra layer of safety
-      if(deny.clicked()){
+      if(deny->clicked()){
         //Send to top again
         autonSelected = false;
       }
-      else if(confirm.clicked()){
+      else if(confirm->clicked()){
         ready = true;
         //Delete buttons
         for(auto b : buttons){
