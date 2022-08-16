@@ -1,14 +1,19 @@
+#ifndef FLYWHEEL_CONTROLLER_H
+#define FLYWHEEL_CONTROLLER_H
+#include "vex.h"
+using namespace vex;
 #include "EMA_Filter.h"
 #include "Odometry/PID.h"
 #include <cstdint>
 #include <algorithm>
 
+#endif
 //Determines if a flywheel is at the proper velocity
 //Also calculates time between steps so that I don't have to 
 //  Manage it elsewhere in the program
 class Settled {
   double maxDeriv;
-  timer time;
+  vex::timer time;
   double maxErr;
   double prevErr;
   double maxSleep = 500;

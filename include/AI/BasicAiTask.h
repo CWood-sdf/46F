@@ -1,5 +1,5 @@
 #pragma once
-#include "vex.h"
+#include "Odometry/FieldCoord.h"
 class RobotState {
 public:
   int containedDisks;

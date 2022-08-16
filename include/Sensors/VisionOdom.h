@@ -1,3 +1,5 @@
+#ifndef VISION_ODOM_H
+#define VISION_ODOM_H
 #include "Odometry/GPS_Share.h"
 #include "Sensors/Vision/FieldObject.h"
 #include "Sensors/Vision/ObjectMap.h"
@@ -235,3 +237,4 @@ class VisionBasicOdometry : private VisionOdom, public BasicConfirmationOdom {
     return sensor->installed();
   }
 };
+#endif

@@ -1,6 +1,6 @@
 #define NO_MAKE
+#define DISTANCE_CPP
 #include "Sensors/Distance.h"
-
 double Distance::sensorVariance(){
   if(sensor.objectDistance(mm) > 200){
     //Over 200 mm, accuracy is +/- 5%

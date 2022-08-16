@@ -1,4 +1,5 @@
 #define NO_MAKE
+#define EPA_WHEEL_CONTROL_CPP
 #include "Odometry/EPA_Wheel_Control.h"
 double sign(double v){
   if(v == 0.0){

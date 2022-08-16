@@ -1,4 +1,5 @@
 #define NO_MAKE
+#define VISION_ODOM_CPP
 #include "Sensors/VisionOdom.h"
 Angle operator "" _deg(long double v){
   return Angle(v, Angle::Type::Deg);

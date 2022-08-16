@@ -1,4 +1,5 @@
 #define NO_MAKE
+#define ODOMETRY_CONTROLLERS_CPP
 #include "Odometry/Controllers.h"
 #include <cstdint>
 #include <iomanip> 
