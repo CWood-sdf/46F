@@ -30,7 +30,7 @@ endif
 ifndef TOOLCHAIN
 TOOLCHAIN = ${HOME}/sdk
 endif
-
+$(Toolchain location $(TOOLCHAIN))
 # Verbose flag passed from app
 ifeq ("$(origin V)", "command line")
 BUILD_VERBOSE=$(V)
