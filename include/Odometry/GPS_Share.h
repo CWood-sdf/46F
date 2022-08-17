@@ -7,8 +7,8 @@ class GPS_Share {
   gps& GPS;
   LinkedList<FieldCoord> gpsReadings;
   LinkedList<FieldCoord> odomReadings;
-  FieldCoord pos;
-  FieldCoord lastOdom;
+  FieldCoord pos = FieldCoord(PVector(0, 0), 0);
+  FieldCoord lastOdom = FieldCoord(PVector(0, 0), 0);
   double speed = 0.0;
   bool lastBad = false;
   bool isFirstBad = false;

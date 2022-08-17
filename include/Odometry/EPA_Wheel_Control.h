@@ -42,6 +42,7 @@ public: // Constructor
     defaultRamsete = defRamsete;
     path.setK(kConst);
     this->turnCtrl = turnCtrl;
+    chassis = c;
   }
   Path path = Path();
 public: // Some Functions
