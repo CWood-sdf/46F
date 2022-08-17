@@ -34,7 +34,7 @@ extern motor flywheel2;
 extern NewMotor<> intake;
 
 extern NewMotor<> flywheelNm;
-extern FlywheelPID flyPID;
+// extern FlywheelPID flyPID;
 extern FlywheelTBH flyTBH;
 extern bool flywheelPID;
 //New Motors, a few reasons for this: 
@@ -102,7 +102,7 @@ extern Omni_6Controller wc;
 Autonomous System Controllers
 
 *************************************/
-void graphFlywheelPID(bool remake);
+// void graphFlywheelPID(bool remake);
 void graphFlywheelTBH(bool remake);
 
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);

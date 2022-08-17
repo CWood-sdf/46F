@@ -6,9 +6,9 @@ PVector& Chassis::botPos(){
 double Chassis::botAngle(){
   return pos.heading();
 }
-Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p){
-  leftWheels = left;
-  rightWheels = right;
+Chassis::Chassis(/*vector<Ref<motor>> left, vector<Ref<motor>> right, */GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p){
+  // leftWheels = left;
+  // rightWheels = right;
 
   this->trackWidth = trackWidth;
   this->gearRatio = gearRatio;

@@ -56,28 +56,28 @@ void updateBotAngle(bool add){
   }
 
 }
-void microWait(uint time);
+// void microWait(uint time);
 
-void programWrite(bool start = true);
+// void programWrite(bool start = true);
 
-//Allows a program reset at a new spot if there is limited tile space
-[[deprecated]]
-void waitForReset(){
-  PVector pos = wc.botPos();
-  cout << "start" << endl;
-  double startAng = wc.botAngle();
-  while(!Greg.ButtonA.pressing()){
-    s(100);
+// //Allows a program reset at a new spot if there is limited tile space
+// [[deprecated]]
+// void waitForReset(){
+//   PVector pos = wc.botPos();
+//   cout << "start" << endl;
+//   double startAng = wc.botAngle();
+//   while(!Greg.ButtonA.pressing()){
+//     s(100);
     
-  }
-  cout << "switch" << endl;
-  while(Greg.ButtonA.pressing()){
-    s(500);
-    cout << "Org: " << startAng << " current: " << wc.botAngle() << endl;
-  }
-  positioner.resetPos(pos);
-  cout << "done" << endl;
-}
+//   }
+//   cout << "switch" << endl;
+//   while(Greg.ButtonA.pressing()){
+//     s(500);
+//     cout << "Org: " << startAng << " current: " << wc.botAngle() << endl;
+//   }
+//   positioner.resetPos(pos);'0-p[]
+//   cout << "done" << endl;
+// }
 
 void microWait(uint time){
   auto startTime = Brain.Timer.systemHighResolution();

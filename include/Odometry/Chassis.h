@@ -66,5 +66,5 @@ struct Chassis {
   chain_method setMaxAcc(double v);
   chain_method setMaxDAcc(double v);
   chain_method setSpeedLimit(double v);
-  Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
+  Chassis(/*vector<Ref<motor>> left, vector<Ref<motor>> right, */GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 };

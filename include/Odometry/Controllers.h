@@ -20,7 +20,9 @@ private:
   VectorArr arr;
   double kConst;
 public:
+  Path(){
 
+  }
   chain_method setK(double s);
   void make(VectorArr arr, Chassis* chassis);
   void remake(Chassis* chassis);
@@ -90,10 +92,11 @@ class PurePursuitController : public Controller {
 public:
   followToRet followTo(Input& input) override;
   void init() override;
-  template<class T, class... Args>
-  PurePursuitController(T val, Args... args){
-    ctrl = PID(val, args...);
-  }
+  // template<class T, class... Args>
+  // PurePursuitController(T val, Args... args){
+  //   ctrl = PID();
+  //   // ctrl = PID(val, args...);
+  // }
   PurePursuitController(PID input);
   PurePursuitController() = delete;
 };

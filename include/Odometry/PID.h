@@ -146,14 +146,14 @@ public:
   }
   PIDF(const PIDF& v){
     //i hate this but it should work
-    double* doubles = (double*)&v;
-    double* thisPtr = (double*)this;
-    int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    for(int i = 0; i < size; i++){
-      thisPtr[i] = doubles[i];
-    }
-    resetVals();
-    manager.reset(v.manager->getCopy());
+    // double* doubles = (double*)&v;
+    // double* thisPtr = (double*)this;
+    // int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
+    // for(int i = 0; i < size; i++){
+    //   thisPtr[i] = doubles[i];
+    // }
+    // resetVals();
+    // manager.reset(v.manager->getCopy());
   }
   //Get the error
   double getError(){
@@ -213,21 +213,22 @@ public:
     return *this;
   }
   PIDF& operator=(PIDF&& a){
-    return operator=(a);
+    // return operator=(a);
+    return *this;
   }
   //Directly taken from the copy constructor
   PIDF& operator=(const PIDF& a){
-    //i hate this but it should work
-    double* doubles = (double*)&a;
-    double* thisPtr = (double*)this;
-    int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    for(int i = 0; i < size; i++){
-      thisPtr[i] = doubles[i];
-    }
+    // //i hate this but it should work
+    // double* doubles = (double*)&a;
+    // double* thisPtr = (double*)this;
+    // int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
+    // for(int i = 0; i < size; i++){
+    //   thisPtr[i] = doubles[i];
+    // }
 
-    //Clear any error build up
-    resetVals();
-    manager.reset(a.manager->getCopy());
+    // //Clear any error build up
+    // resetVals();
+    // manager.reset(a.manager->getCopy());
     CHAIN
   }
   KVals getKVals(){

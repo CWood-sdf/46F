@@ -49,7 +49,7 @@ public: // Constructor
   {
     defaultPurePursuit = defPurePursuit;
     defaultRamsete = defRamsete;
-    path.setK(kConst);
+    //path.setK(kConst);
   }
   Path path = Path();
 public: // Some Functions

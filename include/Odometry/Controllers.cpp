@@ -126,7 +126,7 @@ void PurePursuitController::init(){
   ctrl.setTarget(0);
 }
 PurePursuitController::PurePursuitController(PID input){
-  ctrl = input;
+  // ctrl = input;
 }
 RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double theta = posNeg180(input.currentAngle);//deg

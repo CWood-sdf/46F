@@ -244,23 +244,23 @@ void drivercontrol (){
   }
 }
 void runFlywheel(){
-  //int index = 0;
-  flyPID.setTarget(0);
+  int index = 0;
+  // flyPID.setTarget(0);
   flyTBH.setTarget(0);
   flyTBH.addTarget(500);
   flyTBH.setTarget(1);
   timer ok;
   while(1){
-    if(flywheelPID){
-      flyPID.step();
-    }
-    else {
-      flyTBH.step();
-    }
+    // if(flywheelPID){
+    //   flyPID.step();
+    // }
+    // else {
+    flyTBH.step();
+    // }
     s(50);
   }
 }
-//}
+// }
 
 
 //Brain Drawing Stuff {
@@ -269,12 +269,12 @@ void printVars(bool) {
   Brain.Screen.waitForRefresh();
   Brain.Screen.clearScreen(black);
   Brain.Screen.setFillColor(black);
-  Brain.Screen.printAt(10, 20, (string("glblBotAngle: ") + toCcp(glblBotAngle)).data());
-  Brain.Screen.printAt(10, 40, (string("botAngles.y: ") + toCcp(botAngles.y)).data());
-  Brain.Screen.printAt(10, 60, (string("botAngles.z: ") + toCcp(botAngles.z)).data());
-  Brain.Screen.printAt(10, 80, (string("tiltAngle: ") + toCcp(tiltAngle)).data());
-  Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
-  Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
+  // Brain.Screen.printAt(10, 20, (string("glblBotAngle: ") + toCcp(glblBotAngle)).data());
+  // Brain.Screen.printAt(10, 40, (string("botAngles.y: ") + toCcp(botAngles.y)).data());
+  // Brain.Screen.printAt(10, 60, (string("botAngles.z: ") + toCcp(botAngles.z)).data());
+  // Brain.Screen.printAt(10, 80, (string("tiltAngle: ") + toCcp(tiltAngle)).data());
+  // Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
+  // Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
 }
 void drawPath(bool){
   s(100);
@@ -305,7 +305,7 @@ void  vexTaskSleep( uint32_t time );
 bool init = false;
 void brainOS() {
   while(!init){
-
+    s(500);
   }
   
   
@@ -316,11 +316,11 @@ void brainOS() {
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
   
   bos::bosFns.push_back(Auton::selectAuton);
-  //int state = 0;		
-  //int maxState = 3; 
+  int state = 0;		
+  int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<");		
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">");		
-  //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
+  lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
   while (1) {		
     if(bos::bosFns.size(0)){
@@ -336,14 +336,14 @@ void brainOS() {
     if(result){
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
-        //Remove all objects
+        // Remove all objects
         lv_obj_clean(lv_scr_act());
         lv_anim_del_all();
       }
       bos::bosFns.popCurrent();
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "remake" << endl;
-        //Tell it to remake
+        // Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
     }
@@ -352,7 +352,7 @@ void brainOS() {
     if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
-        //Remove all objects
+        // Remove all objects
         lv_obj_clean(lv_scr_act());
         lv_anim_del_all();
       }
@@ -361,14 +361,14 @@ void brainOS() {
       auto newPtr = &bos::bosFns.getCurrent();
       if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
         cout << "remake" << endl;
-        //Tell it to remake
+        // Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
     }	
     else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {	
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
-        //Remove all objects
+        // Remove all objects
         lv_obj_clean(lv_scr_act());
         lv_anim_del_all();
       }
@@ -377,7 +377,7 @@ void brainOS() {
       auto newPtr = &bos::bosFns.getCurrent();
       if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
         cout << "remake" << endl;
-        //Tell it to remake
+        // Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
     }	
@@ -387,7 +387,7 @@ void brainOS() {
     Brain.Screen.waitForRefresh();
   }	
 }
-//}
+
 
 
 int main() {
@@ -400,20 +400,21 @@ int main() {
     gyroInit(angler);
     s(500);
     gyroInit(GPS);
-    //Gyro's initialized
+    // Gyro's initialized
     init = true;
   });
   while(!init){
     s(100);
   }
+  cout << "init done" << endl;
   [[maybe_unused]]
   KillThread gpsUpdate = thread(updateSharePos);
 
-  //Make a thread to execute some auton tasks concurrently
+  // Make a thread to execute some auton tasks concurrently
   [[maybe_unused]]
   KillThread otherThreads = thread(executeThreads);
 
-  //Awesome brain screen control thread
+  // Awesome brain screen control thread
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
