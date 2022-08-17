@@ -34,9 +34,9 @@ extern motor flywheel2;
 extern NewMotor<> intake;
 
 extern NewMotor<> flywheelNm;
-extern FlywheelPID flyPID;
+// extern FlywheelPID flyPID;
 extern FlywheelTBH flyTBH;
-extern bool flywheelPID;
+// extern bool flywheelPID;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd

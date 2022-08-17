@@ -103,9 +103,9 @@ void turnLeft(int t){
 //   cout << "Done" << endl;
 // }
 void randomAutonTest(){
-  wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &ramsete, false);
-  wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &purePursuit, false);
-  wc.generalFollow({PVector(48, 48)}, &pidController, false);
+  // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &ramsete, false);
+  // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &purePursuit, false);
+  // wc.generalFollow({PVector(48, 48)}, &pidController, false);
 }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
@@ -252,18 +252,18 @@ void drivercontrol (){
 }
 void runFlywheel(){
   //int index = 0;
-  flyPID.setTarget(0);
+  // flyPID.setTarget(0);
   flyTBH.setTarget(0);
   flyTBH.addTarget(500);
   flyTBH.setTarget(1);
   timer ok;
   while(1){
-    if(flywheelPID){
-      flyPID.step();
-    }
-    else {
-      flyTBH.step();
-    }
+    // if(flywheelPID){
+    //   flyPID.step();
+    // }
+    // else {
+    flyTBH.step();
+    // }
     s(50);
   }
 }
@@ -273,33 +273,33 @@ void runFlywheel(){
 //Brain Drawing Stuff {
 
 void printVars(bool) {
-  Brain.Screen.waitForRefresh();
-  Brain.Screen.clearScreen(black);
-  Brain.Screen.setFillColor(black);
-  Brain.Screen.printAt(10, 20, (string("glblBotAngle: ") + toCcp(glblBotAngle)).data());
-  Brain.Screen.printAt(10, 40, (string("botAngles.y: ") + toCcp(botAngles.y)).data());
-  Brain.Screen.printAt(10, 60, (string("botAngles.z: ") + toCcp(botAngles.z)).data());
-  Brain.Screen.printAt(10, 80, (string("tiltAngle: ") + toCcp(tiltAngle)).data());
-  Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
-  Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
+  // Brain.Screen.waitForRefresh();
+  // Brain.Screen.clearScreen(black);
+  // Brain.Screen.setFillColor(black);
+  // Brain.Screen.printAt(10, 20, (string("glblBotAngle: ") + toCcp(glblBotAngle)).data());
+  // Brain.Screen.printAt(10, 40, (string("botAngles.y: ") + toCcp(botAngles.y)).data());
+  // Brain.Screen.printAt(10, 60, (string("botAngles.z: ") + toCcp(botAngles.z)).data());
+  // Brain.Screen.printAt(10, 80, (string("tiltAngle: ") + toCcp(tiltAngle)).data());
+  // Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
+  // Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
 }
 void drawPath(bool){
-  s(100);
-  PVector off = PVector(100, 100);
-  Brain.Screen.waitForRefresh();
-  Brain.Screen.clearScreen(black);
+  // s(100);
+  // PVector off = PVector(100, 100);
+  // Brain.Screen.waitForRefresh();
+  // Brain.Screen.clearScreen(black);
   
-  if(wc.drawArr){
-    Brain.Screen.setFillColor(blue);
-    for(auto v : wc.publicPath){
-      v *= 2.0;
-      v += off;
-      Brain.Screen.drawCircle(v.x, v.y, 2);
-    }
-  } else {
-    Brain.Screen.setFillColor(black);
-    Brain.Screen.printAt(40, 40, "No Path");
-  }
+  // if(wc.drawArr){
+  //   Brain.Screen.setFillColor(blue);
+  //   for(auto v : wc.publicPath){
+  //     v *= 2.0;
+  //     v += off;
+  //     Brain.Screen.drawCircle(v.x, v.y, 2);
+  //   }
+  // } else {
+  //   Brain.Screen.setFillColor(black);
+  //   Brain.Screen.printAt(40, 40, "No Path");
+  // }
 }
 const color grey = color(100, 100, 100);
 const color lightGreen = color(100, 255, 100);
@@ -312,7 +312,7 @@ void  vexTaskSleep( uint32_t time );
 bool init = false;
 void brainOS() {
   while(!init){
-
+    s(500);
   }
   
   

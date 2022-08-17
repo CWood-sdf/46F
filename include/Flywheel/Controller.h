@@ -112,20 +112,20 @@ public:
     //d = dFilter.value();
   }
 };
-class FlywheelPID : public Empty {
-  encoder* en;
-  motor& mots;
-  EMA filter = EMA(0.1, 0);
-  vector<double> velTargets = {100};
-  Settled velCheck = Settled(100, 100 * 100, 500);
-  EMA_D manager;
-  PIDF ctrl;
-  FlywheelDebugEl debug;
-  int target = 0;
-public:
-  FlywheelPID(motor& m, vex::encoder& e);
-  void setTarget(int i);
-  void step() override;
-  void graph(bool);
-  void initPID();
-};
+// class FlywheelPID : public Empty {
+//   encoder* en;
+//   motor& mots;
+//   EMA filter = EMA(0.1, 0);
+//   vector<double> velTargets = {100};
+//   Settled velCheck = Settled(100, 100 * 100, 500);
+//   EMA_D manager;
+//   PIDF ctrl;
+//   FlywheelDebugEl debug;
+//   int target = 0;
+// public:
+//   FlywheelPID(motor& m, vex::encoder& e);
+//   void setTarget(int i);
+//   void step() override;
+//   void graph(bool);
+//   void initPID();
+// };

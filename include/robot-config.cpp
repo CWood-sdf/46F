@@ -1,5 +1,13 @@
 #define NO_MAKE
 #include "robot-config.h"
+
+//Make a brain
+brain Brain;
+
+//Make a controller and name it Greg
+controller Greg = controller();
+controller Beethoven = controller(partner);
+
 //Front Left Wheel (FL)
 motor FL = motor(PORT1,gearSetting::ratio18_1, true);
 //Front Right Wheel (FR)
@@ -22,9 +30,9 @@ motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, true);
 motor flywheel2 = motor(PORT6, ratio6_1, false);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
-FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
+// FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
 FlywheelTBH flyTBH = FlywheelTBH(flywheelNm, flySensor);
-bool flywheelPID = false;
+// bool flywheelPID = false;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
@@ -87,7 +95,7 @@ GPS_Share share = GPS_Share(positioner, GPS);
 //Wheel controller
 
 Chassis chassis = Chassis({BL, ML, FL}, {BR, MR, FR}, share, 15, 1, 3.75, gearSetting::ratio18_1);
-PurePursuitController purePursuit = PurePursuitController(6.25, 0.001, 2.4325, 0, 8, 1);
+PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(1.0, 0.5);
 BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
 
@@ -98,15 +106,15 @@ Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, PID(2.4
 Autonomous System Controllers
 
 *************************************/
-void graphFlywheelPID(bool remake){
-  if(remake){
-    flywheelPID = true;
-  }
-  flyPID.graph(remake);
-}
+// void graphFlywheelPID(bool remake){
+//   if(remake){
+//     flywheelPID = true;
+//   }
+//   flyPID.graph(remake);
+// }
 void graphFlywheelTBH(bool remake){
   if(remake){
-    flywheelPID = false;
+    // flywheelPID = false;
   }
   flyTBH.graph(remake);
 }

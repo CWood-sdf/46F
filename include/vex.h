@@ -29,26 +29,12 @@
 //Eliminate vex:: and std::
 using namespace vex;
 using namespace std;
-
-#ifndef NO_MAKE
-
-//Make a brain
-brain Brain;
-
-//Make a controller and name it Greg
-controller Greg = controller();
-controller Beethoven = controller(partner);
-
-#else
-
 //Make a brain
 extern brain Brain;
 
 //Make a controller and name it Greg
 extern controller Greg;
 extern controller Beethoven;
-
-#endif
 
 #define V5_SENSOR_REFRESH 10 /*msec*/
 
