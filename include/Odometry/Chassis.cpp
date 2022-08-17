@@ -1,5 +1,4 @@
 #define NO_MAKE
-#define CHASSIS_CPP
 #include "Odometry/Chassis.h"
 PVector& Chassis::botPos(){
   return pos.position();
@@ -8,8 +7,6 @@ double Chassis::botAngle(){
   return pos.heading();
 }
 Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p){
-  cout << "sdlsdf" << endl;
-  s(1000);
   leftWheels = left;
   rightWheels = right;
 
@@ -17,8 +14,6 @@ Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p
   this->gearRatio = gearRatio;
   this->wheelRad = wheelRad;
   this->cartridge = cartridge;
-  cout << "sdlsdf" << endl;
-  s(1000);
 }
 void Chassis::turnRight(double speed){
   leftWheels.spinVolt(fwd, speed);

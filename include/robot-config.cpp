@@ -1,22 +1,28 @@
 #define NO_MAKE
-#define ROBOT_CONFIG_CPP
 #include "robot-config.h"
+
+//Make a brain
+brain Brain;
+
+//Make a controller and name it Greg
+controller Greg = controller();
+controller Beethoven = controller(partner);
 
 //Front Left Wheel (FL)
 motor FL = motor(PORT1,gearSetting::ratio18_1, true);
 //Front Right Wheel (FR)
-motor FR = motor(PORT2, gearSetting::ratio18_1,false);
+motor FR = motor(PORT5, gearSetting::ratio18_1,false);
 //Back Left Wheel (BL)
 motor BL = motor(PORT3, gearSetting::ratio18_1,true);
 //Back Right Wheel (BR)
-motor BR = motor(PORT4, gearSetting::ratio18_1,false);
+motor BR = motor(PORT9, gearSetting::ratio18_1,false);
 //Middle Left Wheel (ML)
-// motor ML = motor(PORT2, gearSetting::ratio18_1,true);
-// //Middle Right Wheel (MR)
-// motor MR = motor(PORT8, gearSetting::ratio18_1,false);
+motor ML = motor(PORT2, gearSetting::ratio18_1,true);
+//Middle Right Wheel (MR)
+motor MR = motor(PORT8, gearSetting::ratio18_1,false);
 
-motor_group Left = motor_group(BL, FL);
-motor_group Right = motor_group(BR, FR);
+motor_group Left = motor_group(BL, ML, FL);
+motor_group Right = motor_group(BR, MR, FR);
 
 motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
 
@@ -24,15 +30,15 @@ motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, true);
 motor flywheel2 = motor(PORT6, ratio6_1, false);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
-FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
+// FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
 FlywheelTBH flyTBH = FlywheelTBH(flywheelNm, flySensor);
-bool flywheelPID = false;
+// bool flywheelPID = false;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-NewMotor<> wheels = NewMotor<>(FL, BL, FR, BR);
-NewMotor<> leftWhls = NewMotor<>(BL, FL);
-NewMotor<> rghtWhls = NewMotor<>(BR, FR);
+NewMotor<> wheels = NewMotor<>(FL, ML, BL, FR, MR, BR);
+NewMotor<> leftWhls = NewMotor<>(BL, FL, ML);
+NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
 
 NewMotor<> intake = NewMotor<>(intakeMot);
 
@@ -88,8 +94,8 @@ GPS_Share share = GPS_Share(positioner, GPS);
 
 //Wheel controller
 
-Chassis chassis = Chassis({BL, FL}, {BR, FR}, share, 15, 1, 3.75, gearSetting::ratio18_1);
-PurePursuitController purePursuit = PurePursuitController(6.25, 0.001, 2.4325, 0, 8, 1);
+Chassis chassis = Chassis({BL, ML, FL}, {BR, MR, FR}, share, 15, 1, 3.75, gearSetting::ratio18_1);
+PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(1.0, 0.5);
 BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
 
@@ -100,15 +106,15 @@ Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, PID(2.4
 Autonomous System Controllers
 
 *************************************/
-void graphFlywheelPID(bool remake){
-  if(remake){
-    flywheelPID = true;
-  }
-  flyPID.graph(remake);
-}
+// void graphFlywheelPID(bool remake){
+//   if(remake){
+//     flywheelPID = true;
+//   }
+//   flyPID.graph(remake);
+// }
 void graphFlywheelTBH(bool remake){
   if(remake){
-    flywheelPID = false;
+    // flywheelPID = false;
   }
   flyTBH.graph(remake);
 }
@@ -116,20 +122,20 @@ void graphFlywheelTBH(bool remake){
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
 void testMotorConfiguration(){
   TEST_MOT(FL)
-  // TEST_MOT(ML)
+  TEST_MOT(ML)
   TEST_MOT(BL)
   s(1000);
   TEST_MOT(FR)
-  // TEST_MOT(MR)
+  TEST_MOT(MR)
   TEST_MOT(BR)
 }
 #define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
 void testMotorConnection(){
   TMC(FL)
-  // TMC(ML)
+  TMC(ML)
   TMC(BL)
   TMC(FR)
-  // TMC(MR)
+  TMC(MR)
   TMC(BR)
 }
 /**

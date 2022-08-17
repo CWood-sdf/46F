@@ -62,7 +62,7 @@ class PIDF {
   //A simple struct that stores the multiplication values
   struct KVals {
     //The variables
-    double p, i, d, f = 0.0;
+    double p = 0.0, i = 0.0, d = 0.0, f = 0.0;
     KVals(){
       p = i = d = f = 0.0;
     }
@@ -110,7 +110,7 @@ class PIDF {
   //Variables
   double target = 0.0, error = 0.0, lastError = 0.0, iCap = 0.0, iGrowth = 0.0, iZero = 0.0;
 public:
-  std::shared_ptr<PIDF_Extension> manager = std::shared_ptr<PIDF_Extension>();
+  std::shared_ptr<PIDF_Extension> manager = std::shared_ptr<PIDF_Extension>(NULL);
   PIDF(){
 
   }
@@ -145,18 +145,25 @@ public:
 
   }
   PIDF(const PIDF& v){
-    //i hate this but it should work
+    // //i hate this but it should work
     double* doubles = (double*)&v;
     double* thisPtr = (double*)this;
+    cout << doubles << ", " << thisPtr << endl;
     int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
+    cout << size << endl;
     for(int i = 0; i < size; i++){
       thisPtr[i] = doubles[i];
     }
+
+    //Clear any error build up
     resetVals();
-    manager.reset(v.manager->getCopy());
+    cout << (bool)v.manager << endl;
+    if(v.manager){
+      manager.reset(v.manager->getCopy());
+    }
   }
   PIDF(PIDF&& v) {
-    *this = std::move(v);
+    operator=(std::move(v));
   }
   //Get the error
   double getError(){
@@ -217,20 +224,26 @@ public:
   }
   PIDF& operator=(PIDF&& a){
     return operator=(a);
+    CHAIN
   }
   //Directly taken from the copy constructor
   PIDF& operator=(const PIDF& a){
     //i hate this but it should work
     double* doubles = (double*)&a;
     double* thisPtr = (double*)this;
+    cout << doubles << ", " << thisPtr << endl;
     int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
+    cout << size << endl;
     for(int i = 0; i < size; i++){
       thisPtr[i] = doubles[i];
     }
 
     //Clear any error build up
     resetVals();
-    manager.reset(a.manager->getCopy());
+    cout << (bool)a.manager << endl;
+    if(a.manager){
+      manager.reset(a.manager->getCopy());
+    }
     CHAIN
   }
   KVals getKVals(){

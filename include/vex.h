@@ -1,62 +1,7 @@
 //vex.h -- This file includes all external files, defines random functions    
 //      and defines devices
-// #ifndef VEX_H
-// #define VEX_H
-#pragma once
-#include "v5.h"
-#include "v5_vcs.h"
-#define ADD_THIS instances.push_back(this)
-
-//Eliminate vex:: and std::
-using namespace vex;
-#include <iostream>
-struct Print {
-  Print(std::string d){
-    task::sleep(5000);
-    std::cout << d << std::endl;
-    task::sleep(5000);
-  }
-};
-#ifndef NO_MAKE
-Print sdfkjsdhfkasflskfh = Print("skdjfsdjf");
-#endif
-#ifdef EPA_WHEEL_CONTROL_CPP
-Print asasddasdasd = Print("Wheel control");
-#endif
-#ifdef EPA_TRACKER_CPP
-
-Print sdfkjsdasdhfkasflskfh = Print("EPA_Tracker");
-#endif
-#ifdef BEZIER_CPP
-Print sdfkasflskfh = Print("Bezier");
-#endif
-#ifdef CHASSIS_CPP
-Print sdfkjsdhffdskasflskfh = Print("Chassis");
-#endif
-#ifdef ODOMETRY_CONTROLLERS_CPP
-Print sdfkjsdhfkasflsdfsdskfh = Print("Controllers");
-#endif
-#ifdef DISTANCE_CPP
-Print sdfkjsASDAdhfkasflskfh = Print("Ditance.cpp");
-#endif
-#ifdef LINE_COUNTER_CPP
-Print sdfkjasdassdhfkasflskfh = Print("LineCounter.cpp");
-#endif
-#ifdef POT_DIAL_CPP
-Print sdfkjsdhfkassdffflskfh = Print("PotDial.cpp");
-#endif
-#ifdef VISION_ODOM_CPP
-Print sdfkjsdhsdfdffkasflskfh = Print("VisionOdom.cpp");
-#endif
-#ifdef BOT_TRACKER_CPP
-Print sdfkjsdhfsdfdskasflskfh = Print("BotTracker");
-#endif
-#ifdef FLYWHEEL_CONTROLLER_CPP
-Print sdfkjsdhfkasffsdafflskfh = Print("Flywheel/controller");
-#endif
-#ifdef ROBOT_CONFIG_CPP
-Print sdffdsf = Print("robot config start");
-#endif
+#ifndef VEX_H
+#define VEX_H
 //#define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
 #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
 //Undef this macro to find all places that are game specific
@@ -76,17 +21,14 @@ Print sdffdsf = Print("robot config start");
 #include <string.h>
 
 
-#ifndef NO_MAKE
-Print sdfsdkfjasdfkhzxcalsk = Print("Global config start");
-//Make a brain
-brain Brain;
+#include "v5.h"
+#include "v5_vcs.h"
 
-//Make a controller and name it Greg
-controller Greg = controller();
-controller Beethoven = controller(partner);
+#define ADD_THIS instances.push_back(this)
 
-#else
-
+//Eliminate vex:: and std::
+using namespace vex;
+using namespace std;
 //Make a brain
 extern brain Brain;
 
@@ -94,22 +36,20 @@ extern brain Brain;
 extern controller Greg;
 extern controller Beethoven;
 
-#endif
-
 #define V5_SENSOR_REFRESH 10 /*msec*/
 
 #include "lvgl_inc.h"
 //Include my epicly epic background files
 #define BASE BASE_FILE
-using namespace std;
 #include BASE_FILE/basefile.h>
 /*<>*/
+
 #define _sin(t) (t - t*t*t/6 + t*t*t*t*t/120 - t*t*t*t*t*t*t/5040 + t*t*t*t*t*t*t*t*t/362880)
 #define _cos(t) (1 - t*t/2 + t*t*t*t/24 - t*t*t*t*t*t/720 + t*t*t*t*t*t*t*t/40320)
 #define _tan(t) (_sin(t)/_cos(t))
 
 #ifndef NO_MAKE
-Print sdfsdfsdf = Print("Start");
+
 //A vector to store the bot angles globally
 PVector botAngles = PVector(0.0, 0.0, 0.0);
 //The Actual Bot Angle
@@ -239,4 +179,4 @@ string toCcp(int v);
 //Converts double to string
 string toCcp(double v);
 #endif
-// #endif
+#endif

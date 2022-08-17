@@ -214,43 +214,43 @@ void FlywheelTBH::step(){
 bool FlywheelTBH::ready(){
   return velCheck.settled();
 }
-void FlywheelPID::initPID(){
-  ctrl = PIDF(0.1, 0.02, 0.00, manager, 0, 0, 5);
-}
-FlywheelPID::FlywheelPID(motor& m, vex::encoder& p) : en(&p), mots(m), filter(0.7){
-  filter.seed(0);
-  initPID();
-}
-void FlywheelPID::setTarget(int i){
-  target = i;
-  if(target < 0) 
-    target = 0;
-  else if(target >= velTargets.size()) 
-    target = velTargets.size() - 1;
-  cout << velTargets[i] << endl;
-  ctrl.setTarget(velTargets[i]);
-}
-void FlywheelPID::step(){
-  static double lastRotation = 0;
-  double desiredVel = velTargets[target];
-  int timeStep = velCheck.timeStep();
-  double rotation = mots.rotation(rotationUnits::rev);
-  // cout << rotation << endl;
-  // cout << timeStep << endl;
-  double speedEst = (rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
-  //cout << speedEst << endl;
-  lastRotation = rotation;
-  filter.update(speedEst);
-  //cout << timeStep << endl;
-  double speed = filter.value();
-  //cout << speed << endl << endl;
-  double err = speed - desiredVel;
-  //bool settled = velCheck.settled(err);
-  debug.set(err, speedEst, speed, desiredVel);
+// void FlywheelPID::initPID(){
+//   ctrl = PIDF(0.1, 0.02, 0.00, manager, 0, 0, 5);
+// }
+// FlywheelPID::FlywheelPID(motor& m, vex::encoder& p) : en(&p), mots(m), filter(0.7){
+//   filter.seed(0);
+//   initPID();
+// }
+// void FlywheelPID::setTarget(int i){
+//   target = i;
+//   if(target < 0) 
+//     target = 0;
+//   else if(target >= velTargets.size()) 
+//     target = velTargets.size() - 1;
+//   cout << velTargets[i] << endl;
+//   ctrl.setTarget(velTargets[i]);
+// }
+// void FlywheelPID::step(){
+//   static double lastRotation = 0;
+//   double desiredVel = velTargets[target];
+//   int timeStep = velCheck.timeStep();
+//   double rotation = mots.rotation(rotationUnits::rev);
+//   // cout << rotation << endl;
+//   // cout << timeStep << endl;
+//   double speedEst = (rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
+//   //cout << speedEst << endl;
+//   lastRotation = rotation;
+//   filter.update(speedEst);
+//   //cout << timeStep << endl;
+//   double speed = filter.value();
+//   //cout << speed << endl << endl;
+//   double err = speed - desiredVel;
+//   //bool settled = velCheck.settled(err);
+//   debug.set(err, speedEst, speed, desiredVel);
   
-  mots.spin(fwd, ctrl.getVal(err), pct);
-}
+//   mots.spin(fwd, ctrl.getVal(err), pct);
+// }
 
-void FlywheelPID::graph(bool remake){
-  basicGraph(remake, "PID ctrl", debug);
-}
+// void FlywheelPID::graph(bool remake){
+//   basicGraph(remake, "PID ctrl", debug);
+// }
