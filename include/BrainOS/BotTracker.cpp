@@ -81,19 +81,24 @@ void displayBot(bool remake) {
       basicAlign(labelA, 45);
 
     }
-    
-    std::vector<lv_obj_t*> squs;
-    for (int i = 0; i < 4; i++) {
-      lv_obj_t* blueSqu = lv_obj_create(gridContainer);
-      lv_obj_align(blueSqu, LV_ALIGN_TOP_LEFT, i * sixthHeight, i * sixthHeight);
-      lv_obj_set_size(blueSqu, sixthHeight, sixthHeight);
-      lv_obj_set_style_bg_color(blueSqu, lv_color_make(255, 0, 0), 0);
-      lv_obj_set_style_border_width(blueSqu, 0, 0);
-      lv_obj_set_style_border_color(blueSqu, lv_color_make(0, 0, 0), 0);
-      lv_obj_set_style_radius(blueSqu, 0, 0);
-      //Necessary for later deallocation
-      squs.push_back(blueSqu);
-    }
+    double lvObjWidth = 0.6;
+    double dSixthHeight = static_cast<double>(sixthHeight);
+    lv_obj_t* redGoal = lv_obj_create(gridContainer);
+    lv_obj_align(redGoal, LV_ALIGN_TOP_LEFT, (int)(dSixthHeight * (5.4 - lvObjWidth / 2)), (int)(dSixthHeight * (0.6 - lvObjWidth / 2)));
+    lv_obj_set_size(redGoal, dSixthHeight * lvObjWidth, dSixthHeight * lvObjWidth);
+    lv_obj_set_style_bg_color(redGoal, lv_color_make(255, 0, 0), 0);
+    lv_obj_set_style_border_width(redGoal, 0, 0);
+    lv_obj_set_style_border_color(redGoal, lv_color_make(0, 0, 0), 0);
+    lv_obj_set_style_radius(redGoal, dSixthHeight * lvObjWidth, 0);
+
+    lv_obj_t* blueGoal = lv_obj_create(gridContainer);
+    lv_obj_align(blueGoal, LV_ALIGN_TOP_LEFT, dSixthHeight * (0.6 - lvObjWidth / 2), dSixthHeight * (5.4 - lvObjWidth / 2));
+    lv_obj_set_size(blueGoal, dSixthHeight * lvObjWidth, dSixthHeight * lvObjWidth);
+    lv_obj_set_style_bg_color(blueGoal, lv_color_make(0, 0, 255), 0);
+    lv_obj_set_style_border_width(blueGoal, 0, 0);
+    lv_obj_set_style_border_color(blueGoal, lv_color_make(0, 0, 0), 0);
+    lv_obj_set_style_radius(blueGoal, dSixthHeight * lvObjWidth, 0);
+
     botContainer = lv_obj_create(gridContainer);
     line2 = lv_line_create(botContainer);
     centerPt = lv_obj_create(botContainer);
