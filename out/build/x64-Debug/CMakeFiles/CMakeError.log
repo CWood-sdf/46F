@@ -1,0 +1,404 @@
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags:  
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --c++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --ec++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Detecting CXX compiler ABI info failed to compile with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_10f70 && [1/2] Building CXX object CMakeFiles\cmTC_10f70.dir\CMakeCXXCompilerABI.cpp.obj
+FAILED: CMakeFiles/cmTC_10f70.dir/CMakeCXXCompilerABI.cpp.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_10f70.dir\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\cmTC_10f70.dir\ /FS -c "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+
+Determining if the CXX compiler works failed with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_706ae && [1/2] Building CXX object CMakeFiles\cmTC_706ae.dir\testCXXCompiler.cxx.obj
+FAILED: CMakeFiles/cmTC_706ae.dir/testCXXCompiler.cxx.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_706ae.dir\testCXXCompiler.cxx.obj /FdCMakeFiles\cmTC_706ae.dir\ /FS -c "C:\Users\woodc\source\VEX CODE\46X-APA-EPA-PID-PPA\out\build\x64-Debug\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags:  
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --c++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --ec++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Detecting CXX compiler ABI info failed to compile with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_2b3a2 && [1/2] Building CXX object CMakeFiles\cmTC_2b3a2.dir\CMakeCXXCompilerABI.cpp.obj
+FAILED: CMakeFiles/cmTC_2b3a2.dir/CMakeCXXCompilerABI.cpp.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_2b3a2.dir\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\cmTC_2b3a2.dir\ /FS -c "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+
+Determining if the CXX compiler works failed with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_7678d && [1/2] Building CXX object CMakeFiles\cmTC_7678d.dir\testCXXCompiler.cxx.obj
+FAILED: CMakeFiles/cmTC_7678d.dir/testCXXCompiler.cxx.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_7678d.dir\testCXXCompiler.cxx.obj /FdCMakeFiles\cmTC_7678d.dir\ /FS -c "C:\Users\woodc\source\VEX CODE\46X-APA-EPA-PID-PPA\out\build\x64-Debug\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags:  
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --c++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --ec++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Detecting CXX compiler ABI info failed to compile with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_12729 && [1/2] Building CXX object CMakeFiles\cmTC_12729.dir\CMakeCXXCompilerABI.cpp.obj
+FAILED: CMakeFiles/cmTC_12729.dir/CMakeCXXCompilerABI.cpp.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_12729.dir\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\cmTC_12729.dir\ /FS -c "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+
+Determining if the CXX compiler works failed with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_1c6a7 && [1/2] Building CXX object CMakeFiles\cmTC_1c6a7.dir\testCXXCompiler.cxx.obj
+FAILED: CMakeFiles/cmTC_1c6a7.dir/testCXXCompiler.cxx.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_1c6a7.dir\testCXXCompiler.cxx.obj /FdCMakeFiles\cmTC_1c6a7.dir\ /FS -c "C:\Users\woodc\source\VEX CODE\46X-APA-EPA-PID-PPA\out\build\x64-Debug\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags:  
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --c++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --ec++ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
+Build flags: -target;thumbv7-none-eabi;-fshort-enums;-Wno-unknown-attributes;-U__INT32_TYPE__;-U__UINT32_TYPE__;-D__INT32_TYPE__=long;-D__UINT32_TYPE__='unsigned;long';;-march=armv7-a;-mfpu=neon;-mfloat-abi=softfp;-Os;-Wall;-Werror=return-type;-fno-rtti;-fno-threadsafe-statics;-fno-exceptions;;-std=gnu++2a;-ffunction-sections;-fdata-sections;-DVexV5;-Iinclude;-I.;-Iinclude/lvgl;-Iinclude/lvgl/src;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/clang/8.0.0/include";-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3";;-I"C:\Program;Files;(x86)\VEX;Robotics\VEXcode;Pro;V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb";-c
+Id flags: -c;-I__does_not_exist__ 
+
+The output was:
+2
+Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+
+
+Detecting CXX compiler ABI info failed to compile with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_0164d && [1/2] Building CXX object CMakeFiles\cmTC_0164d.dir\CMakeCXXCompilerABI.cpp.obj
+FAILED: CMakeFiles/cmTC_0164d.dir/CMakeCXXCompilerABI.cpp.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_0164d.dir\CMakeCXXCompilerABI.cpp.obj /FdCMakeFiles\cmTC_0164d.dir\ /FS -c "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.22\Modules\CMakeCXXCompilerABI.cpp"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+
+
+Determining if the CXX compiler works failed with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_42bd8 && [1/2] Building CXX object CMakeFiles\cmTC_42bd8.dir\testCXXCompiler.cxx.obj
+FAILED: CMakeFiles/cmTC_42bd8.dir/testCXXCompiler.cxx.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1432~1.313\bin\Hostx64\x64\cl.exe  /nologo /TP   -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long'  -march=armv7-a -mfpu=neon -mfloat-abi=softfp -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections -DVexV5 -Iinclude -I. -Iinclude/lvgl -Iinclude/lvgl/src -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/clang/8.0.0/include" -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3"  -I"C:\Program Files (x86)\VEX Robotics\VEXcode Pro V5\sdk/vexv5/gcc/include/c++/4.9.3/arm-none-eabi/armv7-ar/thumb" -c  /Zi /Ob0 /Od /RTC1 -MDd /showIncludes /FoCMakeFiles\cmTC_42bd8.dir\testCXXCompiler.cxx.obj /FdCMakeFiles\cmTC_42bd8.dir\ /FS -c "C:\Users\woodc\source\VEX CODE\46X-APA-EPA-PID-PPA\out\build\x64-Debug\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+cl : Command line error D8021 : invalid numeric argument '/Wno-unknown-attributes'
+ninja: build stopped: subcommand failed.
+
+
+

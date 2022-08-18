@@ -1,6 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\build-lvgl",
+    "\\build-lvgl\\include",
+    "\\include",
+    "\\include\\AI",
+    "\\src",
+    "\\vex"
   ],
+  "SelectedNode": "\\include\\Odometry",
   "PreviewInSolutionExplorer": false
 }
