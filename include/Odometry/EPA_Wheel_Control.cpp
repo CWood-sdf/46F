@@ -234,6 +234,13 @@ void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg){
 
 
 // }
+
+void BasicWheelController::driveTo(double x, double y){
+  generalFollow({PVector(x, y)}, defaultPid, false);
+}
+void BasicWheelController::backInto(double x, double y){
+  generalFollow({PVector(x, y)}, defaultPid, true);
+}
 /***
 Random thoughts 
 

@@ -6,9 +6,13 @@
 .  |_|     |_____|  |___/   |_____|
 
 . Finish writing vision util
-. Match VisionOdom files to the website test
-. Check that the vector fns in website return the same
-.   - Esp. angleTo
+. Testing items
+.  -Wheelbase controls
+.  -Vision relative position detection
+.  -Auton init with potentiometers
+.  -Auton fns (esp roller spinner)
+.  -Flywheel again i guess
+.  -Vision odom
 
 **********************/
 
@@ -136,6 +140,7 @@ void autonomous(){
   autonInit();
   //Put auton call here
   Auton::callAuton();
+  wc.driveTo(1, 1);
   //Print time
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
@@ -425,9 +430,7 @@ int main() {
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-  auto& p = wc.botPos().x;
-  // p.x++;
-  p++;
+  
   //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);

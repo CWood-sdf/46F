@@ -35,11 +35,13 @@ public: // Some variables
   std::function<void()> afterTurn = [](){}; 
   RamseteController* defaultRamsete;
   PurePursuitController* defaultPurePursuit;
+  BasicPidController* defaultPid;
 public: // Constructor
-  BasicWheelController(Chassis* c, RamseteController* defRamsete, PurePursuitController* defPurePursuit, PID turnCtrl, double kConst = 1.0)
+  BasicWheelController(Chassis* c, RamseteController* defRamsete, PurePursuitController* defPurePursuit, BasicPidController* defPid, PID turnCtrl, double kConst = 1.0)
   {
     defaultPurePursuit = defPurePursuit;
     defaultRamsete = defRamsete;
+    defaultPid = defPid;
     path.setK(kConst);
     this->turnCtrl = turnCtrl;
     chassis = c;
@@ -111,8 +113,8 @@ public:
 
 class OmniWheelController : public BasicWheelController {
 public: // Import variables + add constructor
-  OmniWheelController(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, PID tc, double kConst = 1.0) :
-    BasicWheelController(c, ramsete, purePursuit, tc, kConst)
+  OmniWheelController(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid, PID tc, double kConst = 1.0) :
+    BasicWheelController(c, ramsete, purePursuit, defPid, tc, kConst)
     //positioner(positioner)
   {
     
@@ -122,8 +124,8 @@ public: // Import variables + add constructor
 class Omni_4Controller : public BasicWheelController{
 public: // Import variables, functions + add constructor
 
-  Omni_4Controller(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, PID tc, double kConst = 1.0) :
-    BasicWheelController(c, ramsete, purePursuit, tc, kConst)
+  Omni_4Controller(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid, PID tc, double kConst = 1.0) :
+    BasicWheelController(c, ramsete, purePursuit, defPid, tc, kConst)
     //positioner(positioner)
   {
     
@@ -133,8 +135,8 @@ public: // Import variables, functions + add constructor
 class MechWheelController : public Omni_4Controller{
 public: // Import variables + constructor
   //MechWheelController(motor& BL, motor& BR, posTp&, gps&) = delete;
-  MechWheelController(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, PID tc, double kConst = 1.0) :
-    Omni_4Controller(c, ramsete, purePursuit, tc, kConst) {
+  MechWheelController(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid, PID tc, double kConst = 1.0) :
+    Omni_4Controller(c, ramsete, purePursuit, defPid, tc, kConst) {
 
   }
 
@@ -150,8 +152,8 @@ public: // EPIC PID Things, when actually used on competition bot, please rewrit
 
 class Omni_6Controller : public BasicWheelController{
 public: // Import variables + constructor
-  Omni_6Controller(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, PID tc, double kConst = 1.0) :
-    BasicWheelController(c, ramsete, purePursuit, tc, kConst)
+  Omni_6Controller(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid, PID tc, double kConst = 1.0) :
+    BasicWheelController(c, ramsete, purePursuit, defPid, tc, kConst)
     //positioner(positioner)
   {
     
