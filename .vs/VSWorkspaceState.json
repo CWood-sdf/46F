@@ -5,9 +5,10 @@
     "\\build-lvgl\\include",
     "\\include",
     "\\include\\AI",
+    "\\include\\Odometry",
     "\\src",
     "\\vex"
   ],
-  "SelectedNode": "\\include\\Odometry",
+  "SelectedNode": "\\include\\Odometry\\Bezier.cpp",
   "PreviewInSolutionExplorer": false
 }

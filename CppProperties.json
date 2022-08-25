@@ -23,7 +23,7 @@
         "_UNICODE"
       ],
       "intelliSenseMode": "linux-gcc-x86",
-      "compilerSwitches": "/std:c++17"
+      "compilerSwitches": "std:c++17"
     }
   ]
 }

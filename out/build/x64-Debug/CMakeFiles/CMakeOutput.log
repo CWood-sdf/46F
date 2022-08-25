@@ -25,7 +25,7 @@ The C compiler identification is MSVC, found in "C:/Users/woodc/source/VEX CODE/
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
 Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
-Build flags: 
+Build flags: -std=c++17
 Id flags:  
 
 The output was:
@@ -33,6 +33,7 @@ The output was:
 Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
+cl : Command line warning D9002 : ignoring unknown option '-std=c++17'
 CMakeCXXCompilerId.cpp
 Microsoft (R) Incremental Linker Version 14.32.31332.0
 Copyright (C) Microsoft Corporation.  All rights reserved.
@@ -50,80 +51,17 @@ The CXX compiler identification is MSVC, found in "C:/Users/woodc/source/VEX COD
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_34f90 && [1/2] Building C object CMakeFiles\cmTC_34f90.dir\CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_34f90.exe
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_9482e && [1/2] Building C object CMakeFiles\cmTC_9482e.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_9482e.exe
 
 
 
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
-Build flags: 
-Id flags:  
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/CMakeTmp
 
-The output was:
-0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-CMakeCXXCompilerId.cpp
-Microsoft (R) Incremental Linker Version 14.32.31332.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-/out:CMakeCXXCompilerId.exe 
-CMakeCXXCompilerId.obj 
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_de20f && [1/2] Building CXX object CMakeFiles\cmTC_de20f.dir\CMakeCXXCompilerABI.cpp.obj
+cl : Command line warning D9002 : ignoring unknown option '-std=c++17'
+[2/2] Linking CXX executable cmTC_de20f.exe
 
 
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
-
-The CXX compiler identification is MSVC, found in "C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
-Build flags: 
-Id flags:  
-
-The output was:
-0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-CMakeCXXCompilerId.cpp
-Microsoft (R) Incremental Linker Version 14.32.31332.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-/out:CMakeCXXCompilerId.exe 
-CMakeCXXCompilerId.obj 
-
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
-
-The CXX compiler identification is MSVC, found in "C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe 
-Build flags: 
-Id flags:  
-
-The output was:
-0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31332 for x64
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-CMakeCXXCompilerId.cpp
-Microsoft (R) Incremental Linker Version 14.32.31332.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-/out:CMakeCXXCompilerId.exe 
-CMakeCXXCompilerId.obj 
-
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
-
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
-
-The CXX compiler identification is MSVC, found in "C:/Users/woodc/source/VEX CODE/46X-APA-EPA-PID-PPA/out/build/x64-Debug/CMakeFiles/3.22.22040401-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
 

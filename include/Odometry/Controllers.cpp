@@ -74,7 +74,7 @@ void Path::make(VectorArr arr, Chassis* chassis){
           << "\nbezier: " << bezier.size() 
           << "\ntargetSpeeds: " << targetSpeeds.size()
           << "\ntargetAngles: " << targetAngles.size() << endl;
-      
+    
   }
   for(int i = 0; i < bezier.size(); i++){
     path.push_back(El{bezier[i], targetSpeeds[i], targetAngles[i], curvatures[i]});
@@ -121,8 +121,8 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
     double 
       side = 
         sign(
-          -cos(input.currentAngle) * (lPos.x - rPos.x)
-          +sin(input.currentAngle) * (lPos.y - rPos.y)
+          -cos(moddedAngle) * (lPos.x - rPos.x)
+          +sin(moddedAngle) * (lPos.y - rPos.y)
         ),
       a = -tan(moddedAngle),
       b = 1.0,

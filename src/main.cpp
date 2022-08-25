@@ -13,6 +13,8 @@
 .  -Auton fns (esp roller spinner)
 .  -Flywheel again i guess
 .  -Vision odom
+. Put abs in Controllers.cpp line 38 maybe
+. Maybe insert a sleep command after the error cout in Path::make
 
 **********************/
 
@@ -110,6 +112,7 @@ void randomAutonTest(){
   // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &ramsete, false);
   // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &purePursuit, false);
   // wc.generalFollow({PVector(48, 48)}, &pidController, false);
+
 }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
@@ -180,6 +183,8 @@ public:
     return state;
   }
 };
+
+
 void drivercontrol (){
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
   static bool driveReversed = false;

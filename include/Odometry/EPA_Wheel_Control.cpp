@@ -296,17 +296,17 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
   }
 
   path.make(arr, chassis);
-  //Make extended path
+  // //Make extended path
   auto bezier = path.getBezier();
-  VectorArr extendedPath;
-  {
-    extendedPath = bezier;
-    PVector ext = (PVector)bezier.last() - bezier[bezier.size() - 2];
-    double extraDist = 0.7;
-    for(int i = 1; i < 24.0 / extraDist; i++){
-      extendedPath.push((PVector)bezier.last() + ext * extraDist * i);
-    }
-  }
+  // VectorArr extendedPath;
+  // {
+  //   extendedPath = bezier;
+  //   PVector ext = (PVector)bezier.last() - bezier[bezier.size() - 2];
+  //   double extraDist = 0.7;
+  //   for(int i = 1; i < 24.0 / extraDist; i++){
+  //     extendedPath.push((PVector)bezier.last() + ext * extraDist * i);
+  //   }
+  // }
 
   //The index of the pursuit target
   int bezierIndex = 0;

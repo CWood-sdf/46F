@@ -130,7 +130,7 @@ void FlywheelTBH::step(){
   bool calcTbh = true;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = mots[0].rotation(rotationUnits::rev);
+  double rotation = mots[0].position(rotationUnits::rev);
   double speedEst = (rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
   lastRotation = rotation;
   filter.update(speedEst);
@@ -164,7 +164,7 @@ void FlywheelTBH::step(){
     gain = 0.01;
   }
   if(calcTbh){
-    if(signbit(err) != signbit(prevErr)){
+    if(std::signbit(err) != std::signbit(prevErr)){
       tbh = (lastVel + tbh) / 2;
       if(tbh < 0){
         tbh = 0;
@@ -186,7 +186,7 @@ void FlywheelTBH::step(){
   // cout << velSent << endl;
   // cout << (abs(err) < 200) << ", " << abs(velSent - lastVel) << ", " << (abs(velSent - lastVel) < 4.0) << ", " << !settled << endl;
   if(abs(err) < 200 && abs(err) > 50 && abs(velSent - lastVel) < 1.0 && !settled){
-    velSent += -1.0 * (2.0 * signbit(err) - 1.0); 
+    velSent += -1.0 * (2.0 * std::signbit(err) - 1.0); 
   }
   // cout << signbit(err) << endl;
   // cout << velSent << endl << endl;
