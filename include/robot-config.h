@@ -3,7 +3,7 @@
 #define ROBOT_CONFIG_H
 #include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
-#include "Sensors/Distance.h"
+// #include "Sensors/Distance.h"
 #include "Sensors/VisionOdom.h"
 #include "Odometry/EPA_Wheel_Control.h"
 #include "Flywheel/Controller.h"
