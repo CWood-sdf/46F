@@ -7,6 +7,7 @@
 #include "Sensors/VisionOdom.h"
 #include "Odometry/EPA_Wheel_Control.h"
 #include "Flywheel/Controller.h"
+#include "Sensors/Wrappers/Encoder.h"
 /*************************************
 
 Motors
