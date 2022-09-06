@@ -1,4 +1,8 @@
 #include "Sensors/KillThread.h"
+//Oh, this lovely class
+//It just always works (unless there's a sun there)
+
+//Class that uses a line tracker to count objects
 class LineCounter {
   
   static const KillThread updater;

@@ -419,6 +419,7 @@ int main() {
     s(500);
     gyroInit(GPS);
     //Gyro's initialized
+    testMotorConnection();
     init = true;
   });
   while(!init){
