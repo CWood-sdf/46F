@@ -2,7 +2,7 @@
 #include "Odometry/PID.h"
 #include <cstdint>
 #include <algorithm>
-
+#include "Sensors/Wrappers/Encoder.h"
 //Determines if a flywheel is at the proper velocity
 //Also calculates time between steps so that I don't have to 
 //  Manage it elsewhere in the program
@@ -97,6 +97,29 @@ class FlywheelTBH : public Empty {
   FlywheelDebugEl debug;
 public:
   FlywheelTBH(NewMotor<>& m, vex::encoder& e);
+  void setTarget(int i);
+  void addTarget(double t);
+  void step() override;
+  void graph(bool);
+  void init();
+  bool ready();
+};
+class FlywheelTBHEncoder : public Empty {
+  Encoder en;
+  NewMotor<>& mots;
+  EMA filter;
+  vector<double> velTargets = { 550 };
+  vector<double> initialTbh = { 10 };
+  double tbh = 0;
+  double gain;
+  Settled velCheck = Settled(10, 10, 500);
+  int target;
+  double maxRateDrop = 5;
+  double maxRateGain = 2;
+  FlywheelDebugEl debug;
+public:
+  FlywheelTBHEncoder(NewMotor<>& m, Encoder en);
+  FlywheelTBHEncoder(NewMotor<>& m);
   void setTarget(int i);
   void addTarget(double t);
   void step() override;
