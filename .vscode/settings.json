@@ -1,7 +1,28 @@
 {
-    "editor.tokenColorCustomizations": {
-        
-    },
+    "C_Cpp.enhancedColorization": "Enabled",
+    // "editor.semanticTokenColorCustomizations": {
+    //     "[Material Theme Ocean]": {
+    //         "rules": {
+    //             "templateType": "#008055",
+    //             "variable.global": "#8ca2f0",
+    //             "function": "#b4b661",
+    //             "namespace": "#ac7118",
+    //             "enumMember": "#5b8115",
+    //             "genericType": "#ff0000",
+    //             "decorator": "#ff0000"
+    //         }
+    //     }
+    // },
+    // "editor.tokenColorCustomizations": {
+    //     //Comment
+    //     "[Material Theme Ocean]": {
+    //         "numbers": "#9b460d",
+    //         "comments": "#747474",
+    //         "strings": "#a17b08",
+    //         "keywords": "#6d3494",
+    //         "types": "#008055",
+    //     }
+    // },
     "files.associations": {
         "algorithm": "cpp",
         "array": "cpp",

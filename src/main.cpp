@@ -268,7 +268,7 @@ void runFlywheel(){
   flyTBH.addTarget(500);
   flyTBH.setTarget(1);
   timer ok;
-  while(1){
+  while (1) {
     // if(flywheelPID){
     //   flyPID.step();
     // }
@@ -437,8 +437,8 @@ int main() {
   thread flywheelControl = thread(runFlywheel);
   
   //autonomous();
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(drivercontrol);
+  // Competition.autonomous(autonomous);
+  // Competition.drivercontrol(drivercontrol);
 
   //Prevent main from exiting
   while(1){

@@ -15,7 +15,7 @@ motor FR = motor(PORT5, gearSetting::ratio18_1,false);
 //Back Left Wheel (BL)
 motor BL = motor(PORT3, gearSetting::ratio18_1,true);
 //Back Right Wheel (BR)
-motor BR = motor(PORT9, gearSetting::ratio18_1,false);
+motor BR = motor(PORT9, gearSetting::ratio18_1, false);
 //Middle Left Wheel (ML)
 motor ML = motor(PORT2, gearSetting::ratio18_1,true);
 //Middle Right Wheel (MR)
@@ -26,8 +26,8 @@ motor_group Right = motor_group(BR, MR, FR);
 
 motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
 
-motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, true);
-motor flywheel2 = motor(PORT6, ratio6_1, false);
+motor flyWheelMot = motor(PORT9, gearSetting::ratio6_1, false);
+motor flywheel2 = motor(PORT8, ratio6_1, true);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
 // FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
