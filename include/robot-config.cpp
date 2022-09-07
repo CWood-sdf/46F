@@ -30,8 +30,10 @@ motor flyWheelMot = motor(PORT9, gearSetting::ratio6_1, false);
 motor flywheel2 = motor(PORT8, ratio6_1, true);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
+rotation flywheelRotation = rotation(PORT5);
+Encoder e = Encoder(flyWheelMot);
 // FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
-FlywheelTBH flyTBH = FlywheelTBH(flywheelNm, flySensor);
+FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 // bool flywheelPID = false;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
@@ -137,6 +139,8 @@ void testMotorConnection(){
   TMC(FR)
   TMC(MR)
   TMC(BR)
+  TMC(flyWheelMot)
+  TMC(flywheel2)
 }
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

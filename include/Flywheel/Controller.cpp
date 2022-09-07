@@ -116,10 +116,11 @@ FlywheelTBH::FlywheelTBH(NewMotor<>& m, vex::encoder& p) : en(&p), mots(m), filt
   init();
   filter.seed(0);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m, Encoder p) : en(p), mots(m), filter(0.15) {
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m, Encoder p) : mots(m), filter(0.15) {
   // mots = m;
   init();
   filter.seed(0);
+  en = p;
 }
 FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m) : mots(m), filter(0.15) {
   // mots = m;
@@ -129,22 +130,32 @@ FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m) : mots(m), filter(0.15) {
 }
 
 void FlywheelTBH::setTarget(int i) {
+  if (velTargets.size() == 0) return;
   target = i;
-  if(target < 0) 
+  if(target < 0)
     target = 0;
   else if(target >= velTargets.size()) 
     target = velTargets.size() - 1;
   
   tbh = initialTbh[target];
+  if (velTargets.size() != 0) {
+    hasTarget = true;
+  }
 }
 void FlywheelTBHEncoder::setTarget(int i) {
+  if(velTargets.size() == 0) return;
   target = i;
-  if(target < 0) 
+  if (target < 0) {
     target = 0;
-  else if(target >= velTargets.size()) 
+  }
+  else if (target >= velTargets.size()) {
     target = velTargets.size() - 1;
-  
+  }
+
   tbh = initialTbh[target];
+  if (velTargets.size() != 0) {
+    hasTarget = true;
+  }
 }
 void FlywheelTBH::addTarget(double t) {
   velTargets.push_back(t);
@@ -155,6 +166,7 @@ void FlywheelTBHEncoder::addTarget(double t) {
   initialTbh.push_back(t / 6.0);
 }
 void FlywheelTBH::step() {
+  if(!hasTarget) return;
   static double lastRotation = 0;
   static double lastVel;
   static double lastDesiredVel = 0;
@@ -245,6 +257,7 @@ void FlywheelTBH::step() {
   lastVel = velSent;
 }
 void FlywheelTBHEncoder::step() {
+  if (!hasTarget) return;
   static double lastRotation = 0;
   static double lastVel;
   static double lastDesiredVel = 0;
@@ -254,7 +267,7 @@ void FlywheelTBHEncoder::step() {
   bool calcTbh = true;
   double desiredVel = velTargets[target];
   int timeStep = velCheck.timeStep();
-  double rotation = en.position(deg);
+  double rotation = en.position(rev);
   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
   lastRotation = rotation;
   filter.update(speedEst);
