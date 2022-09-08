@@ -1,6 +1,13 @@
 #define NO_MAKE
 #include "robot-config.h"
-
+std::vector<tuple<string, vex::device*>> connectedDevices = {};
+struct AddDevice {
+  AddDevice(string name, vex::device* device){
+    connectedDevices.push_back(make_tuple(name, device));
+  }
+};
+#define TestDevice(device) AddDevice device##AddDevice(#device, &device);
+#define TestDevices(device, ...) TestDevice(device); TestDevices(__VA_ARGS__)
 //Make a brain
 brain Brain;
 
@@ -9,25 +16,34 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 //Front Left Wheel (FL)
-motor FL = motor(PORT1,gearSetting::ratio18_1, true);
+motor FL = motor(PORT1, gearSetting::ratio18_1, true);
+TestDevice(FL);
 //Front Right Wheel (FR)
-motor FR = motor(PORT5, gearSetting::ratio18_1,false);
+motor FR = motor(PORT5, gearSetting::ratio18_1, false);
+TestDevice(FR);
 //Back Left Wheel (BL)
-motor BL = motor(PORT3, gearSetting::ratio18_1,true);
+motor BL = motor(PORT3, gearSetting::ratio18_1, true);
+TestDevice(BL);
 //Back Right Wheel (BR)
 motor BR = motor(PORT9, gearSetting::ratio18_1, false);
+TestDevice(BR);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT2, gearSetting::ratio18_1,true);
+motor ML = motor(PORT2, gearSetting::ratio18_1, true);
+TestDevice(ML);
 //Middle Right Wheel (MR)
-motor MR = motor(PORT8, gearSetting::ratio18_1,false);
+motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+TestDevice(MR);
 
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
 motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
+TestDevice(intakeMot);
 
 motor flyWheelMot = motor(PORT9, gearSetting::ratio6_1, false);
+TestDevice(flyWheelMot);
 motor flywheel2 = motor(PORT8, ratio6_1, true);
+TestDevice(flywheel2);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
 // FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
@@ -60,14 +76,17 @@ Sensors
 
 //Three wire expander
 triport Expander = triport(PORT9);
-
+TestDevice(Expander);
 //Inertial Sensor
 inertial angler = inertial(PORT11);
+TestDevice(angler);
 
 //gps
 gps GPS = gps(PORT10, -6.0, 0.0, inches, -90);
+TestDevice(GPS);
 
 optical rachetColor = optical(PORT8);
+TestDevice(rachetColor);
 
 LineCounter rachetDetector (Brain.ThreeWirePort.A);
 // Distance goalFront = Distance(PORT11);
@@ -137,6 +156,12 @@ void testMotorConnection(){
   TMC(FR)
   TMC(MR)
   TMC(BR)
+  for(auto i : connectedDevices){
+    if(!get<1>(i)->installed()){
+      cout << "Device " << get<0>(i) << " is not connected!" << endl;
+      Greg.rumble(".");
+    }
+  }
 }
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
