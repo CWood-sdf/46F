@@ -1,10 +1,11 @@
-/*********************
+/*
 ._______   _______  ____    _______
 .|__  __|  | __  |  |   \   | __  |
 .  | |     | | | |  | |\ \  | | | | 
 .  | |     | |_| |  | |/ /  | |_| |
 .  |_|     |_____|  |___/   |_____|
 
+  Maybe add a configuration screen that can configure variables, and it can have multiple screens
 . Finish writing vision util
 . Testing items
 .  -Wheelbase controls
@@ -16,8 +17,7 @@
 . Put abs in Controllers.cpp line 38 maybe
 . Maybe insert a sleep command after the error cout in Path::make
 
-**********************/
-
+*/
 //main.cpp
 #include "updaters.h"
 #include "AutonInit/Init.h"

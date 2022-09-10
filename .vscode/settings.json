@@ -22,6 +22,15 @@
     },
     "editor.tokenColorCustomizations": {
         "[Tokyo Night]": {
+            "textMateRules": [
+                {
+                    "scope": "comment.block",
+                    "settings": {
+                        "foreground": "#8694b9"
+                    },
+                    
+                }
+            ],
             "types": "#df776f",
             "comments": "#7781af"
         }
