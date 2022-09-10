@@ -2,15 +2,16 @@
 //      and defines devices
 #ifndef VEX_H
 #define VEX_H
-#define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
-// #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
+// #define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
+#define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
 //Undef this macro to find all places that are game specific
 #define USE_GAME_SPECIFIC
+#undef USE_GAME_SPECIFIC
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
 //#pragma GCC diagnostic ignored "-Wunused-variable"
-#define _USE_MATH_DEFINES
+#define USE_MATH_DEFINES
 //Include a few basic files
 #include <list>
 

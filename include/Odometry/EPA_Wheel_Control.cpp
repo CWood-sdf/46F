@@ -161,13 +161,15 @@ bool BasicWheelController::isMoving(){
 }
 BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVector v, double a){
   cout << sign(botPos().x) << ", " << sign(v.x) << endl;
-  if(botPos().mag() < 3){
+  //If it thinks it is at (0, 0), just use the given value
+  if (botPos().mag() < 6) {
     chassis->pos.setPos(v, a);
   }
   #ifndef USE_GAME_SPECIFIC
   #warning GSD (Conditions for reversing auton)
   #endif
-  else if(sign(botPos().x) != sign(v.x)){
+  //If they are on opposite sides, reverse the auton
+  else if (sign(botPos().x) != sign(v.x) && sign(botPos().y) != sign(v.y)) {
     reversed = true;
     cout << "Reversing auton" << endl;
   }

@@ -1,5 +1,31 @@
 {
     "C_Cpp.enhancedColorization": "Enabled",
+    "editor.semanticTokenColorCustomizations": {
+        "[Tokyo Night]": {
+            "rules": {
+                "variable.global": "#ce8787",
+                "class": "#df776f"
+            }
+        },
+        "[Tomorrow Night]": {
+            "rules": {
+                "variable.global": "#ce8787",
+            }
+        }
+        
+    },
+    "workbench.colorCustomizations": {
+        "[Tokyo Night]": {
+            "editorLineNumber.foreground": "#575d7c",
+            "editorLineNumber.activeForeground": "#9199c2"
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "[Tokyo Night]": {
+            "types": "#df776f",
+            "comments": "#7781af"
+        }
+    },
     // "editor.semanticTokenColorCustomizations": {
     //     "[Material Theme Ocean]": {
     //         "rules": {

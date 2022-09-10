@@ -39,8 +39,8 @@ bool isPressing(const controller::button& btn){
   return false;
 }
 //Similar to isPressing(controller::button&), but only does it if a joystick axis is going in a certain direction
-bool isPressing(const controller::axis& joystick, int mult){
-  if(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
+bool isPressing(const controller::axis& joystick, int mult) {
+  if (abs(joystick.value()) > 50 && joystick.value() * mult > 1) {
     while(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
       s(10);
     }
