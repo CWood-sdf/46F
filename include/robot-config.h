@@ -36,7 +36,7 @@ extern NewMotor<> intake;
 
 extern NewMotor<> flywheelNm;
 // extern FlywheelPID flyPID;
-extern FlywheelTBH flyTBH;
+extern FlywheelTBHEncoder flyTBH;
 // extern bool flywheelPID;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff

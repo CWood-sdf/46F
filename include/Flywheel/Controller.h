@@ -55,7 +55,7 @@ struct FlywheelDebugEl {
     targetVel = targ;
   }
   //Sussy version
-  void set(double arr[size]){
+  void set(double* arr){
     for(int i = 0; i < size; i++){
       ((double*)this)[i] = arr[i];
     }
@@ -95,6 +95,7 @@ class FlywheelTBH : public Empty {
   double maxRateDrop = 5;
   double maxRateGain = 2;
   FlywheelDebugEl debug;
+  bool hasTarget = false;
 public:
   FlywheelTBH(NewMotor<>& m, vex::encoder& e);
   void setTarget(int i);
@@ -117,6 +118,7 @@ class FlywheelTBHEncoder : public Empty {
   double maxRateDrop = 5;
   double maxRateGain = 2;
   FlywheelDebugEl debug;
+  bool hasTarget = false;
 public:
   FlywheelTBHEncoder(NewMotor<>& m, Encoder en);
   FlywheelTBHEncoder(NewMotor<>& m);

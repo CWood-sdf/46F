@@ -15,6 +15,7 @@ public:
     //The constructor, only enable if the type has been mapped
     template<class Sensor>
     Encoder(Sensor* e, decltype(&Sensor::resetPosition) = nullptr) {
+        cout << "Init encoder" << endl;
         getValue = [e](rotationUnits units) {
             return e->position(units);
         };
@@ -61,8 +62,16 @@ public:
     void resetPosition() {
         resetter();
     }
-    Encoder& operator=(const Encoder& other) = default;
-    Encoder& operator=(Encoder&& other) = default;
+    Encoder& operator=(const Encoder& other) {
+        getValue = other.getValue;
+        resetter = other.resetter;
+        return *this;
+    }
+    Encoder& operator=(Encoder&& other) {
+        getValue = other.getValue;
+        resetter = other.resetter;
+        return *this;
+    }
 };
 
 #endif  // ENCODER_H
