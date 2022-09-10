@@ -4,12 +4,14 @@
         "[Tokyo Night]": {
             "rules": {
                 "variable.global": "#ce8787",
-                "class": "#df776f"
+                "class": "#df776f",
+                "enumMember": "#d49490"
             }
         },
         "[Tomorrow Night]": {
             "rules": {
                 "variable.global": "#ce8787",
+                "enumMember": "#db892c"
             }
         }
         

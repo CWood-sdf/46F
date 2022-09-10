@@ -64,7 +64,6 @@ public: // Some Functions
   void callFn();
   void reuseFn();
 
-public: // PID Stuff
   void setOldDistFns();
   void useDistFns(double dist);
 private: // turnTo, with re-updating function
@@ -81,6 +80,8 @@ private: // followPath vars
   bool moving = false;
   bool stopExitPrev = false;
   double pathRadius = 1.0;
+  double followPathDist = 16.0;
+  int followPathMaxTimeIn = 5;
 public: // exitMode
   enum class exitMode {
     normal,
@@ -91,6 +92,12 @@ public: // exitMode
   
 public: // followPath var editors
   bool isMoving();
+  double getPathRadius();
+  double getFollowPathDist();
+  chain_method setFollowPathDist(double dist);
+  chain_method setFollowPathMaxTimeIn(int time);
+  int getFollowPathMaxTimeIn();
+  // chain_method setPathRadius(double r);
   chain_method estimateStartPos(PVector v, double a);
   chain_method forceEarlyExit();
   chain_method setExitMode(exitMode m);

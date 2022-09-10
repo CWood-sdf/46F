@@ -204,6 +204,23 @@ BasicWheelController::chain_method BasicWheelController::setPathRadius(double r)
   pathRadius = r;
   CHAIN
 }
+double BasicWheelController::getPathRadius(){
+  return pathRadius;
+}
+BasicWheelController::chain_method BasicWheelController::setFollowPathDist(double d){
+  followPathDist = d;
+  CHAIN;
+}
+double BasicWheelController::getFollowPathDist(){
+  return followPathDist;
+}
+BasicWheelController::chain_method BasicWheelController::setFollowPathMaxTimeIn(int t){
+  followPathMaxTimeIn = t;
+  CHAIN;
+}
+int BasicWheelController::getFollowPathMaxTimeIn(){
+  return followPathMaxTimeIn;
+}
 template<class Arr>
 size_t BasicWheelController::getNearest(Arr arr, PVector obj){
   size_t i = 0;
@@ -257,7 +274,7 @@ all controller should do is just to take target and nearest point data and retur
 chassis should manage wheel spinning nitty gritty
 **/
 void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, bool isNeg){
-  double purePursuitDist = 16.0; // Distance to pure pursuit target
+  double purePursuitDist = followPathDist; // Distance to pure pursuit target
   
   controller->init();
   #ifndef USE_GAME_SPECIFIC
@@ -326,13 +343,13 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
   [[maybe_unused]]
   int time = 0, //Counts the time in loop iterations
   timeIn = 0, // The amount of time spent near the target
-  maxTimeIn = 5, // The time needed before exit
+  maxTimeIn = followPathMaxTimeIn, // The time needed before exit
   sleepTime = 10, // The sleep time
   g = 0; // A debug output counter
 
   double 
   //Going with an hopefully possible 1 in accuracy
-  minAllowedDist = exitDist == 0.0 ? 4.0 : exitDist; // The maximum distance from target before starting timeIn count
+  minAllowedDist = exitDist == 0.0 ? 2.0 : exitDist; // The maximum distance from target before starting timeIn count
   cout << minAllowedDist << endl;
   #undef DEBUG
   #ifdef DEBUG  
