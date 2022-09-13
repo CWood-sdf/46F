@@ -440,7 +440,8 @@ int main() {
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-  
+
+  drivercontrol();
   //autonomous();
   // Competition.autonomous(autonomous);
   // Competition.drivercontrol(drivercontrol);

@@ -16,16 +16,16 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 //Front Left Wheel (FL)
-motor FL = motor(PORT1, gearSetting::ratio18_1, true);
+motor FL = motor(PORT19, gearSetting::ratio18_1, true);
 TestDevice(FL);
 //Front Right Wheel (FR)
-motor FR = motor(PORT5, gearSetting::ratio18_1, false);
+motor FR = motor(PORT11, gearSetting::ratio18_1, false);
 TestDevice(FR);
 //Back Left Wheel (BL)
-motor BL = motor(PORT3, gearSetting::ratio18_1, true);
+motor BL = motor(PORT10, gearSetting::ratio18_1, true);
 TestDevice(BL);
 //Back Right Wheel (BR)
-motor BR = motor(PORT9, gearSetting::ratio18_1, false);
+motor BR = motor(PORT1, gearSetting::ratio18_1, false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
 motor ML = motor(PORT2, gearSetting::ratio18_1, true);
@@ -152,15 +152,15 @@ void testMotorConfiguration(){
 }
 #define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
 void testMotorConnection(){
-  TMC(FL)
-  TMC(ML)
-  TMC(BL)
-  TMC(FR)
-  TMC(MR)
-  TMC(BR)
+  // TMC(FL)
+  // TMC(ML)
+  // TMC(BL)
+  // TMC(FR)
+  // TMC(MR)
+  // TMC(BR)
   for(auto i : connectedDevices){
     if(!get<1>(i)->installed()){
-      cout << "Device " << get<0>(i) << " is not connected!" << endl;
+      cout << get<0>(i) << " is not connected!" << endl;
       Greg.rumble(".");
     }
   }
