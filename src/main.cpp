@@ -38,6 +38,8 @@ bool isPressing(const controller::button& btn){
   
   return false;
 }
+
+
 //Similar to isPressing(controller::button&), but only does it if a joystick axis is going in a certain direction
 bool isPressing(const controller::axis& joystick, int mult) {
   if (abs(joystick.value()) > 50 && joystick.value() * mult > 1) {
@@ -410,19 +412,19 @@ int main() {
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
     v5_lv_init();
-    cout << "Lvgl initialized" << endl;
+    cout << "<< Lvgl initialized >>" << endl;
     s(100);
     gyroInit(angler);
     s(500);
     gyroInit(GPS);
     //Gyro's initialized
     testMotorConnection();
-    cout << "Motor connection test complete" << endl;
+    cout << "<< Motor connection test complete >>" << endl;
     s(500);
     flyTBH.setTarget(0);
     flyTBH.addTarget(500);
     flyTBH.setTarget(1);
-    cout << "Flywheel initialized" << endl;
+    cout << "<< Flywheel initialized >>" << endl;
     s(500);
     init = true;
   });

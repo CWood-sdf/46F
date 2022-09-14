@@ -148,16 +148,16 @@ public:
     // //i hate this but it should work
     double* doubles = (double*)&v;
     double* thisPtr = (double*)this;
-    cout << doubles << ", " << thisPtr << endl;
+    // cout << doubles << ", " << thisPtr << endl;
     int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    cout << size << endl;
+    // cout << size << endl;
     for(int i = 0; i < size; i++){
       thisPtr[i] = doubles[i];
     }
 
     //Clear any error build up
     resetVals();
-    cout << (bool)v.manager << endl;
+    // cout << (bool)v.manager << endl;
     if(v.manager){
       manager.reset(v.manager->getCopy());
     }
@@ -231,16 +231,16 @@ public:
     //i hate this but it should work
     double* doubles = (double*)&a;
     double* thisPtr = (double*)this;
-    cout << doubles << ", " << thisPtr << endl;
+    // cout << doubles << ", " << thisPtr << endl;
     int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    cout << size << endl;
+    // cout << size << endl;
     for(int i = 0; i < size; i++){
       thisPtr[i] = doubles[i];
     }
 
     //Clear any error build up
     resetVals();
-    cout << (bool)a.manager << endl;
+    // cout << (bool)a.manager << endl;
     if(a.manager){
       manager.reset(a.manager->getCopy());
     }

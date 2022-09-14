@@ -16,16 +16,16 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 //Front Left Wheel (FL)
-motor FL = motor(PORT19, gearSetting::ratio18_1, true);
+motor FL = motor(PORT1, gearSetting::ratio18_1, !true);
 TestDevice(FL);
 //Front Right Wheel (FR)
-motor FR = motor(PORT11, gearSetting::ratio18_1, false);
+motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
 TestDevice(FR);
 //Back Left Wheel (BL)
-motor BL = motor(PORT10, gearSetting::ratio18_1, true);
+motor BL = motor(PORT11, gearSetting::ratio18_1, !true);
 TestDevice(BL);
 //Back Right Wheel (BR)
-motor BR = motor(PORT1, gearSetting::ratio18_1, false);
+motor BR = motor(PORT19, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
 motor ML = motor(PORT2, gearSetting::ratio18_1, true);
@@ -40,9 +40,9 @@ motor_group Right = motor_group(BR, MR, FR);
 motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
 TestDevice(intakeMot);
 
-motor flyWheelMot = motor(PORT9, gearSetting::ratio6_1, false);
+motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
-motor flywheel2 = motor(PORT8, ratio6_1, true);
+motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
 NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);

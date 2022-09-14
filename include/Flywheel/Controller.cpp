@@ -93,29 +93,29 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
     lv_chart_set_next_value(chart, serFilt, out.filterVel);
   }
 }
-void FlywheelTBH::init() {
-  gain = 0.025;
-  maxRateGain = 1.5;
-  maxRateDrop = 2;
-  velCheck = Settled(10, 0.2, 500);
-}
+// void FlywheelTBH::init() {
+//   gain = 0.025;
+//   maxRateGain = 1.5;
+//   maxRateDrop = 2;
+//   velCheck = Settled(10, 0.2, 500);
+// }
 void FlywheelTBHEncoder::init() {
   gain = 0.025;
   maxRateGain = 1.5;
   maxRateDrop = 2;
   velCheck = Settled(10, 0.2, 500);
 }
-void FlywheelTBH::graph(bool remake) {
-  basicGraph(remake, "TBH ctrl", debug);
-}
+// void FlywheelTBH::graph(bool remake) {
+//   basicGraph(remake, "TBH ctrl", debug);
+// }
 void FlywheelTBHEncoder::graph(bool remake) {
   basicGraph(remake, "TBHE ctrl", debug);
 }
-FlywheelTBH::FlywheelTBH(NewMotor<>& m, vex::encoder& p) : en(&p), mots(m), filter(0.15) {
-  // mots = m;
-  init();
-  filter.seed(0);
-}
+// FlywheelTBH::FlywheelTBH(NewMotor<>& m, vex::encoder& p) : en(&p), mots(m), filter(0.15) {
+//   // mots = m;
+//   init();
+//   filter.seed(0);
+// }
 FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m, Encoder p) : mots(m), filter(0.15) {
   // mots = m;
   init();
@@ -129,19 +129,19 @@ FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m) : mots(m), filter(0.15) {
   filter.seed(0);
 }
 
-void FlywheelTBH::setTarget(int i) {
-  if (velTargets.size() == 0) return;
-  target = i;
-  if(target < 0)
-    target = 0;
-  else if(target >= velTargets.size()) 
-    target = velTargets.size() - 1;
+// void FlywheelTBH::setTarget(int i) {
+//   if (velTargets.size() == 0) return;
+//   target = i;
+//   if(target < 0)
+//     target = 0;
+//   else if(target >= velTargets.size()) 
+//     target = velTargets.size() - 1;
   
-  tbh = initialTbh[target];
-  if (velTargets.size() != 0) {
-    hasTarget = true;
-  }
-}
+//   tbh = initialTbh[target];
+//   if (velTargets.size() != 0) {
+//     hasTarget = true;
+//   }
+// }
 void FlywheelTBHEncoder::setTarget(int i) {
   if(velTargets.size() == 0) return;
   target = i;
@@ -157,105 +157,105 @@ void FlywheelTBHEncoder::setTarget(int i) {
     hasTarget = true;
   }
 }
-void FlywheelTBH::addTarget(double t) {
-  velTargets.push_back(t);
-  initialTbh.push_back(t / 6.0);
-}
+// void FlywheelTBH::addTarget(double t) {
+//   velTargets.push_back(t);
+//   initialTbh.push_back(t / 6.0);
+// }
 void FlywheelTBHEncoder::addTarget(double t) {
   velTargets.push_back(t);
   initialTbh.push_back(t / 6.0);
 }
-void FlywheelTBH::step() {
-  if(!hasTarget) return;
-  static double lastRotation = 0;
-  static double lastVel;
-  static double lastDesiredVel = 0;
-  static double prevErr = 0;
-  static int settledCount = 0;
-  double velSent = 10;
-  bool calcTbh = true;
-  double desiredVel = velTargets[target];
-  int timeStep = velCheck.timeStep();
-  double rotation = mots[0].position(rotationUnits::rev);
-  double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
-  lastRotation = rotation;
-  filter.update(speedEst);
-  double speed = filter.value();
-  double err = desiredVel - speed;
-  bool settled = velCheck.settled(err);
+// void FlywheelTBH::step() {
+//   if(!hasTarget) return;
+//   static double lastRotation = 0;
+//   static double lastVel;
+//   static double lastDesiredVel = 0;
+//   static double prevErr = 0;
+//   static int settledCount = 0;
+//   double velSent = 10;
+//   bool calcTbh = true;
+//   double desiredVel = velTargets[target];
+//   int timeStep = velCheck.timeStep();
+//   double rotation = mots[0].position(rotationUnits::rev);
+//   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
+//   lastRotation = rotation;
+//   filter.update(speedEst);
+//   double speed = filter.value();
+//   double err = desiredVel - speed;
+//   bool settled = velCheck.settled(err);
   
-  //Leave this empty until TBH is working
-  if(settled){
-    calcTbh = false;
-    settledCount++;
-    if(settledCount > 1000/50){
-      settledCount = 1000/50;
-    }
-  }
-  else {
-    settledCount--;
-    if(settledCount > 0){
-      calcTbh = false;
-    }
-  }
-  if(desiredVel != lastDesiredVel){
-    calcTbh = false;
-    settledCount = 0;
-  }
-  lastDesiredVel = desiredVel;
-  if(abs(err) < 60){
-    gain = 0.07;
-  }
-  else {
-    gain = 0.01;
-  }
-  if(calcTbh){
-    if(std::signbit(err) != std::signbit(prevErr)){
-      tbh = (lastVel + tbh) / 2;
-      if(tbh < 0){
-        tbh = 0;
-      }
-      if(tbh > 100){
-        tbh = 100;
-      }
-      initialTbh[target] = tbh;
-      velSent = tbh;
-    }
-    else {
-      velSent = lastVel + gain * err;
+//   //Leave this empty until TBH is working
+//   if(settled){
+//     calcTbh = false;
+//     settledCount++;
+//     if(settledCount > 1000/50){
+//       settledCount = 1000/50;
+//     }
+//   }
+//   else {
+//     settledCount--;
+//     if(settledCount > 0){
+//       calcTbh = false;
+//     }
+//   }
+//   if(desiredVel != lastDesiredVel){
+//     calcTbh = false;
+//     settledCount = 0;
+//   }
+//   lastDesiredVel = desiredVel;
+//   if(abs(err) < 60){
+//     gain = 0.07;
+//   }
+//   else {
+//     gain = 0.01;
+//   }
+//   if(calcTbh){
+//     if(std::signbit(err) != std::signbit(prevErr)){
+//       tbh = (lastVel + tbh) / 2;
+//       if(tbh < 0){
+//         tbh = 0;
+//       }
+//       if(tbh > 100){
+//         tbh = 100;
+//       }
+//       initialTbh[target] = tbh;
+//       velSent = tbh;
+//     }
+//     else {
+//       velSent = lastVel + gain * err;
       
-    }
-  }
-  else {
-    velSent = lastVel;
-  }
-  // cout << velSent << endl;
-  // cout << (abs(err) < 200) << ", " << abs(velSent - lastVel) << ", " << (abs(velSent - lastVel) < 4.0) << ", " << !settled << endl;
-  if(abs(err) < 200 && abs(err) > 50 && abs(velSent - lastVel) < 1.0 && !settled){
-    velSent += -1.0 * (2.0 * std::signbit(err) - 1.0); 
-  }
-  // cout << signbit(err) << endl;
-  // cout << velSent << endl << endl;
-  if(velSent - lastVel > maxRateGain){
-    velSent = lastVel + maxRateGain;
-  }
-  else if(velSent - lastVel < -maxRateDrop){
-    velSent = lastVel - maxRateDrop;
-  }
-  if(abs(err) < 60 && velSent - lastVel > 0.1){
-    velSent = lastVel + 0.1;
-  }
-  if(velSent < 0){
-    velSent = 0;
-  }
-  if(velSent > 100){
-    velSent = 100;
-  }
-  debug.set(err, speedEst, speed, desiredVel);
-  prevErr = err;
-  mots.spin(fwd, velSent, pct);
-  lastVel = velSent;
-}
+//     }
+//   }
+//   else {
+//     velSent = lastVel;
+//   }
+//   // cout << velSent << endl;
+//   // cout << (abs(err) < 200) << ", " << abs(velSent - lastVel) << ", " << (abs(velSent - lastVel) < 4.0) << ", " << !settled << endl;
+//   if(abs(err) < 200 && abs(err) > 50 && abs(velSent - lastVel) < 1.0 && !settled){
+//     velSent += -1.0 * (2.0 * std::signbit(err) - 1.0); 
+//   }
+//   // cout << signbit(err) << endl;
+//   // cout << velSent << endl << endl;
+//   if(velSent - lastVel > maxRateGain){
+//     velSent = lastVel + maxRateGain;
+//   }
+//   else if(velSent - lastVel < -maxRateDrop){
+//     velSent = lastVel - maxRateDrop;
+//   }
+//   if(abs(err) < 60 && velSent - lastVel > 0.1){
+//     velSent = lastVel + 0.1;
+//   }
+//   if(velSent < 0){
+//     velSent = 0;
+//   }
+//   if(velSent > 100){
+//     velSent = 100;
+//   }
+//   debug.set(err, speedEst, speed, desiredVel);
+//   prevErr = err;
+//   mots.spin(fwd, velSent, pct);
+//   lastVel = velSent;
+// }
 void FlywheelTBHEncoder::step() {
   if (!hasTarget) return;
   static double lastRotation = 0;
@@ -294,11 +294,14 @@ void FlywheelTBHEncoder::step() {
     settledCount = 0;
   }
   lastDesiredVel = desiredVel;
-  if(abs(err) < 60){
+  if (abs(err) < 10){
+    gain = 0.05;
+  }
+  if (abs(err) < 60) {
     gain = 0.07;
   }
   else {
-    gain = 0.01;
+    gain = 0.02;
   }
   if(calcTbh){
     if(std::signbit(err) != std::signbit(prevErr)){
@@ -344,13 +347,14 @@ void FlywheelTBHEncoder::step() {
   }
   debug.set(err, speedEst, speed, desiredVel);
   prevErr = err;
-  mots.spin(fwd, velSent, pct);
+  mots.spinVolt(fwd, velSent);
   lastVel = velSent;
+  s(5);
 }
 
-bool FlywheelTBH::ready() {
-    return velCheck.settled();
-}
+// bool FlywheelTBH::ready() {
+//     return velCheck.settled();
+// }
 // void FlywheelPID::initPID(){
 //   ctrl = PIDF(0.1, 0.02, 0.00, manager, 0, 0, 5);
 // }

@@ -82,29 +82,29 @@ class Empty {
   public:
   virtual void step();
 };
-class FlywheelTBH : public Empty {
-  encoder* en;
-  NewMotor<>& mots;
-  EMA filter;
-  vector<double> velTargets = {550};
-  vector<double> initialTbh = {10};
-  double tbh = 0;
-  double gain;
-  Settled velCheck = Settled(10, 10, 500);
-  int target;
-  double maxRateDrop = 5;
-  double maxRateGain = 2;
-  FlywheelDebugEl debug;
-  bool hasTarget = false;
-public:
-  FlywheelTBH(NewMotor<>& m, vex::encoder& e);
-  void setTarget(int i);
-  void addTarget(double t);
-  void step() override;
-  void graph(bool);
-  void init();
-  bool ready();
-};
+// class FlywheelTBH : public Empty {
+//   encoder* en;
+//   NewMotor<>& mots;
+//   EMA filter;
+//   vector<double> velTargets = {550};
+//   vector<double> initialTbh = {10};
+//   double tbh = 0;
+//   double gain;
+//   Settled velCheck = Settled(10, 10, 500);
+//   int target;
+//   double maxRateDrop = 5;
+//   double maxRateGain = 2;
+//   FlywheelDebugEl debug;
+//   bool hasTarget = false;
+// public:
+//   FlywheelTBH(NewMotor<>& m, vex::encoder& e);
+//   void setTarget(int i);
+//   void addTarget(double t);
+//   void step() override;
+//   void graph(bool);
+//   void init();
+//   bool ready();
+// };
 class FlywheelTBHEncoder : public Empty {
   Encoder en;
   NewMotor<>& mots;
