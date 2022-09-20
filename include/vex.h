@@ -3,14 +3,15 @@
 #ifndef VEX_H
 #define VEX_H
 // #define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
-// #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
-#define BASE_FILE <C:/Users/Student.EGR_03_LAPTOP.001/Documents/GitHub/Libs
+#define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
+// #define BASE_FILE <C:/Users/Student.EGR_03_LAPTOP.001/Documents/GitHub/Libs
 //Undef this macro to find all places that are game specific
 #define USE_GAME_SPECIFIC
 // #undef USE_GAME_SPECIFIC
 //
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
+#pragma GCC diagnostic ignored "-Wdeprecated-anon-enum-enum-conversion"
 //#pragma GCC diagnostic ignored "-Wunused-variable"
 #define USE_MATH_DEFINES
 //Include a few basic files
@@ -84,10 +85,10 @@ string toCcp(int v) {
 	string ret;
   //Convert single digit integers to characters
 	array<char, 10> arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-	bool neg = false;
+	// bool neg = false;
   //Check if it's negative, if so add a "-" to ret
 	if (v < 0) {
-		neg = true;
+		// neg = true;
 		v *= -1;
 		ret = "-";
     ret += toCcp(v);
@@ -129,9 +130,9 @@ string toCcp(int v) {
 string toCcp(double v) {
 	string ret;
 	array<char, 10> arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-	bool neg = false;
+	// bool neg = false;
 	if (v < 0) {
-		neg = true;
+		// neg = true;
 		v *= -1.0;
 		ret = "-";
     ret += toCcp(v);

@@ -19,7 +19,7 @@
 
 */
 //main.cpp
-#include "updaters.h"
+#include "Updaters.h"
 #include "AutonInit/Init.h"
 #include "BrainOS/BotTracker.h"
 #include "lv_conf.h"
@@ -278,6 +278,13 @@ void runFlywheel(){
   }
 }
 //}
+template<typename T>
+concept okok = true;
+
+template<okok T>
+void test(T t){
+  cout << "ok" << endl;
+}
 
 
 //Brain Drawing Stuff {

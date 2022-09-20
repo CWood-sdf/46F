@@ -2,6 +2,8 @@
 #define GPS_SHARE_H
 #include "Odometry/EPA_Tracker.h"
 class BasicConfirmationOdom {
+public:
+  virtual ~BasicConfirmationOdom() {}
   virtual double xPosition(distanceUnits) = 0;
   virtual double yPosition(distanceUnits) = 0;
   virtual int32_t quality() = 0;

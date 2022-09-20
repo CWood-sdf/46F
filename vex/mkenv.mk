@@ -53,8 +53,10 @@ Q =
 endif
 
 # compile and link tools
-CC      = clang
-CXX     = clang
+CC      = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang.exe
+CXX     = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang++.exe
+#CC = clang
+#CXX = clang
 OBJCOPY = arm-none-eabi-objcopy
 SIZE    = arm-none-eabi-size
 LINK    = arm-none-eabi-ld

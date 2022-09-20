@@ -4,7 +4,7 @@
 //Update the bot angle in all three dimensions
 void updateBotAngle(bool add){
   //
-  bool gpsFirst = false;
+  // bool gpsFirst = false;
   static double lastAngle = angler.orientation(orientationType::yaw, rotationUnits::deg);
   
   static double lastAngleYZ = angler.orientation(orientationType::pitch, rotationUnits::deg);
@@ -20,7 +20,7 @@ void updateBotAngle(bool add){
   if(!share.gpsBad()/* && !gpsFirst*/){
     // cout << "Share not bad: " << share.heading() << endl;
     botAngles.x = posNeg180(share.heading());
-    gpsFirst = true;
+    // gpsFirst = true;
   }
   double angle = angler.orientation(orientationType::yaw, rotationUnits::deg);
   double gain = posNeg180(angle - lastAngle);
@@ -81,9 +81,7 @@ void waitForReset(){
 
 void microWait(uint time){
   auto startTime = Brain.Timer.systemHighResolution();
-  //This volatile int is just there to prevent annoying compiler optimizations
-  //That mess up the timing of everything
-  volatile int i = 0;
+  int i = 0;
   while(Brain.Timer.systemHighResolution() - startTime < time || i < -10){
     i++;
   }

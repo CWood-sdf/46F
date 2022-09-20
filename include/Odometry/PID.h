@@ -23,7 +23,8 @@ public:
 };
 
 struct PIDF_Extension {
-  PIDF_Extension(){
+  virtual ~PIDF_Extension() {}
+  PIDF_Extension() {
 
   }
   virtual void manageP(double& p){

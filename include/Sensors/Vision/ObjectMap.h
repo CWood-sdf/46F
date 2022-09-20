@@ -54,7 +54,7 @@ struct ObjectMap {
       arr.push_back(sensor.objects[i]);
     }
     for(int i = 0; i < objects.size(); i++){
-      vision::object* closestObj = NULL;
+      // vision::object* closestObj = NULL;
       PVector topLeft = objects[i].origin.value() - PVector(10, 10);
       PVector btmRight = objects[i].origin.value() + PVector(objects[i].width, objects[i].height) + PVector(10, 10);
       

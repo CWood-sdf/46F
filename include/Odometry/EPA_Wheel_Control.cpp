@@ -487,7 +487,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
       g = 0;
     }
     // double targetVel = abs(speed);
-    
+    [[maybe_unused]]
     double orgSpeed = speed + 0.000000001;
     //Slew speed
     if(abs(speed) > path[nearestIndex].targetSpeed){
