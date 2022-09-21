@@ -13,6 +13,7 @@ class Settled {
   double prevErr;
   double maxSleep = 500;
   uint32_t lastTimeStep;
+  LinkedList<double> lastDerivs;
   bool isSettled;
 public:
   Settled(double me, double md, double ms = 500){
@@ -32,10 +33,23 @@ public:
     if(timeStep < 30){
       return false;
     }
+    lastDerivs.push_back(deriv);
+    if(lastDerivs.size() > 5){
+      lastDerivs.popBase();
+    }
     isSettled = abs(deriv) < maxDeriv && abs(err) < maxErr;
     return abs(deriv) < maxDeriv && abs(err) < maxErr;
   }
-  bool settled(){
+  bool stableSpeed() {
+    //If all the lastDerivs are less than maxDeriv, return true
+    for (auto deriv : lastDerivs) {
+      if (abs(deriv) > maxDeriv) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool settled() {
     return isSettled;
   }
   uint32_t timeStep(){
