@@ -115,8 +115,8 @@ class FlywheelTBHEncoder : public Empty {
   double gain;
   Settled velCheck = Settled(10, 10, 500);
   int target;
-  double maxRateDrop = 5;
-  double maxRateGain = 2;
+  double maxRateDrop = 2;
+  double maxRateGain = 4;
   FlywheelDebugEl debug;
   bool hasTarget = false;
 public:

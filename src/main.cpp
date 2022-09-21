@@ -189,6 +189,10 @@ public:
 
 void drivercontrol (){
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
+  ButtonLatch UpLatch = ButtonLatch(Greg.ButtonUp);
+  ButtonLatch DownLatch = ButtonLatch(Greg.ButtonDown);
+  int currentVelocity = 540;
+  int flywheelI = 1;
   static bool driveReversed = false;
   //Protection from multiple instances of drivercontrol running
   //Is true if there is no instance of drivercontrol running
@@ -209,7 +213,7 @@ void drivercontrol (){
   count++;
   while(1){
     //Place driver code in here
-    if(primary){
+    if (primary) {
       //Drive control, uses quotient/square for smoothness
       double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
       double X1 = abs(Greg.Axis1.value()) > sensitivity ? Greg.Axis1.value() : 0;
@@ -219,7 +223,7 @@ void drivercontrol (){
       // Y2 *= Y2;
       // Y1 *= Greg.Axis2.value() != 0 ? Greg.Axis2.value() / abs(Greg.Axis2.value()) : 1;
       // Y2 *= Greg.Axis3.value() != 0 ? Greg.Axis3.value() / abs(Greg.Axis3.value()) : 1;
-      
+
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
       if (driveReversed) {
@@ -238,8 +242,17 @@ void drivercontrol (){
         MR.spin(fwd, s2, pct);
         BR.spin(fwd, s2, pct);
       }
-
-      if(BLatch.pressing()){
+      if (UpLatch.pressing() && currentVelocity < 600) {
+        currentVelocity += 60;
+        flyTBH.addTarget(currentVelocity);
+        flyTBH.setTarget(flywheelI++);
+      }
+      if (DownLatch.pressing() && currentVelocity > 60) {
+        currentVelocity -= 60;
+        flyTBH.addTarget(currentVelocity);
+        flyTBH.setTarget(flywheelI++);
+      }
+      if (BLatch.pressing()) {
         driveReversed = !driveReversed;
       }
     }
@@ -278,13 +291,13 @@ void runFlywheel(){
   }
 }
 //}
-template<typename T>
-concept okok = true;
+// template<typename T>
+// concept okok = true;
 
-template<okok T>
-void test(T t){
-  cout << "ok" << endl;
-}
+// template<okok T>
+// void test(T t){
+//   cout << "ok" << endl;
+// }
 
 
 //Brain Drawing Stuff {
@@ -429,8 +442,6 @@ int main() {
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
     flyTBH.setTarget(0);
-    flyTBH.addTarget(500);
-    flyTBH.setTarget(1);
     cout << "<< Flywheel initialized >>" << endl;
     s(500);
     init = true;
