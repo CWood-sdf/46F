@@ -118,6 +118,7 @@ void randomAutonTest(){
 }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
+
 };
 Auton rightA = "Right" + [](){
   cout << "r" << endl;
