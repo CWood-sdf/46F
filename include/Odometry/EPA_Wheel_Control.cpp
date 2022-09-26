@@ -696,8 +696,20 @@ void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg){
   
 
 }
+bool BasicWheelController::isRed() {
+  return !reversed;
+}
+void BasicWheelController::setRed() {
+  reversed = false;
+}
+void BasicWheelController::setBlue() {
+  reversed = true;
+}
+bool BasicWheelController::isBlue() {
+  return reversed;
+}
 
-void MechWheelController::moveAt(double angle, double speed, double turnSpeed){
+void MechWheelController::moveAt(double angle, double speed, double turnSpeed) {
   //There are actual equations governing this
   // double Y1 = cos(angle * DEG_TO_RAD) * speed;
   // double Y2 = cos(angle * DEG_TO_RAD) * speed;

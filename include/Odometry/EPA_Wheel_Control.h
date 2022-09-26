@@ -115,7 +115,10 @@ public:
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
   virtual void generalFollow(VectorArr arr, Controller* controller, bool isNeg);
-  
+  bool isRed();
+  bool isBlue();
+  void setRed();
+  void setBlue();
 };
 
 class OmniWheelController : public BasicWheelController {

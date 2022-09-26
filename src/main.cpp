@@ -22,6 +22,7 @@
 #include "Updaters.h"
 #include "AutonInit/Init.h"
 #include "BrainOS/BotTracker.h"
+#include "BrainOS/VariableConfig.h"
 #include "lv_conf.h"
 using namespace ClassFns;
 using namespace vex;
@@ -118,7 +119,7 @@ void randomAutonTest(){
 }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
-
+  wc.estimateStartPos({ 0, 0 }, 0);
 };
 Auton rightA = "Right" + [](){
   cout << "r" << endl;
@@ -336,6 +337,10 @@ const color grey = color(100, 100, 100);
 const color lightGreen = color(100, 255, 100);
 
 const color darkGreen = color(ClrDarkGreen);
+enum class Alliance : int {
+  red = 0,
+  blue = 1
+};
 
 void displayBot(bool);
 #define V5_LVGL_RATE    4
@@ -345,8 +350,15 @@ void brainOS() {
   while(!init){
     s(500);
   }
-  
-  
+  VariableConfig setAlliance = VariableConfig({ "red", "blue" }, "Alliance", 0, [](int i) {
+    if (i == 0) {
+      wc.setRed();
+    }
+    else {
+      wc.setBlue();
+    }
+  });
+  bos::bosFns.push_back(VariableConfig::drawAll);
   bos::bosFns.push_back(windowsLoader);
   bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.push_back(printVars);

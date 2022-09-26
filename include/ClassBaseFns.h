@@ -44,8 +44,8 @@ string parseInt(vision::signature& c){
 
 //All the functions that are based on classes
 namespace ClassFns {
-  bool targetRed = false;
   FN_WITH_APA_SIG_NO_ARG(spinRoller)
+    bool targetRed = wc.isRed();
     bool isRed = rachetColor.hue() > 300 && rachetColor.hue() < 60;
     bool lastRed = isRed;
     while(1){
