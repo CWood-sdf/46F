@@ -37,7 +37,7 @@ TestDevice(MR);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
-motor intakeMot = motor(PORT7, gearSetting::ratio18_1, true);
+motor intakeMot = motor(PORT7, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);

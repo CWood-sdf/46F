@@ -112,26 +112,18 @@ void turnLeft(int t){
 //   cout << "Done" << endl;
 // }
 void randomAutonTest(){
-  // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &ramsete, false);
-  // wc.generalFollow({PVector(48, 0), PVector(48, 48)}, &purePursuit, false);
-  // wc.generalFollow({PVector(48, 48)}, &pidController, false);
-
 }
 Auton leftA = "Left" + [](){
   cout << "l" << endl;
-  wc.estimateStartPos({ 0, 0 }, 0);
 };
 Auton rightA = "Right" + [](){
   cout << "r" << endl;
 };
-Auton coolA = "Cool" + [](){
-  //sdf
+Auton skills = "Skills" + [](){
+  cout << "s" << endl;
 };
-Auton csdf = "sdfff" + [](){
-  
-};
-Auton scsdf = "sdffsdff" + [](){
-  
+Auton winPoint = "Win Point" + [](){
+  cout << "w" << endl;
 };
 void autonInit(){
   cout << "Auton Init" << endl;
@@ -346,10 +338,19 @@ void displayBot(bool);
 #define V5_LVGL_RATE    4
 void  vexTaskSleep( uint32_t time );
 bool init = false;
+void fn(bool ){
+  if(Brain.Screen.pressing()){
+    intake.spin(fwd, 100, pct);
+  }
+  else {
+    intake.stop(coast);
+  }
+}
 void brainOS() {
   while(!init){
     s(500);
   }
+  cout << "Start" << endl;
   VariableConfig setAlliance = VariableConfig({ "red", "blue" }, "Alliance", 0, [](int i) {
     if (i == 0) {
       wc.setRed();
@@ -358,6 +359,8 @@ void brainOS() {
       wc.setBlue();
     }
   });
+  // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  // bos::bosFns.push_back(fn);
   bos::bosFns.push_back(VariableConfig::drawAll);
   bos::bosFns.push_back(windowsLoader);
   bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
@@ -365,7 +368,7 @@ void brainOS() {
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
   
-  bos::bosFns.push_back(Auton::selectAuton);
+  // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;		
   //int maxState = 3; 
   Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<", -40, -30);		

@@ -1,5 +1,6 @@
 #include "vex.h"
 #include "Sensors/PotDial.h"
+#include "BrainOS/VariableConfig.h"
 class Auton {
   friend class Init;
   static inline size_t idSet = 0;
@@ -10,6 +11,13 @@ class Auton {
   static inline bool ready = false;
   static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, "Confirm");
   static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, "Deny");
+  static void configCallback(int i){
+    auton = refList[i];
+    autonSelected = true;
+    ready = true;
+    cout << "Select auton" << endl;
+  }
+  static inline VariableConfig conf = VariableConfig({}, "Auton", configCallback);
   string name;
   size_t index;
   function<void()> fn;
@@ -20,10 +28,12 @@ class Auton {
     CHAIN;
   }
   chain_method setName(string n){
+    conf.setOptionName(index, n);
     name = n;
     CHAIN;
   }
   Auton(){
+    conf.addOption("");
     index = idSet++;
     refList.push_back(this);
   }
