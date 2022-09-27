@@ -12,8 +12,7 @@
 			"${vex_sdkPath}/clang/8.0.0/include/**",
 			"${vex_gcc}/",
 			"${workspaceFolder}/include/**",
-			"${workspaceFolder}/src/**",
-			"${workspaceFolder}/include/*/**",
+			"${workspaceFolder}/src/**"
 		]
 	},
 	"configurations": [
@@ -26,7 +25,7 @@
 			"cStandard": "gnu99",
 			"cppStandard": "c++20",
 			"intelliSenseMode": "windows-clang-x86",
-			"configurationProvider": "ms-vscode.makefile-tools"
+			"configurationProvider": "ms-vscode.cpptools"
 		},
 		{
 			"name": "Mac",
