@@ -2,8 +2,8 @@
 #define VARIABLE_CONFIG_H
 #include "vex.h"
 class VariableConfig {
-    static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, "Confirm");
-    static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, "Deny");
+    static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, color(0, 200, 0), "Confirm");
+    static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, color(200, 0, 0), "Deny");
     static inline LinkedList<VariableConfig*> variables = LinkedList<VariableConfig*>();
     int index = -1;
     vector<string> optionNames;

@@ -380,7 +380,37 @@ void brainOS() {
       cout << "bosFns is empty for some reason" << endl;
       break;
     }
-
+    //Have buttons clicked first so that clicking them overrides the screenx
+    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
+      if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
+        //Remove all objects
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
+      }
+      auto oldPtr = &bos::bosFns.getCurrent();
+      bos::bosFns.moveCurrentLeft();
+      auto newPtr = &bos::bosFns.getCurrent();
+      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
+    }	
+    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {	
+      if(bos::bosFns.getCurrent()->lvgl()){
+        cout << "Clean" << endl;
+        //Remove all objects
+        lv_obj_clean(lv_scr_act());
+        lv_anim_del_all();
+      }
+      auto oldPtr = &bos::bosFns.getCurrent();
+      bos::bosFns.moveCurrentRight();
+      auto newPtr = &bos::bosFns.getCurrent();
+      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
+        //Tell it to remake
+        bos::bosFns.getCurrent()->call(true);
+      }
+    }	
     auto result = bos::bosFns.getCurrent()->call(false);
     if(bos::bosFns.getCurrent()->lvgl()){
       lv_tick_inc(V5_LVGL_RATE);
@@ -402,38 +432,7 @@ void brainOS() {
     }
     screenLeft.draw();		
     screenRight.draw();	
-    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
-      if(bos::bosFns.getCurrent()->lvgl()){
-        cout << "Clean" << endl;
-        //Remove all objects
-        lv_obj_clean(lv_scr_act());
-        lv_anim_del_all();
-      }
-      auto oldPtr = &bos::bosFns.getCurrent();
-      bos::bosFns.moveCurrentLeft();
-      auto newPtr = &bos::bosFns.getCurrent();
-      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
-        cout << "remake" << endl;
-        //Tell it to remake
-        bos::bosFns.getCurrent()->call(true);
-      }
-    }	
-    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {	
-      if(bos::bosFns.getCurrent()->lvgl()){
-        cout << "Clean" << endl;
-        //Remove all objects
-        lv_obj_clean(lv_scr_act());
-        lv_anim_del_all();
-      }
-      auto oldPtr = &bos::bosFns.getCurrent();
-      bos::bosFns.moveCurrentRight();
-      auto newPtr = &bos::bosFns.getCurrent();
-      if(oldPtr != newPtr && bos::bosFns.getCurrent()->lvgl()){
-        cout << "remake" << endl;
-        //Tell it to remake
-        bos::bosFns.getCurrent()->call(true);
-      }
-    }	
+    
 
     // Allow other tasks to run
     vex::task::sleep(V5_LVGL_RATE);
