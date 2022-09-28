@@ -115,6 +115,12 @@ public:
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
   virtual void generalFollow(VectorArr arr, Controller* controller, bool isNeg);
+  virtual void followPath(Controller* controller, VectorArr arr){
+    generalFollow(arr, controller, false);
+  }
+  virtual void backwardsFollow(Controller* controller, VectorArr arr){
+    generalFollow(arr, controller, true);
+  }
   bool isRed();
   bool isBlue();
   void setRed();

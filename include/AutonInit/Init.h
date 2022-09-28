@@ -82,6 +82,12 @@ public:
   static bool isDone(){
     return ready;
   }
+  static string selectedName(){
+    if(auton == NULL){
+      return "";
+    }
+    return auton->getName();
+  }
 };
 Auton operator "" _afn(const char* s){
   return Auton(s, [](){});

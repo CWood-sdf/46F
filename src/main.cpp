@@ -1,7 +1,7 @@
 /*
 ._______   _______  ____    _______
 .|__  __|  | __  |  |   \   | __  |
-.  | |     | | | |  | |\ \  | | | | 
+.  | |     | | | |  | |\ \  | | | |
 .  | |     | |_| |  | |/ /  | |_| |
 .  |_|     |_____|  |___/   |_____|
 
@@ -36,7 +36,7 @@ bool isPressing(const controller::button& btn){
     }
     return true;
   }
-  
+
   return false;
 }
 
@@ -50,11 +50,11 @@ bool isPressing(const controller::axis& joystick, int mult) {
     //cout << "  ";
     return true;
   }
-  
+
   return false;
 }
 
-//Moves bot backwards at the given speed for the given amount of time 
+//Moves bot backwards at the given speed for the given amount of time
 void backwards(int t, int sp = 40){
   Left.spin(vex::reverse, sp, pct);
   Right.spin(vex::reverse, sp, pct);
@@ -68,7 +68,7 @@ void fwds(int t, double sp = 30){
   s(t);
   Left.stop(hold);
   Right.stop(hold);
-  
+
 }
 void turnRight(int t){
   Left.spin(fwd, 60, pct);
@@ -83,6 +83,7 @@ void turnLeft(int t){
   s(t);
   Left.stop(hold);
   Right.stop(hold);
+
 }
 //Autonomous Stuff {
 
@@ -108,7 +109,7 @@ void turnLeft(int t){
 //       break;
 //     }
 //   }
-  
+
 //   cout << "Done" << endl;
 // }
 void randomAutonTest(){
@@ -145,7 +146,7 @@ void autonomous(){
 }
 
 //}
-#define sensitivity 12 
+#define sensitivity 12
 
 //Drivercontrol + automation {
 
@@ -166,7 +167,7 @@ public:
       if(state == stateLim + 1){
         state = 1;
       }
-      
+
       isPressing = true;
       return true;
     }
@@ -197,7 +198,7 @@ void drivercontrol (){
   static vector<pair<bool, bool*>> countsExist = {};
   //The count of drivercontrol instances
   static int count = 0;
-  
+
   //Is true if this drivercontrol instance should be running
   bool primary = count == 0 || allEmpty ? true : false;
   //Push back the array
@@ -253,7 +254,7 @@ void drivercontrol (){
     else {    }
     s(10);
 
-    
+
   }
   //Let other instances know that this drivercontrol can't run
   countsExist[localCount].first = false;
@@ -312,7 +313,7 @@ void drawPath(bool){
   PVector off = PVector(100, 100);
   Brain.Screen.waitForRefresh();
   Brain.Screen.clearScreen(black);
-  
+
   if(wc.drawArr){
     Brain.Screen.setFillColor(blue);
     for(auto v : wc.publicPath){
@@ -359,29 +360,34 @@ void brainOS() {
       wc.setBlue();
     }
   });
+  setAlliance.addBypass([](){
+    // return false;
+    return Auton::selectedName() == skills.getName();
+  });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
   // bos::bosFns.push_back(fn);
+  bos::bosFns.push_back(fn);
   bos::bosFns.push_back(VariableConfig::drawAll);
   bos::bosFns.push_back(windowsLoader);
   bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.push_back(printVars);
   bos::bosFns.push_back(drawPath);
   bos::bosFns.push_back(bos::BosFn(displayBot, true));
-  
+
   // bos::bosFns.push_back(Auton::selectAuton);
-  //int state = 0;		
-  //int maxState = 3; 
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<", -40, -30);		
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">", -40, -30);		
+  //int state = 0;
+  //int maxState = 3;
+  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<", -40, -30);
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">", -40, -30);
   //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
-  while (1) {		
+  while (1) {
     if(bos::bosFns.size(0)){
       cout << "bosFns is empty for some reason" << endl;
       break;
     }
     //Have buttons clicked first so that clicking them overrides the screenx
-    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {	
+    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent()) {
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
         //Remove all objects
@@ -395,8 +401,8 @@ void brainOS() {
         //Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
-    }	
-    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {	
+    }
+    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent()) {
       if(bos::bosFns.getCurrent()->lvgl()){
         cout << "Clean" << endl;
         //Remove all objects
@@ -410,7 +416,7 @@ void brainOS() {
         //Tell it to remake
         bos::bosFns.getCurrent()->call(true);
       }
-    }	
+    }
     auto result = bos::bosFns.getCurrent()->call(false);
     if(bos::bosFns.getCurrent()->lvgl()){
       lv_tick_inc(V5_LVGL_RATE);
@@ -430,20 +436,20 @@ void brainOS() {
         bos::bosFns.getCurrent()->call(true);
       }
     }
-    screenLeft.draw();		
-    screenRight.draw();	
-    
+    screenLeft.draw();
+    screenRight.draw();
+
 
     // Allow other tasks to run
     vex::task::sleep(V5_LVGL_RATE);
     Brain.Screen.waitForRefresh();
-  }	
+  }
 }
 //}
 
 
 int main() {
-  
+
   //Init has to be in thread, otherwise it won't work with comp switch
   thread initThread = thread([](){
     v5_lv_init();

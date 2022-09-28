@@ -10,6 +10,7 @@ class VariableConfig {
     bool selected = false;
     bool ready = false;
     vector<Button*> buttons = vector<Button*>();
+    function<bool()> bypass = []() {return false;};
     //A callback function for when the variable is finally selected
     function<void(int)> callback = [](int) {};
     string title = "";
@@ -34,6 +35,10 @@ public:
     }
     VariableConfig(vector<string> options, string title, int defaultOption, function<void(int)> callback) : VariableConfig(options, title, defaultOption) {
         this->callback = callback;
+    }
+    VariableConfig& addBypass(function<bool()> bypass) {
+        this->bypass = bypass;
+        return *this;
     }
     //A function that sets the name of an index
     void setOptionName(int index, string name) {
@@ -91,7 +96,7 @@ public:
         if (!selected) {
             for (int i = 0; i < buttons.size(); i++) {
                 buttons[i]->draw();
-                if (buttons[i]->clicked()) {
+                if (buttons[i]->released()) {
                     selected = true;
                     //Get the option from the stored list of options
                     index = i;
@@ -104,11 +109,11 @@ public:
             Brain.Screen.setFillColor(black);
             Brain.Screen.printAt(BRAIN_WIDTH / 2 - 20, BRAIN_HEIGHT / 2, optionNames[index].data());
             //Deny first as an extra layer of safety
-            if (deny.clicked()) {
+            if (deny.released()) {
                 //Send to top again
                 selected = false;
             }
-            else if (confirm.clicked()) {
+            else if (confirm.released()) {
                 ready = true;
                 //Delete buttons
                 for (auto b : buttons) {
@@ -118,6 +123,16 @@ public:
                 callback(index);
                 return true;
             }
+        }
+        if(bypass()){
+            ready = true;
+            //Delete buttons
+            for (auto b : buttons) {
+                delete b;
+            }
+            buttons.clear();
+            callback(index);
+            return true;
         }
         return ready;
     }
