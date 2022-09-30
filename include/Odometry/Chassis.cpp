@@ -16,26 +16,40 @@ Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p
   this->cartridge = cartridge;
 }
 void Chassis::turnRight(double speed){
-  leftWheels.spinVolt(fwd, speed);
-  rightWheels.spinVolt(reverse, speed);
+  driveFromDiff(0, speed, fwd);
 }
 void Chassis::turnLeft(double speed){
-  leftWheels.spinVolt(reverse, speed);
-  rightWheels.spinVolt(fwd, speed);
+  driveFromDiff(0, -speed, fwd);
 }
 void Chassis::moveRightSide(double speed, directionType d){
+  lastRightSpeed = speed * (d == fwd ? 1 : -1);
   rightWheels.spinVolt(d, speed);
 }
 void Chassis::moveLeftSide(double speed, directionType d){
+  lastLeftSpeed = speed * (d == fwd ? 1 : -1);
   leftWheels.spinVolt(d, speed);
 }
 void Chassis::hardBrake(){
-  leftWheels.stop(hold);
-  rightWheels.stop(hold);
+  lastLeftSpeed = lastRightSpeed = 0;
+  if(!ptoEngaged){
+    leftWheels.stop(hold, ptoMotorsLeft);
+    rightWheels.stop(hold, ptoMotorsRight);
+  }
+  else {
+    leftWheels.stop(hold);
+    rightWheels.stop(hold);
+  }
 }
 void Chassis::coastBrake(){
-  leftWheels.stop(coast);
-  rightWheels.stop(coast);
+  lastLeftSpeed = lastRightSpeed = 0;
+  if(!ptoEngaged){
+    leftWheels.stop(coast, ptoMotorsLeft);
+    rightWheels.stop(coast, ptoMotorsRight);
+  }
+  else {
+    leftWheels.stop(coast);
+    rightWheels.stop(coast);
+  }
 }
 Chassis::chain_method Chassis::setMaxAcc(double v){
   maxAcc = v;
@@ -52,8 +66,16 @@ Chassis::chain_method Chassis::setSpeedLimit(double v){
 void Chassis::driveFromDiff(double speed, double diff, directionType d){
   double left = speed + diff;
   double right = speed - diff;
-  leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
-  rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));
+  lastLeftSpeed = left;
+  lastRightSpeed = right;
+  if(!ptoEngaged){
+    leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left), ptoMotorsLeft);
+    rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right), ptoMotorsRight);
+  }
+  else {
+    leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
+    rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));
+  }
 }
 //Speed is in pct, velocity is in rad/sec
 void Chassis::driveFromAngular(double speed, double vel) {

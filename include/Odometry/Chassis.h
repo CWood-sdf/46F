@@ -8,6 +8,13 @@ struct Chassis {
   double maxDAcc = 360; // in/s^2
   NewMotor<> leftWheels;
   NewMotor<> rightWheels;
+  vector<bool> ptoMotorsLeft = vector<bool>();
+  vector<bool> ptoMotorsRight = vector<bool>();
+  vector<pneumatics*> ptoPneumatics = vector<pneumatics*>();
+  double lastLeftSpeed = 0.0;
+  double lastRightSpeed = 0.0;
+  //If true, the chassis is on extra motors
+  bool ptoEngaged = true;
   GPS_Share& pos;
   double trackWidth = 0.0;
   double gearRatio = 1.0;
@@ -60,6 +67,24 @@ struct Chassis {
   void moveLeftSide(double speed, directionType d);
   void moveRightSide(double speed, directionType d);
   void move(double speed, directionType d);
+  void engagePto(){
+    if(!ptoEngaged){
+      //Loop through pneumatics and open them
+      for(int i = 0; i < ptoPneumatics.size(); i++){
+        ptoPneumatics[i]->open();
+      }
+    }
+    ptoEngaged = true;
+  }
+  void disengagePto(){
+    if(ptoEngaged){
+      //Loop through pneumatics and close them
+      for(int i = 0; i < ptoPneumatics.size(); i++){
+        ptoPneumatics[i]->close();
+      }
+    }
+    ptoEngaged = false;
+  }
   chain_method setMaxAcc(double v);
   chain_method setMaxDAcc(double v);
   chain_method setSpeedLimit(double v);
