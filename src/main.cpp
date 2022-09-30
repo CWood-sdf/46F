@@ -125,6 +125,20 @@ Auton skills = "Skills" + [](){
 };
 Auton winPoint = "Win Point" + [](){
   cout << "w" << endl;
+  wc.estimateStartPos(PVector(41.34406604747163, -61.455521155830745), 0);
+  spinRoller();
+  wc.followPath(&ramsete, {PVector(-2.08, -67.89), PVector(7.99, -44.94)});
+  //Pick up and fire the disks at the same time
+  //TODO
+
+  
+  //Forward to back-face the roller
+  wc.followPath(&purePursuit, {PVector(-53.43, 9.87), PVector(-53.10, 37.28)});
+  //Contact roller
+  wc.backwardsFollow(&purePursuit, {PVector(-58.38, 40.42), PVector(-62.18, 40.42)});
+  
+  spinRoller();
+
 };
 void autonInit(){
   cout << "Auton Init" << endl;
@@ -186,6 +200,8 @@ void drivercontrol (){
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
   ButtonLatch UpLatch = ButtonLatch(Greg.ButtonUp);
   ButtonLatch DownLatch = ButtonLatch(Greg.ButtonDown);
+  ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
+  ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
   int currentVelocity = 540;
   int flywheelI = 1;
   static bool driveReversed = false;
@@ -249,6 +265,13 @@ void drivercontrol (){
       }
       if (BLatch.pressing()) {
         driveReversed = !driveReversed;
+      }
+
+      if(XLatch.pressing()){
+        wc.turnTo(wc.botPos().angleTo({-50, -50}));
+      }
+      if(YLatch.pressing()){
+        wc.turnTo(wc.botPos().angleTo({50, 50}));
       }
     }
     else {    }
@@ -341,10 +364,10 @@ void  vexTaskSleep( uint32_t time );
 bool init = false;
 void fn(bool ){
   if(Brain.Screen.pressing()){
-    intake.spin(fwd, 100, pct);
+    intake.spinVolt(fwd, 10000);
   }
   else {
-    intake.stop(coast);
+    // intake.stop(coast);
   }
 }
 void brainOS() {
@@ -366,7 +389,7 @@ void brainOS() {
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
   // bos::bosFns.push_back(fn);
-  bos::bosFns.push_back(fn);
+  // bos::bosFns.push_back(fn);
   bos::bosFns.push_back(VariableConfig::drawAll);
   bos::bosFns.push_back(windowsLoader);
   bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
@@ -481,7 +504,7 @@ int main() {
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-
+  intake.spinVolt(fwd, 10000);
   drivercontrol();
   //autonomous();
   // Competition.autonomous(autonomous);

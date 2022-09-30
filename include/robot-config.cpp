@@ -84,7 +84,7 @@ inertial angler = inertial(PORT11);
 TestDevice(angler);
 
 //gps
-gps GPS = gps(PORT10, -6.0, 0.0, inches, -90);
+gps GPS = gps(PORT10, -7.5, 0.0, inches, -90);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT8);
