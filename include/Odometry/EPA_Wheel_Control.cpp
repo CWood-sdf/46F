@@ -155,6 +155,11 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc){
 void BasicWheelController::turnTo(double angle){
   turnTo([=](){ return angle; });
 }
+//Implement faceTarget
+void BasicWheelController::faceTarget(PVector target){
+  turnTo(botPos().angleTo(target));
+}
+
 
 bool BasicWheelController::isMoving(){
   return moving;

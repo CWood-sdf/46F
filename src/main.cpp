@@ -119,6 +119,18 @@ Auton leftA = "Left" + [](){
 };
 Auton rightA = "Right" + [](){
   cout << "r" << endl;
+  wc.estimateStartPos(PVector(41.849730893433815, -61.9659849300323), 0);
+  spinRoller();
+  wc.followPath(&purePursuit, {PVector(41.84, -58.17), PVector(18.08, -41.12)});
+  //Pick up one disk
+  wc.turnTo(19.53);
+  //Go to the 3 disk stack
+  wc.followPath(&ramsete, {PVector(24.45, -52.83), PVector(31.86, -41.64)});
+  //Back up to prevent robot from crossing line
+  wc.backwardsFollow(&ramsete, {PVector(27.89, -48.01)});
+  //Turn to goal
+  wc.turnTo(12.91);
+
 };
 Auton skills = "Skills" + [](){
   cout << "s" << endl;
