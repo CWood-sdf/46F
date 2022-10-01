@@ -138,6 +138,7 @@ public:
   FlywheelTBHEncoder(NewMotor<>& m);
   void setTarget(int i);
   void addTarget(double t);
+  void setTargetSpeed(double t);
   void step() override;
   void graph(bool);
   void init();
