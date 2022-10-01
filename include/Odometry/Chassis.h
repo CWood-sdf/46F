@@ -67,24 +67,8 @@ struct Chassis {
   void moveLeftSide(double speed, directionType d);
   void moveRightSide(double speed, directionType d);
   void move(double speed, directionType d);
-  void engagePto(){
-    if(!ptoEngaged){
-      //Loop through pneumatics and open them
-      for(int i = 0; i < ptoPneumatics.size(); i++){
-        ptoPneumatics[i]->open();
-      }
-    }
-    ptoEngaged = true;
-  }
-  void disengagePto(){
-    if(ptoEngaged){
-      //Loop through pneumatics and close them
-      for(int i = 0; i < ptoPneumatics.size(); i++){
-        ptoPneumatics[i]->close();
-      }
-    }
-    ptoEngaged = false;
-  }
+  void engagePto();
+  void disengagePto();
   chain_method setMaxAcc(double v);
   chain_method setMaxDAcc(double v);
   chain_method setSpeedLimit(double v);

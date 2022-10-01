@@ -15,6 +15,24 @@ Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p
   this->wheelRad = wheelRad;
   this->cartridge = cartridge;
 }
+void Chassis::engagePto(){
+  if(!ptoEngaged){
+    //Loop through pneumatics and open them
+    for(int i = 0; i < ptoPneumatics.size(); i++){
+      ptoPneumatics[i]->open();
+    }
+  }
+  ptoEngaged = true;
+}
+void Chassis::disengagePto(){
+  if(ptoEngaged){
+    //Loop through pneumatics and close them
+    for(int i = 0; i < ptoPneumatics.size(); i++){
+      ptoPneumatics[i]->close();
+    }
+  }
+  ptoEngaged = false;
+}
 void Chassis::turnRight(double speed){
   driveFromDiff(0, speed, fwd);
 }
