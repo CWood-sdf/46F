@@ -11,15 +11,8 @@ class PidfAdder {
 public:
   //Constructor
   //PidAdder(0.1, 0.2, 0.1);
-  PidfAdder(double p, double i, double d, double f = 0.0){
-    this->p = p;
-    this->i = i;
-    this->d = d;
-    this->f = f;
-  }
-  PidfAdder(){
-    
-  }
+  PidfAdder(double p, double i, double d, double f = 0.0);
+  PidfAdder();
 };
 
 struct PIDF_Extension {
@@ -64,45 +57,18 @@ class PIDF {
   struct KVals {
     //The variables
     double p = 0.0, i = 0.0, d = 0.0, f = 0.0;
-    KVals(){
-      p = i = d = f = 0.0;
-    }
+    KVals();
     //Set the values
-    KVals& operator=(KVals& vals){
-      p = vals.p;
-      i = vals.i;
-      d = vals.d;
-      f = vals.f;
-      return *this;
-    }
+    KVals& operator=(KVals& vals);
     //Constructor with initializer_list
     //KVals({0.1, 0.2, 0.3});
-    KVals(std::initializer_list<double> vals){
-      double* ths = (double*) this;
-      for(double val : vals){
-        *ths = val;
-        ++ths;
-      }
-
-    }
+    KVals(std::initializer_list<double> vals);
     //Add a similar KVal class (Like PidAdder) to the values
     template<class T>
-    KVals& operator+=(T a){
-      p += a.p;
-      i += a.i;
-      d += a.d;
-      f += a.f;
-      return *this;
-    }
+    KVals& operator+=(T a);
     //Subtract
     template<class T>
-    KVals& operator-=(T a){
-      p -= a.p;
-      i -= a.i;
-      d -= a.d;
-      f -= a.f;
-      return *this;
-    }
+    KVals& operator-=(T a);
     
   };
   //Stores the multiplication values under k
@@ -112,161 +78,45 @@ class PIDF {
   double target = 0.0, error = 0.0, lastError = 0.0, iCap = 0.0, iGrowth = 0.0, iZero = 0.0;
 public:
   std::shared_ptr<PIDF_Extension> manager = std::shared_ptr<PIDF_Extension>(NULL);
-  PIDF(){
-
-  }
-  PIDF(KVals vals, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PIDF(vals, iCap, iGrowthRange, iZeroRange){
-    manager.reset(&mgr);
-  }
-  PIDF(double p, double i, double d, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PIDF(p, i, d, 0.0, iCap, iGrowthRange, iZeroRange){
-    manager.reset(&mgr);
-  }
-  PIDF(double p, double i, double d, double f, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0) : PIDF(p, i, d, f, iCap, iGrowthRange, iZeroRange){
-    manager.reset(&mgr);
-  }
+  PIDF();
+  PIDF(KVals vals, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
+  PIDF(double p, double i, double d, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
+  PIDF(double p, double i, double d, double f, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
   //Constructors
-  PIDF(KVals vals, double iCap, double iGrowthRange, double iZeroRange) : k(vals){
-    this->iCap = iCap;
-    iGrowth = iGrowthRange;
-    iZero = iZeroRange;
-  }
-  PIDF(double p, double i, double d, double iCap, double iGrowthRange, double iZeroRange) : PIDF(KVals({ p, i, d, 0.0 })) {
-    this->iCap = iCap;
-    iGrowth = iGrowthRange;
-    iZero = iZeroRange;
-  }
-  PIDF(double p, double i, double d, double f, double iCap, double iGrowthRange, double iZeroRange) : PIDF(KVals({ p, i, d, f })) {
-    this->iCap = iCap;
-    iGrowth = iGrowthRange;
-    iZero = iZeroRange;
-  }
-  PIDF(double p, double i, double d, double f) : PIDF(KVals({p, i, d, f})){}
-  PIDF(double p, double i, double d) : PIDF(KVals({p, i, d, 0.0})){}
-  PIDF(KVals vals) : k(vals){
-
-  }
-  PIDF(const PIDF& v){
-    // //i hate this but it should work
-    double* doubles = (double*)&v;
-    double* thisPtr = (double*)this;
-    // cout << doubles << ", " << thisPtr << endl;
-    int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    // cout << size << endl;
-    for(int i = 0; i < size; i++){
-      thisPtr[i] = doubles[i];
-    }
-
-    //Clear any error build up
-    resetVals();
-    // cout << (bool)v.manager << endl;
-    if(v.manager){
-      manager.reset(v.manager->getCopy());
-    }
-  }
-  PIDF(PIDF&& v) {
-    operator=(std::move(v));
-  }
+  PIDF(KVals vals, double iCap, double iGrowthRange, double iZeroRange);
+  PIDF(double p, double i, double d, double iCap, double iGrowthRange, double iZeroRange);
+  PIDF(double p, double i, double d, double f, double iCap, double iGrowthRange, double iZeroRange);
+  PIDF(double p, double i, double d, double f);
+  PIDF(double p, double i, double d);
+  PIDF(KVals vals);
+  PIDF(const PIDF& v);
+  PIDF(PIDF&& v);
   //Get the error
-  double getError(){
-    return error;
-  }
+  double getError();
   //Clear out the previous PID usage
-  void resetVals(){
-    error = 0.0;
-    p = i = d = 0.0;
-  }
+  void resetVals();
   //Set the target value of the PID
-  void setTarget(double val){
-    resetVals();
-    target = val;
-  }
+  void setTarget(double val);
   //Apply the error
-  void incVals(double sensorVal){
-    
-    lastError = error;
-    error = manager->manageInput(target - sensorVal);
-    p = error;
-    if(abs(error) <= iGrowth && iGrowth != 0.0){
-      i += error;
-    }
-    if(abs(i) > abs(iCap) && abs(iCap) > 1.0){
-      i = iCap;
-    }
-    if(abs(error) <= iZero && iZero != 0.0){
-      i = 0.0;
-    }
-    d = error - lastError;
-    manager->manageP(p);
-    manager->manageI(i);
-    manager->manageD(d);
-  }
+  void incVals(double sensorVal);
   //Get the speed value given that error has already been applied
-  double getVal(){
-    double pInc = k.p * p;
-    double iInc = k.i * this->i;
-    double dInc = k.d * this->d;
-    return manager->getVal(pInc + iInc + dInc);
-  }
+  double getVal();
   //Apply error, then return getVal()
-  double getVal(double sensorVal){
-    
-    this->incVals(sensorVal);
-    return getVal();
-  }
+  double getVal(double sensorVal);
   //Add a PidAdder
-  PIDF& operator+= (PidfAdder a){
-    k += a;
-    return *this;
-  }
+  PIDF& operator+= (PidfAdder a);
   //Subtract a PidAdder
-  PIDF& operator-= (PidfAdder a){
-    k -= a;
-    return *this;
-  }
-  PIDF& operator=(PIDF&& a){
-    return operator=(a);
-    CHAIN
-  }
+  PIDF& operator-= (PidfAdder a);
+  PIDF& operator=(PIDF&& a);
   //Directly taken from the copy constructor
-  PIDF& operator=(const PIDF& a){
-    //i hate this but it should work
-    double* doubles = (double*)&a;
-    double* thisPtr = (double*)this;
-    // cout << doubles << ", " << thisPtr << endl;
-    int size = (sizeof(PIDF) - sizeof(std::shared_ptr<PIDF_Extension>)) / sizeof(double);
-    // cout << size << endl;
-    for(int i = 0; i < size; i++){
-      thisPtr[i] = doubles[i];
-    }
-
-    //Clear any error build up
-    resetVals();
-    // cout << (bool)a.manager << endl;
-    if(a.manager){
-      manager.reset(a.manager->getCopy());
-    }
-    CHAIN
-  }
-  KVals getKVals(){
-    return k;
-  }
+  PIDF& operator=(const PIDF& a);
+  KVals getKVals();
 };
 
 typedef PIDF PID;
 typedef PidfAdder PidAdder;
 typedef PIDF_Extension PID_Extension;
 
-#ifndef NO_MAKE
-ostream& operator<<(ostream& cout, PIDF&& v){
-  cout << v.getKVals().p << ", " << v.getKVals().i << ", " << v.getKVals().d << ", " << v.getKVals().f << endl;
-  return cout;
-}
-ostream& operator<<(ostream& cout, PIDF& p){
-  cout << p.k.p << ", " << p.k.i << ", " << p.k.d << ", " << p.k.f << endl;
-  return cout;
-}
-#else 
 ostream& operator<<(ostream& cout, PIDF&& v);
 ostream& operator<<(ostream& cout, PIDF& p);
-#endif
 #endif
