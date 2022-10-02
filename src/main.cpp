@@ -18,6 +18,14 @@
 . Maybe insert a sleep command after the error cout in Path::make
 
 */
+/*
+The Plan
+
+-2 distance sensors and color sensor for the roller
+-At least 2 line trackers for auto indexer and rollers
+-Maybe auto intake
+-Vision sensor goal positioning
+*/
 //main.cpp
 #include "Updaters.h"
 #include "AutonInit/Init.h"
