@@ -147,6 +147,7 @@ void FlywheelTBHEncoder::addTarget(double t) {
 
 void FlywheelTBHEncoder::step() {
   if (!hasTarget) return;
+  //A lot of variables
   static double lastRotation = 0;
   static double lastVel;
   static double lastDesiredVel = 0;
@@ -155,34 +156,40 @@ void FlywheelTBHEncoder::step() {
   double velSent = 10;
   bool calcTbh = true;
   double desiredVel = velTargets[target];
+  //The interval between the last step and this one
   int timeStep = velCheck.timeStep();
   double rotation = en.position(rev);
+  //An estimate of the velocity
   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
   lastRotation = rotation;
+  //Get a filtered velocity
   filter.update(speedEst);
   double speed = filter.value();
   double err = desiredVel - speed;
+  //Check if the flywheel speed is stable and if the error is small
   bool settled = velCheck.settled(err);
 
-  //Leave this empty until TBH is working
+
   if(settled){
     calcTbh = false;
-    settledCount++;
-    if(settledCount > 1000/50){
-      settledCount = 1000/50;
-    }
+    // settledCount++;
+    // if(settledCount > 1000/50){
+    //   settledCount = 1000/50;
+    // }
   }
-  else {
-    settledCount--;
-    if(settledCount > 0){
-      calcTbh = false;
-    }
-  }
+  // else {
+  //   settledCount--;
+  //   if(settledCount > 0){
+  //     calcTbh = false;
+  //   }
+  // }
+  //If the target velocity has changed, don't recalculate the tbh
   if(desiredVel != lastDesiredVel){
     calcTbh = false;
     settledCount = 0;
   }
   lastDesiredVel = desiredVel;
+  //Vary the gain value to optimize the flywheel acceleration
   if (abs(err) < 10){
     gain = 0.05;
   }
@@ -219,12 +226,15 @@ void FlywheelTBHEncoder::step() {
   }
   // cout << signbit(err) << endl;
   // cout << velSent << endl << endl;
+
+  //Limit the velocity change
   if(velSent - lastVel > maxRateGain){
     velSent = lastVel + maxRateGain;
   }
   else if(velSent - lastVel < -maxRateDrop){
     velSent = lastVel - maxRateDrop;
   }
+  //Slow down the acceleration if the flywheel is close to the target
   if(abs(err) < 60 && velSent - lastVel > 0.1){
     velSent = lastVel + 0.1;
   }

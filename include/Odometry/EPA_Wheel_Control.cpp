@@ -297,9 +297,10 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
   {
     //Allow the array to be drawn
     this->drawArr = true;
-    arr.push_front(botPos());
+    auto arrCopy = arr;
+    arrCopy.push_front(botPos());
     //Construct the original bezier
-    VectorArr bezier = bezierCurve(arr);
+    VectorArr bezier = bezierCurve(arrCopy);
     this->publicPath = bezier;
     //Turn to the first point purePursuitDist away
     // get first point
