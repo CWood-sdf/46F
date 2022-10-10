@@ -383,11 +383,12 @@ void displayBot(bool);
 void  vexTaskSleep( uint32_t time );
 bool init = false;
 void fn(bool ){
+  Brain.Screen.clearScreen(black);
   if(Brain.Screen.pressing()){
     intake.spinVolt(fwd, 10000);
   }
   else {
-    // intake.stop(coast);
+    intake.stop(coast);
   }
 }
 void brainOS() {
@@ -408,7 +409,7 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
-  // bos::bosFns.push_back(fn);
+  bos::bosFns.push_back(fn);
   // bos::bosFns.push_back(fn);
   bos::bosFns.push_back(VariableConfig::drawAll);
   bos::bosFns.push_back(windowsLoader);
@@ -420,8 +421,8 @@ void brainOS() {
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;
   //int maxState = 3;
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, "<", -40, -30);
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, ">", -40, -30);
+  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, purple, "<", -40, -30);
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, purple, ">", -40, -30);
   //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
   while (1) {
