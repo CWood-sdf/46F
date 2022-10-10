@@ -191,7 +191,7 @@ c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexro
 c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(v5_apiversions.c.obj)
                               c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(v5_apijump.c.obj) (vexSystemVersion)
 c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(vex_global.cpp.obj)
-                              build/src/main.o (vex::purple)
+                              build/include/BrainOS/VariableConfig.o (vex::purple)
 c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(vex_motor.cpp.obj)
                               build/include/robot-config.o (vex::motor::~motor())
 c:\Users\Student.EGR_03_LAPTOP.001\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(vex_imu.cpp.obj)

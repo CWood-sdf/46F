@@ -421,8 +421,8 @@ void brainOS() {
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;
   //int maxState = 3;
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, purple, "<", -40, -30);
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, purple, ">", -40, -30);
+  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, color(50, 50, 50), "<", -40, -30);
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, color(50, 50, 50), ">", -40, -30);
   //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
   while (1) {
