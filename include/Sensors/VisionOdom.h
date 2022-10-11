@@ -133,10 +133,10 @@ protected:
     return ret;
   }
   Angle getAngleY(int pixelY){
-    return Angle(-atan(-(screenHeight / 2.0 - pixelY) / backDist), Angle::Type::Rad);
+    return Angle(-atan(-(screenHeight / 2.0 - pixelY) / backDist), Angle::Type::Rad) + mountAngle;
   }
   Angle getAngleX(int pixelX){
-    return Angle( atan(-(screenHeight / 2.0 - pixelX) / backDist), Angle::Type::Rad);
+    return Angle( atan(-(screenHeight / 2.0 - pixelX) / backDist), Angle::Type::Rad) + mountRotation;
   }
 public:
   

@@ -2,9 +2,9 @@
 //      and defines devices
 #ifndef VEX_H
 #define VEX_H
-// #define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
+#define BASE_FILE <C:/Users/Student/Documents/GitHub/Libs
 // #define BASE_FILE <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs
-#define BASE_FILE <C:/Users/Student.EGR_03_LAPTOP.001/Documents/GitHub/Libs
+// #define BASE_FILE <C:/Users/Student.EGR_03_LAPTOP.001/Documents/GitHub/Libs
 //Undef this macro to find all places that are game specific
 #define USE_GAME_SPECIFIC
 // #undef USE_GAME_SPECIFIC
