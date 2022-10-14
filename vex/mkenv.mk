@@ -53,10 +53,10 @@ Q =
 endif
 
 # compile and link tools
-# CC      = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang.exe
-# CXX     = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang++.exe
-CC = clang
-CXX = clang
+CC      = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang.exe
+CXX     = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang++.exe
+# CC = clang
+# CXX = clang
 OBJCOPY = arm-none-eabi-objcopy
 SIZE    = arm-none-eabi-size
 LINK    = arm-none-eabi-ld
@@ -92,12 +92,14 @@ TOOL_LIB  = -L"$(TOOLCHAIN)/$(PLATFORM)/gcc/libs"
 CFLAGS_CL = -target thumbv7-none-eabi -fshort-enums -Wno-unknown-attributes -U__INT32_TYPE__ -U__UINT32_TYPE__ -D__INT32_TYPE__=long -D__UINT32_TYPE__='unsigned long' 
 CFLAGS_V7 = -march=armv7-a -mfpu=neon -mfloat-abi=softfp
 CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -ansi -std=gnu99 $(DEFINES)
-CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections $(DEFINES)
+CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++20 -ffunction-sections -fdata-sections $(DEFINES)
 
 
 
 # linker flags
-LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+# Currently set up for C++20
+# To change back to C++17 (smaller binary) add -nostdlib at the start and -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" after the -T section
+LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
 
 
 # future statuc library
@@ -105,7 +107,7 @@ PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group -llvgl -l46f -lv5rt -lstdc++ -lc -lm --end-group
+LIBS =  --start-group -llvgl -l46f -lv5rt -lstdc++ -lc -lm -lgcc --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})
