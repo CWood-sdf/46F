@@ -94,15 +94,18 @@ CFLAGS_V7 = -march=armv7-a -mfpu=neon -mfloat-abi=softfp
 CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -ansi -std=gnu99 $(DEFINES)
 CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++2a -ffunction-sections -fdata-sections $(DEFINES)
 
+
+
 # linker flags
-LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -nostdlib -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+
 
 # future statuc library
 PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group -llvgl -l46f -lv5rt -lstdc++ -lc -lm -lgcc --end-group
+LIBS =  --start-group -llvgl -l46f -lv5rt -lstdc++ -lc -lm --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})
