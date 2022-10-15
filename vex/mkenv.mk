@@ -97,9 +97,10 @@ CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -f
 
 
 # linker flags
-# Currently set up for C++20
-# To change back to C++17 (smaller binary) add -nostdlib at the start and -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" after the -T section
-LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+# C++20
+# LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+# C++17
+LNK_FLAGS = -nostdlib --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
 
 
 # future statuc library
