@@ -9,9 +9,9 @@ public:
     Rev
   };
 private:
-  double value;//In rad
-  Type type;
-  static map<Type, double> toRad;
+  double value = 0.0;//In rad
+  Type type = Type::Rad;
+  static inline map<Type, double> toRad = map<Type, double>();
   static void init(){
     static bool done = false;
     if(!done){
@@ -23,9 +23,11 @@ private:
   }
 public:
   Angle(double v, Type t){
+    init();
     from(v, t);
   }
   Angle(double v){
+    init();
     from(v, Type::Rad);
   }
   double to(Type t){
@@ -113,18 +115,23 @@ protected:
   PVector estimateRelativePos(int pixelLeft, int pixelRight, double radius, double objHeight){
     Angle angleXLeft = getAngleX(pixelLeft);
     Angle angleXRight = getAngleX(pixelRight);
+    cout << "AngleXLeft: " << angleXLeft.to(Angle::Type::Deg) << endl;
+    cout << "AngleXRight: " << angleXRight.to(Angle::Type::Deg) << endl;
     //The internal angle is 0.5 times the difference
-    Angle internalAngle = (angleXLeft - angleXRight) / 2.0;
+    Angle internalAngle = (angleXLeft - angleXRight);
+    cout << "Internal Angle: " << internalAngle.to(Angle::Type::Deg) << endl;
     //The local offset is the avg
     Angle localOffset = (angleXLeft + angleXRight) / 2.0;
+    cout << "Local Offset: " << localOffset.to(Angle::Type::Deg) << endl;
     //The distance to the object is the radius * the csc of internalAngle
     //The distance between the camera and the center point
     double dist = radius / sin(internalAngle);
-
+    cout << "Dist: " << dist << endl;
     double heightDiff = mountHeight - objHeight;
+    cout << "Height Diff: " << heightDiff << endl;
     //The angle to rotateYZ down by is the 90 - acos(heightDiff / dist)
     Angle angleYZ = 90.0_deg - Angle(acos(heightDiff / dist), Angle::Type::Rad);
-    
+    cout << "Angle YZ: " << angleYZ.to(Angle::Type::Deg) << endl;
     PVector ret = PVector(0, dist, 0);
     ret.rotateYZ(-angleYZ);
     ret.rotateXY(localOffset);
@@ -133,10 +140,30 @@ protected:
     return ret;
   }
   Angle getAngleY(int pixelY){
-    return Angle(-atan(-(screenHeight / 2.0 - pixelY) / backDist), Angle::Type::Rad) + mountAngle;
+    //backDist
+    cout << "BackDist: " << backDist << endl;
+    //screenHeight
+    cout << "ScreenHeight: " << screenHeight << endl;
+    //pixelY
+    cout << "PixelY: " << pixelY << endl;
+    //mountAngle
+    cout << "MountAngle: " << mountAngle << endl;
+    //atan((screenHeight / 2.0 - pixelY) / backDist)
+    cout << "Atan: " << atan((screenHeight / 2.0 - pixelY) / backDist) << endl;
+    return Angle(-atan(-(screenHeight / 2.0 - pixelY) / backDist) + mountAngle * DEG_TO_RAD, Angle::Type::Rad);
   }
   Angle getAngleX(int pixelX){
-    return Angle( atan(-(screenHeight / 2.0 - pixelX) / backDist), Angle::Type::Rad) + mountRotation;
+    //backDist
+    cout << "BackDist: " << backDist << endl;
+    //screenWidth
+    cout << "ScreenWidth: " << screenWidth << endl;
+    //pixelX
+    cout << "PixelX: " << pixelX << endl;
+    //mountRotation
+    cout << "MountRotation: " << mountRotation << endl;
+    //atan((screenWidth / 2.0 - pixelX) / backDist)
+    cout << "Atan: " << atan((screenWidth / 2.0 - pixelX) / backDist) << endl;
+    return Angle( atan(-(screenHeight / 2.0 - pixelX) / backDist) + mountRotation * DEG_TO_RAD, Angle::Type::Rad);
   }
 public:
   
@@ -146,6 +173,19 @@ public:
     mountHeight = height;
     mountAngle = mAngle * DEG_TO_RAD;
     mountRotation = mRotation;
+  }
+  PVector estimateRelativePos(vision::signature* sig, double radius, double objHeight){
+    sensor->takeSnapshot(*sig);
+    auto& largestObj = sensor->largestObject;
+    if (!largestObj.exists) {
+      //Return an absolutely large estimate if no object is found
+      return { 400, 400 };
+    }
+    return estimateRelativePos(
+      largestObj.originX, 
+      largestObj.originX + largestObj.width, 
+      radius, 
+      objHeight);
   }
   // template<class Sig>
   // PVector estimatePos(Sig& sig){

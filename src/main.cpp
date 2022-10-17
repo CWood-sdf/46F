@@ -525,6 +525,16 @@ int main() {
 
   thread flywheelControl = thread(runFlywheel);
   intake.spinVolt(fwd, 10000);
+  VisionOdom odom = VisionOdom(Vision1, {0,0}, 12, 0, 0);
+  BasicEMA<PVector> ema = BasicEMA<PVector>(0.1);
+  
+  ema.seed({0, 0, -72});
+  while(1){
+    auto pos = odom.estimateRelativePos(&BLUEGOAL, 12, 6);
+    ema.update(pos);
+    cout << (PVector)ema << endl << endl << endl;
+    s(100);
+  }
   drivercontrol();
   //autonomous();
   // Competition.autonomous(autonomous);

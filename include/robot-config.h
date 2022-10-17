@@ -96,6 +96,9 @@ extern GPS_Share share;
 extern Positioner positioner;
 //Wheel controller
 extern Omni_6Controller wc;
+extern vision Vision1;
+extern vision::signature BLUEGOAL;
+extern vision::signature REDGOAL;
 
 
 /*************************************
