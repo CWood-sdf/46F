@@ -134,6 +134,8 @@
         "xutility": "cpp",
         "*.tcc": "cpp",
         "string_view": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "*.rh": "cpp",
+        "cerrno": "cpp"
     }
 }

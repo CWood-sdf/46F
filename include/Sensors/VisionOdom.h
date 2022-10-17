@@ -30,14 +30,28 @@ public:
     init();
     from(v, Type::Rad);
   }
-  double to(Type t){
+  double as(Type t){
     if(t == Type::Rad){
       return value * toRad[type];
     }
     return value * toRad[type] / toRad[t];
   }
+  double as(vex::rotationUnits t){
+    switch (t)
+    {
+    case rotationUnits::deg:
+      return as(Type::Deg);
+      break;
+    case rotationUnits::raw:  
+      return as(Type::Rad);
+      break;
+    case rotationUnits::rev:
+      return as(Type::Rev);
+      break;
+    }
+  }
   Angle& changeType(Type t){
-    value = to(t);
+    value = as(t);
     type = t;
     return *this;
   }
@@ -47,7 +61,7 @@ public:
     return *this;
   }
   operator double(){
-    return to(Type::Rad);
+    return as(Type::Rad);
   }
 };
 Angle operator "" _deg(long double);
@@ -115,14 +129,14 @@ protected:
   PVector estimateRelativePos(int pixelLeft, int pixelRight, double radius, double objHeight){
     Angle angleXLeft = getAngleX(pixelLeft);
     Angle angleXRight = getAngleX(pixelRight);
-    cout << "AngleXLeft: " << angleXLeft.to(Angle::Type::Deg) << endl;
-    cout << "AngleXRight: " << angleXRight.to(Angle::Type::Deg) << endl;
+    cout << "AngleXLeft: " << angleXLeft.as(Angle::Type::Deg) << endl;
+    cout << "AngleXRight: " << angleXRight.as(Angle::Type::Deg) << endl;
     //The internal angle is 0.5 times the difference
-    Angle internalAngle = (angleXLeft - angleXRight);
-    cout << "Internal Angle: " << internalAngle.to(Angle::Type::Deg) << endl;
+    Angle internalAngle = (angleXLeft - angleXRight) / 2.0;
+    cout << "Internal Angle: " << internalAngle.as(Angle::Type::Deg) << endl;
     //The local offset is the avg
     Angle localOffset = (angleXLeft + angleXRight) / 2.0;
-    cout << "Local Offset: " << localOffset.to(Angle::Type::Deg) << endl;
+    cout << "Local Offset: " << localOffset.as(Angle::Type::Deg) << endl;
     //The distance to the object is the radius * the csc of internalAngle
     //The distance between the camera and the center point
     double dist = radius / sin(internalAngle);
@@ -131,10 +145,10 @@ protected:
     cout << "Height Diff: " << heightDiff << endl;
     //The angle to rotateYZ down by is the 90 - acos(heightDiff / dist)
     Angle angleYZ = 90.0_deg - Angle(acos(heightDiff / dist), Angle::Type::Rad);
-    cout << "Angle YZ: " << angleYZ.to(Angle::Type::Deg) << endl;
+    cout << "Angle YZ: " << angleYZ.as(Angle::Type::Deg) << endl;
     PVector ret = PVector(0, dist, 0);
-    ret.rotateYZ(-angleYZ);
-    ret.rotateXY(localOffset);
+    ret.rotateYZ(-angleYZ.as(Angle::Type::Deg));
+    ret.rotateXY(localOffset.as(Angle::Type::Deg));
     ret.z += mountHeight;
     //ret.pt.z = 0;
     return ret;
