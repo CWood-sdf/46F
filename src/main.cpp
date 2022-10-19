@@ -409,14 +409,14 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
-  bos::bosFns.push_back(fn);
+  bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
-  bos::bosFns.push_back(VariableConfig::drawAll);
-  bos::bosFns.push_back(windowsLoader);
-  bos::bosFns.push_back(bos::BosFn(graphFlywheelTBH, true));
-  bos::bosFns.push_back(printVars);
-  bos::bosFns.push_back(drawPath);
-  bos::bosFns.push_back(bos::BosFn(displayBot, true));
+  bos::bosFns.pushBack(VariableConfig::drawAll);
+  bos::bosFns.pushBack(windowsLoader);
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
+  bos::bosFns.pushBack(printVars);
+  bos::bosFns.pushBack(drawPath);
+  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
 
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;
@@ -530,7 +530,7 @@ int main() {
   
   ema.seed({0, 0, -72});
   while(1){
-    auto pos = odom.estimateRelativePos(&BLUEGOAL, 12, 6);
+    auto pos = odom.estimateRelativePos(&BLUEGOAL, 12, 24);
     ema.update(pos);
     cout << (PVector)ema << endl << endl << endl;
     s(100);

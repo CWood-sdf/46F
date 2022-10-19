@@ -5,14 +5,14 @@ Button VariableConfig::deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2,
 VariableConfig::VariableConfig(vector<string> options, string title) {
     optionNames = options;
     index = -1;
-    variables.push_back(this);
+    variables.pushBack(this);
     this->title = title;
 }
 //Constructor that takes a list of options and a default option
 VariableConfig::VariableConfig(vector<string> options, string title, int defaultOption) {
     optionNames = options;
     index = defaultOption;
-    variables.push_back(this);
+    variables.pushBack(this);
     this->title = title;
 }
 //Make all the constructors above but have them take a callback

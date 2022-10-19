@@ -76,6 +76,6 @@ public:
     return selectOptimalTask()->build();
   }
   void addBuilder(std::unique_ptr<BasicAiTaskBuilder> builder) {
-    builders.push_back(std::move(builder));
+    builders.pushBack(std::move(builder));
   }
 };
