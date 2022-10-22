@@ -133,7 +133,7 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
   }
   //Get the target speed of the robot
   double speed = ctrl.getVal(abs(input.dist));
-  return {{speed, FwdVelTps::pct}, {travelCurvature, AngularVelTps::curvature}};
+  return {{speed, ForwardVel::pct}, {travelCurvature, AngularVel::curvature}};
 }
 void PurePursuitController::init(){
   ctrl.setTarget(0);
@@ -164,7 +164,7 @@ RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double eTheta = error(2, 0)/*rad*/;
   double speed = vd * cos(eTheta) + k * error(1, 0);//inps
   double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / eTheta * error(0, 0);
-  return {{speed, FwdVelTps::inps}, {turnVel, AngularVelTps::radps}};
+  return {{speed, ForwardVel::inps}, {turnVel, AngularVel::radps}};
 }
 RamseteController::RamseteController(double beta, double zeta) : Controller() {
   this->beta = beta;
@@ -180,7 +180,7 @@ BasicPidController::followToRet BasicPidController::followTo(Input &input){
   double normAngle = posNeg180(input.angleTarget - input.currentAngle);
   double fwdVel = ctrl.getVal(dist);
   double turnVel = slave.getVal(normAngle);
-  return {{fwdVel, Controller::FwdVelTps::pct}, {turnVel, Controller::AngularVelTps::pctDiff}};
+  return {{fwdVel, Controller::ForwardVel::pct}, {turnVel, Controller::AngularVel::pctDiff}};
 }
 void BasicPidController::init(){
   ctrl.setTarget(0);

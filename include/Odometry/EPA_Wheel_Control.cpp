@@ -477,10 +477,10 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     auto speeds = controller->followTo(input);
     double speed = 0;
     switch(speeds.first.second){
-    case Controller::FwdVelTps::inps:
+    case Controller::ForwardVel::inps:
       speed = chassis->realToPct(speeds.first.first);
       break;
-    case Controller::FwdVelTps::pct:
+    case Controller::ForwardVel::pct:
       speed = speeds.first.first;
       break;
     }
@@ -509,13 +509,13 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     {
       double targetRobotVel = chassis->pctToReal(speed);
       switch (speeds.second.second) {
-      case Controller::AngularVelTps::curvature:
+      case Controller::AngularVel::curvature:
         rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
         break;
-      case Controller::AngularVelTps::pctDiff:
+      case Controller::AngularVel::pctDiff:
         rightExtra = speeds.second.first;
         break;
-      case Controller::AngularVelTps::radps:
+      case Controller::AngularVel::radps:
         rightExtra = speeds.second.first * chassis->trackWidth / -2.0;
         break;
       }
@@ -525,7 +525,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     //   double newFwdVel = chassis->pctToReal(speed);
     //   double left, right;
     //   switch (speeds.second.second) {
-    //   case Controller::AngularVelTps::curvature: [[likely]]
+    //   case Controller::AngularVel::curvature: [[likely]]
     //   TOP:
     //     left = chassis->realToPct(newFwdVel * (2.0 + speeds.second.first * chassis->trackWidth) / 2.0);
     //     right = chassis->realToPct(newFwdVel * (2.0 - speeds.second.first * chassis->trackWidth) / 2.0);
@@ -539,7 +539,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     //     }
     //     speed = chassis->realToPct(newFwdVel);
     //     break;
-    //   case Controller::AngularVelTps::pctDiff:
+    //   case Controller::AngularVel::pctDiff:
     //   TOP2:
     //     left = speed + speeds.second.first;
     //     right = speed - speeds.second.first;
@@ -552,7 +552,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller* controller, 
     //       goto TOP2;
     //     }
     //     break;
-    //   case Controller::AngularVelTps::radps:
+    //   case Controller::AngularVel::radps:
     //   TOP3:
     //     rightExtra = chassis->pctToReal(speed) * chassis->trackWidth / -2.0;
     //     if (abs(speed + rightExtra) > 100 || abs(speed - rightExtra) > 100) {

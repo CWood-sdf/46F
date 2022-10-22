@@ -61,19 +61,19 @@ public:
     //bool isNeg;
 
   };
-  enum class AngularVelTps {
+  enum class AngularVel {
     curvature,
     pctDiff,
     radps
   };
-  enum class FwdVelTps {
+  enum class ForwardVel {
     pct,
     inps
   };
   
   virtual void init();
   //Pure Pursuit
-  typedef pair<pair<double, FwdVelTps>, pair<double, AngularVelTps>> followToRet;
+  typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
   virtual followToRet followTo(Input& input);
   followToRet followTo(Input&& v){
     return followTo(v);
