@@ -16,22 +16,10 @@ Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p
   this->cartridge = cartridge;
 }
 void Chassis::engagePto(){
-  if(!ptoEngaged){
-    //Loop through pneumatics and open them
-    for(int i = 0; i < ptoPneumatics.size(); i++){
-      ptoPneumatics[i]->open();
-    }
-  }
-  ptoEngaged = true;
+  
 }
 void Chassis::disengagePto(){
-  if(ptoEngaged){
-    //Loop through pneumatics and close them
-    for(int i = 0; i < ptoPneumatics.size(); i++){
-      ptoPneumatics[i]->close();
-    }
-  }
-  ptoEngaged = false;
+  
 }
 void Chassis::turnRight(double speed){
   driveFromDiff(0, speed, fwd);
@@ -49,25 +37,14 @@ void Chassis::moveLeftSide(double speed, directionType d){
 }
 void Chassis::hardBrake(){
   lastLeftSpeed = lastRightSpeed = 0;
-  if(!ptoEngaged){
-    leftWheels.stop(hold, ptoMotorsLeft);
-    rightWheels.stop(hold, ptoMotorsRight);
-  }
-  else {
-    leftWheels.stop(hold);
-    rightWheels.stop(hold);
-  }
+  leftWheels.stop(hold);
+  rightWheels.stop(hold);
+  
 }
 void Chassis::coastBrake(){
   lastLeftSpeed = lastRightSpeed = 0;
-  if(!ptoEngaged){
-    leftWheels.stop(coast, ptoMotorsLeft);
-    rightWheels.stop(coast, ptoMotorsRight);
-  }
-  else {
-    leftWheels.stop(coast);
-    rightWheels.stop(coast);
-  }
+  leftWheels.stop(coast);
+  rightWheels.stop(coast);
 }
 Chassis::chain_method Chassis::setMaxAcc(double v){
   maxAcc = v;
@@ -86,14 +63,10 @@ void Chassis::driveFromDiff(double speed, double diff, directionType d){
   double right = speed - diff;
   lastLeftSpeed = left;
   lastRightSpeed = right;
-  if(!ptoEngaged){
-    leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left), ptoMotorsLeft);
-    rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right), ptoMotorsRight);
-  }
-  else {
-    leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
-    rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));
-  }
+  leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
+  rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));
+  
+  
 }
 //Speed is in pct, velocity is in rad/sec
 void Chassis::driveFromAngular(double speed, double vel) {
