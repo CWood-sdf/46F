@@ -102,12 +102,12 @@ void FlywheelTBHEncoder::init() {
 void FlywheelTBHEncoder::graph(bool remake) {
   basicGraph(remake, "TBHE ctrl", debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m, Encoder p) : mots(m), filter(0.15) {
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m, Encoder p) : mots(m), filter(0.15) {
   init();
   filter.seed(0);
   en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor<>& m) : mots(m), filter(0.15) {
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m) : mots(m), filter(0.15) {
   en = Encoder(m[0]);
   init();
   filter.seed(0);

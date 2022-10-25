@@ -32,18 +32,18 @@ extern motor_group Right;
 extern motor flyWheelMot;
 extern motor flywheel2;
 
-extern NewMotor<> intake;
+extern NewMotor intake;
 
-extern NewMotor<> flywheelNm;
+extern NewMotor flywheelNm;
 // extern FlywheelPID flyPID;
 extern FlywheelTBHEncoder flyTBH;
 // extern bool flywheelPID;
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-extern NewMotor<> wheels;
-extern NewMotor<> leftWhls;
-extern NewMotor<> rghtWhls;
+extern NewMotor wheels;
+extern NewMotor leftWhls;
+extern NewMotor rghtWhls;
 
 extern Chassis chassis;
 extern PurePursuitController purePursuit;

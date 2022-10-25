@@ -6,8 +6,8 @@ struct Chassis {
   double speedLimit = 100;
   double maxAcc = 500; // in/s^2
   double maxDAcc = 360; // in/s^2
-  NewMotor<> leftWheels;
-  NewMotor<> rightWheels;
+  NewMotor leftWheels;
+  NewMotor rightWheels;
   vector<bool> ptoMotorsLeft = vector<bool>();
   vector<bool> ptoMotorsRight = vector<bool>();
   vector<pneumatics*> ptoPneumatics = vector<pneumatics*>();

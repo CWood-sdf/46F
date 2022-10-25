@@ -44,7 +44,7 @@ motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
 motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
-NewMotor<> flywheelNm = NewMotor<>(flyWheelMot, flywheel2);
+NewMotor flywheelNm = NewMotor(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
 rotation flywheelRotation = rotation(PORT5);
 Encoder e = Encoder(flyWheelMot);
@@ -54,11 +54,11 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-NewMotor<> wheels = NewMotor<>(FL, ML, BL, FR, MR, BR);
-NewMotor<> leftWhls = NewMotor<>(BL, FL, ML);
-NewMotor<> rghtWhls = NewMotor<>(BR, FR, MR);
+NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
+NewMotor leftWhls = NewMotor(BL, FL, ML);
+NewMotor rghtWhls = NewMotor(BR, FR, MR);
 
-NewMotor<> intake = NewMotor<>(intakeMot);
+NewMotor intake = NewMotor(intakeMot);
 
 
 

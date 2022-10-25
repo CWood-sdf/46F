@@ -98,7 +98,7 @@ class Empty {
 };
 // class FlywheelTBH : public Empty {
 //   encoder* en;
-//   NewMotor<>& mots;
+//   NewMotor& mots;
 //   EMA filter;
 //   vector<double> velTargets = {550};
 //   vector<double> initialTbh = {10};
@@ -111,7 +111,7 @@ class Empty {
 //   FlywheelDebugEl debug;
 //   bool hasTarget = false;
 // public:
-//   FlywheelTBH(NewMotor<>& m, vex::encoder& e);
+//   FlywheelTBH(NewMotor& m, vex::encoder& e);
 //   void setTarget(int i);
 //   void addTarget(double t);
 //   void step() override;
@@ -121,7 +121,7 @@ class Empty {
 // };
 class FlywheelTBHEncoder : public Empty {
   Encoder en;
-  NewMotor<>& mots;
+  NewMotor& mots;
   EMA filter;
   vector<double> velTargets = { 550 };
   vector<double> initialTbh = { 10 };
@@ -134,8 +134,8 @@ class FlywheelTBHEncoder : public Empty {
   FlywheelDebugEl debug;
   bool hasTarget = false;
 public:
-  FlywheelTBHEncoder(NewMotor<>& m, Encoder en);
-  FlywheelTBHEncoder(NewMotor<>& m);
+  FlywheelTBHEncoder(NewMotor& m, Encoder en);
+  FlywheelTBHEncoder(NewMotor& m);
   void setTarget(int i);
   void addTarget(double t);
   void setTargetSpeed(double t);
