@@ -1,5 +1,10 @@
 #include "ClassBaseFns.h"
-
+#ifdef NO_MAKE
+void updateBotAngle(bool);
+void microWait(uint);
+void executeThreads();
+void updateSharePos();
+#else
 
 //Update the bot angle in all three dimensions
 void updateBotAngle(bool add){
@@ -56,28 +61,6 @@ void updateBotAngle(bool add){
   }
 
 }
-void microWait(uint time);
-
-void programWrite(bool start = true);
-
-//Allows a program reset at a new spot if there is limited tile space
-[[deprecated]]
-void waitForReset(){
-  PVector pos = wc.botPos();
-  cout << "start" << endl;
-  double startAng = wc.botAngle();
-  while(!Greg.ButtonA.pressing()){
-    s(100);
-    
-  }
-  cout << "switch" << endl;
-  while(Greg.ButtonA.pressing()){
-    s(500);
-    cout << "Org: " << startAng << " current: " << wc.botAngle() << endl;
-  }
-  positioner.resetPos(pos);
-  cout << "done" << endl;
-}
 
 void microWait(uint time){
   auto startTime = Brain.Timer.systemHighResolution();
@@ -106,3 +89,4 @@ void updateSharePos(){
     share.update();
   }
 }
+#endif

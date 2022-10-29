@@ -133,5 +133,6 @@ class VisionBasicOdometry : private VisionOdom, public BasicConfirmationOdom {
   }
   bool installed() override {
     return sensor->installed();
+
   }
 };

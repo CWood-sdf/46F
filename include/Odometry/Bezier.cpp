@@ -54,7 +54,6 @@ PVector& VectorArr::first(){
 
 //operator=
 VectorArr& VectorArr::operator=(VectorArr& v){
-  
   arr = v.arr;
   return *this;
 }
@@ -62,6 +61,13 @@ VectorArr& VectorArr::operator=(VectorArr& v){
 VectorArr& VectorArr::operator=(VectorArr&& v){
   arr = v.arr;
   return *this;
+}
+double VectorArr::getLength(){
+  double length = 0;
+  for(int i = 0; i < arr.size() - 1; i++){
+    length += arr[i].dist2D(arr[i+1]);
+  }
+  return length;
 }
 //Find a single point on a bezier curve with parameter t (t goes from 0 -> 1)
 PVector bezierInterpolate(VectorArr ptArr, double t){

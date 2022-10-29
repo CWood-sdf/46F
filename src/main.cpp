@@ -27,14 +27,9 @@ The Plan
 -Vision sensor goal positioning
 */
 //main.cpp
-#include "Updaters.h"
-#include "AutonInit/Init.h"
-#include "BrainOS/BotTracker.h"
-#include "BrainOS/VariableConfig.h"
-#include "lv_conf.h"
+#include "Autons/Autons.h"
 using namespace ClassFns;
 using namespace vex;
-
 competition Competition;//
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
 bool isPressing(const controller::button& btn){
@@ -122,44 +117,14 @@ void turnLeft(int t){
 // }
 void randomAutonTest(){
 }
-Auton leftA = "Left" + [](){
-  cout << "l" << endl;
-};
-Auton rightA = "Right" + [](){
-  cout << "r" << endl;
-  wc.estimateStartPos(PVector(41.849730893433815, -61.9659849300323), 0);
-  spinRoller();
-  wc.followPath(&purePursuit, {PVector(41.84, -58.17), PVector(18.08, -41.12)});
-  //Pick up one disk
-  wc.turnTo(19.53);
-  //Go to the 3 disk stack
-  wc.followPath(&ramsete, {PVector(24.45, -52.83), PVector(31.86, -41.64)});
-  //Back up to prevent robot from crossing line
-  wc.backwardsFollow(&ramsete, {PVector(27.89, -48.01)});
-  //Turn to goal
-  wc.turnTo(12.91);
 
-};
-Auton skills = "Skills" + [](){
-  cout << "s" << endl;
-};
-Auton winPoint = "Win Point" + [](){
-  cout << "w" << endl;
-  wc.estimateStartPos(PVector(41.34406604747163, -61.455521155830745), 0);
-  spinRoller();
-  wc.followPath(&ramsete, {PVector(-2.08, -67.89), PVector(7.99, -44.94)});
-  //Pick up and fire the disks at the same time
-  //TODO
+string testPrintData = "";
+void printTestData(bool){
+  Brain.Screen.clearScreen(black);
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print(testPrintData.data());
+}
 
-  
-  //Forward to back-face the roller
-  wc.followPath(&purePursuit, {PVector(-53.43, 9.87), PVector(-53.10, 37.28)});
-  //Contact roller
-  wc.backwardsFollow(&purePursuit, {PVector(-58.38, 40.42), PVector(-62.18, 40.42)});
-  
-  spinRoller();
-
-};
 void autonInit(){
   cout << "Auton Init" << endl;
   cout << "Auton Init Done" << endl;
@@ -417,6 +382,7 @@ void brainOS() {
   bos::bosFns.pushBack(printVars);
   bos::bosFns.pushBack(drawPath);
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
+  bos::bosFns.pushBack(bos::BosFn(printTestData));
 
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;

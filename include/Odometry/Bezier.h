@@ -40,6 +40,8 @@ struct VectorArr {
   VectorArr& operator=(VectorArr& v);
   //operator=
   VectorArr& operator=(VectorArr&& v);
+
+  double getLength();
 };
 
 //Find a single point on a bezier curve with parameter t (t goes from 0 -> 1)

@@ -89,9 +89,14 @@ public:
     return auton->getName();
   }
 };
+#ifndef NO_MAKE
 Auton operator "" _afn(const char* s){
   return Auton(s, [](){});
 }
 Auton operator+(const char* n, std::function<void()> f){
   return Auton(n, f);
 }
+#else
+Auton operator "" _afn(const char* s);
+Auton operator+(const char* n, std::function<void()> f);
+#endif
