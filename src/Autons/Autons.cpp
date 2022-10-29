@@ -2,40 +2,47 @@
 #include "src/Autons/Autons.h"
 
 Auton leftA = "Left" + [](){
-  cout << "l" << endl;
+  wc.estimateStartPos(PVector(-61.61, 41.32), 90.03);
+  spinRoller();
+  wc.faceTarget({49.77, 50.01});
+  //TODO: fire disks
+  wc.followPath(&ramsete, {PVector(-49.73, 24.83), PVector(-42.81, 31.39)});
+  wc.backwardsFollow(&pidController, {PVector(-46.54, 27.84)});
+  wc.faceTarget({49.77, 50.01});
+  //TODO: fire disks
+  wc.followPath(&pidController, {PVector(-28.80, 2.83)});
+  wc.faceTarget({49.77, 50.01});
+  //TODO: fire disks
+
 };
 Auton rightA = "Right" + [](){
-  cout << "r" << endl;
-  wc.estimateStartPos(PVector(41.849730893433815, -61.9659849300323), 0);
+  wc.estimateStartPos(PVector(13.05, -61.73), 222.54);
+  wc.backwardsFollow(&purePursuit, {PVector(24.23, -50.38), PVector(41.26, -52.15), PVector(41.44, -61.55)});
   spinRoller();
-  wc.followPath(&purePursuit, {PVector(41.84, -58.17), PVector(18.08, -41.12)});
-  //Pick up one disk
-  wc.turnTo(19.53);
-  //Go to the 3 disk stack
-  wc.followPath(&ramsete, {PVector(24.45, -52.83), PVector(31.86, -41.64)});
-  //Back up to prevent robot from crossing line
-  wc.backwardsFollow(&ramsete, {PVector(27.89, -48.01)});
-  //Turn to goal
-  wc.turnTo(12.91);
+  wc.faceTarget({49.06, 49.84});
+  //TODO: fire disks
+  wc.followPath(&ramsete, {PVector(22.46, -52.68), PVector(30.97, -42.22)});
+  wc.backwardsFollow(&pidController, {PVector(28.13, -46.12)});
+  wc.faceTarget({49.06, 49.84});
+  //TODO: fire disks
+  wc.followPath(&purePursuit, {PVector(17.67, -43.99), PVector(-12.12, -11.35)});
+  wc.faceTarget({49.06, 49.84});
+  //TODO: fire disks
 
 };
 Auton skills = "Skills" + [](){
   cout << "s" << endl;
 };
 Auton winPoint = "Win Point" + [](){
-  cout << "w" << endl;
-  wc.estimateStartPos(PVector(41.34406604747163, -61.455521155830745), 0);
+  wc.estimateStartPos(PVector(-61.61, 41.32), 90.03);
   spinRoller();
-  wc.followPath(&ramsete, {PVector(-2.08, -67.89), PVector(7.99, -44.94)});
-  //Pick up and fire the disks at the same time
-  //TODO
-
-  
-  //Forward to back-face the roller
-  wc.followPath(&purePursuit, {PVector(-53.43, 9.87), PVector(-53.10, 37.28)});
-  //Contact roller
-  wc.backwardsFollow(&purePursuit, {PVector(-58.38, 40.42), PVector(-62.18, 40.42)});
-  
+  wc.faceTarget({49.77, 50.01});
+  //TODO: fire disks
+  wc.followPath(&pidController, {PVector(-25.96, 0.35)});
+  wc.faceTarget({49.77, 50.01});
+  //TODO: fire disks
+  wc.followPath(&purePursuit, {PVector(18.20, -47.89), PVector(31.32, -46.3)});
+  wc.backwardsFollow(&purePursuit, {PVector(39.48, -53.04), PVector(40.02, -61.37)});
   spinRoller();
 
 };

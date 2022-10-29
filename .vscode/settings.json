@@ -136,6 +136,7 @@
         "string_view": "cpp",
         "cinttypes": "cpp",
         "*.rh": "cpp",
-        "cerrno": "cpp"
+        "cerrno": "cpp",
+        "iostream": "cpp"
     }
 }
