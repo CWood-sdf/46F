@@ -1,6 +1,7 @@
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
-#include "Odometry/EPA_Tracker.h"
+#include "EPA_Tracker.h"
+#ifndef TEST
 class BasicConfirmationOdom {
 public:
   virtual ~BasicConfirmationOdom() {}
@@ -40,4 +41,5 @@ public:
   void update();
   void setPos(PVector v, double a);
 };
+#endif
 #endif

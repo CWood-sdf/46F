@@ -1,6 +1,6 @@
 #define NO_MAKE
-#include "Odometry/Bezier.h"
-#include "Odometry/GPS_Share.h"
+#include "Bezier.h"
+#include "GPS_Share.h"
 //Constructor
 VectorArr::VectorArr(std::initializer_list<PVector> list){
   for(PVector v : list){

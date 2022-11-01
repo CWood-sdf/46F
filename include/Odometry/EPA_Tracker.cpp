@@ -1,5 +1,5 @@
 #define NO_MAKE
-#include "Odometry/EPA_Tracker.h"
+#include "EPA_Tracker.h"
 //Shifts angle to range of [0, 360)
 double baseAngle(double ang){
   while(ang >= 360.0){
@@ -21,7 +21,7 @@ double posNeg180(double ang){
   }
   return ret;
 }
-
+#ifndef TEST
 //Function that updates the position
 //80+ lines of trig, vector math, and some sensor stuff
 PVector Positioner::update(){
@@ -139,3 +139,4 @@ double Positioner::velocity(){
 void Positioner::clearMove(){
   time.clear();
 }
+#endif

@@ -1,6 +1,6 @@
 #ifndef EPA_TRACKER_H
 #define EPA_TRACKER_H
-#include "Odometry/FieldCoord.h"
+#include "FieldCoord.h"
 //EPA_Tracker.h -- Use this file to track the robot's absolute position on the field
 //This file does so much math that it be like Beethoven 9 if it all works properly
 
@@ -41,6 +41,7 @@ struct Ref {
 // //Each encoder is used for each dimension
 // //Positioner<2, 2> has four encoders total 2x, 2y
 // template<uint encodersX, uint encodersY>
+#ifndef TEST
 class Positioner {
 //A few typedefs
 public:
@@ -147,4 +148,5 @@ public:
   double velocity();
   void clearMove();
 };
+#endif
 #endif

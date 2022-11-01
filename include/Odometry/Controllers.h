@@ -1,4 +1,6 @@
-#include "Odometry/Chassis.h"
+#ifndef CONTROLLERS_H
+#define CONTROLLERS_H
+#include "Chassis.h"
 #ifndef CHAIN
 #define CHAIN return *this;
 #endif
@@ -74,7 +76,7 @@ public:
   virtual void init();
   //Pure Pursuit
   typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
-  virtual followToRet followTo(Input& input);
+  virtual followToRet followTo(Input& input){}
   followToRet followTo(Input&& v){
     return followTo(v);
   }
@@ -118,3 +120,4 @@ public:
   followToRet followTo(Input &input) override;
   BasicPidController() = delete;
 };
+#endif

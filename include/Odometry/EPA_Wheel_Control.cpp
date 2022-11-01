@@ -1,5 +1,5 @@
 #define NO_MAKE
-#include "Odometry/EPA_Wheel_Control.h"
+#include "EPA_Wheel_Control.h"
 double sign(double v)
 {
   if (v == 0.0)
@@ -124,9 +124,9 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
     while (timeIn * sleepTime < minTimeIn)
     {
 
-      double s = turnCtrl.getVal(normAngle);
-      chassis->turnLeft(s > speedLimit ? speedLimit : s);
-      task::sleep(sleepTime);
+      double speed = turnCtrl.getVal(normAngle);
+      chassis->turnLeft(speed > speedLimit ? speedLimit : speed);
+      s(sleepTime);
 
       angle = angleCalc();
 
@@ -148,9 +148,9 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
     while (timeIn * sleepTime < minTimeIn)
     {
 
-      double s = -turnCtrl.getVal(normAngle);
-      chassis->turnRight(s > speedLimit ? speedLimit : s);
-      task::sleep(sleepTime);
+      double speed = -turnCtrl.getVal(normAngle);
+      chassis->turnRight(speed > speedLimit ? speedLimit : speed);
+      s(sleepTime);
 
       angle = angleCalc();
       //
@@ -187,6 +187,7 @@ bool BasicWheelController::isMoving()
 {
   return moving;
 }
+#ifndef TEST
 BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVector v, double a)
 {
   cout << sign(botPos().x) << ", " << sign(v.x) << endl;
@@ -210,7 +211,7 @@ BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVecto
   }
   CHAIN;
 }
-
+#endif
 BasicWheelController::chain_method BasicWheelController::forceEarlyExit()
 {
   exitEarly = true;
@@ -328,7 +329,7 @@ chassis should manage wheel spinning nitty gritty
 void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, bool isNeg)
 {
   double purePursuitDist = followPathDist; // Distance to pure pursuit target
-
+  
   controller->init();
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Auton position reverse)
@@ -341,7 +342,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       a *= -1.0;
     }
   }
-
+#ifndef TEST
   if (controller->isTurnAtStart())
   // Simple initialization and turn to first point
   {
@@ -371,8 +372,9 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     afterTurn();
     afterTurn = []() {};
   }
-
+#endif
   path.make(arr, chassis);
+  
   // //Make extended path
   auto bezier = path.getBezier();
   // VectorArr extendedPath;
@@ -397,7 +399,21 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
   // The last dist
   // double lastDist = 12 * 2 * 24;
   // A timer
+  #ifndef TEST
+  
+  
   timer t = timer();
+  
+  
+  #else
+  
+  
+  cout << "Sdff" << endl; s(100);
+  Timer t = Timer();
+  
+  
+  cout << "Sdff" << endl; s(100);
+  #endif
   [[maybe_unused]] int time = 0,       // Counts the time in loop iterations
       timeIn = 0,                      // The amount of time spent near the target
       maxTimeIn = followPathMaxTimeIn, // The time needed before exit
@@ -427,9 +443,10 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       sd.push_back(asd);
       pursuit.push_back(apursuit);
     }
-  } realTime;
+  } realTime; 
 #endif
 
+    cout << "Chassis " << chassis << endl; s(100);
   // Save the current distance fns
   setOldDistFns();
   int timesStopped = 0;
@@ -439,6 +456,8 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
+    
+  
     // Get the nearest pure pursuit position
     int nearestIndex = getNearest(path, botPos(), lastIndex);
     lastIndex = nearestIndex;
@@ -448,12 +467,14 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       exitEarly = false;
       break;
     }
+    
     // Keep the Pure Pursuit target purePursuitDist inches away from the bot
     while (pursuit.dist2D(botPos()) < purePursuitDist && pursuit != path.last())
     {
       pursuit = path[bezierIndex];
       ++bezierIndex;
     }
+    
     if (bezierIndex >= path.size())
     {
       bezierIndex = path.size() - 1;
@@ -467,9 +488,10 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     {
       timeIn = 0;
     }
+    
     // The distance to the pursuit target
     double dist = botPos().dist2D(pursuit);
-
+    #ifndef TEST
     // If the bot's not moving, and it's not currently accelerating
     if (chassis->pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000)
     {
@@ -479,6 +501,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     {
       timesStopped = 0;
     }
+    #endif
     // 50 ms not moving -> exit
     if (timesStopped * sleepTime > 50 && !stopExitPrev)
     {
@@ -515,7 +538,9 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     // The angle that it needs to travel at
     double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
 
-    Controller::Input input;
+
+    cout << "Chassis " << chassis << endl; s(100);
+    Controller::Input input = Controller::Input();
     input.angleTarget = angle;
     input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
     input.target = virtualPursuit;
@@ -525,28 +550,32 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     copy.bezierPt = virtualPursuit;
     input.targetPt = copy;
     input.chassis = chassis;
+    
+    cout << "ctrller " << controller << endl; s(100);
     /*** NOTHING HAPPENING IN NEXT TWO BLOCKS ***/
     // So that the robot can take tight turns,
     // if the turn is too tight, then the robot direction of travel will flip
     // Also if it's basically at the end,
     //   then the robot will take the more efficient path backwards to the target
     //   rather than turn around
-    if (abs(normAngle) >= 150)
-    {
-      // isNeg = !isNeg;
-      //  cout << botPos() << ", " << pursuit << endl;
-      //  cout << normAngle << endl;
-      //  cout << "Reverse Neg" << endl;
-      // Decrease timeIn because we aren't doing any sleeping this round
-      if (timeIn > 0)
-      {
-        // timeIn--;
-      }
-      // Send it back up top to recalibrate the speeds without sleeping
-      // continue;
-    }
+    // if (abs(normAngle) >= 150)
+    // {
+    //   // isNeg = !isNeg;
+    //   //  cout << botPos() << ", " << pursuit << endl;
+    //   //  cout << normAngle << endl;
+    //   //  cout << "Reverse Neg" << endl;
+    //   // Decrease timeIn because we aren't doing any sleeping this round
+    //   if (timeIn > 0)
+    //   {
+    //     // timeIn--;
+    //   }
+    //   // Send it back up top to recalibrate the speeds without sleeping
+    //   // continue;
+    // }
 
     auto speeds = controller->followTo(input);
+    
+    cout << "Chassssis " << chassis << endl; s(100);
     double speed = 0;
     switch (speeds.first.second)
     {
@@ -653,7 +682,16 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     chassis->driveFromDiff(-speed, -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
+    
+    cout << "Sdff" << endl; s(100);
     s(sleepTime);
+    
+    cout << "Sdff" << endl; s(100);
+    #ifdef TEST
+    chassis->runSimStep();
+    #endif
+    
+    cout << "Sdff" << endl; s(100);
 
 #ifdef DEBUG
     realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);

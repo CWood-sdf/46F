@@ -1,4 +1,6 @@
-#include "Odometry/GPS_Share.h"
+#ifndef BEZIER_H
+#define BEZIER_H
+#include "GPS_Share.h"
 //Makes an array of Vectors that can be efficiently modified at both ends
 struct VectorArr {
   //Underlying storage type
@@ -51,3 +53,4 @@ VectorArr bezierCurve(VectorArr ptArr, double inc = 1.0 / 50.0);
 VectorArr bezierDerivative(VectorArr ptArr, double inc = 1.0 / 50.0);
 pair<VectorArr, VectorArr> bezierCurveNormalLR(VectorArr ptArr, double dist = 1.0, double inc = 1.0 / 50.0);
 vector<double> bezierCurvature(VectorArr ptArr, double inc = 1.0 / 50.0);
+#endif

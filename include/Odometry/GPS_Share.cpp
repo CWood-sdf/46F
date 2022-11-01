@@ -1,6 +1,6 @@
 #define NO_MAKE
-#include "Odometry/GPS_Share.h"
-
+#include "GPS_Share.h"
+#ifndef TEST
 bool GPS_Share::firstBad(){
     if(isFirstBad){
         isFirstBad = false;
@@ -81,3 +81,4 @@ void GPS_Share::setPos(PVector v, double a){
     pos.angle = 0;
     update();
 }
+#endif

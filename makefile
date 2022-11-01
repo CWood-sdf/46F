@@ -31,7 +31,7 @@ SRC_H += $(wildcard include/*/*/*/*/*/*/*/*.h)
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include . include/lvgl include/lvgl/src
+INC_F  = include . include/lvgl include/lvgl/src include/Odometry
 
 # headers needed to use library
 LV_SRC_H += $(wildcard include/lvgl/lvgl.h) 
