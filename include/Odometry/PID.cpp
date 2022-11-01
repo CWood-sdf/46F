@@ -132,7 +132,12 @@ void PIDF::setTarget(double val){
 void PIDF::incVals(double sensorVal){
 
     lastError = error;
-    error = manager->manageInput(target - sensorVal);
+    if(manager){
+        error = manager->manageInput(target - sensorVal);
+    } 
+    else {
+        error = target - sensorVal;
+    }
     p = error;
     if(abs(error) <= iGrowth && iGrowth != 0.0){
         i += error;
@@ -144,20 +149,27 @@ void PIDF::incVals(double sensorVal){
         i = 0.0;
     }
     d = error - lastError;
-    manager->manageP(p);
-    manager->manageI(i);
-    manager->manageD(d);
+    if(manager){
+        manager->manageP(p);
+        manager->manageI(i);
+        manager->manageD(d);
+    }
 }
 //Get the speed value given that error has already been applied
 double PIDF::getVal(){
     double pInc = k.p * p;
     double iInc = k.i * this->i;
     double dInc = k.d * this->d;
-    return manager->getVal(pInc + iInc + dInc);
+    if(manager){
+        return manager->getVal(pInc + iInc + dInc);
+    }
+    else 
+    {
+        return pInc + iInc + dInc;
+    }
 }
 //Apply error, then return getVal()
 double PIDF::getVal(double sensorVal){
-
     this->incVals(sensorVal);
     return getVal();
 }

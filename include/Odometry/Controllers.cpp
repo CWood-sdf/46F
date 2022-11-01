@@ -127,7 +127,6 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
       a = -tan(moddedAngle),
       b = 1.0,
       c = tan(moddedAngle) * rPos.y - rPos.x;
-    
     double x = abs(a * lPos.y + b * lPos.x + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
     travelCurvature = 2.0 * x / pow(input.dist, 2);
   }

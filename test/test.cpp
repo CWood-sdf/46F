@@ -12,7 +12,7 @@ using namespace std;
 #include <stdlib.h>
 Chassis chassis = Chassis(15, 1.4, 3.75, gearSetting::ratio18_1);
 BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
-PurePursuitController purePursuit = PurePursuitController(6.25, 0.001, 2.4325, 0, 8, 1);
+PurePursuitController purePursuit = PurePursuitController(-6.25, -0.001, -2.4325, 0, 8, 1);
 RamseteController ramsete = RamseteController(0.07, 0.5);
 Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(2.42, 0.2, 1.35, 0, 20, 4), 1.0);
 int main(){

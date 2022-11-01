@@ -88,7 +88,7 @@ public:
 };
 class PurePursuitController : public Controller {
   //Get ctrl kP up to 6.25
-  PID ctrl;
+  PID ctrl = PID();
 public:
   followToRet followTo(Input& input) override;
   void init() override;

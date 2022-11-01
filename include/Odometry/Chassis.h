@@ -130,14 +130,8 @@ struct Chassis {
   #else
   Chassis(double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
   void runSimStep() {
-    
-    cout << "Sdff" << endl; s(100);
         static int i = 0;
-        
-       cout << "Sdff" << endl; s(100);
         double timeStep = static_cast<double>(stopwatch.getTime()) / 3.0;
-        
-    cout << "Sdff" << endl; s(100);
         if (i++ < 19) {
             std::cout << timeStep << std::endl;
         }

@@ -445,8 +445,6 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     }
   } realTime; 
 #endif
-
-    cout << "Chassis " << chassis << endl; s(100);
   // Save the current distance fns
   setOldDistFns();
   int timesStopped = 0;
@@ -539,7 +537,6 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
 
 
-    cout << "Chassis " << chassis << endl; s(100);
     Controller::Input input = Controller::Input();
     input.angleTarget = angle;
     input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
@@ -551,7 +548,6 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     input.targetPt = copy;
     input.chassis = chassis;
     
-    cout << "ctrller " << controller << endl; s(100);
     /*** NOTHING HAPPENING IN NEXT TWO BLOCKS ***/
     // So that the robot can take tight turns,
     // if the turn is too tight, then the robot direction of travel will flip
@@ -574,8 +570,6 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     // }
 
     auto speeds = controller->followTo(input);
-    
-    cout << "Chassssis " << chassis << endl; s(100);
     double speed = 0;
     switch (speeds.first.second)
     {
@@ -677,21 +671,17 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       // rightExtra *= -1;
       speed *= -1.0;
     }
+    speed *= -1.0;
     // Mindblowing lines right here
     // Move the robot
-    chassis->driveFromDiff(-speed, -rightExtra, fwd);
+    chassis->driveFromDiff(speed, -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
     
-    cout << "Sdff" << endl; s(100);
     s(sleepTime);
-    
-    cout << "Sdff" << endl; s(100);
     #ifdef TEST
     chassis->runSimStep();
     #endif
-    
-    cout << "Sdff" << endl; s(100);
 
 #ifdef DEBUG
     realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
