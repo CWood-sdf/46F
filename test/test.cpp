@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+#define TEST
 #undef NO_MAKE
 #include <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs/LinkedList.h>
 #include <C:/Users/woodc/OneDrive/GitHub/Libs-Actual/Libs/PVector.h>
@@ -21,7 +22,7 @@ int main(){
 	chassis.position.angle = 0 * DEG_TO_RAD;
 	//Set the path k const to 2  to make the robot go faster
 	wc.path.setK(2.0);
-	wc.purePursuitFollow(VectorArr({ PVector(0, 48), PVector(48, 48), PVector(48, 0)}), false);
+	wc.generalFollow(VectorArr({ PVector(0, 48), PVector(48, 48)}), &purePursuit, false);
 	//wc.purePursuitFollow(, false);
 	// while ((int)chassis.vel != 0 || (int)chassis.angVel != 0) {
 	// 	chassis.runSimStep(); s(10);

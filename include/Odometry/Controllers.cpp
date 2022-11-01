@@ -132,7 +132,7 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
   }
   //Get the target speed of the robot
   double speed = ctrl.getVal(abs(input.dist));
-  return {{speed, ForwardVel::pct}, {travelCurvature, AngularVel::curvature}};
+  return {{speed, ForwardVel::pct}, {-travelCurvature, AngularVel::curvature}};
 }
 void PurePursuitController::init(){
   ctrl.setTarget(0);

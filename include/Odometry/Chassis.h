@@ -162,7 +162,7 @@ struct Chassis {
 		double realRight = pctToReal(currentRightVel);
 		vel = (realLeft + realRight) / 2.0;
 		angVel = (realLeft - realRight) / trackWidth;
-        auto fwd = this->vel * timeStep;
+        auto fwd = -this->vel * timeStep;
         this->position.pos.x += fwd * sin(-this->position.angle);
         this->position.pos.y += -fwd * cos(-this->position.angle);
         this->position.angle += this->angVel * timeStep;

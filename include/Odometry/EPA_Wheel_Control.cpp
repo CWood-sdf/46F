@@ -592,12 +592,12 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     // double targetVel = abs(speed);
     [[maybe_unused]] double orgSpeed = speed + 0.000000001;
     // Slew speed
-    if (abs(speed) > path[nearestIndex].targetSpeed)
+    if (abs(speed) > abs(path[nearestIndex].targetSpeed))
     {
       orgSpeed = speed;
-      speed = path[nearestIndex].targetSpeed;
+      speed = path[nearestIndex].targetSpeed * sign(speed);
     }
-    if (abs(speed) > chassis->speedLimit)
+    if (abs(speed) > abs(chassis->speedLimit))
     {
       orgSpeed = speed;
       speed /= abs(speed);
@@ -671,10 +671,9 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       // rightExtra *= -1;
       speed *= -1.0;
     }
-    speed *= -1.0;
     // Mindblowing lines right here
     // Move the robot
-    chassis->driveFromDiff(speed, -rightExtra, fwd);
+    chassis->driveFromDiff(abs(speed), -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
     
