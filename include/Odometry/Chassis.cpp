@@ -95,7 +95,11 @@ Chassis::chain_method Chassis::setSpeedLimit(double v){
   speedLimit = v;
   CHAIN
 }
+double sign(double);
 void Chassis::driveFromDiff(double speed, double diff, directionType d){
+  if(abs(speed) > speedLimit){
+    speed = speedLimit * sign(speed);
+  }
   double left = speed + diff;
   double right = speed - diff;
   lastLeftSpeed = left;

@@ -52,8 +52,8 @@ Q =
 endif
 
 # compile and link tools
-# CC      = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang.exe
-# CXX     = C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang++.exe
+# CC      = F:\bin\clang.exe
+# CXX     = F:\bin\clang.exe
 CC = clang
 CXX = clang
 OBJCOPY = arm-none-eabi-objcopy
@@ -97,7 +97,7 @@ CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -f
 # C++20
 # LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
 # C++17
-LNK_FLAGS = -nostdlib --defsym _HEAP_SIZE=0x800000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
+LNK_FLAGS = -nostdlib --defsym _HEAP_SIZE=0xa00000 -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB} -L"$(BUILD)" -L"$(BUILD_LVGL)"
 
 
 # future statuc library
@@ -105,7 +105,7 @@ PROJECTLIB = lib$(PROJECT)
 ARCH_FLAGS = rcs
 
 # libraries
-LIBS =  --start-group -l46f -lv5rt -lstdc++ -lc -lm -lgcc -llvgl --end-group
+LIBS =  --start-group -lv5rt -lstdc++ -lc -lm -lgcc -llvgl --end-group
 
 # include file paths
 INC += $(addprefix -I, ${INC_F})

@@ -374,6 +374,8 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
+  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(VariableConfig::drawAll);
@@ -381,7 +383,6 @@ void brainOS() {
   bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(printVars);
   bos::bosFns.pushBack(drawPath);
-  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(bos::BosFn(printTestData));
 
   // bos::bosFns.push_back(Auton::selectAuton);
@@ -467,6 +468,7 @@ int main() {
     gyroInit(angler);
     s(500);
     gyroInit(GPS);
+    cout << "<< Gyros initialized >>" << endl;
     //Gyro's initialized
     testMotorConnection();
     cout << "<< Motor connection test complete >>" << endl;
@@ -490,8 +492,15 @@ int main() {
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-  intake.spinVolt(fwd, 10000);
-  drivercontrol();
+  // chassis.setSpeedLimit(30);
+  VectorArr path = VectorArr();
+  wc.path.setK(2);
+  chassis.setMaxAcc(6000);
+  chassis.setMaxDAcc(6000);
+  wc.generalFollow({{0, 48}, {48, 48}, {48, 0}}, &purePursuit, false);
+  chassis.coastBrake();
+  // intake.spinVolt(fwd, 10000);
+  // drivercontrol();
   
   //autonomous();
   // Competition.autonomous(autonomous);

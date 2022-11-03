@@ -47,6 +47,10 @@ public: // Constructor
     chassis = c;
     cout << chassis << endl;
   }
+  std::function<void()> drawFn = [](){};
+  void draw(bool){
+     drawFn();
+  }
   Path path = Path();
 public: // Some Functions
   // void addTurnPid(PidAdder a);
@@ -116,7 +120,10 @@ public:
   virtual void faceTarget(PVector target);
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
-  virtual void generalFollow(VectorArr arr, Controller* controller, bool isNeg);
+  virtual void generalFollow(VectorArr&& arr, Controller* controller, bool isNeg){
+    generalFollow(arr, controller, isNeg);
+  }
+  virtual void generalFollow(VectorArr& arr, Controller* controller, bool isNeg);
   virtual void followPath(Controller* controller, VectorArr arr){
     generalFollow(arr, controller, false);
   }

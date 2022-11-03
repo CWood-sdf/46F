@@ -22,7 +22,7 @@ TestDevice(FL);
 motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
 TestDevice(FR);
 //Back Left Wheel (BL)
-motor BL = motor(PORT11, gearSetting::ratio18_1, !true);
+motor BL = motor(PORT12, gearSetting::ratio18_1, !true);
 TestDevice(BL);
 //Back Right Wheel (BR)
 motor BR = motor(PORT19, gearSetting::ratio18_1, !false);
@@ -39,6 +39,8 @@ motor_group Right = motor_group(BR, MR, FR);
 
 motor intakeMot = motor(PORT7, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
+motor intakeMot2 = motor(PORT10, gearSetting::ratio18_1, true);
+TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
@@ -58,7 +60,7 @@ NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
 NewMotor leftWhls = NewMotor(BL, FL, ML);
 NewMotor rghtWhls = NewMotor(BR, FR, MR);
 
-NewMotor intake = NewMotor(intakeMot);
+NewMotor intake = NewMotor(intakeMot, intakeMot2);
 
 
 
@@ -95,7 +97,7 @@ inertial angler = inertial(PORT11);
 TestDevice(angler);
 
 //gps
-gps GPS = gps(PORT10, -7.5, 0.0, inches, -90);
+gps GPS = gps(PORT7, 6, 4.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT8);
@@ -129,8 +131,7 @@ GPS_Share share = GPS_Share(positioner, GPS);
 Chassis chassis = Chassis({BL, ML, FL}, {BR, MR, FR}, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
 PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(1.0, 0.5);
-BasicPidController pidController = BasicPidController(PIDF(6.25, 0.001, 2.4325, 0, 8, 1), PID(6.0, 0.1, 0.1, 0, 0, 10));
-
+BasicPidController pidController = BasicPidController(PIDF(6.25, 0.1, 2.4325, 20, 4, 1), PID(6.0, 0, 0, 0, 0, 0));
 Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(2.42, 0.2, 1.35, 0, 20, 4), 1.0);
 
 /*************************************

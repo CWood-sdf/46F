@@ -1,8 +1,11 @@
 #define NO_MAKE
 #include "BotTracker.h"
+#include "Odometry/EPA_Wheel_Control.h"
 std::vector<lv_point_t> pts = { {0, 0}, {100, 100}, {50, 100}, {150, 150} };
 std::vector<lv_point_t> actualPts;
+std::vector<lv_point_t> pathPts = {};
 extern GPS_Share share;
+extern Omni_6Controller wc;
 void displayBot(bool remake) {
   static lv_obj_t* botContainer;
   static lv_obj_t* line2;
@@ -10,6 +13,7 @@ void displayBot(bool remake) {
   static lv_obj_t* labelX;
   static lv_obj_t* labelY;
   static lv_obj_t* labelA;
+  static lv_obj_t* pathLine;
   if(remake){
     short gridHeight = LV_VER_RES;
     short sixthHeight = (LV_VER_RES / 6);
@@ -101,6 +105,7 @@ void displayBot(bool remake) {
 
     botContainer = lv_obj_create(gridContainer);
     line2 = lv_line_create(botContainer);
+    pathLine = lv_line_create(gridContainer);
     centerPt = lv_obj_create(botContainer);
 
 
@@ -108,6 +113,11 @@ void displayBot(bool remake) {
     lv_obj_set_style_line_rounded(line2, true, 0);
     lv_obj_set_style_line_color(line2, lv_color_make(0, 0, 0), 0);
     lv_obj_set_style_line_opa(line2, LV_OPA_MAX, 0);
+
+    lv_obj_set_style_line_width(pathLine, 3, 0);
+    lv_obj_set_style_line_rounded(pathLine, true, 0);
+    lv_obj_set_style_line_color(pathLine, lv_color_make(0, 0, 0), 0);
+    lv_obj_set_style_line_opa(pathLine, LV_OPA_MAX, 0);
 
     lv_obj_set_style_bg_opa(botContainer, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_opa(botContainer, LV_OPA_TRANSP, 0);
@@ -145,7 +155,19 @@ void displayBot(bool remake) {
       actualPts.push_back(v + PVector(halfContWidth, halfContWidth));
   }
   lv_line_set_points(line2, actualPts.data(), actualPts.size());
-  
+
+  if(wc.drawArr){
+    auto p = wc.publicPath;
+    pathPts.clear();
+    for(auto pt : p){
+      
+      pt += {72, 72}; 
+      pt *= height / 144.0;
+      pathPts.push_back(pt);
+    }
+  }  
+  lv_line_set_points(pathLine, pathPts.data(), pathPts.size());
+
   lv_obj_align(botContainer, LV_ALIGN_CENTER, pos.x, pos.y);
   lv_obj_set_size(botContainer, width * M_SQRT2 + 30, width * M_SQRT2 + 30);
   std::string setTextY = "y: ";

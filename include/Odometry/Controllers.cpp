@@ -17,68 +17,84 @@ double clamp(double val, double high, double low){
   }
   return val;
 }
-void Path::make(VectorArr arr, Chassis* chassis){
+void Path::make(VectorArr& arr, Chassis* chassis){
+  // cout << "Making path" << endl; s(100);
   this->path.clear();
   this->arr = arr;
-  auto arrCopy = arr;
+  auto arrCopy = VectorArr(arr);
+  // cout << "Path size: " << arr.size() << endl; s(100); 
   arrCopy.push_front(chassis->botPos());
   
-  auto bezier = bezierCurve(arrCopy);
+  auto bezier = VectorArr(bezierCurve(arrCopy));
+  // cout << "Bezier size: " << bezier.size() << endl; s(100);
   vector<double> targetAngles;
   vector<double> curvatures;
   vector<double> targetSpeeds;
-  auto deriv = bezierDerivative(arrCopy);
+  auto deriv = VectorArr(bezierDerivative(arrCopy));
+  // cout << "Derivative size: " << deriv.size() << endl; s(100);
   for(auto i : deriv){
     targetAngles.push_back(i.heading2D());
   }
+  // cout << "Target angles size: " << targetAngles.size() << endl; s(100);
   curvatures = bezierCurvature(arrCopy);
   targetSpeeds = vector<double>();
-  
   for(int i = 0; i < bezier.size(); i++){
     targetSpeeds.push_back(abs(min(chassis->speedLimit, kConst / curvatures[i])));
     if(targetSpeeds.back() > 100){
       targetSpeeds.back() = 100;
     }
   }
+  
+  // cout << "Target speeds size: " << targetSpeeds.size() << endl; s(100);
   //Smooth targetSpeeds
   //vf^2 = vi^2 + 2ad
   double startVel = 30;
   targetSpeeds[0] = startVel;
-  targetSpeeds.back() = 40;
-  for(int i = 1; i < bezier.size(); i++){
+  targetSpeeds[targetSpeeds.size() - 1] = 40;
+  
+  for(int i = 1; i < bezier.size() ; i++){
     //I think this math of converting inches to percent works
-    double d = bezier[i].dist2D(bezier[i - 1]);
+    double d = (bezier)[i].dist2D((bezier)[i - 1]);
     double a = chassis->maxAcc;
-    if(startVel < targetSpeeds[i]){
-      startVel = targetSpeeds[i] = clamp(sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI)), -abs(targetSpeeds[i]), abs(targetSpeeds[i]));
-      if(startVel > targetSpeeds[i + 1]){
-        startVel = targetSpeeds[i + 1];
-      }
+    targetSpeeds[i] = abs(targetSpeeds[i]);
+    if(startVel < targetSpeeds[i] && i != bezier.size() - 1){
+      startVel = targetSpeeds[i] = clamp(chassis->realToPct(sqrt(pow(chassis->pctToReal(startVel), 2) + 2.0 * a * d)), abs(targetSpeeds[i]), 0);
+      // if(startVel > targetSpeeds[i + 1]){
+      //   targetSpeeds[i] = startVel = targetSpeeds[i + 1];
+      // }
     }
-    else if(startVel > targetSpeeds[i]){
+    else if(startVel > targetSpeeds[i]  && i != 0){
       int startI = i;
       //Go backwards until reached speed
       do {
         startVel = targetSpeeds[i];
         i--;
         double a = chassis->maxDAcc;
-        double d = bezier[i].dist2D(bezier[i + 1]);
-        startVel = targetSpeeds[i] = clamp(sqrt(pow(startVel * 3.75 * M_PI / 9.0, 2) + 2.0 * a * d) * (9.0 / (3.75 * M_PI)), -abs(targetSpeeds[i]), abs(targetSpeeds[i]));
-      } while(startVel < targetSpeeds[i - 1]);
+        double d = (bezier)[i].dist2D((bezier)[i + 1]);
+        startVel = targetSpeeds[i] = clamp(chassis->realToPct(sqrt(pow(chassis->pctToReal(startVel), 2) + 2.0 * a * d)), abs(targetSpeeds[i]), 0);
+      } while(i != 0 && startVel < targetSpeeds[i - 1]);
       i = startI;
       startVel = targetSpeeds[i];
     }
   }
+  // cout << "Target speeds size: " << targetSpeeds.size() << endl; s(100);
+  for(auto& i : targetSpeeds){
+    i = abs(i);
+  }
+  // cout << "Target speeds size: " << targetSpeeds.size() << endl; s(100);
   if(curvatures.size() != bezier.size() || targetSpeeds.size() != bezier.size() || targetAngles.size() != bezier.size()){
     cout << "Err in making path\ncurvatures: " << curvatures.size() 
           << "\nbezier: " << bezier.size() 
           << "\ntargetSpeeds: " << targetSpeeds.size()
-          << "\ntargetAngles: " << targetAngles.size() << endl;
+          << "\ntargetAngles: " << targetAngles.size() << endl;  
     
   }
+  // cout << "Path made" << endl; s(100);
   for(int i = 0; i < bezier.size(); i++){
-    path.push_back(El{bezier[i], targetSpeeds[i], targetAngles[i], curvatures[i]});
+    path.push_back(El{(bezier)[i], targetSpeeds[i], targetAngles[i], curvatures[i]});
   }
+  // s(300000);
+  // cout << "Path size: " << path.size() << endl; s(100);
 }
 void Path::remake(Chassis* chassis){
   make(arr, chassis);
@@ -131,7 +147,7 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
     travelCurvature = 2.0 * x / pow(input.dist, 2);
   }
   //Get the target speed of the robot
-  double speed = ctrl.getVal(abs(input.dist));
+  double speed = -ctrl.getVal(input.dist);
   return {{speed, ForwardVel::pct}, {-travelCurvature, AngularVel::curvature}};
 }
 void PurePursuitController::init(){
@@ -177,7 +193,8 @@ BasicPidController::BasicPidController(PID ctrl, PID slave){
 BasicPidController::followToRet BasicPidController::followTo(Input &input){
   double dist = input.dist;
   double normAngle = posNeg180(input.angleTarget - input.currentAngle);
-  double fwdVel = ctrl.getVal(dist);
+  cout << normAngle << endl;
+  double fwdVel = -ctrl.getVal(dist);
   double turnVel = slave.getVal(normAngle);
   return {{fwdVel, Controller::ForwardVel::pct}, {turnVel, Controller::AngularVel::pctDiff}};
 }

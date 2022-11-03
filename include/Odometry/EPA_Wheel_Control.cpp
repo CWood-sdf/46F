@@ -326,7 +326,7 @@ follow should call spin the wheels
 all controller should do is just to take target and nearest point data and return wheel speed
 chassis should manage wheel spinning nitty gritty
 **/
-void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, bool isNeg)
+void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller, bool isNeg)
 {
   double purePursuitDist = followPathDist; // Distance to pure pursuit target
   
@@ -343,20 +343,27 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     }
   }
 #ifndef TEST
+    
+  // cout << "sdfa" << endl; s(100);
   if (controller->isTurnAtStart())
   // Simple initialization and turn to first point
   {
+    
+  // cout << "sdfa" << endl; s(100);
     // Allow the array to be drawn
     this->drawArr = true;
     auto arrCopy = arr;
     arrCopy.push_front(botPos());
     // Construct the original bezier
     VectorArr bezier = bezierCurve(arrCopy);
+    
+  // cout << "sdfa" << endl; s(100);
     this->publicPath = bezier;
     // Turn to the first point purePursuitDist away
     //  get first point
     double dist = botPos().dist2D(bezier[0]);
     int i = 0;
+    // cout << "Cool" << endl;
     while (dist < purePursuitDist)
     {
       dist += bezier[i].dist2D(bezier[i + 1]);
@@ -365,16 +372,23 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     if (!controller->isTurnAtStart())
     {
       callingInDrive = true;
-      turnTo(botPos().angleTo(bezier[i - 1]) + 180.0 * isNeg);
+      auto angle = botPos().angleTo(bezier[i - 1]);
+      turnTo(angle + 180.0 * isNeg);
       callingInDrive = false;
     }
+    // cout << "Cool" << endl;
     cout << "Turn Done" << endl;
     afterTurn();
     afterTurn = []() {};
   }
 #endif
+
+    
+  // cout << "sdddfa" << endl; s(100);
+  // bool sg = false;
   path.make(arr, chassis);
-  
+  // s(1000);
+  // cout << "yeet" << endl; s(1000);
   // //Make extended path
   auto bezier = path.getBezier();
   // VectorArr extendedPath;
@@ -408,11 +422,11 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
   #else
   
   
-  cout << "Sdff" << endl; s(100);
+  // cout << "Sdff" << endl; s(100);
   Timer t = Timer();
   
   
-  cout << "Sdff" << endl; s(100);
+  // cout << "Sdff" << endl; s(100);
   #endif
   [[maybe_unused]] int time = 0,       // Counts the time in loop iterations
       timeIn = 0,                      // The amount of time spent near the target
@@ -423,7 +437,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
   double
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = exitDist == 0.0 ? 2.0 : exitDist; // The maximum distance from target before starting timeIn count
-  cout << minAllowedDist << endl;
+  // cout << minAllowedDist << endl;
 #undef DEBUG
 #ifdef DEBUG
   struct
@@ -451,6 +465,13 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
   moving = true;
   PVector lastPos = botPos();
   int lastIndex = 0;
+  drawFn = [this](){
+    Brain.Screen.clearScreen(black);
+    for(int i = 0; i < path.size(); i++){
+      // Brain.Screen.printAt(10, i * 10, "%f", path[i].targetSpeed);
+      Brain.Screen.drawCircle(i, path[i].targetSpeed, 1);
+    }
+  };
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
@@ -503,13 +524,14 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     // 50 ms not moving -> exit
     if (timesStopped * sleepTime > 50 && !stopExitPrev)
     {
-      cout << "Stop Exit" << endl;
-      break;
+      // cout << "Stop Exit" << endl;
+      // break;
     }
     // Use the distFns for the current dist
     useDistFns(botPos().dist2D(path.last()));
     // The point extended beyond the path to make sure normAngle doesn't get big near the target
     PVector virtualPursuit = pursuit;
+    // cout << virtualPursuit << endl;
     if (botPos().dist2D(pursuit) < 4.0 && pursuit == path.last())
     {
       // A vector that is parallel wih last point
@@ -521,22 +543,24 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       last *= addDist / last.mag();
       virtualPursuit += last;
     }
-
+    // cout << virtualPursuit << endl;
     dist = botPos().dist2D(pursuit);
     // Make the dist signed so that PID will work
-    {
+    if (bezierIndex == path.size() - 1){
       PVector pathNearEnd = path[path.size() - 3];
       // Multiply dist by -1 if the bot is past the target
       double distSign = sign((pathNearEnd - path.last()).dot(botPos() - path.last()));
       dist *= distSign;
     }
+    
+    // cout << "Cool" << endl;
     // Angle of robot to target
     double angle = baseAngle(botPos().angleTo(virtualPursuit));
 
     // The angle that it needs to travel at
     double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
-
-
+    // cout << "N " << normAngle << endl;
+    // cout << "D " << dist << endl;
     Controller::Input input = Controller::Input();
     input.angleTarget = angle;
     input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
@@ -570,6 +594,7 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
     // }
 
     auto speeds = controller->followTo(input);
+    // cout << speeds.first.first << endl;
     double speed = 0;
     switch (speeds.first.second)
     {
@@ -671,9 +696,11 @@ void BasicWheelController::generalFollow(VectorArr arr, Controller *controller, 
       // rightExtra *= -1;
       speed *= -1.0;
     }
+    // speed *= -1.0;
+    // cout << "S: " << speed << endl;
     // Mindblowing lines right here
     // Move the robot
-    chassis->driveFromDiff(abs(speed), -rightExtra, fwd);
+    chassis->driveFromDiff(speed, -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
     

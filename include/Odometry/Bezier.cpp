@@ -53,7 +53,7 @@ PVector& VectorArr::first(){
 }
 
 //operator=
-VectorArr& VectorArr::operator=(VectorArr& v){
+VectorArr& VectorArr::operator=(const VectorArr& v){
   arr = v.arr;
   return *this;
 }

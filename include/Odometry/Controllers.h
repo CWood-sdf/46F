@@ -24,7 +24,7 @@ private:
 public:
 
   chain_method setK(double s);
-  void make(VectorArr arr, Chassis* chassis);
+  void make(VectorArr& arr, Chassis* chassis);
   void remake(Chassis* chassis);
   VectorArr getBezier();
   vector<Ref<PVector>> getBezierRef();
@@ -76,7 +76,7 @@ public:
   virtual void init();
   //Pure Pursuit
   typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
-  virtual followToRet followTo(Input& input){}
+  virtual followToRet followTo(Input& input);
   followToRet followTo(Input&& v){
     return followTo(v);
   }

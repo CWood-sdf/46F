@@ -53,8 +53,8 @@ struct Chassis {
 	double targetRightVel = 0;
   #endif
   double speedLimit = 100;
-  double maxAcc = 500; // in/s^2
-  double maxDAcc = 360; // in/s^2
+  double maxAcc = 100; // in/s^2
+  double maxDAcc = 80; // in/s^2
   #ifndef TEST
   NewMotor leftWheels;
   NewMotor rightWheels;
