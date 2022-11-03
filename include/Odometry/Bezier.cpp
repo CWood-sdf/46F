@@ -147,6 +147,7 @@ pair<VectorArr, VectorArr> bezierCurveNormalLR(VectorArr ptArr, double dist, dou
   }
   return ret;
 }
+
 vector<double> bezierCurvature(VectorArr ptArr, double inc){
   vector<double> ret;
   auto curve = bezierCurve(ptArr, inc);
@@ -161,9 +162,9 @@ vector<double> bezierCurvature(VectorArr ptArr, double inc){
     double y2 = q.y;
     double x3 = r.x;
     double y3 = r.y;
-    double k1 = 0.5 * (pow(x1, 2) + pow(y1, 2) - pow(x2, 2) - pow(y2, 2)) / (x1 - x2);
-    double k2 = (y1 - y2) / (x1 - x2);
-    double b = 0.5 * (pow(x2,2) - 2.0*x2*k1 + pow(y2,2) - pow(x3,2) + 2.0*x3*k1 - pow(y3,2)) / (x3*k2 - y3 + y2 - x2*k2);
+    double k1 = 0.5 * (pow(x1, 2) + pow(y1, 2) - pow(x2, 2) - pow(y2, 2)) / (x1 - x2 + 0.0000001);
+    double k2 = (y1 - y2) / (x1 - x2 + 0.0000001);
+    double b = 0.5 * (pow(x2,2) - 2.0*x2*k1 + pow(y2,2) - pow(x3,2) + 2.0*x3*k1 - pow(y3,2)) / (x3*k2 - y3 + y2 - x2*k2 + 0.0000001);
     double a = k1 - k2 * b;
     double rad = sqrt(pow(x1-a, 2) + pow(y1-b, 2));
     ret.push_back(1.0 / rad);

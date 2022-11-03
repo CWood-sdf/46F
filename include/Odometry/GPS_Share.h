@@ -1,7 +1,7 @@
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
 #include "EPA_Tracker.h"
-#ifndef TEST
+#ifndef WINDOWS
 class BasicConfirmationOdom {
 public:
   virtual ~BasicConfirmationOdom() {}

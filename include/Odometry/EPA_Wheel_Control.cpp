@@ -91,7 +91,7 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
 #endif
     angleCalc = [&]()
     {
-      return oldAngleCalc() + 180.0;
+      return oldAngleCalc();
     };
   }
   // If the auton is on the other side, turn to the opposite angle
@@ -187,7 +187,7 @@ bool BasicWheelController::isMoving()
 {
   return moving;
 }
-#ifndef TEST
+#ifndef WINDOWS
 BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVector v, double a)
 {
   cout << sign(botPos().x) << ", " << sign(v.x) << endl;
@@ -342,7 +342,6 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       a *= -1.0;
     }
   }
-#ifndef TEST
     
   // cout << "sdfa" << endl; s(100);
   if (controller->isTurnAtStart())
@@ -373,7 +372,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     {
       callingInDrive = true;
       auto angle = botPos().angleTo(bezier[i - 1]);
-      turnTo(angle + 180.0 * isNeg);
+      turnTo(angle + 180.0 * !isNeg);
       callingInDrive = false;
     }
     // cout << "Cool" << endl;
@@ -381,7 +380,6 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     afterTurn();
     afterTurn = []() {};
   }
-#endif
 
     
   // cout << "sdddfa" << endl; s(100);
@@ -532,12 +530,12 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     // The point extended beyond the path to make sure normAngle doesn't get big near the target
     PVector virtualPursuit = pursuit;
     // cout << virtualPursuit << endl;
-    if (botPos().dist2D(pursuit) < 4.0 && pursuit == path.last())
+    if (botPos().dist2D(pursuit) < 8.0 && pursuit == path.last())
     {
       // A vector that is parallel wih last point
       PVector last = (PVector)path.last() - path[path.size() - 4];
       // Distance to be added so that virtualPursuit is still purePursuitDist away from bot
-      double addDist = 4.0 - botPos().dist2D(pursuit);
+      double addDist = 8.0 - botPos().dist2D(pursuit);
       // Make last to be proper size
 
       last *= addDist / last.mag();
@@ -594,12 +592,13 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     // }
 
     auto speeds = controller->followTo(input);
-    // cout << speeds.first.first << endl;
+    cout << "S1: " << speeds.first.first << endl;
     double speed = 0;
     switch (speeds.first.second)
     {
     case Controller::ForwardVel::inps:
       speed = chassis->realToPct(speeds.first.first);
+      cout << "S2: " << speed << endl;
       break;
     case Controller::ForwardVel::pct:
       speed = speeds.first.first;
@@ -622,12 +621,14 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       orgSpeed = speed;
       speed = path[nearestIndex].targetSpeed * sign(speed);
     }
+    cout << "S3: " << speed << endl;
     if (abs(speed) > abs(chassis->speedLimit))
     {
       orgSpeed = speed;
       speed /= abs(speed);
       speed *= chassis->speedLimit;
     }
+    cout << "S4: " << speed << endl;
     double rightExtra;
     {
       double targetRobotVel = chassis->pctToReal(speed);
@@ -697,10 +698,10 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       speed *= -1.0;
     }
     // speed *= -1.0;
-    // cout << "S: " << speed << endl;
+    cout << "S: " << speed << endl;
     // Mindblowing lines right here
     // Move the robot
-    chassis->driveFromDiff(speed, -rightExtra, fwd);
+    chassis->driveFromDiff(-speed, -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
     

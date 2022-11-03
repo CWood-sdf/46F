@@ -4,7 +4,7 @@
 std::vector<lv_point_t> pts = { {0, 0}, {100, 100}, {50, 100}, {150, 150} };
 std::vector<lv_point_t> actualPts;
 std::vector<lv_point_t> pathPts = {};
-extern GPS_Share share;
+extern Chassis chassis;
 extern Omni_6Controller wc;
 void displayBot(bool remake) {
   static lv_obj_t* botContainer;
@@ -129,8 +129,8 @@ void displayBot(bool remake) {
 
   }
 
-  PVector pos = share.position();
-  double angle = share.heading();
+  PVector pos = chassis.botPos();
+  double angle = chassis.botAngle();
 
   short height = LV_VER_RES;
 
@@ -171,7 +171,7 @@ void displayBot(bool remake) {
   lv_obj_align(botContainer, LV_ALIGN_CENTER, pos.x, pos.y);
   lv_obj_set_size(botContainer, width * M_SQRT2 + 30, width * M_SQRT2 + 30);
   std::string setTextY = "y: ";
-  setTextY += toCcp(pos.y);
+  setTextY += toCcp(chassis.botPos().y);
   lv_label_set_text(labelY, setTextY.data());
   
   std::string setTextA = "a: ";
@@ -180,6 +180,6 @@ void displayBot(bool remake) {
 
 
   std::string setTextX = "x: ";
-  setTextX += toCcp(pos.x);
+  setTextX += toCcp(chassis.botPos().x);
   lv_label_set_text(labelX, setTextX.data());
 }

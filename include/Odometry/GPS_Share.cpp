@@ -1,6 +1,6 @@
 #define NO_MAKE
 #include "GPS_Share.h"
-#ifndef TEST
+#ifndef WINDOWS
 bool GPS_Share::firstBad(){
     if(isFirstBad){
         isFirstBad = false;

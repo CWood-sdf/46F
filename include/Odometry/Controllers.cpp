@@ -50,7 +50,7 @@ void Path::make(VectorArr& arr, Chassis* chassis){
   //vf^2 = vi^2 + 2ad
   double startVel = 30;
   targetSpeeds[0] = startVel;
-  targetSpeeds[targetSpeeds.size() - 1] = 40;
+  targetSpeeds[targetSpeeds.size() - 1] = 20;
   
   for(int i = 1; i < bezier.size() ; i++){
     //I think this math of converting inches to percent works
@@ -148,7 +148,7 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
   }
   //Get the target speed of the robot
   double speed = -ctrl.getVal(input.dist);
-  return {{speed, ForwardVel::pct}, {-travelCurvature, AngularVel::curvature}};
+  return {{speed, ForwardVel::pct}, {travelCurvature, AngularVel::curvature}};
 }
 void PurePursuitController::init(){
   ctrl.setTarget(0);
@@ -178,7 +178,8 @@ RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double k = 2.0 * zeta * sqrt(Wd * Wd/*rad^2/s^2*/ + beta * vd * vd/*rad^2/s^2*/);//1/s^2
   double eTheta = error(2, 0)/*rad*/;
   double speed = vd * cos(eTheta) + k * error(1, 0);//inps
-  double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / eTheta * error(0, 0);
+  cout << Wd << endl;
+  double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / (eTheta + eTheta == 0 ? 0.00001 : 0) * error(0, 0);
   return {{speed, ForwardVel::inps}, {turnVel, AngularVel::radps}};
 }
 RamseteController::RamseteController(double beta, double zeta) : Controller() {

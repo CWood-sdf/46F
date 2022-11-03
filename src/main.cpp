@@ -374,8 +374,8 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
-  bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
+  bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
   bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(VariableConfig::drawAll);
@@ -494,10 +494,11 @@ int main() {
   thread flywheelControl = thread(runFlywheel);
   // chassis.setSpeedLimit(30);
   VectorArr path = VectorArr();
+  purePursuit.setTurn();
   wc.path.setK(2);
   chassis.setMaxAcc(6000);
   chassis.setMaxDAcc(6000);
-  wc.generalFollow({{0, 48}, {48, 48}, {48, 0}}, &purePursuit, false);
+  wc.generalFollow({{0, 48}, {48, 48}}, &ramsete, false);
   chassis.coastBrake();
   // intake.spinVolt(fwd, 10000);
   // drivercontrol();

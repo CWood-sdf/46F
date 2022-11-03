@@ -9,6 +9,7 @@
 #define USE_GAME_SPECIFIC
 // #undef USE_GAME_SPECIFIC
 //
+#define TEST
 //Disable all warnings that exist bc I like using C++17 stuff
 #pragma GCC diagnostic ignored "-Wc++17-extensions"
 #pragma GCC diagnostic ignored "-Wdeprecated-anon-enum-enum-conversion"

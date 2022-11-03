@@ -17,7 +17,7 @@ double Chassis::botAngle(){
   return position.angle / DEG_TO_RAD;
   #endif
 }
-#ifndef TEST
+#ifndef WINDOWS
 Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p){
   leftWheels = left;
   rightWheels = right;
@@ -138,3 +138,49 @@ void Chassis::driveFromLR(double left, double right) {
 	double diff = (left - right) / 2.0;
 	driveFromDiff((left + right) / 2.0, diff, fwd);
 }
+#ifdef TEST
+void Chassis::runSimStep() {
+    static int i = 0;
+    double timeStep = static_cast<double>(stopwatch.getTime()) / 3.0;
+    if (i++ < 19) {
+        std::cout << timeStep << std::endl;
+    }
+    if (timeStep > 20) {
+        timeStep = 10;
+    }
+    timeStep /= 1000.0;
+    //Calculate the side accelleration from the target velocity and current velocity
+    //      and torque and stuff
+    //Calculate the current angular velocity (and maye the angular accelleration)
+    //Update the position and velocity using Euler's method
+    //Shift currentLeftVel
+    double wheelAcc = 2;
+    if (currentLeftVel < targetLeftVel && currentLeftVel < 100) {
+        currentLeftVel += wheelAcc;
+    }
+    else if (currentLeftVel > targetLeftVel && currentLeftVel > -100) {
+        currentLeftVel -= wheelAcc;
+    }
+    //Shift currentRightVel
+    if (currentRightVel < targetRightVel && currentRightVel < 100) {
+        currentRightVel += wheelAcc;
+    }
+    else if (currentRightVel > targetRightVel && currentRightVel > -100) {
+        currentRightVel -= wheelAcc;
+    }
+    double realLeft = pctToReal(currentLeftVel);
+double realRight = pctToReal(currentRightVel);
+vel = (realLeft + realRight) / 2.0;
+angVel = (realLeft - realRight) / trackWidth;
+    auto fwd = this->vel * timeStep;
+    this->position.pos.x += fwd * sin(-this->position.angle);
+    this->position.pos.y += -fwd * cos(-this->position.angle);
+    this->position.angle += this->angVel * timeStep;
+    this->position.angle = posNeg180(position.angle / DEG_TO_RAD) * DEG_TO_RAD;
+    if (i % 20 == 0) {
+        std::cout << timeStep << "\n" << this->position.pos << "; " << this->position.angle << "\n"
+            << currentLeftVel << ", " << currentRightVel << "\n"
+            << targetLeftVel << ", " << targetRightVel << "\n" << std::endl;
+    }
+}
+#endif

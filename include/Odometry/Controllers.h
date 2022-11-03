@@ -108,6 +108,7 @@ class RamseteController : public Controller {
   double zeta;//1/rad
 public:
   followToRet followTo(Input &input) override;
+  //[b > 0], [0 < zeta < 1]
   RamseteController(double beta, double zeta);
   RamseteController() = delete;
 };

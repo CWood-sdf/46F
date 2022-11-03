@@ -21,7 +21,7 @@ double posNeg180(double ang){
   }
   return ret;
 }
-#ifndef TEST
+#ifndef WINDOWS
 //Function that updates the position
 //80+ lines of trig, vector math, and some sensor stuff
 PVector Positioner::update(){

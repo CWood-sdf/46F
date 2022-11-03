@@ -41,7 +41,7 @@ struct Ref {
 // //Each encoder is used for each dimension
 // //Positioner<2, 2> has four encoders total 2x, 2y
 // template<uint encodersX, uint encodersY>
-#ifndef TEST
+#ifndef WINDOWS
 class Positioner {
 //A few typedefs
 public:
