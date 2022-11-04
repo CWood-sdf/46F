@@ -28,7 +28,7 @@ TestDevice(BL);
 motor BR = motor(PORT19, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT2, gearSetting::ratio18_1, true);
+motor ML = motor(PORT17, gearSetting::ratio18_1, true);
 TestDevice(ML);
 //Middle Right Wheel (MR)
 motor MR = motor(PORT8, gearSetting::ratio18_1, false);
@@ -37,14 +37,14 @@ TestDevice(MR);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
-motor intakeMot = motor(PORT7, gearSetting::ratio18_1, false);
+motor intakeMot = motor(PORT2, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
 motor intakeMot2 = motor(PORT10, gearSetting::ratio18_1, true);
 TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
-motor flywheel2 = motor(PORT4, ratio6_1, true);
+motor flywheel2 = motor(PORT5, ratio6_1, true);
 TestDevice(flywheel2);
 NewMotor flywheelNm = NewMotor(flyWheelMot, flywheel2);
 encoder flySensor = encoder(Brain.ThreeWirePort.A);
@@ -81,7 +81,7 @@ Pneumatics
 
 *************************************/
 
-
+pneumatics endgame = pneumatics(Brain.ThreeWirePort.C);
 /*************************************
 
 Sensors
@@ -117,7 +117,8 @@ Odometry
 
 //Positioner init
 posTp::xPortArr arrX = { };
-posTp::yPortArr arrY = { Brain.ThreeWirePort.E };
+
+posTp::yPortArr arrY = { Port(PORT6) };
 //Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, 
                         { 1.0 }, { 1.0 }, { 1.0 }, { 1.0 },

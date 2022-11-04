@@ -187,6 +187,8 @@ void drivercontrol (){
   ButtonLatch DownLatch = ButtonLatch(Greg.ButtonDown);
   ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
   ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
+  ButtonLatch LeftLatch = ButtonLatch(Greg.ButtonLeft);
+  ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
   int currentVelocity = 540;
   int flywheelI = 1;
   static bool driveReversed = false;
@@ -238,15 +240,11 @@ void drivercontrol (){
         MR.spin(fwd, s2, pct);
         BR.spin(fwd, s2, pct);
       }
-      if (UpLatch.pressing() && currentVelocity < 600) {
-        currentVelocity += 60;
-        flyTBH.addTarget(currentVelocity);
-        flyTBH.setTarget(flywheelI++);
+      if(Greg.ButtonR1.pressing()){
+        intake.spin(fwd, 100);
       }
-      if (DownLatch.pressing() && currentVelocity > 60) {
-        currentVelocity -= 60;
-        flyTBH.addTarget(currentVelocity);
-        flyTBH.setTarget(flywheelI++);
+      else {
+        intake.stop();
       }
       if (BLatch.pressing()) {
         driveReversed = !driveReversed;
@@ -258,6 +256,20 @@ void drivercontrol (){
       if(YLatch.pressing()){
         wc.turnTo(wc.botPos().angleTo({50, 50}));
       }
+      if(Greg.ButtonRight.pressing()){
+        //If continuously pressing for 0.5s, release endgame
+        int time = 0;
+        while(Greg.ButtonRight.pressing()){
+          s(10);
+          time += 10;
+          if(time >= 500){
+            endgame.open();
+            Greg.rumble("...."); 
+            break;
+          }
+        }
+      }
+      
     }
     else {    }
     s(10);
@@ -374,13 +386,13 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
   bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(windowsLoader);
-  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(printVars);
   bos::bosFns.pushBack(drawPath);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
@@ -471,6 +483,7 @@ int main() {
     cout << "<< Gyros initialized >>" << endl;
     //Gyro's initialized
     testMotorConnection();
+    // testMotorConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
     flyTBH.setTarget(0);
@@ -498,10 +511,10 @@ int main() {
   wc.path.setK(2);
   chassis.setMaxAcc(6000);
   chassis.setMaxDAcc(6000);
-  wc.generalFollow({{0, 48}, {48, 48}}, &ramsete, false);
+  // wc.generalFollow({{0, 48}, {48, 48}}, &purePursuit, false);
   chassis.coastBrake();
   // intake.spinVolt(fwd, 10000);
-  // drivercontrol();
+  drivercontrol();
   
   //autonomous();
   // Competition.autonomous(autonomous);

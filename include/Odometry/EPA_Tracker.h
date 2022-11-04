@@ -1,6 +1,7 @@
 #ifndef EPA_TRACKER_H
 #define EPA_TRACKER_H
 #include "FieldCoord.h"
+#include "Sensors/Wrappers/Encoder.h"
 //EPA_Tracker.h -- Use this file to track the robot's absolute position on the field
 //This file does so much math that it be like Beethoven 9 if it all works properly
 
@@ -41,16 +42,26 @@ struct Ref {
 // //Each encoder is used for each dimension
 // //Positioner<2, 2> has four encoders total 2x, 2y
 // template<uint encodersX, uint encodersY>
+class Port {
+  const int32_t port;
+  public:
+  Port(int32_t p): port(p){}
+  int32_t getPort(){
+    return port;
+  }
+};
 #ifndef WINDOWS
 class Positioner {
 //A few typedefs
 public:
-  typedef vector<encoder*> yEncoderArr; // Defines the type of the arrays
+  typedef vector<Encoder*> yEncoderArr; // Defines the type of the arrays
       //That the encoders will be stored in and names it encoderArr
-  typedef vector<encoder*> xEncoderArr;
-  typedef vector<Ref<vex::triport::port>> xPortArr; // Defines the type of the arrays
+  typedef vector<Encoder*> xEncoderArr;
+  typedef vector<Ref<vex::triport::port>> xTriportArr; // Defines the type of the arrays
       //That the encoders will be stored in and names it encoderArr
-  typedef vector<Ref<vex::triport::port>> yPortArr;
+  typedef vector<Ref<vex::triport::port>> yTriportArr;
+  typedef vector<Port> xPortArr;
+  typedef vector<Port> yPortArr;
   //const double size = encodersX + encodersY;
 //Private variables
 private:
@@ -104,6 +115,38 @@ public:
 
   //Accepts port array and radius
   Positioner(
+    xTriportArr xPorts, yTriportArr yPorts, 
+    xDoubleArr mX, yDoubleArr mY, 
+    xDoubleArr mNX, yDoubleArr mNY, 
+    double cDistX, double cDistY, 
+    double rad
+  ) : Positioner(mX, mY, mNX, mNY, cDistX, cDistY, rad)
+  {
+    int i = 0;
+    //I know, I know, using 'new' is bad but, like, I mean, 
+    // it's used only in the global scope, so all memory is deallocated by OS, not me
+    for(auto& port : xPorts){
+      //Allocate a completely new encoder from the heap and add it to the array
+      EncodersX.push_back(new Encoder(new encoder(port)));
+      lastX.push_back(0);
+      //Increase array access position
+      i++;
+    }
+
+    i = 0;
+    for(auto& port : yPorts){
+      lastY.push_back(0);
+      //Allocate a completely new encoder from the heap and add it to the array
+      EncodersY.push_back(new Encoder(new encoder(port)));
+      //Increase array access position
+      i++;
+    }
+    encXAmnt = EncodersX.size();
+    encYAmnt = EncodersY.size();
+    cout << "Init Odom with " << encXAmnt << " x encoders and " << encYAmnt << " y encoders" << endl;
+  }
+  //Accepts port array and radius
+  Positioner(
     xPortArr xPorts, yPortArr yPorts, 
     xDoubleArr mX, yDoubleArr mY, 
     xDoubleArr mNX, yDoubleArr mNY, 
@@ -116,7 +159,7 @@ public:
     // it's used only in the global scope, so all memory is deallocated by OS, not me
     for(auto& port : xPorts){
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersX.push_back(new encoder(port));
+      EncodersX.push_back(new Encoder(new rotation(port.getPort())));
       lastX.push_back(0);
       //Increase array access position
       i++;
@@ -126,7 +169,7 @@ public:
     for(auto& port : yPorts){
       lastY.push_back(0);
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersY.push_back(new encoder(port));
+      EncodersY.push_back(new Encoder(new rotation(port.getPort())));
       //Increase array access position
       i++;
     }

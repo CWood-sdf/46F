@@ -38,6 +38,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
   static lv_chart_series_t* serMeas;
   static lv_chart_series_t* serFilt;
   static lv_chart_series_t* serErr;
+  static lv_chart_series_t* serSent;
   static lv_obj_t* chartLabel;
   static lv_obj_t* key;
   // cout << "LO" << endl;
@@ -55,10 +56,11 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
     lv_obj_set_pos(chart, 20, 0);
 
     //Make the series
-    serTarg = lv_chart_add_series(chart, lv_color_black(), LV_CHART_AXIS_PRIMARY_Y);
+    serTarg = lv_chart_add_series(chart, lv_color_make(255, 200, 200), LV_CHART_AXIS_PRIMARY_Y);
     serMeas = lv_chart_add_series(chart, lv_color_make(255, 0, 0), LV_CHART_AXIS_PRIMARY_Y);
     serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
     serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_PRIMARY_Y);
+    serSent = lv_chart_add_series(chart, lv_color_make(0, 255, 255), LV_CHART_AXIS_PRIMARY_Y);
 
     //Make the label
     chartLabel = lv_label_create(chart);
@@ -69,8 +71,8 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
     lv_obj_set_align(key, LV_ALIGN_BOTTOM_RIGHT);
     lv_obj_set_style_bg_color(key, lv_color_make(200, 200, 200), 0);
     lv_obj_set_style_pad_all(key, 0, 0);
-    lv_obj_set_content_height(key, 100);
-    lv_obj_set_content_width(key, 80);
+    lv_obj_set_content_height(key, 120);
+    lv_obj_set_content_width(key, 100);
     lv_obj_set_style_bg_opa(key, 0, 0);
     lv_obj_set_style_border_opa(key, 0, 0);
 
@@ -79,6 +81,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
     makeKeyCont(key, "Targ", serTarg->color, 20);
     makeKeyCont(key, "meas", serMeas->color, 40);
     makeKeyCont(key, "Filt", serFilt->color, 60);
+    makeKeyCont(key, "Sent", serSent->color, 80);
     // cout << remake << endl;
     lv_chart_set_next_value(chart, serTarg, out.targetVel);
     lv_chart_set_next_value(chart, serErr, out.error);
@@ -91,6 +94,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
     lv_chart_set_next_value(chart, serErr, out.error);
     lv_chart_set_next_value(chart, serMeas, out.measuredVel);
     lv_chart_set_next_value(chart, serFilt, out.filterVel);
+    lv_chart_set_next_value(chart, serSent, out.sentVel * 6);
   }
 }
 void FlywheelTBHEncoder::init() {
@@ -244,7 +248,7 @@ void FlywheelTBHEncoder::step() {
   if(velSent > 100){
     velSent = 100;
   }
-  debug.set(err, speedEst, speed, desiredVel);
+  debug.set(err, speedEst, speed, desiredVel, velSent);
   prevErr = err;
   mots.spinVolt(fwd, velSent);
   lastVel = velSent;

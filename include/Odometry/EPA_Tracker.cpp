@@ -39,13 +39,13 @@ PVector Positioner::update(){
   if(EncodersX.size() != 0){
     for(int i = 0; i < EncodersX.size(); i++){
       //Don't do any multiplication (for speed)
-      rotX.push_back(EncodersX[i]->rotation(rotationUnits::deg));
+      rotX.push_back(EncodersX[i]->position(rotationUnits::deg));
     }
   }
   // cout << EncodersY.size() << endl;
   if(EncodersY.size() != 0){
     for(int i = 0; i < EncodersY.size(); i++){
-      rotY.push_back(EncodersY[i]->rotation(rotationUnits::deg));
+      rotY.push_back(EncodersY[i]->position(rotationUnits::deg));
       // cout << rotY[i] << endl;
       // s(1);
     }

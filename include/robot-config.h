@@ -55,7 +55,7 @@ extern BasicPidController pidController;
 Pneumatics
 
 *************************************/
-
+extern pneumatics endgame;
 
 /*************************************
 

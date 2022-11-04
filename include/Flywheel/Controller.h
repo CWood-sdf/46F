@@ -61,12 +61,14 @@ struct FlywheelDebugEl {
   double measuredVel;
   double filterVel;
   double targetVel;
+  double sentVel;
   static const int size;
-  void set(double err, double raw, double filtRetVal, double targ){
+  void set(double err, double raw, double filtRetVal, double targ, double sent){
     error = err;
     measuredVel = raw;
     filterVel = filtRetVal;
     targetVel = targ;
+    sentVel = sent;
   }
   //Sussy version
   void set(double* arr){
