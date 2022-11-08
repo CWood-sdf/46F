@@ -93,6 +93,7 @@ PIDF::PIDF(double p, double i, double d) : PIDF(KVals({p, i, d, 0.0})){}
 PIDF::PIDF(KVals vals) : k(vals){
 
 }
+//HACK
 PIDF::PIDF(const PIDF& v){
     //i hate this but it should work
     double* doubles = (double*)&v;

@@ -1,11 +1,10 @@
 #define NO_MAKE
 #include "robot-config.h"
 std::vector<tuple<string, vex::device*>> connectedDevices = {};
-struct AddDevice {
-  AddDevice(string name, vex::device* device){
-    connectedDevices.push_back(make_tuple(name, device));
-  }
-};
+
+AddDevice::AddDevice(string name, vex::device* device){
+  connectedDevices.push_back(make_tuple(name, device));
+}
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
 #define TestDevices(device, ...) TestDevice(device); TestDevices(__VA_ARGS__)
 //Make a brain
@@ -16,16 +15,16 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 //Front Left Wheel (FL)
-motor FL = motor(PORT1, gearSetting::ratio18_1, !true);
+motor FL = motor(PORT19, gearSetting::ratio18_1, !true);
 TestDevice(FL);
 //Front Right Wheel (FR)
 motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
 TestDevice(FR);
 //Back Left Wheel (BL)
-motor BL = motor(PORT12, gearSetting::ratio18_1, !true);
+motor BL = motor(PORT18, gearSetting::ratio18_1, !true);
 TestDevice(BL);
 //Back Right Wheel (BR)
-motor BR = motor(PORT19, gearSetting::ratio18_1, !false);
+motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
 motor ML = motor(PORT17, gearSetting::ratio18_1, true);
@@ -37,18 +36,18 @@ TestDevice(MR);
 motor_group Left = motor_group(BL, ML, FL);
 motor_group Right = motor_group(BR, MR, FR);
 
-motor intakeMot = motor(PORT2, gearSetting::ratio18_1, false);
+motor intakeMot = motor(PORT17, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
-motor intakeMot2 = motor(PORT10, gearSetting::ratio18_1, true);
+motor intakeMot2 = motor(PORT5, gearSetting::ratio18_1, true);
 TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
-motor flywheel2 = motor(PORT5, ratio6_1, true);
+motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
 NewMotor flywheelNm = NewMotor(flyWheelMot, flywheel2);
-encoder flySensor = encoder(Brain.ThreeWirePort.A);
-rotation flywheelRotation = rotation(PORT5);
+// encoder flySensor = encoder(Brain.ThreeWirePort.A);
+// rotation flywheelRotation = rotation(PORT5);
 Encoder e = Encoder(flyWheelMot);
 // FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
 FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
@@ -56,7 +55,7 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //New Motors, a few reasons for this: 
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
+// NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
 NewMotor leftWhls = NewMotor(BL, FL, ML);
 NewMotor rghtWhls = NewMotor(BR, FR, MR);
 
@@ -65,14 +64,14 @@ NewMotor intake = NewMotor(intakeMot, intakeMot2);
 
 
 // /*vex-vision-config:begin*/
-vex::vision::signature BLUEGOAL = vex::vision::signature (1, -1873, 915, -479, 3997, 7001, 5499, 2.5, 0);
-vex::vision::signature REDGOAL = vex::vision::signature (2, 7225, 9019, 8122, -879, 497, -191, 3, 0);
-vex::vision::signature SIG_3 = vex::vision::signature (3, 0, 0, 0, 0, 0, 0, 2.5, 0);
-vex::vision::signature SIG_4 = vex::vision::signature (4, 0, 0, 0, 0, 0, 0, 2.5, 0);
-vex::vision::signature SIG_5 = vex::vision::signature (5, 0, 0, 0, 0, 0, 0, 2.5, 0);
-vex::vision::signature SIG_6 = vex::vision::signature (6, 0, 0, 0, 0, 0, 0, 2.5, 0);
-vex::vision::signature SIG_7 = vex::vision::signature (7, 0, 0, 0, 0, 0, 0, 2.5, 0);
-vex::vision Vision1 = vex::vision (vex::PORT1, 66, BLUEGOAL, REDGOAL, SIG_3, SIG_4, SIG_5, SIG_6, SIG_7);
+// vex::vision::signature BLUEGOAL = vex::vision::signature (1, -1873, 915, -479, 3997, 7001, 5499, 2.5, 0);
+// vex::vision::signature REDGOAL = vex::vision::signature (2, 7225, 9019, 8122, -879, 497, -191, 3, 0);
+// vex::vision::signature SIG_3 = vex::vision::signature (3, 0, 0, 0, 0, 0, 0, 2.5, 0);
+// vex::vision::signature SIG_4 = vex::vision::signature (4, 0, 0, 0, 0, 0, 0, 2.5, 0);
+// vex::vision::signature SIG_5 = vex::vision::signature (5, 0, 0, 0, 0, 0, 0, 2.5, 0);
+// vex::vision::signature SIG_6 = vex::vision::signature (6, 0, 0, 0, 0, 0, 0, 2.5, 0);
+// vex::vision::signature SIG_7 = vex::vision::signature (7, 0, 0, 0, 0, 0, 0, 2.5, 0);
+// vex::vision Vision1 = vex::vision (vex::PORT1, 66, BLUEGOAL, REDGOAL, SIG_3, SIG_4, SIG_5, SIG_6, SIG_7);
 // /*vex-vision-config:end*/
 
 /*************************************
@@ -90,17 +89,17 @@ Sensors
 
 
 //Three wire expander
-triport Expander = triport(PORT9);
-TestDevice(Expander);
+// triport Expander = triport(PORT9);
+// TestDevice(Expander);
 //Inertial Sensor
-inertial angler = inertial(PORT11);
+inertial angler = inertial(PORT16);
 TestDevice(angler);
 
 //gps
-gps GPS = gps(PORT7, 6, 4.0, inches, 0);
+gps GPS = gps(PORT10, 6, 4.0, inches, 0);
 TestDevice(GPS);
 
-optical rachetColor = optical(PORT8);
+optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
 
 LineCounter rachetDetector (Brain.ThreeWirePort.A);
@@ -118,7 +117,7 @@ Odometry
 //Positioner init
 posTp::xPortArr arrX = { };
 
-posTp::yPortArr arrY = { Port(PORT6) };
+posTp::yPortArr arrY = { Port(PORT15) };
 //Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, 
                         { 1.0 }, { 1.0 }, { 1.0 }, { 1.0 },
@@ -173,7 +172,12 @@ void testMotorConnection(){
   // TMC(BR)
   for(auto i : connectedDevices){
     if(!get<1>(i)->installed()){
-      cout << get<0>(i) << " is not connected!" << endl;
+      int32_t port = 0;
+      //POSSIBLE_PROBLEM: pointer failure
+      char* d = (char*)get<1>(i);
+      d += sizeof(V5_DeviceT);
+      port = *(int32_t*)d;
+      cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
       Greg.rumble(".");
     }
   }

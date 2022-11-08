@@ -50,7 +50,11 @@ class Port {
     return port;
   }
 };
+
 #ifndef WINDOWS
+struct AddDevice {
+  AddDevice(string name, vex::device* device);
+};
 class Positioner {
 //A few typedefs
 public:
@@ -127,7 +131,8 @@ public:
     // it's used only in the global scope, so all memory is deallocated by OS, not me
     for(auto& port : xPorts){
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersX.push_back(new Encoder(new encoder(port)));
+      Encoder* enc = new Encoder(new encoder(port));
+      EncodersX.push_back(enc);
       lastX.push_back(0);
       //Increase array access position
       i++;
@@ -136,8 +141,9 @@ public:
     i = 0;
     for(auto& port : yPorts){
       lastY.push_back(0);
+      Encoder* enc = new Encoder(new encoder(port));
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersY.push_back(new Encoder(new encoder(port)));
+      EncodersY.push_back(enc);
       //Increase array access position
       i++;
     }
@@ -159,7 +165,9 @@ public:
     // it's used only in the global scope, so all memory is deallocated by OS, not me
     for(auto& port : xPorts){
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersX.push_back(new Encoder(new rotation(port.getPort())));
+      Encoder* enc = new Encoder(new rotation(port.getPort()));
+      EncodersX.push_back(enc);
+      AddDevice("Odom X Encoder " + toCcp(i), (vex::device*)enc);
       lastX.push_back(0);
       //Increase array access position
       i++;
@@ -168,8 +176,10 @@ public:
     i = 0;
     for(auto& port : yPorts){
       lastY.push_back(0);
+      Encoder* enc = new Encoder(new rotation(port.getPort()));
       //Allocate a completely new encoder from the heap and add it to the array
-      EncodersY.push_back(new Encoder(new rotation(port.getPort())));
+      EncodersY.push_back(enc);
+      AddDevice("Odom Y Encoder " + toCcp(i), (vex::device*)enc);
       //Increase array access position
       i++;
     }
