@@ -49,22 +49,28 @@ Auton winPoint = "Win Point" + [](){
 Auton purePursuitTest1 = "pptline" + [](){
   // wc.estimateStartPos(PVector(0, 0), 0);
   testPrintData = "pure pursuit line";
+  // leftWhls.spinVolt(fwd, 100);
+  // rghtWhls.spinVolt(fwd, 100);
+  // s(500);
+  // chassis.coastBrake();
   long startTime = Brain.Timer.system();
-  wc.followPath(&purePursuit, {PVector(0, 60)});
+  wc.followPath(&pidController, {PVector(0, -48)});
   auto oldPath = wc.publicPath;
   double timeTaken = static_cast<double>(Brain.Timer.system() - startTime)/1000.0;
   //Get avg velocity (inches per second)
   double avgVel = oldPath.getLength() / timeTaken;
   double avgPctVel = chassis.realToPct(avgVel);
-  testPrintData += " time taken: " + toCcp(timeTaken) + "s";
-  testPrintData += " avg vel: " + toCcp(avgVel) + "in/s";
-  testPrintData += " avg pct vel: " + toCcp(avgPctVel) + "%";
+  testPrintData += " \ntime taken: " + toCcp(timeTaken) + "s";
+  testPrintData += " \navg vel: " + toCcp(avgVel) + "in/s";
+  testPrintData += " \navg pct vel: " + toCcp(avgPctVel) + "%";
+  // s(40000);
 };
 Auton purePursuitTest2 = "pptcurve" + [](){
   // wc.estimateStartPos(PVector(0, 0), 0);
   testPrintData = "pure pursuit curve (2 ctrl pts)";
   long startTime = Brain.Timer.system();
-  wc.followPath(&purePursuit, {PVector(0, 60), PVector(60, 60)});
+  wc.setExitDist(6);
+  wc.followPath(&purePursuit, {PVector(0, -48), PVector(-48, -48)});
   auto oldPath = wc.publicPath;
   double timeTaken = static_cast<double>(Brain.Timer.system() - startTime)/1000.0;
   //Get avg velocity (inches per second)

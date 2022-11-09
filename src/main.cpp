@@ -27,6 +27,8 @@ The Plan
 -Vision sensor goal positioning
 */
 //main.cpp
+#include "BrainOS/VariableConfig.h"
+#include "BrainOS/ConnectionTest.h"
 #include "Autons/Autons.h"
 using namespace ClassFns;
 using namespace vex;
@@ -94,7 +96,7 @@ void turnLeft(int t){
 //   cout << "Turn P" << endl;
 //   while(1){
 //     if(isPressing(Greg.ButtonA)){
-//       wc.addTurnPid(0, 0, 0);
+//       wc.addTurnPid(0, 0, 0);p
 //       break;
 //     }
 //     if(isPressing(Greg.ButtonB)){
@@ -139,7 +141,7 @@ void autonomous(){
   autonInit();
   //Put auton call here
   Auton::callAuton();
-  wc.driveTo(1, 1);
+  // wc.driveTo(1, 1);
   //Print time
   cout << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
@@ -225,20 +227,12 @@ void drivercontrol (){
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
       if (driveReversed) {
-        FL.spin(vex::reverse, s2, pct);
-        ML.spin(vex::reverse, s2, pct);
-        BL.spin(vex::reverse, s2, pct);
-        FR.spin(vex::reverse, s1, pct);
-        MR.spin(vex::reverse, s1, pct);
-        BR.spin(vex::reverse, s1, pct);
+        leftWhls.spin(vex::reverse, s1, pct);
+        rghtWhls.spin(vex::reverse, s2, pct);
       }
       else {
-        FL.spin(fwd, s1, pct);
-        ML.spin(fwd, s1, pct);
-        BL.spin(fwd, s1, pct);
-        FR.spin(fwd, s2, pct);
-        MR.spin(fwd, s2, pct);
-        BR.spin(fwd, s2, pct);
+        leftWhls.spin(fwd, s1, pct);
+        rghtWhls.spin(fwd, s2, pct);
       }
       if(Greg.ButtonR1.pressing()){
         intake.spin(fwd, 100);
@@ -386,16 +380,17 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(testConnection);
+  bos::bosFns.pushBack(VariableConfig::drawAll);
+  bos::bosFns.pushBack(bos::BosFn(printTestData));
   bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
   bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
-  bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(windowsLoader);
   bos::bosFns.pushBack(printVars);
   bos::bosFns.pushBack(drawPath);
-  bos::bosFns.pushBack(bos::BosFn(printTestData));
 
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;
@@ -486,7 +481,8 @@ int main() {
     // testMotorConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
-    flyTBH.setTarget(0);
+    // flyTBH.setTarget(0);
+    flyTBH.setTargetSpeed(0);
     cout << "<< Flywheel initialized >>" << endl;
     s(500);
     init = true;
@@ -506,14 +502,15 @@ int main() {
 
   thread flywheelControl = thread(runFlywheel);
   // chassis.setSpeedLimit(30);
-  VectorArr path = VectorArr();
-  purePursuit.setTurn();
+  // VectorArr path = VectorArr();
+  // purePursuit.setTurn();
   wc.path.setK(2);
   chassis.setMaxAcc(6000);
   chassis.setMaxDAcc(6000);
-  // wc.generalFollow({{0, 48}, {48, 48}}, &purePursuit, false);
-  chassis.coastBrake();
+  // // wc.generalFollow({{0, 48}, {48, 48}}, &purePursuit, false);
+  // chassis.coastBrake();
   // intake.spinVolt(fwd, 10000);
+  // autonomous();
   drivercontrol();
   
   //autonomous();

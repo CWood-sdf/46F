@@ -124,33 +124,7 @@ public:
     xDoubleArr mNX, yDoubleArr mNY, 
     double cDistX, double cDistY, 
     double rad
-  ) : Positioner(mX, mY, mNX, mNY, cDistX, cDistY, rad)
-  {
-    int i = 0;
-    //I know, I know, using 'new' is bad but, like, I mean, 
-    // it's used only in the global scope, so all memory is deallocated by OS, not me
-    for(auto& port : xPorts){
-      //Allocate a completely new encoder from the heap and add it to the array
-      Encoder* enc = new Encoder(new encoder(port));
-      EncodersX.push_back(enc);
-      lastX.push_back(0);
-      //Increase array access position
-      i++;
-    }
-
-    i = 0;
-    for(auto& port : yPorts){
-      lastY.push_back(0);
-      Encoder* enc = new Encoder(new encoder(port));
-      //Allocate a completely new encoder from the heap and add it to the array
-      EncodersY.push_back(enc);
-      //Increase array access position
-      i++;
-    }
-    encXAmnt = EncodersX.size();
-    encYAmnt = EncodersY.size();
-    cout << "Init Odom with " << encXAmnt << " x encoders and " << encYAmnt << " y encoders" << endl;
-  }
+  );
   //Accepts port array and radius
   Positioner(
     xPortArr xPorts, yPortArr yPorts, 
@@ -158,37 +132,8 @@ public:
     xDoubleArr mNX, yDoubleArr mNY, 
     double cDistX, double cDistY, 
     double rad
-  ) : Positioner(mX, mY, mNX, mNY, cDistX, cDistY, rad)
-  {
-    int i = 0;
-    //I know, I know, using 'new' is bad but, like, I mean, 
-    // it's used only in the global scope, so all memory is deallocated by OS, not me
-    for(auto& port : xPorts){
-      //Allocate a completely new encoder from the heap and add it to the array
-      Encoder* enc = new Encoder(new rotation(port.getPort()));
-      EncodersX.push_back(enc);
-      AddDevice("Odom X Encoder " + toCcp(i), (vex::device*)enc);
-      lastX.push_back(0);
-      //Increase array access position
-      i++;
-    }
-
-    i = 0;
-    for(auto& port : yPorts){
-      lastY.push_back(0);
-      Encoder* enc = new Encoder(new rotation(port.getPort()));
-      //Allocate a completely new encoder from the heap and add it to the array
-      EncodersY.push_back(enc);
-      AddDevice("Odom Y Encoder " + toCcp(i), (vex::device*)enc);
-      //Increase array access position
-      i++;
-    }
-    encXAmnt = EncodersX.size();
-    encYAmnt = EncodersY.size();
-    cout << "Init Odom with " << encXAmnt << " x encoders and " << encYAmnt << " y encoders" << endl;
-  }
-  Positioner(){
-  }
+  );
+  Positioner();
   //Function that updates the position
   //80+ lines of trig, vector math, and some sensor stuff
   PVector update();

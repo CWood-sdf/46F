@@ -701,7 +701,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     cout << "S: " << speed << endl;
     // Mindblowing lines right here
     // Move the robot
-    chassis->driveFromDiff(-speed, -rightExtra, fwd);
+    chassis->driveFromDiff(speed, -rightExtra, fwd);
     lastPos = botPos();
     // Sleep (WOW, HE'S A GENIUS)
     

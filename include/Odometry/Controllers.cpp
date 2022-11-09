@@ -196,7 +196,8 @@ BasicPidController::followToRet BasicPidController::followTo(Input &input){
   double normAngle = posNeg180(input.angleTarget - input.currentAngle);
   cout << normAngle << endl;
   double fwdVel = -ctrl.getVal(dist);
-  double turnVel = slave.getVal(normAngle);
+  double turnVel = slave.getVal(posNeg180(normAngle));
+
   return {{fwdVel, Controller::ForwardVel::pct}, {turnVel, Controller::AngularVel::pctDiff}};
 }
 void BasicPidController::init(){

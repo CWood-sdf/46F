@@ -18,14 +18,11 @@ double Chassis::botAngle(){
   #endif
 }
 #ifndef WINDOWS
-Chassis::Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p){
-  leftWheels = left;
-  rightWheels = right;
+Chassis::Chassis(NewMotor& left, NewMotor& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p), leftWheels(left), rightWheels(right){
 
   this->trackWidth = trackWidth;
   this->gearRatio = gearRatio;
   this->wheelRad = wheelRad;
-  this->cartridge = cartridge;
 }
 #else
 Chassis::Chassis(double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) {
@@ -104,6 +101,7 @@ void Chassis::driveFromDiff(double speed, double diff, directionType d){
   double right = speed - diff;
   lastLeftSpeed = left;
   lastRightSpeed = right;
+  cout << left << ", " << right << endl;
   #ifndef TEST
   leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
   rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));

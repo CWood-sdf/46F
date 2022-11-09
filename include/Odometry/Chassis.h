@@ -56,8 +56,8 @@ struct Chassis {
   double maxAcc = 100; // in/s^2
   double maxDAcc = 80; // in/s^2
   #ifndef WINDOWS
-  NewMotor leftWheels;
-  NewMotor rightWheels;
+  NewMotor& leftWheels;
+  NewMotor& rightWheels;
   vector<bool> ptoMotorsLeft = vector<bool>();
   vector<bool> ptoMotorsRight = vector<bool>();
   vector<pneumatics*> ptoPneumatics = vector<pneumatics*>();
@@ -126,7 +126,7 @@ struct Chassis {
   chain_method setMaxDAcc(double v);
   chain_method setSpeedLimit(double v);
   #ifndef WINDOWS
-  Chassis(vector<Ref<motor>> left, vector<Ref<motor>> right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
+  Chassis(NewMotor& left, NewMotor& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
   #else
   Chassis(double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
   #endif

@@ -27,14 +27,14 @@ TestDevice(BL);
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT17, gearSetting::ratio18_1, true);
-TestDevice(ML);
-//Middle Right Wheel (MR)
-motor MR = motor(PORT8, gearSetting::ratio18_1, false);
-TestDevice(MR);
+// motor ML = motor(PORT17, gearSetting::ratio18_1, true);
+// TestDevice(ML);
+// //Middle Right Wheel (MR)
+// motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+// TestDevice(MR);
 
-motor_group Left = motor_group(BL, ML, FL);
-motor_group Right = motor_group(BR, MR, FR);
+motor_group Left = motor_group(BL, FL);
+motor_group Right = motor_group(BR, FR);
 
 motor intakeMot = motor(PORT17, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
@@ -56,8 +56,8 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 // NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
-NewMotor leftWhls = NewMotor(BL, FL, ML);
-NewMotor rghtWhls = NewMotor(BR, FR, MR);
+NewMotor leftWhls = NewMotor(BL, FL);
+NewMotor rghtWhls = NewMotor(BR, FR);
 
 NewMotor intake = NewMotor(intakeMot, intakeMot2);
 
@@ -120,7 +120,7 @@ posTp::xPortArr arrX = { };
 posTp::yPortArr arrY = { Port(PORT15) };
 //Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, 
-                        { 1.0 }, { 1.0 }, { 1.0 }, { 1.0 },
+                        { -1.0 }, { -1.0 }, { -1.0 }, { -1.0 },
                          0.0 ,  0.0 ,
                         1.375);
 
@@ -128,10 +128,10 @@ GPS_Share share = GPS_Share(positioner, GPS);
 
 //Wheel controller
 
-Chassis chassis = Chassis({BL, ML, FL}, {BR, MR, FR}, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
+Chassis chassis = Chassis(leftWhls, rghtWhls, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
 PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(0.0108, 0.2);
-BasicPidController pidController = BasicPidController(PIDF(6.25, 0.1, 2.4325, 20, 4, 1), PID(6.0, 0, 0, 0, 0, 0));
+BasicPidController pidController = BasicPidController(PIDF(6.25, 0.1, 2.4325, 20, 6, 1), PID(2.0, 0, 0.1, 0, 0, 0));
 Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(2.42, 0.2, 1.35, 0, 20, 4), 1.0);
 
 /*************************************
@@ -155,11 +155,11 @@ void graphFlywheelTBH(bool remake){
 #define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
 void testMotorConfiguration(){
   TEST_MOT(FL)
-  TEST_MOT(ML)
+  // TEST_MOT(ML)
   TEST_MOT(BL)
   s(1000);
   TEST_MOT(FR)
-  TEST_MOT(MR)
+  // TEST_MOT(MR)
   TEST_MOT(BR)
 }
 #define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
@@ -171,12 +171,8 @@ void testMotorConnection(){
   // TMC(MR)
   // TMC(BR)
   for(auto i : connectedDevices){
-    if(!get<1>(i)->installed()){
-      int32_t port = 0;
-      //POSSIBLE_PROBLEM: pointer failure
-      char* d = (char*)get<1>(i);
-      d += sizeof(V5_DeviceT);
-      port = *(int32_t*)d;
+    if(!get<1>(i)->installed()){\
+      int32_t port = get<1>(i)->index() + 1;
       cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
       Greg.rumble(".");
     }
