@@ -96,7 +96,7 @@ inertial angler = inertial(PORT16);
 TestDevice(angler);
 
 //gps
-gps GPS = gps(PORT10, 6, 4.0, inches, 0);
+gps GPS = gps(PORT7, 6, 4.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);
@@ -131,7 +131,7 @@ GPS_Share share = GPS_Share(positioner, GPS);
 Chassis chassis = Chassis(leftWhls, rghtWhls, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
 PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(0.0108, 0.2);
-BasicPidController pidController = BasicPidController(PIDF(6.25, 0.1, 2.4325, 20, 6, 1), PID(2.0, 0, 0.1, 0, 0, 0));
+BasicPidController pidController = BasicPidController(PIDF(6.25, 0.1, 2.4325, 20, 6, 1), PID(1.0, 0, 0.3, 0, 0, 0));
 Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(2.42, 0.2, 1.35, 0, 20, 4), 1.0);
 
 /*************************************

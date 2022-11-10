@@ -436,7 +436,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = exitDist == 0.0 ? 2.0 : exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
-#undef DEBUG
+#define DEBUG
 #ifdef DEBUG
   struct
   {
@@ -711,7 +711,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     #endif
 
 #ifdef DEBUG
-    realTime.add(speed, pos.velocity(), targetSpeeds[nearestIndex], botPos(), botAngle(), ctrl.p, ctrl.d, slaveCtrl.p, slaveCtrl.d, pursuit);
+    realTime.add(speed, 0, path[nearestIndex].targetSpeed, botPos(), botAngle(), normAngle, input.dist, -rightExtra, 0, pursuit);
 #endif
   }
   moving = false;
@@ -742,7 +742,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
   controller->deInit();
 // Print all the lists
 #ifdef DEBUG
-  s(1000);
+  s(20000);
   cout << endl
        << endl;
   cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";

@@ -32,6 +32,55 @@ The Plan
 #include "Autons/Autons.h"
 using namespace ClassFns;
 using namespace vex;
+void spinRoller() {
+  rachetColor.setLightPower(50, percent);
+  bool targetRed = wc.isRed();
+  
+  auto hue = rachetColor.hue();
+  bool isRed = hue > 300 || hue < 60;
+  bool lastRed = isRed;
+  chassis.driveFromDiff(-60, 0, fwd);
+  int count = 0;
+  bool countUp = true;
+  while(1){
+    if(isRed != lastRed && isRed == targetRed){
+      break;
+    }
+    intake.spin(fwd, 50);
+    auto hue = rachetColor.hue();
+    lastRed = isRed;
+    isRed = hue > 300 || hue < 60;
+    cout << hue << ", " << isRed << ", " << targetRed << endl;
+    // if(!isRed){
+    //   if(abs(hue - 240) < 60){
+    //     isRed = false;
+    //   }
+    //   else {
+    //     //Ambiguous colors, set isRed to lastRed to prevent exit
+    //     isRed = lastRed;
+    //   }
+    // }
+    if(countUp){
+      count++;
+    }
+    else {
+      count--;
+    }
+    if(count == 20){
+      countUp = false;
+      chassis.driveFromDiff(30, 0, fwd);
+    }
+    else if(count == 0){
+      countUp = true;
+      chassis.driveFromDiff(-80, 0, fwd);
+    }
+    s(10);
+  }
+  chassis.coastBrake();
+  intake.stop(hold);
+  //Give the system some time to clear momentum
+  s(300);
+}
 competition Competition;//
 //Returns true if a button is pressing at the start, but doesn't return until button releaseed
 bool isPressing(const controller::button& btn){
@@ -191,8 +240,11 @@ void drivercontrol (){
   ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
   ButtonLatch LeftLatch = ButtonLatch(Greg.ButtonLeft);
   ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
+  ButtonLatch L1Latch = ButtonLatch(Greg.ButtonL1);
+  ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   int currentVelocity = 540;
   int flywheelI = 1;
+  flyTBH.setTargetSpeed(510);
   static bool driveReversed = false;
   //Protection from multiple instances of drivercontrol running
   //Is true if there is no instance of drivercontrol running
@@ -210,13 +262,14 @@ void drivercontrol (){
   countsExist.push_back({true, &primary});
   //The index of this drivercontrol instance in countsExist
   int localCount = count;
+  int flywheelSpeed = 0;
   count++;
   while(1){
     //Place driver code in here
     if (primary) {
       //Drive control, uses quotient/square for smoothness
-      double Y1 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
-      double X1 = abs(Greg.Axis1.value()) > sensitivity ? Greg.Axis1.value() : 0;
+      double Y1 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
+      double X1 = abs(Greg.Axis4.value()) > sensitivity ? Greg.Axis4.value() : 0;
       // Y1 /= 10;
       // Y1 *= Y1;
       // Y2 /= 10;
@@ -226,6 +279,20 @@ void drivercontrol (){
 
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
+      if(L1Latch.pressing()){
+        flywheelSpeed += 600 / 10;
+        if(flywheelSpeed > 600){
+          flywheelSpeed = 600;
+        }
+        flyTBH.setTargetSpeed(flywheelSpeed);
+      }
+      if(L2Latch.pressing()){
+        flywheelSpeed -= 600 / 10;
+        if(flywheelSpeed < 0){
+          flywheelSpeed = 0;
+        }
+        flyTBH.setTargetSpeed(flywheelSpeed);
+      }
       if (driveReversed) {
         leftWhls.spin(vex::reverse, s1, pct);
         rghtWhls.spin(vex::reverse, s2, pct);
@@ -237,12 +304,15 @@ void drivercontrol (){
       if(Greg.ButtonR1.pressing()){
         intake.spin(fwd, 100);
       }
-      else {
-        intake.stop();
+      else if(Greg.ButtonR2.pressing()){
+        intake.spin(vex::reverse, 100);
       }
-      if (BLatch.pressing()) {
-        driveReversed = !driveReversed;
+      else{
+        intake.stop(hold);
       }
+      // if (BLatch.pressing()) {
+      //   driveReversed = !driveReversed;
+      // }
 
       if(XLatch.pressing()){
         wc.turnTo(wc.botPos().angleTo({-50, -50}));
@@ -380,10 +450,10 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
-  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
   bos::bosFns.pushBack(fn);
@@ -504,13 +574,67 @@ int main() {
   // chassis.setSpeedLimit(30);
   // VectorArr path = VectorArr();
   // purePursuit.setTurn();
+  auto start = Brain.Timer.system();
   wc.path.setK(2);
-  chassis.setMaxAcc(6000);
-  chassis.setMaxDAcc(6000);
+  chassis.setMaxAcc(1000);
+  chassis.setMaxDAcc(1000);
+  wc.setExitMode(BasicWheelController::exitMode::coast);
   // // wc.generalFollow({{0, 48}, {48, 48}}, &purePursuit, false);
   // chassis.coastBrake();
   // intake.spinVolt(fwd, 10000);
   // autonomous();
+  // testPrintData = "pure pursuit line";
+  // // leftWhls.spinVolt(fwd, 100);
+  // // rghtWhls.spinVolt(fwd, 100);
+  // // s(500);
+  // // chassis.coastBrake();
+
+
+  // flyTBH.setTargetSpeed(520);
+  // flyTBH.setDisabled(true);
+  // auto acc = flyTBH.maxRateGain;
+  // flyTBH.maxRateGain = 100;
+  // flywheelNm.spin(fwd, 52000/600);
+  // s(2000);
+  // flyTBH.setDisabled(false);
+  // flyTBH.maxRateGain = acc;
+  // s(50);
+  
+  // // wc.faceTarget({-40.79, 50.06});
+  // while(!flyTBH.ready()){
+  //   s(10);
+  // }
+  // intake.spin(fwd, 100);
+  // s(5000);
+  // for(int i = 0; i < 10; i++){
+  //   rachetColor.setLightPower(50, percent);
+  //   auto hue = rachetColor.hue();
+  //   s(10);
+  // }
+  // pidController.setTurn();
+  // wc.setExitDist(3.0);
+  // wc.turnTo(0);
+  // // wc.estimateStartPos(PVector(61.32, -40.98), 270.53);
+  // spinRoller();
+  // cout << "Time taken: " << Brain.Timer.system() - start << endl;
+
+
+
+
+  // long startTime = Brain.Timer.system();
+  // wc.followPath(&pidController, {PVector(0, 48)});
+  // auto oldPath = wc.publicPath;
+  // double timeTaken = static_cast<double>(Brain.Timer.system() - startTime)/1000.0;
+  // //Get avg velocity (inches per second)
+  // double avgVel = oldPath.getLength() / timeTaken;
+  // double avgPctVel = chassis.realToPct(avgVel);
+  // testPrintData += " \ntime taken: " + toCcp(timeTaken) + "s";
+  // testPrintData += " \navg vel: " + toCcp(avgVel) + "in/s";
+  // testPrintData += " \navg pct vel: " + toCcp(avgPctVel) + "%";
+  // spinRoller();
+  // cout << "1" << endl;
+  // spinRoller();
+  // cout << "Done spinning" << endl;
   drivercontrol();
   
   //autonomous();

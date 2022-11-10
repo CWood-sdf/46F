@@ -99,9 +99,12 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
 }
 void FlywheelTBHEncoder::init() {
   gain = 0.025;
-  maxRateGain = 1.5;
-  maxRateDrop = 2;
+  maxRateGain = 0.5;
+  maxRateDrop = 1;
   velCheck = Settled(10, 0.2, 500);
+}
+void FlywheelTBHEncoder::setDisabled(bool p){
+  disabled = p;
 }
 void FlywheelTBHEncoder::graph(bool remake) {
   basicGraph(remake, "TBHE ctrl", debug);
@@ -148,7 +151,9 @@ void FlywheelTBHEncoder::addTarget(double t) {
   velTargets.push_back(t);
   initialTbh.push_back(t / 6.0);
 }
-
+bool FlywheelTBHEncoder::ready(){
+  return velCheck.settled();
+}
 void FlywheelTBHEncoder::step() {
   if (!hasTarget) return;
   //A lot of variables
@@ -250,7 +255,9 @@ void FlywheelTBHEncoder::step() {
   }
   debug.set(err, speedEst, speed, desiredVel, velSent);
   prevErr = err;
-  mots.spinVolt(fwd, velSent);
+  if(!disabled){
+    mots.spinVolt(fwd, velSent);
+  }
   lastVel = velSent;
   s(5);
 }
