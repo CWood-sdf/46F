@@ -574,72 +574,14 @@ int main() {
   // chassis.setSpeedLimit(30);
   // VectorArr path = VectorArr();
   // purePursuit.setTurn();
-  auto start = Brain.Timer.system();
   wc.path.setK(2);
   chassis.setMaxAcc(1000);
   chassis.setMaxDAcc(1000);
   wc.setExitMode(BasicWheelController::exitMode::coast);
-  // // wc.generalFollow({{0, 48}, {48, 48}}, &purePursuit, false);
-  // chassis.coastBrake();
-  // intake.spinVolt(fwd, 10000);
-  // autonomous();
-  // testPrintData = "pure pursuit line";
-  // // leftWhls.spinVolt(fwd, 100);
-  // // rghtWhls.spinVolt(fwd, 100);
-  // // s(500);
-  // // chassis.coastBrake();
 
-
-  // flyTBH.setTargetSpeed(520);
-  // flyTBH.setDisabled(true);
-  // auto acc = flyTBH.maxRateGain;
-  // flyTBH.maxRateGain = 100;
-  // flywheelNm.spin(fwd, 52000/600);
-  // s(2000);
-  // flyTBH.setDisabled(false);
-  // flyTBH.maxRateGain = acc;
-  // s(50);
-  
-  // // wc.faceTarget({-40.79, 50.06});
-  // while(!flyTBH.ready()){
-  //   s(10);
-  // }
-  // intake.spin(fwd, 100);
-  // s(5000);
-  // for(int i = 0; i < 10; i++){
-  //   rachetColor.setLightPower(50, percent);
-  //   auto hue = rachetColor.hue();
-  //   s(10);
-  // }
-  // pidController.setTurn();
-  // wc.setExitDist(3.0);
-  // wc.turnTo(0);
-  // // wc.estimateStartPos(PVector(61.32, -40.98), 270.53);
-  // spinRoller();
-  // cout << "Time taken: " << Brain.Timer.system() - start << endl;
-
-
-
-
-  // long startTime = Brain.Timer.system();
-  // wc.followPath(&pidController, {PVector(0, 48)});
-  // auto oldPath = wc.publicPath;
-  // double timeTaken = static_cast<double>(Brain.Timer.system() - startTime)/1000.0;
-  // //Get avg velocity (inches per second)
-  // double avgVel = oldPath.getLength() / timeTaken;
-  // double avgPctVel = chassis.realToPct(avgVel);
-  // testPrintData += " \ntime taken: " + toCcp(timeTaken) + "s";
-  // testPrintData += " \navg vel: " + toCcp(avgVel) + "in/s";
-  // testPrintData += " \navg pct vel: " + toCcp(avgPctVel) + "%";
-  // spinRoller();
-  // cout << "1" << endl;
-  // spinRoller();
-  // cout << "Done spinning" << endl;
-  drivercontrol();
-  
   //autonomous();
-  // Competition.autonomous(autonomous);
-  // Competition.drivercontrol(drivercontrol);
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
 
   //Prevent main from exiting
   while(1){
