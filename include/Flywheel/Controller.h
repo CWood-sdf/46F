@@ -131,11 +131,12 @@ class FlywheelTBHEncoder : public Empty {
   double gain;
   Settled velCheck = Settled(10, 10, 500);
   int target;
-  double maxRateDrop = 2;
-  double maxRateGain = 4;
   FlywheelDebugEl debug;
   bool hasTarget = false;
+  bool disabled = false;
 public:
+  double maxRateDrop = 2;
+  double maxRateGain = 4;
   FlywheelTBHEncoder(NewMotor& m, Encoder en);
   FlywheelTBHEncoder(NewMotor& m);
   void setTarget(int i);
@@ -145,6 +146,7 @@ public:
   void graph(bool);
   void init();
   bool ready();
+  void setDisabled(bool d);
 };
 class EMA_D : public PIDF_Extension {
   EMA dFilter = EMA(0.7, 0);
