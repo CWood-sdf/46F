@@ -368,13 +368,10 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       dist += bezier[i].dist2D(bezier[i + 1]);
       i++;
     }
-    if (!controller->isTurnAtStart())
-    {
-      callingInDrive = true;
-      auto angle = botPos().angleTo(bezier[i - 1]);
-      turnTo(angle + 180.0 * !isNeg);
-      callingInDrive = false;
-    }
+    callingInDrive = true;
+    auto angle = botPos().angleTo(bezier[i - 1]);
+    turnTo(angle + 180.0 * !isNeg);
+    callingInDrive = false;
     // cout << "Cool" << endl;
     cout << "Turn Done" << endl;
     afterTurn();
