@@ -1,71 +1,71 @@
 {
-    "env": {
-        "vex_compilerPath": "${config:vexcode.Cpp.Toolchain.Path}/clang/bin",
-        "vex_sdkPath": "${config:vexcode.Cpp.Sdk.Home}/V5/V5_20220726_10_00_00/vexv5",
-        "vex_gcc": "${vex_sdkPath}/gcc/include/c++/4.9.3",
-        "vex_sdkIncludes": [
-            "${vex_sdkPath}/include/**",
-            "${vex_sdkPath}/gcc/include/**",
-            "${vex_sdkPath}/gcc/include/machine/**",
-            "${vex_sdkPath}/gcc/include/newlib-nano/**",
-            "${vex_sdkPath}/gcc/include/sys/**",
-            "${vex_sdkPath}/clang/8.0.0/include/**",
-            "${vex_gcc}/",
-            "${workspaceFolder}/include/**",
-            "${workspaceFolder}/src/**"
-        ]
-    },
-    "configurations": [
-        {
-            "name": "Win32",
-            "includePath": [
-                "${vex_sdkIncludes}",
-                "${workspaceFolder}/**",
-                "${workspaceFolder}"
-            ],
-            "compilerPath": "${vex_compilerPath}/clang.exe",
-            "cStandard": "gnu99",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-clang-x86",
-            "configurationProvider": "ms-vscode.cpptools"
-        },
-        {
-            "name": "Mac",
-            "includePath": [
-                "${vex_sdkIncludes}"
-            ],
-            "compilerPath": "${vex_compilerPath}",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++11",
-            "intelliSenseMode": "macos-clang-x86"
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "${vex_sdkIncludes}",
-                "${workspaceFolder}"
-            ],
-            "compilerPath": "",
-            "cStandard": "gnu99",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-clang-x86"
-        },
-        {
-            "name": "VsCodeConfig",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
-        }
-    ],
-    "version": 4
+	"env": {
+		"vex_compilerPath": "${config:vexcode.Cpp.Toolchain.Path}\\clang\\bin\\clang",
+		"vex_sdkPath": "${config:vexcode.Cpp.Sdk.Home}\\V5\\V5_20220726_10_00_00\\vexv5",
+		"vex_gcc": "${vex_sdkPath}/gcc/include/c++/4.9.3",
+		"vex_sdkIncludes": [
+			"${vex_sdkPath}/include/**",
+			"${vex_sdkPath}/gcc/include/**",
+			"${vex_sdkPath}/gcc/include/machine/**",
+			"${vex_sdkPath}/gcc/include/newlib-nano/**",
+			"${vex_sdkPath}/gcc/include/sys/**",
+			"${vex_sdkPath}/clang/8.0.0/include/**",
+			"${vex_gcc}/",
+			"${workspaceFolder}/include/**",
+			"${workspaceFolder}/src/**"
+		]
+	},
+	"configurations": [
+		{
+			"name": "Win32",
+			"includePath": [
+				"${vex_sdkIncludes}",
+				"${workspaceFolder}/**",
+				"${workspaceFolder}"
+			],
+			"compilerPath": "${vex_compilerPath}",
+			"cStandard": "gnu99",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "windows-clang-x86",
+			"configurationProvider": "ms-vscode.cpptools"
+		},
+		{
+			"name": "Mac",
+			"includePath": [
+				"${vex_sdkIncludes}"
+			],
+			"compilerPath": "${vex_compilerPath}",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "macos-clang-x86"
+		},
+		{
+			"name": "Linux",
+			"includePath": [
+				"${vex_sdkIncludes}",
+				"${workspaceFolder}"
+			],
+			"compilerPath": "",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++17",
+			"intelliSenseMode": "linux-clang-x86"
+		},
+		{
+			"name": "VsCodeConfig",
+			"includePath": [
+				"${workspaceFolder}/**"
+			],
+			"defines": [
+				"_DEBUG",
+				"UNICODE",
+				"_UNICODE"
+			],
+			"windowsSdkVersion": "10.0.19041.0",
+			"compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x64/cl.exe",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"intelliSenseMode": "windows-msvc-x64"
+		}
+	],
+	"version": 4
 }

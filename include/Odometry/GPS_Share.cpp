@@ -77,8 +77,8 @@ void GPS_Share::update(){
 }
 void GPS_Share::setPos(PVector v, double a){
     pos.pos = v;
-    botAngles.x = a;
-    pos.angle = 0;
+    // botAngles.x = a;
+    pos.angle = a;
     update();
 }
 #endif

@@ -43,10 +43,10 @@ void spinRoller() {
   int count = 0;
   bool countUp = true;
   while(1){
-    if(isRed != lastRed && isRed == targetRed){
+    if(isRed != lastRed && isRed != targetRed){
       break;
     }
-    intake.spin(fwd, 50);
+    intake.spin(vex::reverse, 50);
     auto hue = rachetColor.hue();
     lastRed = isRed;
     isRed = hue > 300 || hue < 60;
@@ -76,7 +76,7 @@ void spinRoller() {
     }
     s(10);
   }
-  intake.spin(fwd, -100);
+  intake.spin(vex::reverse, -100);
   chassis.driveFromDiff(-60, 0, fwd);
   s(500);
   chassis.coastBrake();
@@ -296,6 +296,12 @@ void drivercontrol (){
         }
         flyTBH.setTargetSpeed(flywheelSpeed);
       }
+      if(Greg.ButtonLeft.pressing()){
+        s1 = -50, s2 = 50;
+      }
+      if(Greg.ButtonRight.pressing()){
+        s1 = 50, s2 = -50;
+      }
       if (driveReversed) {
         leftWhls.spin(vex::reverse, s1, pct);
         rghtWhls.spin(vex::reverse, s2, pct);
@@ -323,19 +329,19 @@ void drivercontrol (){
       if(YLatch.pressing()){
         wc.turnTo(wc.botPos().angleTo({50, 50}));
       }
-      if(Greg.ButtonRight.pressing()){
-        //If continuously pressing for 0.5s, release endgame
-        int time = 0;
-        while(Greg.ButtonRight.pressing()){
-          s(10);
-          time += 10;
-          if(time >= 500){
-            endgame.open();
-            Greg.rumble("...."); 
-            break;
-          }
-        }
-      }
+      // if(Greg.ButtonRight.pressing()){
+      //   //If continuously pressing for 0.5s, release endgame
+      //   int time = 0;
+      //   while(Greg.ButtonRight.pressing()){
+      //     s(10);
+      //     time += 10;
+      //     if(time >= 500){
+      //       endgame.open();
+      //       Greg.rumble("...."); 
+      //       break;
+      //     }
+      //   }
+      // }
       
     }
     else {    }
@@ -645,6 +651,8 @@ int main() {
   // wc.backwardsFollow(&pidController, {PVector(-39.72, 60.73)});
   
   // wc.setExitMode(BasicWheelController::exitMode::coast);
+  // spinRoller();
+  // wc.estimateStartPos(PVector(0, 0), 0);
   // spinRoller();
 
 

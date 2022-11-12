@@ -20,26 +20,45 @@ Auton leftA = "Left" + [](){
   }
   intake.spin(fwd, 100);
   s(5000);
+  intake.stop(hold);
+  flyTBH.setTargetSpeed(0);
   pidController.setTurn();
   wc.setExitDist(3.0);
   wc.turnTo(-90);
-  spinRoller();
+  chassis.driveFromDiff(-20, 0, fwd);
+  intake.spin(vex::reverse, 100);
+  s(3000);
+  intake.stop(hold);
+  rachetColor.setLightPower(0, percent);
 };
-// Auton rightA = "Right" + [](){
-//   wc.estimateStartPos(PVector(13.05, -61.73), 222.54);
-//   wc.backwardsFollow(&purePursuit, {PVector(24.23, -50.38), PVector(41.26, -52.15), PVector(41.44, -61.55)});
-//   spinRoller();
-//   wc.faceTarget({49.06, 49.84});
-//   //TODO: fire disks
-//   wc.followPath(&ramsete, {PVector(22.46, -52.68), PVector(30.97, -42.22)});
-//   wc.backwardsFollow(&pidController, {PVector(28.13, -46.12)});
-//   wc.faceTarget({49.06, 49.84});
-//   //TODO: fire disks
-//   wc.followPath(&purePursuit, {PVector(17.67, -43.99), PVector(-12.12, -11.35)});
-//   wc.faceTarget({49.06, 49.84});
-//   //TODO: fire disks
+Auton rightA = "Right" + [](){
+  flyTBH.setTargetSpeed(500);
+  flyTBH.setDisabled(true);
+  auto acc = flyTBH.maxRateGain;
+  flyTBH.maxRateGain = 100;
+  flywheelNm.spin(fwd, 52000/600);
+  s(2000);
+  flyTBH.setDisabled(false);
+  flyTBH.maxRateGain = acc;
+  s(50);
+  
+  // wc.faceTarget({-40.79, 50.06});
+  while(!flyTBH.ready()){
+    s(10);
+  }
+  intake.spin(fwd, 100);
+  s(3000);
+  intake.stop(hold);
+  flyTBH.setTargetSpeed(0);
 
-// };
+  wc.estimateStartPos(PVector(-17.60, 65.52), 180);
+  
+  wc.driveTo(-17.7, 12.08+65.52);
+  wc.backwardsFollow(&pidController, {PVector(-26.68, 11.42)+PVector(-17.60, 65.52)});
+  wc.backwardsFollow(&pidController, {PVector(-24.04, 4.48)+PVector(-17.60, 65.52)});
+  spinRoller();
+
+};
 Auton skills = "Skills" + [](){
   cout << "s" << endl;
 };
