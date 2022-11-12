@@ -440,9 +440,9 @@ bool helpAlignBot(bool){
   static PVector position = PVector({60.5, -39});
   // position.angleTo({-50, -50});
   static bool init = false;
-  if(!init){
+  if(!init && Auton::isDone()){
     if(Auton::selectedName() == "Right"){
-      desiredAngle = desiredAngle - 90 + (270 - desiredAngle) * 2;
+      desiredAngle = 194;
     }
     init = true;
     if(wc.isRed()){
@@ -608,23 +608,44 @@ int main() {
   // chassis.setSpeedLimit(30);
   // VectorArr path = VectorArr();
   // purePursuit.setTurn();
-  s(1000);
-  while(share.gpsBad() || !Greg.ButtonA.pressing()){
-    s(100);
-  }
-  wc.setExitDist(2);
-  pidController.setTurn();
-  wc.path.setK(2);
-  chassis.setMaxAcc(1000);
-  chassis.setMaxDAcc(1000);
-  rachetColor.setLightPower(50, pct);
-  wc.estimateStartPos(PVector(-14.13, 61.72), 185.83);
-  wc.driveTo(-29.98, 47.68);
-  wc.backwardsFollow(&pidController, {PVector(-39.39, 54.12)});
-  wc.backwardsFollow(&pidController, {PVector(-39.72, 55.73)});
+
+  // flyTBH.setTargetSpeed(500);
+  // flyTBH.setDisabled(true);
+  // auto acc = flyTBH.maxRateGain;
+  // flyTBH.maxRateGain = 100;
+  // flywheelNm.spin(fwd, 52000/600);
+  // s(2000);
+  // flyTBH.setDisabled(false);
+  // flyTBH.maxRateGain = acc;
+  // s(50);
   
-  wc.setExitMode(BasicWheelController::exitMode::coast);
-  spinRoller();
+  // // wc.faceTarget({-40.79, 50.06});
+  // while(!flyTBH.ready()){
+  //   s(10);
+  // }
+  // intake.spin(fwd, 100);
+  // s(1000);
+  // intake.stop(hold);
+  // s(1000);
+  // while(share.gpsBad() || !Greg.ButtonA.pressing()){
+  //   s(100);
+  // }
+  // flyTBH.setTargetSpeed(0);
+
+  // wc.setExitDist(2);
+  // pidController.setTurn();
+  // wc.path.setK(2);
+  // chassis.setMaxAcc(1000);
+  // chassis.setMaxDAcc(1000);
+  // chassis.setSpeedLimit(70);
+  // rachetColor.setLightPower(50, pct);
+  // wc.estimateStartPos(PVector(-14.13, 61.72), 185.83);
+  // wc.driveTo(-29.98, 47.68);
+  // wc.backwardsFollow(&pidController, {PVector(-43.39, 54.12)});
+  // wc.backwardsFollow(&pidController, {PVector(-39.72, 60.73)});
+  
+  // wc.setExitMode(BasicWheelController::exitMode::coast);
+  // spinRoller();
 
 
   //autonomous();

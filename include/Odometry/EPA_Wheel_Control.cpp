@@ -101,7 +101,7 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
   // if(!callingInDrive && reversed){
   //   angle += 90;
   // }
-  int timeIn = 0;
+  int timeIn = 100;
   [[maybe_unused]] int i = 0;
   // Get the normAngle
   double normAngle = posNeg180(angle - posNeg180(botAngle()));
@@ -519,8 +519,8 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     // 50 ms not moving -> exit
     if (timesStopped * sleepTime > 50 && !stopExitPrev)
     {
-      // cout << "Stop Exit" << endl;
-      // break;
+      cout << "Stop Exit" << endl;
+      break;
     }
     // Use the distFns for the current dist
     useDistFns(botPos().dist2D(path.last()));

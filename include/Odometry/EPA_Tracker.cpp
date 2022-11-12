@@ -47,9 +47,10 @@ Positioner::Positioner(
   // it's used only in the global scope, so all memory is deallocated by OS, not me
   for(auto& port : xPorts){
     //Allocate a completely new encoder from the heap and add it to the array
-    Encoder* enc = new Encoder(new rotation(port.getPort()));
+    rotation* rot = new rotation(port.getPort());
+    Encoder* enc = new Encoder(rot);
     EncodersX.push_back(enc);
-    // AddDevice("Odom X Encoder "s + toCcp(i), (vex::device*)enc);
+    AddDevice("Odom X "s + toCcp(i), (vex::device*)rot);
     lastX.push_back(0);
     //Increase array access position
     i++;
@@ -58,10 +59,11 @@ Positioner::Positioner(
   i = 0;
   for(auto& port : yPorts){
     lastY.push_back(0);
-    Encoder* enc = new Encoder(new rotation(port.getPort()));
+    rotation* rot = new rotation(port.getPort());
+    Encoder* enc = new Encoder(rot);
     //Allocate a completely new encoder from the heap and add it to the array
     EncodersY.push_back(enc);
-    // AddDevice("Odom Y Encoder "s + toCcp(i), (vex::device*)enc);
+    AddDevice("Odom Y "s + toCcp(i), (vex::device*)rot);
     //Increase array access position
     i++;
   }

@@ -200,10 +200,8 @@ BasicPidController::followToRet BasicPidController::followTo(Input &input){
     normAngle = posNeg180(normAngle + 180);
   }
   double turnVel = slave.getVal(posNeg180(normAngle));
-  if(abs(fwdVel) < 40){
-    fwdVel = 40 * fwdVel / abs(fwdVel);
-  }
-  return {{fwdVel, Controller::ForwardVel::pct}, {turnVel * 4.0, Controller::AngularVel::pctDiff}};
+  
+  return {{fwdVel * 0.8, Controller::ForwardVel::pct}, {turnVel * 3.0, Controller::AngularVel::pctDiff}};
 }
 void BasicPidController::init(){
   ctrl.setTarget(0);
