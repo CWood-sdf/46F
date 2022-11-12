@@ -370,7 +370,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     }
     callingInDrive = true;
     auto angle = botPos().angleTo(bezier[i - 1]);
-    turnTo(angle + 180.0 * !isNeg);
+    turnTo(angle + 180.0 * isNeg);
     callingInDrive = false;
     // cout << "Cool" << endl;
     cout << "Turn Done" << endl;
@@ -433,7 +433,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = exitDist == 0.0 ? 2.0 : exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
-#define DEBUG
+#undef DEBUG
 #ifdef DEBUG
   struct
   {
@@ -589,13 +589,13 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     // }
 
     auto speeds = controller->followTo(input);
-    cout << "S1: " << speeds.first.first << endl;
+    // cout << "S1: " << speeds.first.first << endl;
     double speed = 0;
     switch (speeds.first.second)
     {
     case Controller::ForwardVel::inps:
       speed = chassis->realToPct(speeds.first.first);
-      cout << "S2: " << speed << endl;
+      // cout << "S2: " << speed << endl;
       break;
     case Controller::ForwardVel::pct:
       speed = speeds.first.first;
@@ -618,14 +618,14 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       orgSpeed = speed;
       speed = path[nearestIndex].targetSpeed * sign(speed);
     }
-    cout << "S3: " << speed << endl;
+    // cout << "S3: " << speed << endl;
     if (abs(speed) > abs(chassis->speedLimit))
     {
       orgSpeed = speed;
       speed /= abs(speed);
       speed *= chassis->speedLimit;
     }
-    cout << "S4: " << speed << endl;
+    // cout << "S4: " << speed << endl;
     double rightExtra;
     {
       double targetRobotVel = chassis->pctToReal(speed);
@@ -695,7 +695,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       speed *= -1.0;
     }
     // speed *= -1.0;
-    cout << "S: " << speed << endl;
+    // cout << "S: " << speed << endl;
     // Mindblowing lines right here
     // Move the robot
     chassis->driveFromDiff(speed, -rightExtra, fwd);

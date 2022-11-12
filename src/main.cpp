@@ -76,6 +76,9 @@ void spinRoller() {
     }
     s(10);
   }
+  intake.spin(fwd, -100);
+  chassis.driveFromDiff(-60, 0, fwd);
+  s(500);
   chassis.coastBrake();
   intake.stop(hold);
   //Give the system some time to clear momentum
@@ -242,8 +245,8 @@ void drivercontrol (){
   ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
   ButtonLatch L1Latch = ButtonLatch(Greg.ButtonL1);
   ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
-  int currentVelocity = 540;
-  int flywheelI = 1;
+  // int currentVelocity = 510;
+  // int flywheelI = 1;
   flyTBH.setTargetSpeed(510);
   static bool driveReversed = false;
   //Protection from multiple instances of drivercontrol running
@@ -262,7 +265,7 @@ void drivercontrol (){
   countsExist.push_back({true, &primary});
   //The index of this drivercontrol instance in countsExist
   int localCount = count;
-  int flywheelSpeed = 0;
+  int flywheelSpeed = 510;
   count++;
   while(1){
     //Place driver code in here
@@ -280,14 +283,14 @@ void drivercontrol (){
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
       if(L1Latch.pressing()){
-        flywheelSpeed += 600 / 10;
+        flywheelSpeed += 600 * 7 / 100;
         if(flywheelSpeed > 600){
           flywheelSpeed = 600;
         }
         flyTBH.setTargetSpeed(flywheelSpeed);
       }
       if(L2Latch.pressing()){
-        flywheelSpeed -= 600 / 10;
+        flywheelSpeed -= 600 * 7 / 100;
         if(flywheelSpeed < 0){
           flywheelSpeed = 0;
         }
@@ -432,6 +435,36 @@ void fn(bool ){
     intake.stop(coast);
   }
 }
+bool helpAlignBot(bool){
+  static double desiredAngle = 255;
+  static PVector position = PVector({60.5, -39});
+  // position.angleTo({-50, -50});
+  static bool init = false;
+  if(!init){
+    if(Auton::selectedName() == "Right"){
+      desiredAngle = desiredAngle - 90 + (270 - desiredAngle) * 2;
+    }
+    init = true;
+    if(wc.isRed()){
+      desiredAngle = posNeg180(desiredAngle + 180);
+      
+    }
+  }
+  Brain.Screen.clearScreen(black);
+  Brain.Screen.setPenColor(red);
+  if(abs(wc.botAngle() - desiredAngle) < 1){
+    Brain.Screen.setPenColor(green);
+  }
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("Desired angle: %f", desiredAngle);
+  Brain.Screen.setCursor(2, 1);
+  Brain.Screen.print("Current angle: %f", wc.botAngle());
+  Brain.Screen.setPenColor(white);
+  if(Brain.Screen.pressing() && Brain.Screen.yPosition() < 100){
+    return true;
+  }
+  return false;
+}
 void brainOS() {
   while(!init){
     s(500);
@@ -450,8 +483,9 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
-  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(testConnection);
+  bos::bosFns.pushBack(helpAlignBot);
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
@@ -574,10 +608,24 @@ int main() {
   // chassis.setSpeedLimit(30);
   // VectorArr path = VectorArr();
   // purePursuit.setTurn();
+  s(1000);
+  while(share.gpsBad() || !Greg.ButtonA.pressing()){
+    s(100);
+  }
+  wc.setExitDist(2);
+  pidController.setTurn();
   wc.path.setK(2);
   chassis.setMaxAcc(1000);
   chassis.setMaxDAcc(1000);
+  rachetColor.setLightPower(50, pct);
+  wc.estimateStartPos(PVector(-14.13, 61.72), 185.83);
+  wc.driveTo(-29.98, 47.68);
+  wc.backwardsFollow(&pidController, {PVector(-39.39, 54.12)});
+  wc.backwardsFollow(&pidController, {PVector(-39.72, 55.73)});
+  
   wc.setExitMode(BasicWheelController::exitMode::coast);
+  spinRoller();
+
 
   //autonomous();
   Competition.autonomous(autonomous);

@@ -101,7 +101,7 @@ void Chassis::driveFromDiff(double speed, double diff, directionType d){
   double right = speed - diff;
   lastLeftSpeed = left;
   lastRightSpeed = right;
-  cout << left << ", " << right << endl;
+  // cout << left << ", " << right << endl;
   #ifndef TEST
   leftWheels.spinVolt(left < 0 ? reverse : fwd, abs(left));
   rightWheels.spinVolt(right < 0 ? reverse : fwd, abs(right));

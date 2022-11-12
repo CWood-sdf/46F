@@ -48,9 +48,9 @@ void Path::make(VectorArr& arr, Chassis* chassis){
   // cout << "Target speeds size: " << targetSpeeds.size() << endl; s(100);
   //Smooth targetSpeeds
   //vf^2 = vi^2 + 2ad
-  double startVel = 30;
+  double startVel = 50;
   targetSpeeds[0] = startVel;
-  targetSpeeds[targetSpeeds.size() - 1] = 20;
+  targetSpeeds[targetSpeeds.size() - 1] = 40;
   
   for(int i = 1; i < bezier.size() ; i++){
     //I think this math of converting inches to percent works
@@ -194,13 +194,15 @@ BasicPidController::BasicPidController(PID ctrl, PID slave){
 BasicPidController::followToRet BasicPidController::followTo(Input &input){
   double dist = input.dist;
   double normAngle = posNeg180(input.angleTarget - input.currentAngle);
-  cout << normAngle << endl;
+  // cout << normAngle << endl;
   double fwdVel = -ctrl.getVal(dist);
   if(dist < 0){
     normAngle = posNeg180(normAngle + 180);
   }
   double turnVel = slave.getVal(posNeg180(normAngle));
-
+  if(abs(fwdVel) < 40){
+    fwdVel = 40 * fwdVel / abs(fwdVel);
+  }
   return {{fwdVel, Controller::ForwardVel::pct}, {turnVel * 4.0, Controller::AngularVel::pctDiff}};
 }
 void BasicPidController::init(){

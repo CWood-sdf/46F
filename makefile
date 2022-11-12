@@ -25,13 +25,14 @@ SRC_H += $(wildcard include/*/*/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*/*/*/*/*.h)
+SRC_H += $(wildcard Libs/*.h)
 
 
 # additional dependancies
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include . include/lvgl include/lvgl/src include/Odometry
+INC_F  = include . include/lvgl include/lvgl/src include/Odometry Libs/
 
 # headers needed to use library
 LV_SRC_H += $(wildcard include/lvgl/lvgl.h) 
@@ -47,7 +48,7 @@ $(BUILD)/include/%: %
 	$(Q)$(MKDIR)
 	$(Q) $(call copyfile,$^, $@)
 
-vpath %.h include/lvgl/ include/
+vpath %.h include/lvgl/ include/ Libs/
 
 # override proj name
 PROJECTLIB = lib46f
