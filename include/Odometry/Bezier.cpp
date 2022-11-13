@@ -76,7 +76,7 @@ PVector bezierInterpolate(VectorArr ptArr, double t){
   for(int i = 0; i < ptArr.size() - 1; i++){
     //Interpolate between current point and next
     PVector newPt = ptArr[i + 1] - ptArr[i];
-    newPt.mult(t);
+    newPt *= t;
     newPt += ptArr[i];
     newPts.push(newPt);
   }
@@ -102,14 +102,77 @@ VectorArr bezierCurve(VectorArr ptArr, double inc){
   ret.push(ptArr.last());
   return ret;
 }
-VectorArr bezierDerivative(VectorArr ptArr, double inc){
-  VectorArr bezier = bezierCurve(ptArr, inc);
-  VectorArr derivative;
-  for(int i = 0; i < bezier.size() - 1; i++){
-    derivative.push(bezier[i + 1] - bezier[i]);
+class AutoDiff {
+  double value = 0;
+  double derivative = 0;
+public:
+  AutoDiff(double value, double derivative = 0) : value(value), derivative(derivative) {}
+  AutoDiff(){}
+  AutoDiff operator+(const AutoDiff& other) const {
+    return AutoDiff(value + other.value, derivative + other.derivative);
   }
-  derivative.push(derivative.last());
-  return derivative;
+  AutoDiff operator-(const AutoDiff& other) const {
+    return AutoDiff(value - other.value, derivative - other.derivative);
+  }
+  AutoDiff operator*(const AutoDiff& other) const {
+    return AutoDiff(value * other.value, derivative * other.value + value * other.derivative);
+  }
+  AutoDiff& operator=(const AutoDiff& other) {
+    value = other.value;
+    derivative = other.derivative;
+    return *this;
+  }
+  static AutoDiff constant(double value) {
+    return AutoDiff(value, 0);
+  }
+  static AutoDiff variable(double value) {
+    return AutoDiff(value, 1);
+  }
+  double getValue() const {
+    return value;
+  }
+  double getDerivative() const {
+    return derivative;
+  } 
+};
+AutoDiff bezierPartialLerp(vector<AutoDiff> arr, AutoDiff t){
+  if(arr.size() == 1){
+    return arr[0];
+  }
+  vector<AutoDiff> newPts;
+  for(int i = 0; i < arr.size() - 1; i++){
+    AutoDiff newPt = arr[i + 1] - arr[i];
+    newPt = newPt * t;
+    newPt = newPt + arr[i];
+    newPts.push_back(newPt);
+  }
+  return bezierPartialLerp(newPts, t);
+}
+AutoDiff getBezierDeivativeMult(int size, int index, double t){
+  vector<AutoDiff> arr = {};
+  arr.resize(size);
+  for(int i = 0; i < size; i++){
+    if(i == index){
+      arr[i] = AutoDiff::constant(1);
+    } else {
+      arr[i] = AutoDiff::constant(0);
+    }
+  }
+  return bezierPartialLerp(arr, AutoDiff::variable(t));
+}
+VectorArr bezierDerivative(VectorArr ptArr, double inc){
+  VectorArr ret;
+  for(double i = 0.000; i <= 1.0 + 1e-9; i += inc){
+    PVector deriv = {0, 0, 0};
+    for(int j = 0; j < ptArr.size(); j++){
+      AutoDiff mult = getBezierDeivativeMult(ptArr.size(), j, i);
+      PVector pt = ptArr[j];
+      pt *= mult.getDerivative();
+      deriv += pt;
+    }
+    ret.push(deriv);
+  }
+  return ret;
 }
 VectorArr bezierAcc(VectorArr ptArr, double inc){
   VectorArr derivative = bezierDerivative(ptArr, inc);
