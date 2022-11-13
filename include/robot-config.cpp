@@ -27,11 +27,11 @@ TestDevice(BL);
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
-// motor ML = motor(PORT17, gearSetting::ratio18_1, true);
-// TestDevice(ML);
-// //Middle Right Wheel (MR)
-// motor MR = motor(PORT8, gearSetting::ratio18_1, false);
-// TestDevice(MR);
+motor ML = motor(PORT1, gearSetting::ratio18_1, true);
+TestDevice(ML);
+//Middle Right Wheel (MR)
+motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+TestDevice(MR);
 
 motor_group Left = motor_group(BL, FL);
 motor_group Right = motor_group(BR, FR);
@@ -56,8 +56,11 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 // NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
-NewMotor leftWhls = NewMotor(BL, FL);
-NewMotor rghtWhls = NewMotor(BR, FR);
+NewMotor leftWheels = NewMotor(BL, FL, ML);
+NewMotor rightWheels = NewMotor(BR, FR, MR);
+pneumatics ptoLeft = pneumatics(Brain.ThreeWirePort.A);
+Pto leftPto = leftWheels.addPto(ptoLeft, {&ML}, true);
+Pto rightPto = rightWheels.addPto(ptoLeft, {&MR}, false);
 
 NewMotor intake = NewMotor(intakeMot, intakeMot2);
 
@@ -128,7 +131,7 @@ GPS_Share share = GPS_Share(positioner, GPS);
 
 //Wheel controller
 
-Chassis chassis = Chassis(leftWhls, rghtWhls, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
+Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
 PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
 RamseteController ramsete = RamseteController(0.0108, 0.2);
 BasicPidController pidController = BasicPidController(PIDF(6.0, 0.1, 2.4325, 20, 6, 1), PID(1.0, 0, 0.3, 0, 0, 0));

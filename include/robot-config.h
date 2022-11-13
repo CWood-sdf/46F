@@ -42,8 +42,8 @@ extern FlywheelTBHEncoder flyTBH;
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 extern NewMotor wheels;
-extern NewMotor leftWhls;
-extern NewMotor rghtWhls;
+extern NewMotor leftWheels;
+extern NewMotor rightWheels;
 
 extern Chassis chassis;
 extern PurePursuitController purePursuit;

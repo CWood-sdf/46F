@@ -303,12 +303,12 @@ void drivercontrol (){
         s1 = 50, s2 = -50;
       }
       if (driveReversed) {
-        leftWhls.spin(vex::reverse, s1, pct);
-        rghtWhls.spin(vex::reverse, s2, pct);
+        leftWheels.spin(vex::reverse, s1, pct);
+        rightWheels.spin(vex::reverse, s2, pct);
       }
       else {
-        leftWhls.spin(fwd, s1, pct);
-        rghtWhls.spin(fwd, s2, pct);
+        leftWheels.spin(fwd, s1, pct);
+        rightWheels.spin(fwd, s2, pct);
       }
       if(Greg.ButtonR1.pressing()){
         intake.spin(fwd, 100);
@@ -495,18 +495,15 @@ void brainOS() {
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
-  bos::bosFns.pushBack(bos::BosFn([](bool){wc.draw(true); }, false));
-  bos::bosFns.pushBack(fn);
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(windowsLoader);
-  bos::bosFns.pushBack(printVars);
-  bos::bosFns.pushBack(drawPath);
+  
 
   // bos::bosFns.push_back(Auton::selectAuton);
   //int state = 0;
   //int maxState = 3;
-  Button screenLeft = Button(Brain, 10, BRAIN_HEIGHT - 60, 30, 30, black, color(50, 50, 50), "<", -40, -30);
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 30, 30, black, color(50, 50, 50), ">", -40, -30);
+  Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, color(50, 50, 50), "<", -40, -30);
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, color(50, 50, 50), ">", -40, -30);
   //lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
   bos::bosFns.getCurrent()->call(true);
   while (1) {
