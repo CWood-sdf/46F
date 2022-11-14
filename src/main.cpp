@@ -608,49 +608,16 @@ int main() {
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-  // chassis.setSpeedLimit(30);
-  // VectorArr path = VectorArr();
-  // purePursuit.setTurn();
 
-  // flyTBH.setTargetSpeed(500);
-  // flyTBH.setDisabled(true);
-  // auto acc = flyTBH.maxRateGain;
-  // flyTBH.maxRateGain = 100;
-  // flywheelNm.spin(fwd, 52000/600);
-  // s(2000);
-  // flyTBH.setDisabled(false);
-  // flyTBH.maxRateGain = acc;
-  // s(50);
-  
-  // // wc.faceTarget({-40.79, 50.06});
-  // while(!flyTBH.ready()){
-  //   s(10);
-  // }
-  // intake.spin(fwd, 100);
-  // s(1000);
-  // intake.stop(hold);
-  // s(1000);
-  // while(share.gpsBad() || !Greg.ButtonA.pressing()){
-  //   s(100);
-  // }
-  // flyTBH.setTargetSpeed(0);
+  // leftWheels.spin(fwd, 50);
+  // rightWheels.spin(fwd, -50);
 
-  // wc.setExitDist(2);
-  // pidController.setTurn();
-  // wc.path.setK(2);
-  // chassis.setMaxAcc(1000);
-  // chassis.setMaxDAcc(1000);
-  // chassis.setSpeedLimit(70);
-  // rachetColor.setLightPower(50, pct);
-  // wc.estimateStartPos(PVector(-14.13, 61.72), 185.83);
-  // wc.driveTo(-29.98, 47.68);
-  // wc.backwardsFollow(&pidController, {PVector(-43.39, 54.12)});
-  // wc.backwardsFollow(&pidController, {PVector(-39.72, 60.73)});
-  
-  // wc.setExitMode(BasicWheelController::exitMode::coast);
-  // spinRoller();
-  // wc.estimateStartPos(PVector(0, 0), 0);
-  // spinRoller();
+  // while(1){
+  //   leftWheels.setPtoRelease(leftPto);
+  //   s(1000);
+  //   rightWheels.setPtoRelease(rightPto);
+  //   s(1000);
+  // }
 
 
   //autonomous();

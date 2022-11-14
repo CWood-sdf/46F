@@ -26,6 +26,9 @@ extern motor ML;
 //Middle Right Wheel (MR)
 extern motor MR;
 
+extern Pto leftPto;
+extern Pto rightPto;
+
 extern motor_group Left;
 extern motor_group Right;
 
@@ -56,6 +59,7 @@ Pneumatics
 
 *************************************/
 extern pneumatics endgame;
+extern pneumatics pto;
 
 /*************************************
 

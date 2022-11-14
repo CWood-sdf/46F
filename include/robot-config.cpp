@@ -27,7 +27,7 @@ TestDevice(BL);
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
 //Middle Left Wheel (ML)
-motor ML = motor(PORT1, gearSetting::ratio18_1, true);
+motor ML = motor(PORT20, gearSetting::ratio18_1, true);
 TestDevice(ML);
 //Middle Right Wheel (MR)
 motor MR = motor(PORT8, gearSetting::ratio18_1, false);
@@ -57,10 +57,11 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //    2 - Simplified spin cmd
 // NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
 NewMotor leftWheels = NewMotor(BL, FL, ML);
-NewMotor rightWheels = NewMotor(BR, FR, MR);
-pneumatics ptoLeft = pneumatics(Brain.ThreeWirePort.A);
-Pto leftPto = leftWheels.addPto(ptoLeft, {&ML}, true);
-Pto rightPto = rightWheels.addPto(ptoLeft, {&MR}, false);
+NewMotor rightWheels = NewMotor(BR, FR, ML);
+NewMotor ptoTarget = NewMotor(ML, MR);
+pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
+Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
+Pto rightPto = rightWheels.addPto(pto, {&ML}, false);
 
 NewMotor intake = NewMotor(intakeMot, intakeMot2);
 
