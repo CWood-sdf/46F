@@ -19,10 +19,11 @@ void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t di
   //Make colored square
   lv_obj_t* squ = lv_obj_create(keyCont);
   lv_obj_set_size(squ, 15, 15);
-  lv_obj_set_style_radius(squ, 03, 0);
+  lv_obj_set_style_radius(squ, 03, 0);  
   lv_obj_set_style_bg_color(squ, color, 0);
   lv_obj_set_align(squ, LV_ALIGN_LEFT_MID);
   lv_obj_set_style_border_opa(squ, 0, 0);
+  lv_obj_set_scrollbar_mode(squ, LV_SCROLLBAR_MODE_OFF);
 
   //Make label
   lv_obj_t* label2 = lv_label_create(keyCont);
