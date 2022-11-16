@@ -638,7 +638,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
         rightExtra = speeds.second.first;
         break;
       case Controller::AngularVel::radps:
-        rightExtra = speeds.second.first * chassis->trackWidth / -2.0;
+        rightExtra = chassis->realToPct(speeds.second.first * chassis->trackWidth / -2.0);
         break;
       }
     }
