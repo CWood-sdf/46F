@@ -100,8 +100,8 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
 }
 void FlywheelTBHEncoder::init() {
   gain = 0.025;
-  maxRateGain = 0.5;
-  maxRateDrop = 1;
+  maxRateGain = 0.1;
+  maxRateDrop = 0.1;
   velCheck = Settled(10, 0.2, 500);
 }
 void FlywheelTBHEncoder::setDisabled(bool p){
@@ -178,7 +178,7 @@ void FlywheelTBHEncoder::step() {
   double err = desiredVel - speed;
   //Check if the flywheel speed is stable and if the error is small
   bool settled = velCheck.settled(err);
-
+  static bool freeAccel = false;
 
   if(settled){
     calcTbh = false;
@@ -244,15 +244,24 @@ void FlywheelTBHEncoder::step() {
   else if(velSent - lastVel < -maxRateDrop){
     velSent = lastVel - maxRateDrop;
   }
-  //Slow down the acceleration if the flywheel is close to the target
-  if(abs(err) < 60 && velSent - lastVel > 0.1){
-    velSent = lastVel + 0.1;
-  }
+  // //Slow down the acceleration if the flywheel is close to the target
+  // if(abs(err) < 60 && velSent - lastVel > 0.1){
+  //   velSent = lastVel + 0.1;
+  // }
   if(velSent < 0){
     velSent = 0;
   }
   if(velSent > 100){
     velSent = 100;
+  }
+  if(abs(err) > 60){
+    freeAccel = true;
+  }
+  if(freeAccel){
+    velSent = initialTbh[target];
+    if(abs(err) < 60){
+      freeAccel = false;
+    }
   }
   debug.set(err, speedEst, speed, desiredVel, velSent);
   prevErr = err;

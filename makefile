@@ -54,7 +54,7 @@ vpath %.h include/lvgl/ include/ Libs/
 PROJECTLIB = lib46f
 
 # build targets
-all: $(BUILD)/$(PROJECT).bin $(BUILD)/$(PROJECTLIB).a inc
+all: $(BUILD)/$(PROJECT).bin inc
 
 # copy lvgl header files
 .PHONY: inc
