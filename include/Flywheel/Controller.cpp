@@ -91,6 +91,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out){
   }
   // cout << chart << endl;
   if(chart != NULL){
+    lv_label_set_text(chartLabel, text);
     lv_chart_set_next_value(chart, serTarg, out.targetVel);
     lv_chart_set_next_value(chart, serErr, out.error);
     lv_chart_set_next_value(chart, serMeas, out.measuredVel);
@@ -108,7 +109,22 @@ void FlywheelTBHEncoder::setDisabled(bool p){
   disabled = p;
 }
 void FlywheelTBHEncoder::graph(bool remake) {
-  basicGraph(remake, "TBHE ctrl", debug);
+  static char text[80] = "TBHE ctrl";
+  const char* newName = "TBHE ctrl - ";
+  stringstream thing = stringstream();
+  thing << debug.targetVel / 6;
+  const char* otherName = thing.str().c_str();
+  cout << otherName << endl;
+  int i = 0; 
+  for(; newName[i] != '\0'; i++){
+    text[i] = newName[i];
+  }
+  for(int j = 0; otherName[j] != '\0'; j++){
+    text[i] = otherName[j];
+    i++;
+  }
+  text[i] = '\0';
+  basicGraph(remake, text, debug);
 }
 FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m, Encoder p) : mots(m), filter(0.15) {
   init();

@@ -282,15 +282,15 @@ void drivercontrol (){
 
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
-      if(L1Latch.pressing()){
-        flywheelSpeed += 600 * 7 / 100;
+      if(Greg.ButtonL1.pressing()){
+        flywheelSpeed += 600 * 1 / 600;
         if(flywheelSpeed > 600){
           flywheelSpeed = 600;
         }
         flyTBH.setTargetSpeed(flywheelSpeed);
       }
-      if(L2Latch.pressing()){
-        flywheelSpeed -= 600 * 7 / 100;
+      if(Greg.ButtonL2.pressing()){
+        flywheelSpeed -= 600 * 1 / 600;
         if(flywheelSpeed < 0){
           flywheelSpeed = 0;
         }
@@ -489,12 +489,12 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
+  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(helpAlignBot);
-  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
-  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(windowsLoader);
   
