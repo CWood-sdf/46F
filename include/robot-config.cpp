@@ -84,7 +84,7 @@ Pneumatics
 
 *************************************/
 
-pneumatics endgame = pneumatics(Brain.ThreeWirePort.C);
+pneumatics endgame = pneumatics(Brain.ThreeWirePort.B);
 /*************************************
 
 Sensors
@@ -106,7 +106,9 @@ TestDevice(GPS);
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
 
-LineCounter rachetDetector (Brain.ThreeWirePort.A);
+LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
+LineCounter intakeMiddle = LineCounter(Brain.ThreeWirePort.D);
+LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
@@ -194,3 +196,11 @@ void vexcodeInit(void){
 bool toBool(double v){
   return (bool)(int)(v + 0.5);
 }
+
+
+/*************************************
+ * 
+ * The intake automation variables in a struct
+ * 
+*************************************/
+
