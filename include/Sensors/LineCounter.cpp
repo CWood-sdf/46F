@@ -43,6 +43,7 @@ int LineCounter::getCountIn(){
 bool LineCounter::pressing(){
   
   isActive = threshold <= sensor->reflectivity();
+  // cout << sensor->reflectivity() << endl;
   if(isActive){
     threshold = lowThreshold;
   } else  {

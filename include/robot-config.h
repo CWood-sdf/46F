@@ -81,7 +81,7 @@ extern gps GPS;
 extern optical rachetColor; 
 
 extern LineCounter intakeBottom;
-extern LineCounter intakeMiddle;
+extern vex::distance intakeMiddle;
 extern LineCounter intakeTop;
 extern AutoIntake intakeController;
 // Distance goalFront;

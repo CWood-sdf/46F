@@ -7,6 +7,7 @@ struct AutoIntake {
   int lastCount = 0;
   bool disabled = false;
   bool clearingDisks = false;
+  bool clearingLastDisk = false;
   bool readyState = false;
   bool intaking = false;
   long clearStartTime = 0;
@@ -17,9 +18,9 @@ struct AutoIntake {
 //     bool middle = false;
 //     bool bottom = false;
 //   } disk;
-  vector<LineCounter*> sensors;
+  vector<std::function<bool()>> sensors;
   int diskMask = 0;
-  AutoIntake(vector<LineCounter*> sensors);
+  AutoIntake(vector<std::function<bool()>> sensors);
   /**
    * @brief For internal use only, stores all the sensor values in a mask for easy comparison
    * 

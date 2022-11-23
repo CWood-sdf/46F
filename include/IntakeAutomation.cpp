@@ -1,12 +1,13 @@
 #define NO_MAKE
 #include "IntakeAutomation.h"
-AutoIntake::AutoIntake(vector<LineCounter*> sensors){
+
+AutoIntake::AutoIntake(vector<std::function<bool()>> sensors){
   this->sensors = sensors;
 }
 void AutoIntake::makeMask(){
   diskMask = 0;
   for(int i = 0; i < sensors.size(); i++){
-    diskMask |= (sensors[i]->pressing() << i);
+    diskMask |= (sensors[i]() << i);
   }
 }
 bool AutoIntake::stable(){
@@ -18,6 +19,7 @@ bool AutoIntake::stable(){
     if(bit == 1 && lastBit == 0){
       return false;
     }
+    lastBit = bit;
   }
   return true;
 }
@@ -51,12 +53,10 @@ void AutoIntake::updateValues(bool flywheelReady){
 //   }
   count = 0;
   for(int i = 0; i < sensors.size(); i++){
-    count += sensors[i]->pressing();
+    count += sensors[i]();
   }
-  if(clearingDisks && count == 0){
-    clearingDisks = false;
-  }
-  if(intaking && sensors.back()->pressing()){
+  // cout << "Intaking: " << intaking << endl;
+  if(intaking && sensors.back()()){
     intaking = false;
   }
   if(intaking && count == lastCount + 1){
@@ -65,19 +65,34 @@ void AutoIntake::updateValues(bool flywheelReady){
   if(!intaking){
     lastCount = count;
   }
-  //If seconds of clearing disks, then stop
-  if(clearingDisks && (Brain.Timer.system() - clearStartTime) > 5000){
+  if(clearingDisks && count == 0 && clearingLastDisk){
     clearingDisks = false;
+    clearingLastDisk = false;
+  }
+  int lastDisk = 1 << (sensors.size() - 1);
+  if(diskMask & lastDisk == lastDisk && clearingDisks){
+    clearingLastDisk = true;
+  } else {
+    clearingLastDisk = false;
+  }
+  //If seconds of clearing disks, then stop
+  if(clearingDisks && (Brain.Timer.system() - clearStartTime) > 10000){
+    // clearingDisks = false;
   }
   direction = 0;
-  if(intaking || (clearingDisks && flywheelReady)){
+  if(intaking || (clearingDisks && (flywheelReady || !sensors.back()()))){
     direction = 1;
   }
-  if(direction != 1 && ((!stable() && fixableUnstable()) || fixingUnstable)){
+  if(direction != 1 && ((!stable() && fixableUnstable()) || fixingUnstable) && !clearingDisks){
     direction = -1;
     fixingUnstable = true;
   }
-  if(stable()){
+  cout << "Mask: " << diskMask << endl;
+  cout << "Stable: " << stable() << endl;
+  cout << "Fixable: " << fixableUnstable() << endl;
+  cout << "Count: " << count << endl;
+  cout << "Direction: " << direction << endl;
+  if(fixingUnstable && stable() && count != 0){
     fixingUnstable = false;
   }
 }

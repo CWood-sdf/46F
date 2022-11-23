@@ -106,10 +106,22 @@ TestDevice(GPS);
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
 
+vex::distance intakeMiddle = vex::distance(PORT20);
+TestDevice(intakeMiddle);
+
 LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
-LineCounter intakeMiddle = LineCounter(Brain.ThreeWirePort.D);
 LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
-AutoIntake intakeController = AutoIntake({&intakeBottom, &intakeMiddle, &intakeTop});
+AutoIntake intakeController = AutoIntake({
+  [](){
+    return intakeBottom.pressing();
+  }, 
+  [](){ 
+    return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
+  }, 
+  [](){
+    return intakeTop.pressing();
+  }
+});
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 

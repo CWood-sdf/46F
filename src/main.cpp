@@ -247,7 +247,7 @@ void drivercontrol (){
   ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
-  flyTBH.setTargetSpeed(510);
+  flyTBH.setTargetSpeed(80);
   static bool driveReversed = false;
   //Protection from multiple instances of drivercontrol running
   //Is true if there is no instance of drivercontrol running
@@ -325,11 +325,17 @@ void drivercontrol (){
       // }
 
       if(XLatch.pressing()){
-        wc.turnTo(wc.botPos().angleTo({-50, -50}));
+        intakeController.intake();
       }
-      if(YLatch.pressing()){
-        wc.turnTo(wc.botPos().angleTo({50, 50}));
+      if(BLatch.pressing()){
+        intakeController.setFiring();
       }
+      // if(XLatch.pressing()){
+      //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
+      // }
+      // if(YLatch.pressing()){
+      //   wc.turnTo(wc.botPos().angleTo({50, 50}));
+      // }
       // if(Greg.ButtonRight.pressing()){
       //   //If continuously pressing for 0.5s, release endgame
       //   int time = 0;
@@ -370,16 +376,19 @@ void runIntake(){
     if(!intakeController.disabled){
       bool flywheelReady = flyTBH.ready();
       intakeController.updateValues(flywheelReady);
+      // cout << hex;
+      // cout << intakeController.diskMask << endl;
       if(intakeController.spinMotor()){
-        intake.spin(fwd, 100);
+        intake.spinVolt(fwd, 100);
       }
       else if(intakeController.reverseMotor()){
-        intake.spin(vex::reverse, 100);
+        intake.spinVolt(vex::reverse, 100);
       }
       else{
         intake.stop(hold);
       }
     }
+    s(10);
   }
 }
 void runFlywheel(){
@@ -507,9 +516,9 @@ void brainOS() {
     return Auton::selectedName() == skills.getName();
   });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
-  bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(helpAlignBot);
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
@@ -608,6 +617,7 @@ int main() {
     s(500);
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
+    intakeController.enable();
     cout << "<< Flywheel initialized >>" << endl;
     s(500);
     init = true;
@@ -623,7 +633,7 @@ int main() {
   KillThread otherThreads = thread(executeThreads);
 
   //TODO: Intake thread
-
+  thread intakeThread = thread(runIntake);
   //Awesome brain screen control thread
   thread loader = thread(brainOS);
 
