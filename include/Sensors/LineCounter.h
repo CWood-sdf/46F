@@ -1,3 +1,7 @@
+
+#ifndef LINECOUNTER_H
+#define LINECOUNTER_H
+
 #include "Sensors/KillThread.h"
 //Oh, this lovely class
 //It just always works (unless there's a sun there)
@@ -49,3 +53,5 @@ public:
   int rawData();
 };
 void microWait(uint time);
+
+#endif // LINECOUNTER_H

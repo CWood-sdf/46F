@@ -109,6 +109,7 @@ TestDevice(rachetColor);
 LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
 LineCounter intakeMiddle = LineCounter(Brain.ThreeWirePort.D);
 LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
+AutoIntake intakeController = AutoIntake({&intakeBottom, &intakeMiddle, &intakeTop});
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 

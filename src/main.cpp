@@ -267,6 +267,7 @@ void drivercontrol (){
   int localCount = count;
   int flywheelSpeed = 510;
   count++;
+  //TODO: intake controls
   while(1){
     //Place driver code in here
     if (primary) {
@@ -361,6 +362,23 @@ void drivercontrol (){
     }
     else {
       allEmpty = true;
+    }
+  }
+}
+void runIntake(){
+  while(1){
+    if(!intakeController.disabled){
+      bool flywheelReady = flyTBH.ready();
+      intakeController.updateValues(flywheelReady);
+      if(intakeController.spinMotor()){
+        intake.spin(fwd, 100);
+      }
+      else if(intakeController.reverseMotor()){
+        intake.spin(vex::reverse, 100);
+      }
+      else{
+        intake.stop(hold);
+      }
     }
   }
 }
@@ -603,6 +621,8 @@ int main() {
   //Make a thread to execute some auton tasks concurrently
   [[maybe_unused]]
   KillThread otherThreads = thread(executeThreads);
+
+  //TODO: Intake thread
 
   //Awesome brain screen control thread
   thread loader = thread(brainOS);
