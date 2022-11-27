@@ -206,8 +206,8 @@ bool Positioner::moving (){
   return abs(speed) > 0.01 || 
           time.time(timeUnits::sec) < 1;
 }
-double Positioner::velocity(){
-  return speed;
+double Positioner::velocity(int sleepTime){
+  return speed / (sleepTime / 1000.0);
 }
 void Positioner::clearMove(){
   time.clear();

@@ -4,27 +4,13 @@
 .  | |     | | | |  | |\ \  | | | |
 .  | |     | |_| |  | |/ /  | |_| |
 .  |_|     |_____|  |___/   |_____|
-
-  Maybe add a configuration screen that can configure variables, and it can have multiple screens
-. Finish writing vision util
+.
 . Testing items
 .  -Wheelbase controls
-.  -Vision relative position detection
-.  -Auton init with potentiometers
 .  -Auton fns (esp roller spinner)
-.  -Flywheel again i guess
-.  -Vision odom
 . Put abs in Controllers.cpp line 38 maybe
 . Maybe insert a sleep command after the error cout in Path::make
 
-*/
-/*
-The Plan
-
--2 distance sensors and color sensor for the roller
--At least 2 line trackers for auto indexer and rollers
--Maybe auto intake
--Vision sensor goal positioning
 */
 //main.cpp
 #include "BrainOS/VariableConfig.h"
@@ -50,16 +36,6 @@ void spinRoller() {
     auto hue = rachetColor.hue();
     lastRed = isRed;
     isRed = hue > 300 || hue < 60;
-    cout << hue << ", " << isRed << ", " << targetRed << endl;
-    // if(!isRed){
-    //   if(abs(hue - 240) < 60){
-    //     isRed = false;
-    //   }
-    //   else {
-    //     //Ambiguous colors, set isRed to lastRed to prevent exit
-    //     isRed = lastRed;
-    //   }
-    // }
     if(countUp){
       count++;
     }
@@ -84,93 +60,8 @@ void spinRoller() {
   //Give the system some time to clear momentum
   s(300);
 }
-competition Competition;//
-//Returns true if a button is pressing at the start, but doesn't return until button releaseed
-bool isPressing(const controller::button& btn){
-  if(btn.pressing()){
-    while(btn.pressing()){
-      s(10);
-    }
-    return true;
-  }
+competition Competition;
 
-  return false;
-}
-
-
-//Similar to isPressing(controller::button&), but only does it if a joystick axis is going in a certain direction
-bool isPressing(const controller::axis& joystick, int mult) {
-  if (abs(joystick.value()) > 50 && joystick.value() * mult > 1) {
-    while(abs(joystick.value()) > 50 && joystick.value() * mult > 1){
-      s(10);
-    }
-    //cout << "  ";
-    return true;
-  }
-
-  return false;
-}
-
-//Moves bot backwards at the given speed for the given amount of time
-void backwards(int t, int sp = 40){
-  Left.spin(vex::reverse, sp, pct);
-  Right.spin(vex::reverse, sp, pct);
-  s(t);
-  Left.stop();
-  Right.stop();
-}
-void fwds(int t, double sp = 30){
-  Left.spin(fwd, sp, pct);
-  Right.spin(fwd, sp, pct);
-  s(t);
-  Left.stop(hold);
-  Right.stop(hold);
-
-}
-void turnRight(int t){
-  Left.spin(fwd, 60, pct);
-  Right.spin(vex::reverse, 60, pct);
-  s(t);
-  Left.stop(hold);
-  Right.stop(hold);
-}
-void turnLeft(int t){
-  Left.spin(vex::reverse, 60, pct);
-  Right.spin(fwd, 60, pct);
-  s(t);
-  Left.stop(hold);
-  Right.stop(hold);
-
-}
-//Autonomous Stuff {
-
-// void addPids(){
-//   cout << "Turn P" << endl;
-//   while(1){
-//     if(isPressing(Greg.ButtonA)){
-//       wc.addTurnPid(0, 0, 0);p
-//       break;
-//     }
-//     if(isPressing(Greg.ButtonB)){
-//       wc.addTurnPid(0.1, 0, 0.0);
-//       break;
-//     }
-//   }
-//   cout << "Turn D" << endl;
-//   while(1){
-//     if(isPressing(Greg.ButtonA)){
-//       break;
-//     }
-//     if(isPressing(Greg.ButtonB)){
-//       wc.addTurnPid(0.0, 0, 0.05);
-//       break;
-//     }
-//   }
-
-//   cout << "Done" << endl;
-// }
-void randomAutonTest(){
-}
 
 string testPrintData = "";
 void printTestData(bool){
@@ -195,7 +86,7 @@ void autonomous(){
   Auton::callAuton();
   // wc.driveTo(1, 1);
   //Print time
-  cout << (Brain.Timer.system() - startTime) / 1000 << endl;
+  cout << "Auton Time: " << (Brain.Timer.system() - startTime) / 1000 << endl;
 }
 
 //}
@@ -236,14 +127,23 @@ public:
 
 
 void drivercontrol (){
+  [[maybe_unused]]
   ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
+  [[maybe_unused]]
   ButtonLatch UpLatch = ButtonLatch(Greg.ButtonUp);
+  [[maybe_unused]]
   ButtonLatch DownLatch = ButtonLatch(Greg.ButtonDown);
+  [[maybe_unused]]
   ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
+  [[maybe_unused]]
   ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
+  [[maybe_unused]]
   ButtonLatch LeftLatch = ButtonLatch(Greg.ButtonLeft);
+  [[maybe_unused]]
   ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
+  [[maybe_unused]]
   ButtonLatch L1Latch = ButtonLatch(Greg.ButtonL1);
+  [[maybe_unused]]
   ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
@@ -406,50 +306,11 @@ void runFlywheel(){
   }
 }
 //}
-// template<typename T>
-// concept okok = true;
 
-// template<okok T>
-// void test(T t){
-//   cout << "ok" << endl;
-// }
 
 
 //Brain Drawing Stuff {
 
-void printVars(bool) {
-  Brain.Screen.waitForRefresh();
-  Brain.Screen.clearScreen(black);
-  Brain.Screen.setFillColor(black);
-  Brain.Screen.printAt(10, 20, (string("glblBotAngle: ") + toCcp(glblBotAngle)).data());
-  Brain.Screen.printAt(10, 40, (string("botAngles.y: ") + toCcp(botAngles.y)).data());
-  Brain.Screen.printAt(10, 60, (string("botAngles.z: ") + toCcp(botAngles.z)).data());
-  Brain.Screen.printAt(10, 80, (string("tiltAngle: ") + toCcp(tiltAngle)).data());
-  Brain.Screen.printAt(10, 100, (string("wc.botPos().x: ") + toCcp(wc.botPos().x)).data());
-  Brain.Screen.printAt(10, 120, (string("wc.botPos().y: ") + toCcp(wc.botPos().y)).data());
-}
-void drawPath(bool){
-  // s(100);
-  PVector off = PVector(100, 100);
-  Brain.Screen.waitForRefresh();
-  Brain.Screen.clearScreen(black);
-
-  if(wc.drawArr){
-    Brain.Screen.setFillColor(blue);
-    for(auto v : wc.publicPath){
-      v *= 2.0;
-      v += off;
-      Brain.Screen.drawCircle(v.x, v.y, 2);
-    }
-  } else {
-    Brain.Screen.setFillColor(black);
-    Brain.Screen.printAt(40, 40, "No Path");
-  }
-}
-const color grey = color(100, 100, 100);
-const color lightGreen = color(100, 255, 100);
-
-const color darkGreen = color(ClrDarkGreen);
 enum class Alliance : int {
   red = 0,
   blue = 1
@@ -459,18 +320,9 @@ void displayBot(bool);
 #define V5_LVGL_RATE    4
 void  vexTaskSleep( uint32_t time );
 bool init = false;
-void fn(bool ){
-  Brain.Screen.clearScreen(black);
-  if(Brain.Screen.pressing()){
-    intake.spinVolt(fwd, 10000);
-  }
-  else {
-    intake.stop(coast);
-  }
-}
 bool helpAlignBot(bool){
   static double desiredAngle = 255;
-  static PVector position = PVector({60.5, -39});
+  // static PVector position = PVector({60.5, -39});
   // position.angleTo({-50, -50});
   static bool init = false;
   if(!init && Auton::isDone()){
@@ -519,7 +371,7 @@ void brainOS() {
   bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
-  bos::bosFns.pushBack(helpAlignBot);
+  // bos::bosFns.pushBack(helpAlignBot);
   bos::bosFns.pushBack(VariableConfig::drawAll);
   bos::bosFns.pushBack(bos::BosFn(printTestData));
   // bos::bosFns.push_back(fn);
@@ -639,18 +491,7 @@ int main() {
 
   thread flywheelControl = thread(runFlywheel);
 
-  // leftWheels.spin(fwd, 50);
-  // rightWheels.spin(fwd, -50);
 
-  // while(1){
-  //   leftWheels.setPtoRelease(leftPto);
-  //   s(1000);
-  //   rightWheels.setPtoRelease(rightPto);
-  //   s(1000);
-  // }
-
-
-  //autonomous();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
 

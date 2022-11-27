@@ -143,7 +143,7 @@ public:
   double heading();
   FieldCoord fullPos();
   bool moving ();
-  double velocity();
+  double velocity(int sleepTime);
   void clearMove();
 };
 #endif

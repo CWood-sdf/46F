@@ -70,7 +70,7 @@ void AutoIntake::updateValues(bool flywheelReady){
     clearingLastDisk = false;
   }
   int lastDisk = 1 << (sensors.size() - 1);
-  if(diskMask & lastDisk == lastDisk && clearingDisks){
+  if((diskMask & lastDisk) == lastDisk && clearingDisks){
     clearingLastDisk = true;
   } else {
     clearingLastDisk = false;

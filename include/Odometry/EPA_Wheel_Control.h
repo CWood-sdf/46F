@@ -80,12 +80,19 @@ private: // followPath vars
   PVector lastTarget;
   double exitDist = 0.0;
   exitMode BrakeMode = exitMode::normal;
-  bool exitEarly = false;
+  //Set to true by external threads to stop the robot
+  bool exitEarly = false; 
+  //Is true when auto needs to be reversed
   bool reversed = false;
+  //Is true when wheelbase is following path
   bool moving = false;
+  //Set to true to prevent a stop exit
   bool stopExitPrev = false;
+  //The radius of the path
   double pathRadius = 1.0;
+  //Distance following the path
   double followPathDist = 16.0;
+  //the time before exit
   int followPathMaxTimeIn = 5;
 public: // exitMode
   enum class exitMode {
@@ -120,6 +127,21 @@ public:
   virtual void faceTarget(PVector target);
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
+  class PathFollowSettings {
+  public:
+    bool useDistToGoal = true;
+    bool turnAtStart = true;
+    bool useForwardDist = true;
+    double virtualPursuitDist = 5.0;
+    double exitDist = 1.0;
+    exitMode brakeMode = exitMode::normal;
+    double pathRadius = 1.0;
+    double followPathDist = 16.0;
+    int maxTimeIn = 10;
+  };
+  // PathFollowSettings getDefaults(){
+
+  // }
   virtual void generalFollow(VectorArr&& arr, Controller* controller, bool isNeg){
     generalFollow(arr, controller, isNeg);
   }

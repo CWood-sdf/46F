@@ -18,7 +18,7 @@ double Chassis::botAngle(){
   #endif
 }
 #ifndef WINDOWS
-Chassis::Chassis(NewMotor& left, NewMotor& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : pos(p), leftWheels(left), rightWheels(right){
+Chassis::Chassis(NewMotor& left, NewMotor& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : leftWheels(left), rightWheels(right), pos(p){
 
   this->trackWidth = trackWidth;
   this->gearRatio = gearRatio;

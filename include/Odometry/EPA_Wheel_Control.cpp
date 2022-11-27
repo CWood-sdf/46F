@@ -199,16 +199,16 @@ BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVecto
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Conditions for reversing auton)
 #endif
-  // If they are on opposite sides, reverse the auton
-  else if (sign(botPos().x) != sign(v.x) && sign(botPos().y) != sign(v.y))
-  {
-    reversed = true;
-    cout << "Reversing auton" << endl;
-  }
-  else
-  {
-    reversed = false;
-  }
+  // // If they are on opposite sides, reverse the auton
+  // else if (sign(botPos().x) != sign(v.x) && sign(botPos().y) != sign(v.y))
+  // {
+  //   reversed = true;
+  //   cout << "Reversing auton" << endl;
+  // }
+  // else
+  // {
+  //   reversed = false;
+  // }
   CHAIN;
 }
 #endif
@@ -313,19 +313,19 @@ void BasicWheelController::backInto(double x, double y)
 {
   generalFollow({PVector(x, y)}, defaultPid, true);
 }
-/***
-Random thoughts
 
-the general follow function should manage the target point
-it should find the closest path point
-all that info needs to be sent to the controller, maybe a struct in controller
-probably have some option to call turnTo at the start
-follow should manage the exiting
-controller should prolly have some deInit function
-follow should call spin the wheels
-all controller should do is just to take target and nearest point data and return wheel speed
-chassis should manage wheel spinning nitty gritty
-**/
+/**
+ * Boolean Settings:
+ *  - Turn at the start
+ *  - Use forward distance
+ * Other settings: 
+ *  - virtual pursuit distance
+ *  - exit distance
+ *  - exit mode
+ *  - path radius
+ *  - follow path distance
+ *  - max time in
+*/
 void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller, bool isNeg)
 {
   double purePursuitDist = followPathDist; // Distance to pure pursuit target
@@ -553,7 +553,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     double angle = baseAngle(botPos().angleTo(virtualPursuit));
 
     // The angle that it needs to travel at
-    double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
+    // double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
     // cout << "N " << normAngle << endl;
     // cout << "D " << dist << endl;
     Controller::Input input = Controller::Input();

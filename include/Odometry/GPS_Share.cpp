@@ -57,8 +57,8 @@ void GPS_Share::update(){
     //Get the speed
     //Uses odometry for speed because the GPS has random, slight variation
     //Odometry speed returns 0 when the speed is 0
-    speed = deltaOdom.pos.mag() / (double)sleepTime * 1000.0;
-
+    speedFilter.update(deltaOdom.pos.mag() / (double)sleepTime * 1000.0);
+    speed = speedFilter.value();
     //Get GPS coordinate
     FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
 

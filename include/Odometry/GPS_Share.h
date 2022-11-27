@@ -1,6 +1,7 @@
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
 #include "EPA_Tracker.h"
+#include "EMA_Filter.h"
 #ifndef WINDOWS
 class BasicConfirmationOdom {
 public:
@@ -22,6 +23,7 @@ class GPS_Share {
   FieldCoord pos = FieldCoord(PVector(0, 0), 0);
   FieldCoord lastOdom = FieldCoord(PVector(0, 0), 0);
   double speed = 0.0;
+  EMA speedFilter = EMA(0.2, 0);
   bool lastBad = false;
   bool isFirstBad = false;
   static const int sleepTime = 10;
