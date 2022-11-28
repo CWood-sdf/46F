@@ -328,7 +328,7 @@ void BasicWheelController::backInto(double x, double y)
 */
 void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller, bool isNeg)
 {
-  double purePursuitDist = followPathDist; // Distance to pure pursuit target
+  double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
   
   controller->init();
 #ifndef USE_GAME_SPECIFIC
@@ -344,7 +344,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
   }
     
   // cout << "sdfa" << endl; s(100);
-  if (controller->isTurnAtStart())
+  if (controller->settings.turnAtStart)
   // Simple initialization and turn to first point
   {
     
@@ -425,13 +425,13 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
   #endif
   [[maybe_unused]] int time = 0,       // Counts the time in loop iterations
       timeIn = 0,                      // The amount of time spent near the target
-      maxTimeIn = followPathMaxTimeIn, // The time needed before exit
+      maxTimeIn = controller->settings.maxTimeIn, // The time needed before exit
       sleepTime = 10,                  // The sleep time
       g = 0;                           // A debug output counter
 
   double
       // Going with an hopefully possible 1 in accuracy
-      minAllowedDist = exitDist == 0.0 ? 2.0 : exitDist; // The maximum distance from target before starting timeIn count
+      minAllowedDist = controller->settings.exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
 #undef DEBUG
 #ifdef DEBUG
@@ -467,6 +467,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       Brain.Screen.drawCircle(i, path[i].targetSpeed, 1);
     }
   };
+  double dist = 0.0; // The distance from the target
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
@@ -494,7 +495,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
       bezierIndex = path.size() - 1;
     }
     // Near the target, increment timeIn
-    if (botPos().dist2D(path.last()) < minAllowedDist && pursuit == path.last())
+    if (dist < minAllowedDist && pursuit == path.last())
     {
       timeIn++;
     }
@@ -504,7 +505,7 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     }
     
     // The distance to the pursuit target
-    double dist = botPos().dist2D(pursuit);
+    dist = botPos().dist2D(pursuit);
     #ifndef TEST
     // If the bot's not moving, and it's not currently accelerating
     if (chassis->pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000)
@@ -527,25 +528,41 @@ void BasicWheelController::generalFollow(VectorArr& arr, Controller *controller,
     // The point extended beyond the path to make sure normAngle doesn't get big near the target
     PVector virtualPursuit = pursuit;
     // cout << virtualPursuit << endl;
-    if (botPos().dist2D(pursuit) < 8.0 && pursuit == path.last())
+    if (botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last())
     {
       // A vector that is parallel wih last point
       PVector last = (PVector)path.last() - path[path.size() - 4];
       // Distance to be added so that virtualPursuit is still purePursuitDist away from bot
-      double addDist = 8.0 - botPos().dist2D(pursuit);
+      double addDist = controller->settings.virtualPursuitDist - botPos().dist2D(pursuit);
       // Make last to be proper size
 
       last *= addDist / last.mag();
       virtualPursuit += last;
     }
     // cout << virtualPursuit << endl;
-    dist = botPos().dist2D(pursuit);
-    // Make the dist signed so that PID will work
-    if (bezierIndex == path.size() - 1){
-      PVector pathNearEnd = path[path.size() - 3];
-      // Multiply dist by -1 if the bot is past the target
-      double distSign = sign((pathNearEnd - path.last()).dot(botPos() - path.last()));
-      dist *= distSign;
+    if(controller->settings.useDistToGoal){
+      if(bezierIndex != 0){
+        PVector pathDir = (PVector)path[bezierIndex] - path[bezierIndex - 1];
+        PVector botDir = botPos() - path[bezierIndex - 1];
+        double pathDirAngle = pathDir.heading2D();
+        //Rotate the vectors back by the pathDirAngle
+        pathDir.rotateXY(-pathDirAngle);
+        botDir.rotateXY(-pathDirAngle);
+        //The dist is the difference in the y's
+        dist = pathDir.y - botDir.y;
+      } else {
+        dist = botPos().dist2D(path[0]);
+      }
+    }
+    else {
+      dist = botPos().dist2D(pursuit);
+      // Make the dist signed so that PID will work
+      if (bezierIndex == path.size() - 1){
+        PVector pathNearEnd = path[path.size() - 3];
+        // Multiply dist by -1 if the bot is past the target
+        double distSign = sign((pathNearEnd - path.last()).dot(botPos() - path.last()));
+        dist *= distSign;
+      }
     }
     
     // cout << "Cool" << endl;
