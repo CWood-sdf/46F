@@ -40,6 +40,35 @@ public:
 	
 };
 #endif
+struct Chassis;
+class Controller;
+class Path {
+public:
+  struct El {
+    PVector bezierPt;
+    double targetSpeed;
+    double targetAngle;
+    double curvature;
+    operator PVector(){
+      return bezierPt;
+    }
+  };
+private:
+  typedef Path& chain_method;
+  vector<El> path;
+  VectorArr arr;
+  double kConst;
+public:
+
+  chain_method setK(double s);
+  void make(VectorArr& arr, Chassis* chassis);
+  void remake(Chassis* chassis);
+  VectorArr getBezier();
+  vector<Ref<PVector>> getBezierRef();
+  int size();
+  El& last();
+  El& operator[](int index);
+};
 struct Chassis {
   typedef Chassis& chain_method;
   #ifdef TEST

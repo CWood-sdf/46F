@@ -4,7 +4,7 @@
 #ifndef EPA_WHEEL_CONTROL_H
 #define EPA_WHEEL_CONTROL_H
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
-#include "Controllers.h"
+#include "Chassis.h"
 #include <deque>
 #ifdef DEBUG
 #warning "DEBUG already defined"
@@ -12,6 +12,9 @@
 #define DEBUG
 #endif
 //The basic wheel controller 
+class RamseteController;
+class BasicPidController;
+class PurePursuitController;
 class BasicWheelController {
 protected: // PID variables + other random things
 
@@ -128,16 +131,49 @@ public:
   virtual void ramseteFollow(VectorArr arr, bool isNeg);
   virtual void purePursuitFollow(VectorArr arr, bool isNeg);
   class PathFollowSettings {
+    typedef PathFollowSettings& chain_method;
   public:
     bool useDistToGoal = true;
     bool turnAtStart = true;
-    bool useForwardDist = true;
     double virtualPursuitDist = 5.0;
     double exitDist = 1.0;
     exitMode brakeMode = exitMode::normal;
     double pathRadius = 1.0;
     double followPathDist = 16.0;
     int maxTimeIn = 10;
+    chain_method setUseDistToGoal(bool v){
+      useDistToGoal = v;
+      return *this;
+    }
+    chain_method setTurnAtStart(bool v){
+      turnAtStart = v;
+      return *this;
+    }
+    chain_method setVirtualPursuitDist(double v){
+      virtualPursuitDist = v;
+      return *this;
+    }
+    chain_method setExitDist(double v){
+      exitDist = v;
+      return *this;
+    }
+    chain_method setBrakeMode(exitMode v){
+      brakeMode = v;
+      return *this;
+    }
+    chain_method setPathRadius(double v){
+      pathRadius = v;
+      return *this;
+    }
+    chain_method setFollowPathDist(double v){
+      followPathDist = v;
+      return *this;
+    }
+    chain_method setMaxTimeIn(int v){
+      maxTimeIn = v;
+      return *this;
+    }
+
   };
   // PathFollowSettings getDefaults(){
 

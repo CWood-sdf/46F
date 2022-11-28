@@ -148,9 +148,35 @@ GPS_Share share = GPS_Share(positioner, GPS);
 //Wheel controller
 
 Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
-PurePursuitController purePursuit = PurePursuitController(PID(6.25, 0.001, 2.4325, 0, 8, 1));
-RamseteController ramsete = RamseteController(0.0108, 0.2);
-BasicPidController pidController = BasicPidController(PIDF(6.0, 0.1, 2.4325, 20, 6, 1), PID(1.0, 0, 0.3, 0, 0, 0));
+BasicWheelController::PathFollowSettings purePursuitSettings = BasicWheelController::PathFollowSettings();
+
+PurePursuitController purePursuit = PurePursuitController(
+  PID(6.25, 0.001, 2.4325, 0, 8, 1), 
+  purePursuitSettings
+    .setBrakeMode(BasicWheelController::exitMode::nothing)
+    .setExitDist(6)
+    .setUseDistToGoal(true)
+    .setFollowPathDist(16)
+    .setVirtualPursuitDist(5));
+BasicWheelController::PathFollowSettings ramseteSettings = BasicWheelController::PathFollowSettings();
+RamseteController ramsete = RamseteController(
+  0.0108, 0.2,
+  ramseteSettings
+    .setBrakeMode(BasicWheelController::exitMode::normal)
+    .setExitDist(2)
+    .setUseDistToGoal(true)
+    .setFollowPathDist(12)
+    .setVirtualPursuitDist(2));
+BasicWheelController::PathFollowSettings pidSettings = BasicWheelController::PathFollowSettings();
+BasicPidController pidController = BasicPidController(
+  PIDF(6.0, 0.1, 2.4325, 20, 6, 1), 
+  PID(1.0, 0, 0.3, 0, 0, 0),
+  pidSettings
+    .setBrakeMode(BasicWheelController::exitMode::normal)
+    .setExitDist(2)
+    .setUseDistToGoal(false)
+    .setFollowPathDist(16)
+    .setVirtualPursuitDist(4));
 Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(1.42, 0.05, 1.35/2, 0, 20, 4), 1.0);
 
 /*************************************

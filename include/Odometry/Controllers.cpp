@@ -153,8 +153,12 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
 void PurePursuitController::init(){
   ctrl.setTarget(0);
 }
-PurePursuitController::PurePursuitController(PID input){
+PurePursuitController::PurePursuitController(PID input) : PurePursuitController(input, BasicWheelController::PathFollowSettings()) {
+
+}
+PurePursuitController::PurePursuitController(PID input, BasicWheelController::PathFollowSettings settings){
   ctrl = input;
+  this->settings = settings;
 }
 RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double theta = posNeg180(input.currentAngle);//deg
@@ -182,13 +186,21 @@ RamseteController::followToRet RamseteController::followTo(Input &input)  {
   double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / (eTheta + eTheta == 0 ? 0.00001 : 0) * error(0, 0);
   return {{speed, ForwardVel::inps}, {turnVel, AngularVel::radps}};
 }
-RamseteController::RamseteController(double beta, double zeta) : Controller() {
+RamseteController::RamseteController(double beta, double zeta, BasicWheelController::PathFollowSettings settings) : Controller() {
   this->beta = beta;
   this->zeta = zeta;
+  this->settings = settings;
 }
-BasicPidController::BasicPidController(PID ctrl, PID slave){
+RamseteController::RamseteController(double beta, double zeta) : RamseteController(beta, zeta, BasicWheelController::PathFollowSettings()) {
+
+}
+BasicPidController::BasicPidController(PID ctrl, PID slave, BasicWheelController::PathFollowSettings settings) : Controller() {
   this->ctrl = ctrl;
   this->slave = slave;
+  this->settings = settings;
+}
+BasicPidController::BasicPidController(PID ctrl, PID slave) : BasicPidController(ctrl, slave, BasicWheelController::PathFollowSettings()) {
+
 }
 
 BasicPidController::followToRet BasicPidController::followTo(Input &input){

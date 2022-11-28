@@ -1,42 +1,17 @@
 #ifndef CONTROLLERS_H
 #define CONTROLLERS_H
-#include "Chassis.h"
+#include "EPA_Wheel_Control.h"
 #ifndef CHAIN
 #define CHAIN return *this;
 #endif
 //That should be a sufficient path generator
-class Path {
-public:
-  struct El {
-    PVector bezierPt;
-    double targetSpeed;
-    double targetAngle;
-    double curvature;
-    operator PVector(){
-      return bezierPt;
-    }
-  };
-private:
-  typedef Path& chain_method;
-  vector<El> path;
-  VectorArr arr;
-  double kConst;
-public:
 
-  chain_method setK(double s);
-  void make(VectorArr& arr, Chassis* chassis);
-  void remake(Chassis* chassis);
-  VectorArr getBezier();
-  vector<Ref<PVector>> getBezierRef();
-  int size();
-  El& last();
-  El& operator[](int index);
-};
 double sign(double v);
 class Controller {
   bool turnAtStart = false;
   bool defaultTurn = true;
 public:  
+  BasicWheelController::PathFollowSettings settings;
   bool isTurnAtStart(){
     return turnAtStart;
   }
@@ -92,11 +67,8 @@ class PurePursuitController : public Controller {
 public:
   followToRet followTo(Input& input) override;
   void init() override;
-  template<class T, class... Args>
-  PurePursuitController(T val, Args... args){
-    ctrl = PID(val, args...);
-  }
   PurePursuitController(PID input);
+  PurePursuitController(PID input, BasicWheelController::PathFollowSettings settings);
   PurePursuitController() = delete;
 };
 class RamseteController : public Controller {
@@ -110,6 +82,7 @@ public:
   followToRet followTo(Input &input) override;
   //[b > 0], [0 < zeta < 1]
   RamseteController(double beta, double zeta);
+  RamseteController(double beta, double zeta, BasicWheelController::PathFollowSettings settings);
   RamseteController() = delete;
 };
 class BasicPidController : public Controller {
@@ -118,6 +91,7 @@ class BasicPidController : public Controller {
 public:
   void init() override;
   BasicPidController(PID, PID);
+  BasicPidController(PID, PID, BasicWheelController::PathFollowSettings settings);
   followToRet followTo(Input &input) override;
   BasicPidController() = delete;
 };
