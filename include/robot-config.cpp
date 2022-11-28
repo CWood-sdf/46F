@@ -1,35 +1,38 @@
 #define NO_MAKE
 #include "robot-config.h"
-std::vector<tuple<string, vex::device*>> connectedDevices = {};
+std::vector<tuple<string, vex::device *>> connectedDevices = {};
 
-AddDevice::AddDevice(string name, vex::device* device){
+AddDevice::AddDevice(string name, vex::device *device)
+{
   connectedDevices.push_back(make_tuple(name, device));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
-#define TestDevices(device, ...) TestDevice(device); TestDevices(__VA_ARGS__)
-//Make a brain
+#define TestDevices(device, ...) \
+  TestDevice(device);            \
+  TestDevices(__VA_ARGS__)
+// Make a brain
 brain Brain;
 
-//Make a controller and name it Greg
+// Make a controller and name it Greg
 controller Greg = controller();
 controller Beethoven = controller(partner);
 
-//Front Left Wheel (FL)
+// Front Left Wheel (FL)
 motor FL = motor(PORT19, gearSetting::ratio18_1, !true);
 TestDevice(FL);
-//Front Right Wheel (FR)
+// Front Right Wheel (FR)
 motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
 TestDevice(FR);
-//Back Left Wheel (BL)
+// Back Left Wheel (BL)
 motor BL = motor(PORT18, gearSetting::ratio18_1, !true);
 TestDevice(BL);
-//Back Right Wheel (BR)
+// Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
-//Middle Left Wheel (ML)
+// Middle Left Wheel (ML)
 motor ML = motor(PORT20, gearSetting::ratio18_1, true);
 TestDevice(ML);
-//Middle Right Wheel (MR)
+// Middle Right Wheel (MR)
 motor MR = motor(PORT8, gearSetting::ratio18_1, false);
 TestDevice(MR);
 
@@ -52,20 +55,17 @@ Encoder e = Encoder(flyWheelMot);
 // FlywheelPID flyPID = FlywheelPID(flyWheelMot, flySensor);
 FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 // bool flywheelPID = false;
-//New Motors, a few reasons for this: 
+// New Motors, a few reasons for this:
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 // NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
 NewMotor leftWheels = NewMotor(BL, FL, ML);
-NewMotor rightWheels = NewMotor(BR, FR, ML);
-NewMotor ptoTarget = NewMotor(ML, MR);
+NewMotor rightWheels = NewMotor(BR, FR, MR);
+NewMotor intake = NewMotor(ML, MR);
 pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
 Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
-Pto rightPto = rightWheels.addPto(pto, {&ML}, false);
-
-NewMotor intake = NewMotor(intakeMot, intakeMot2);
-
-
+Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
+Pto intakePto = intake.addPto(pto, vector<motor *>({&ML, &MR}), false);
 
 // /*vex-vision-config:begin*/
 // vex::vision::signature BLUEGOAL = vex::vision::signature (1, -1873, 915, -479, 3997, 7001, 5499, 2.5, 0);
@@ -91,37 +91,37 @@ Sensors
 
 *************************************/
 
-
-//Three wire expander
-// triport Expander = triport(PORT9);
-// TestDevice(Expander);
-//Inertial Sensor
+// Three wire expander
+//  triport Expander = triport(PORT9);
+//  TestDevice(Expander);
+// Inertial Sensor
 inertial angler = inertial(PORT16);
 TestDevice(angler);
 
-//gps
+// gps
 gps GPS = gps(PORT7, 6, 4.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
 
-vex::distance intakeMiddle = vex::distance(PORT20);
+vex::distance intakeMiddle = vex::distance(PORT19);
 TestDevice(intakeMiddle);
 
 LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
 LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
-AutoIntake intakeController = AutoIntake({
-  [](){
-    return intakeBottom.pressing();
-  }, 
-  [](){ 
-    return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
-  }, 
-  [](){
-    return intakeTop.pressing();
-  }
-});
+AutoIntake intakeController = AutoIntake({[]()
+                                          {
+                                            return intakeBottom.pressing();
+                                          },
+                                          []()
+                                          {
+                                            return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
+                                          },
+                                          []()
+                                          {
+                                            return intakeTop.pressing();
+                                          }});
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
@@ -133,51 +133,51 @@ Odometry
 
 // VisionOdom visionTest = VisionOdom(goalFrontVision, {0, 0}, 12.5, 32, 0);
 
-//Positioner init
-posTp::xPortArr arrX = { };
+// Positioner init
+posTp::xPortArr arrX = {};
 
-posTp::yPortArr arrY = { Port(PORT15) };
-//Make a positioner that measures x and y with smallest omni wheel rad
-posTp positioner = posTp(arrX, arrY, 
-                        { -1.0 }, { -1.0 }, { -1.0 }, { -1.0 },
-                         0.0 ,  0.0 ,
-                        1.375);
+posTp::yPortArr arrY = {Port(PORT15)};
+// Make a positioner that measures x and y with smallest omni wheel rad
+posTp positioner = posTp(arrX, arrY,
+                         {-1.0}, {-1.0}, {-1.0}, {-1.0},
+                         0.0, 0.0,
+                         1.375);
 
 GPS_Share share = GPS_Share(positioner, GPS);
 
-//Wheel controller
+// Wheel controller
 
-Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0/60.0, 3.75, gearSetting::ratio6_1);
+Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio6_1);
 BasicWheelController::PathFollowSettings purePursuitSettings = BasicWheelController::PathFollowSettings();
 
 PurePursuitController purePursuit = PurePursuitController(
-  PID(6.25, 0.001, 2.4325, 0, 8, 1), 
-  purePursuitSettings
-    .setBrakeMode(BasicWheelController::exitMode::nothing)
-    .setExitDist(6)
-    .setUseDistToGoal(true)
-    .setFollowPathDist(16)
-    .setVirtualPursuitDist(5));
+    PID(6.25, 0.001, 2.4325, 0, 8, 1),
+    purePursuitSettings
+        .setBrakeMode(BasicWheelController::exitMode::nothing)
+        .setExitDist(6)
+        .setUseDistToGoal(true)
+        .setFollowPathDist(16)
+        .setVirtualPursuitDist(5));
 BasicWheelController::PathFollowSettings ramseteSettings = BasicWheelController::PathFollowSettings();
 RamseteController ramsete = RamseteController(
-  0.0108, 0.2,
-  ramseteSettings
-    .setBrakeMode(BasicWheelController::exitMode::normal)
-    .setExitDist(2)
-    .setUseDistToGoal(true)
-    .setFollowPathDist(12)
-    .setVirtualPursuitDist(2));
+    0.0108, 0.2,
+    ramseteSettings
+        .setBrakeMode(BasicWheelController::exitMode::normal)
+        .setExitDist(2)
+        .setUseDistToGoal(true)
+        .setFollowPathDist(12)
+        .setVirtualPursuitDist(2));
 BasicWheelController::PathFollowSettings pidSettings = BasicWheelController::PathFollowSettings();
 BasicPidController pidController = BasicPidController(
-  PIDF(6.0, 0.1, 2.4325, 20, 6, 1), 
-  PID(1.0, 0, 0.3, 0, 0, 0),
-  pidSettings
-    .setBrakeMode(BasicWheelController::exitMode::normal)
-    .setExitDist(2)
-    .setUseDistToGoal(false)
-    .setFollowPathDist(16)
-    .setVirtualPursuitDist(4));
-Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(1.42, 0.05, 1.35/2, 0, 20, 4), 1.0);
+    PIDF(6.0, 0.1, 2.4325, 20, 6, 1),
+    PID(1.0, 0, 0.3, 0, 0, 0),
+    pidSettings
+        .setBrakeMode(BasicWheelController::exitMode::normal)
+        .setExitDist(2)
+        .setUseDistToGoal(false)
+        .setFollowPathDist(16)
+        .setVirtualPursuitDist(4));
+Omni_6Controller wc = Omni_6Controller(&chassis, &ramsete, &purePursuit, &pidController, PID(1.42, 0.05, 1.35 / 2, 0, 20, 4), 1.0);
 
 /*************************************
 
@@ -190,15 +190,23 @@ Autonomous System Controllers
 //   }
 //   flyPID.graph(remake);
 // }
-void graphFlywheelTBH(bool remake){
-  if(remake){
+void graphFlywheelTBH(bool remake)
+{
+  if (remake)
+  {
     // flywheelPID = false;
   }
   flyTBH.graph(remake);
 }
 
-#define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
-void testMotorConfiguration(){
+#define TEST_MOT(m)   \
+  cout << #m << endl; \
+  m.spin(fwd);        \
+  s(1000);            \
+  m.stop();           \
+  s(500);
+void testMotorConfiguration()
+{
   TEST_MOT(FL)
   // TEST_MOT(ML)
   TEST_MOT(BL)
@@ -207,16 +215,24 @@ void testMotorConfiguration(){
   // TEST_MOT(MR)
   TEST_MOT(BR)
 }
-#define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
-void testMotorConnection(){
+#define TMC(m)                                              \
+  if (!m.installed())                                       \
+  {                                                         \
+    cout << "Motor " << #m << " is not connected!" << endl; \
+    Greg.rumble(".");                                       \
+  }
+void testMotorConnection()
+{
   // TMC(FL)
   // TMC(ML)
   // TMC(BL)
   // TMC(FR)
   // TMC(MR)
   // TMC(BR)
-  for(auto i : connectedDevices){
-    if(!get<1>(i)->installed()){\
+  for (auto i : connectedDevices)
+  {
+    if (!get<1>(i)->installed())
+    {
       int32_t port = get<1>(i)->index() + 1;
       cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
       Greg.rumble(".");
@@ -228,18 +244,18 @@ void testMotorConnection(){
  *
  * This should be called at the start of your int main function.
  */
-void vexcodeInit(void){
+void vexcodeInit(void)
+{
   // wheels.set(hold);
 }
 
-bool toBool(double v){
+bool toBool(double v)
+{
   return (bool)(int)(v + 0.5);
 }
 
-
 /*************************************
- * 
+ *
  * The intake automation variables in a struct
- * 
-*************************************/
-
+ *
+ *************************************/
