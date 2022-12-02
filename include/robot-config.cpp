@@ -65,7 +65,7 @@ NewMotor intake = NewMotor(ML, MR);
 pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
 Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
 Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
-Pto intakePto = intake.addPto(pto, vector<motor *>({&ML, &MR}), false);
+Pto intakePto = intake.addPto(pto, vector<int>({0, 1}), false);
 
 // /*vex-vision-config:begin*/
 // vex::vision::signature BLUEGOAL = vex::vision::signature (1, -1873, 915, -479, 3997, 7001, 5499, 2.5, 0);
