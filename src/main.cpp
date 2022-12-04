@@ -539,18 +539,6 @@ int main()
   // thread loader = thread(brainOS);
 
   // thread flywheelControl = thread(runFlywheel);
-  ML.spin(fwd, 100, pct);
-  while (1)
-  {
-    pto.set(true);
-    ML.spin(fwd, 100, pct);
-    s(2000);
-    ML.spin(fwd, 100, pct);
-    pto.set(false);
-    ML.spin(fwd, 100, pct);
-    s(2000);
-    ML.spin(fwd, 100, pct);
-  }
 
   // Competition.autonomous(autonomous);
   // Competition.drivercontrol(drivercontrol);

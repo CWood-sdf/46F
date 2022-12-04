@@ -14,27 +14,27 @@
 Motors
 
 *************************************/
-//Front Left Wheel (FL)
-extern motor FL;
-//Front Right Wheel (FR)
-extern motor FR;
-//Back Left Wheel (BL)
-extern motor BL;
-//Back Right Wheel (BR)
-extern motor BR;
-//Middle Left Wheel (ML)
-extern motor ML;
-//Middle Right Wheel (MR)
-extern motor MR;
+// //Front Left Wheel (FL)
+// extern motor FL;
+// //Front Right Wheel (FR)
+// extern motor FR;
+// //Back Left Wheel (BL)
+// extern motor BL;
+// //Back Right Wheel (BR)
+// extern motor BR;
+// //Middle Left Wheel (ML)
+// extern motor ML;
+// //Middle Right Wheel (MR)
+// extern motor MR;
 
-extern Pto leftPto;
-extern Pto rightPto;
+// extern Pto leftPto;
+// extern Pto rightPto;
 
-extern motor_group Left;
-extern motor_group Right;
+// extern motor_group Left;
+// extern motor_group Right;
 
-extern motor flyWheelMot;
-extern motor flywheel2;
+// extern motor flyWheelMot;
+// extern motor flywheel2;
 
 extern NewMotor intake;
 
@@ -42,10 +42,10 @@ extern NewMotor flywheelNm;
 // extern FlywheelPID flyPID;
 extern FlywheelTBHEncoder flyTBH;
 // extern bool flywheelPID;
-//New Motors, a few reasons for this: 
+// New Motors, a few reasons for this:
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-extern NewMotor wheels;
+// extern NewMotor wheels;
 extern NewMotor leftWheels;
 extern NewMotor rightWheels;
 
@@ -60,7 +60,7 @@ Pneumatics
 
 *************************************/
 extern pneumatics endgame;
-extern pneumatics pto;
+// extern pneumatics pto;
 
 /*************************************
 
@@ -68,17 +68,16 @@ Sensors
 
 *************************************/
 
-
-//Three wire expander
+// Three wire expander
 extern triport Expander;
 
-//Inertial Sensor
+// Inertial Sensor
 extern inertial angler;
 
-//gps
+// gps
 extern gps GPS;
 
-extern optical rachetColor; 
+extern optical rachetColor;
 
 extern LineCounter intakeBottom;
 extern vex::distance intakeMiddle;
@@ -86,7 +85,6 @@ extern LineCounter intakeTop;
 extern AutoIntake intakeController;
 // Distance goalFront;
 // Distance goalBack;
-
 
 /*************************************
 
@@ -96,18 +94,17 @@ Odometry
 
 // VisionOdom visionTest;
 
-//Positioner init
+// Positioner init
 typedef Positioner posTp;
 
 extern GPS_Share share;
 
 extern Positioner positioner;
-//Wheel controller
+// Wheel controller
 extern Omni_6Controller wc;
 extern vision Vision1;
 extern vision::signature BLUEGOAL;
 extern vision::signature REDGOAL;
-
 
 /*************************************
 
@@ -117,9 +114,19 @@ Autonomous System Controllers
 void graphFlywheelPID(bool remake);
 void graphFlywheelTBH(bool remake);
 
-#define TEST_MOT(m) cout << #m << endl; m.spin(fwd); s(1000); m.stop(); s(500);
+#define TEST_MOT(m)     \
+    cout << #m << endl; \
+    m.spin(fwd);        \
+    s(1000);            \
+    m.stop();           \
+    s(500);
 void testMotorConfiguration();
-#define TMC(m) if(!m.installed()){ cout << "Motor " << #m << " is not connected!" << endl; Greg.rumble(".");}
+#define TMC(m)                                                  \
+    if (!m.installed())                                         \
+    {                                                           \
+        cout << "Motor " << #m << " is not connected!" << endl; \
+        Greg.rumble(".");                                       \
+    }
 void testMotorConnection();
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

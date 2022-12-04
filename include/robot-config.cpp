@@ -29,19 +29,19 @@ TestDevice(BL);
 // Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
-// Middle Left Wheel (ML)
-motor ML = motor(PORT20, gearSetting::ratio18_1, true);
-TestDevice(ML);
-// Middle Right Wheel (MR)
-motor MR = motor(PORT8, gearSetting::ratio18_1, false);
-TestDevice(MR);
+// // Middle Left Wheel (ML)
+// motor ML = motor(PORT20, gearSetting::ratio18_1, true);
+// TestDevice(ML);
+// // Middle Right Wheel (MR)
+// motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+// TestDevice(MR);
 
 motor_group Left = motor_group(BL, FL);
 motor_group Right = motor_group(BR, FR);
 
-motor intakeMot = motor(PORT17, gearSetting::ratio18_1, false);
+motor intakeMot = motor(PORT20, gearSetting::ratio18_1, false);
 TestDevice(intakeMot);
-motor intakeMot2 = motor(PORT5, gearSetting::ratio18_1, true);
+motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, true);
 TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
@@ -59,13 +59,13 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
 // NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
-NewMotor leftWheels = NewMotor(BL, FL, ML);
-NewMotor rightWheels = NewMotor(BR, FR, MR);
-NewMotor intake = NewMotor(ML, MR);
-pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
-Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
-Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
-Pto intakePto = intake.addPto(pto, vector<motor *>({&ML, &MR}), false);
+NewMotor leftWheels = NewMotor(BL, FL);
+NewMotor rightWheels = NewMotor(BR, FR);
+NewMotor intake = NewMotor(intakeMot, intakeMot2);
+// pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
+// Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
+// Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
+// Pto intakePto = intake.addPto(pto, vector<motor *>({&ML, &MR}), false);
 
 // /*vex-vision-config:begin*/
 // vex::vision::signature BLUEGOAL = vex::vision::signature (1, -1873, 915, -479, 3997, 7001, 5499, 2.5, 0);
