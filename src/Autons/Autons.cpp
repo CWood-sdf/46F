@@ -1,80 +1,63 @@
 #define NO_MAKE
 #include "src/Autons/Autons.h"
 
-Auton leftA = "Left" + [](){
-  wc.estimateStartPos({60, -36}, 90);
-  rachetColor.setLightPower(50, percent);
-  flyTBH.setTargetSpeed(520);
-  flyTBH.setDisabled(true);
-  auto acc = flyTBH.maxRateGain;
-  flyTBH.maxRateGain = 100;
-  flywheelNm.spin(fwd, 52000/600);
-  s(2000);
-  flyTBH.setDisabled(false);
-  flyTBH.maxRateGain = acc;
-  s(50);
-  
-  // wc.faceTarget({-40.79, 50.06});
-  while(!flyTBH.ready()){
-    s(10);
-  }
-  intake.spin(fwd, 100);
-  s(5000);
-  intake.stop(hold);
-  flyTBH.setTargetSpeed(0);
-  pidController.setTurn();
-  wc.setExitDist(3.0);
-  wc.turnTo(-90);
-  chassis.driveFromDiff(-20, 0, fwd);
-  intake.spin(vex::reverse, 100);
-  s(3000);
-  intake.stop(hold);
-  rachetColor.setLightPower(0, percent);
-};
-Auton rightA = "Right" + [](){
-  flyTBH.setTargetSpeed(500);
-  flyTBH.setDisabled(true);
-  auto acc = flyTBH.maxRateGain;
-  flyTBH.maxRateGain = 100;
-  flywheelNm.spin(fwd, 52000/600);
-  s(2000);
-  flyTBH.setDisabled(false);
-  flyTBH.maxRateGain = acc;
-  s(50);
-  
-  // wc.faceTarget({-40.79, 50.06});
-  while(!flyTBH.ready()){
-    s(10);
-  }
-  intake.spin(fwd, 100);
-  s(3000);
-  intake.stop(hold);
-  flyTBH.setTargetSpeed(0);
-
-  wc.estimateStartPos(PVector(-17.60, 65.52), 180);
-  
-  wc.driveTo(-17.7, 12.08+65.52);
-  wc.backwardsFollow(&pidController, {PVector(-26.68, 11.42)+PVector(-17.60, 65.52)});
-  wc.backwardsFollow(&pidController, {PVector(-24.04, 4.48)+PVector(-17.60, 65.52)});
+Auton leftA = "Left" + []()
+{
+  wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
   spinRoller();
-
+  // Fire
+  wc.faceTarget({49.60, 49.88});
+  intakeController.setFiring();
+  // Drive to 3-stack
+  goalRaise.open();
+  wc.driveTo(-22.45, -3.39);
+  goalRaise.close();
+  intakeController.intakeMultiple(3);
+  wc.faceTarget({49.42, 50.22});
+  // Fire
+  intakeController.setFiring();
 };
-Auton skills = "Skills" + [](){
+Auton rightA = "Right" + []()
+{
+  wc.estimateStartPos(PVector(16.81, -62.47), 0);
+  wc.faceTarget({48.57, 50.05});
+  // Fire
+  intakeController.setFiring();
+  // Move fwd to allow for roller
+  wc.driveTo(21.59, -42.32);
+  // Drive to roller
+  wc.backwardsFollow(&pidController, {PVector(39.01, -54.1)});
+  wc.backwardsFollow(&pidController, {PVector(39.18, -60.76)});
+  spinRoller();
+  // Drive along 3-ground
+  wc.followPath(&pidController, {PVector(-14.26, -11.07)});
+  wc.faceTarget({48.57, 50.05});
+  // Fire
+  intakeController.setFiring();
+};
+Auton skills = "Skills" + []()
+{
   cout << "s" << endl;
 };
-// Auton winPoint = "Win Point" + [](){
-//   wc.estimateStartPos(PVector(-61.61, 41.32), 90.03);
-//   spinRoller();
-//   wc.faceTarget({49.77, 50.01});
-//   //TODO: fire disks
-//   wc.followPath(&pidController, {PVector(-25.96, 0.35)});
-//   wc.faceTarget({49.77, 50.01});
-//   //TODO: fire disks
-//   wc.followPath(&purePursuit, {PVector(18.20, -47.89), PVector(31.32, -46.3)});
-//   wc.backwardsFollow(&purePursuit, {PVector(39.48, -53.04), PVector(40.02, -61.37)});
-//   spinRoller();
-
-// };
+Auton winPoint = "Win Point" + []()
+{
+  wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
+  spinRoller();
+  // Fire
+  wc.faceTarget({49.60, 49.88});
+  intakeController.setFiring();
+  // Drive to 3-stack
+  goalRaise.open();
+  wc.driveTo(-22.45, -3.39);
+  goalRaise.close();
+  intakeController.intakeMultiple(3);
+  wc.faceTarget({49.60, 49.88});
+  // Fire disks
+  intakeController.setFiring();
+  wc.followPath(&purePursuit, {PVector(25.52, -52.57), PVector(41.23, -57.52)});
+  wc.backwardsFollow(&pidController, {PVector(41.23, -60.59)});
+  spinRoller();
+};
 // Auton purePursuitTest1 = "pptline" + [](){
 //   // wc.estimateStartPos(PVector(0, 0), 0);
 //   testPrintData = "pure pursuit line";

@@ -80,6 +80,9 @@ void printTestData(bool)
 void autonInit()
 {
   cout << "Auton Init" << endl;
+  rachetColor.setLight(ledState::on);
+  rachetColor.setLightPower(100, percent);
+  rachetColor.integrationTime(50);
   cout << "Auton Init Done" << endl;
 }
 void autonomous()

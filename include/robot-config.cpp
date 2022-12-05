@@ -85,6 +85,7 @@ Pneumatics
 *************************************/
 
 pneumatics endgame = pneumatics(Brain.ThreeWirePort.B);
+pneumatics goalRaise = pneumatics(Brain.ThreeWirePort.C);
 /*************************************
 
 Sensors
@@ -173,6 +174,15 @@ BasicPidController pidController = BasicPidController(
     PID(1.0, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(BasicWheelController::exitMode::normal)
+        .setExitDist(2)
+        .setUseDistToGoal(false)
+        .setFollowPathDist(16)
+        .setVirtualPursuitDist(4));
+
+BasicWheelController::PathFollowSettings debugSettings = BasicWheelController::PathFollowSettings();
+DebugController debugController = DebugController(
+    debugSettings
+        .setBrakeMode(BasicWheelController::exitMode::coast)
         .setExitDist(2)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
