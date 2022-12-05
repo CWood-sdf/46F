@@ -18,13 +18,13 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 // Front Left Wheel (FL)
-motor FL = motor(PORT19, gearSetting::ratio18_1, !true);
+motor FL = motor(PORT17, gearSetting::ratio18_1, !true);
 TestDevice(FL);
 // Front Right Wheel (FR)
 motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
 TestDevice(FR);
 // Back Left Wheel (BL)
-motor BL = motor(PORT18, gearSetting::ratio18_1, !true);
+motor BL = motor(PORT21, gearSetting::ratio18_1, !true);
 TestDevice(BL);
 // Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
@@ -39,9 +39,9 @@ TestDevice(BR);
 motor_group Left = motor_group(BL, FL);
 motor_group Right = motor_group(BR, FR);
 
-motor intakeMot = motor(PORT20, gearSetting::ratio18_1, false);
+motor intakeMot = motor(PORT10, gearSetting::ratio18_1, true);
 TestDevice(intakeMot);
-motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, true);
+motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, false);
 TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
@@ -155,13 +155,13 @@ PurePursuitController purePursuit = PurePursuitController(
     PID(6.25, 0.001, 2.4325, 0, 8, 1),
     purePursuitSettings
         .setBrakeMode(BasicWheelController::exitMode::nothing)
-        .setExitDist(6)
+        .setExitDist(12)
         .setUseDistToGoal(true)
         .setFollowPathDist(16)
-        .setVirtualPursuitDist(5));
+        .setVirtualPursuitDist(11));
 BasicWheelController::PathFollowSettings ramseteSettings = BasicWheelController::PathFollowSettings();
 RamseteController ramsete = RamseteController(
-    0.0108, 0.2,
+    0.0108, 0.05,
     ramseteSettings
         .setBrakeMode(BasicWheelController::exitMode::normal)
         .setExitDist(2)
@@ -177,13 +177,13 @@ BasicPidController pidController = BasicPidController(
         .setExitDist(2)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
-        .setVirtualPursuitDist(4));
+        .setVirtualPursuitDist(5));
 
 BasicWheelController::PathFollowSettings debugSettings = BasicWheelController::PathFollowSettings();
 DebugController debugController = DebugController(
     debugSettings
         .setBrakeMode(BasicWheelController::exitMode::coast)
-        .setExitDist(2)
+        .setExitDist(4)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
         .setVirtualPursuitDist(4));

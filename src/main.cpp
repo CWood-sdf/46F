@@ -158,7 +158,7 @@ void drivercontrol()
   [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
-  flyTBH.setTargetSpeed(80);
+  flyTBH.setTargetSpeed(352);
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -198,7 +198,7 @@ void drivercontrol()
       double s2 = Y1 - X1;
       if (Greg.ButtonL1.pressing())
       {
-        flywheelSpeed += 600 * 1 / 600;
+        flywheelSpeed += 600 * 0.5 / 600;
         if (flywheelSpeed > 600)
         {
           flywheelSpeed = 600;
@@ -207,7 +207,7 @@ void drivercontrol()
       }
       if (Greg.ButtonL2.pressing())
       {
-        flywheelSpeed -= 600 * 1 / 600;
+        flywheelSpeed -= 600 * 0.5 / 600;
         if (flywheelSpeed < 0)
         {
           flywheelSpeed = 0;
@@ -234,28 +234,31 @@ void drivercontrol()
       }
       if (Greg.ButtonR1.pressing())
       {
+        intakeController.disable();
         intake.spin(fwd, 100);
       }
       else if (Greg.ButtonR2.pressing())
       {
+        intakeController.disable();
         intake.spin(vex::reverse, 100);
       }
       else
       {
+        intakeController.enable();
         intake.stop(hold);
       }
       // if (BLatch.pressing()) {
       //   driveReversed = !driveReversed;
       // }
 
-      if (XLatch.pressing())
-      {
-        intakeController.intake();
-      }
-      if (BLatch.pressing())
-      {
-        intakeController.setFiring();
-      }
+      // if (XLatch.pressing())
+      // {
+      //   intakeController.intake();
+      // }
+      // if (BLatch.pressing())
+      // {
+      //   intakeController.setFiring();
+      // }
       // if(XLatch.pressing()){
       //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
       // }
@@ -521,6 +524,7 @@ int main()
     // testMotorConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
+    wc.path.setK(1.2);
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
     intakeController.enable();
@@ -531,20 +535,24 @@ int main()
   {
     s(100);
   }
-  // [[maybe_unused]] KillThread gpsUpdate = thread(updateSharePos);
+  [[maybe_unused]] KillThread gpsUpdate = thread(updateSharePos);
 
-  // // Make a thread to execute some auton tasks concurrently
-  // [[maybe_unused]] KillThread otherThreads = thread(executeThreads);
+  // Make a thread to execute some auton tasks concurrently
+  [[maybe_unused]] KillThread otherThreads = thread(executeThreads);
 
-  // // TODO: Intake thread
+  // TODO: Intake thread
   // thread intakeThread = thread(runIntake);
-  // // Awesome brain screen control thread
-  // thread loader = thread(brainOS);
+  // Awesome brain screen control thread
+  thread loader = thread(brainOS);
 
-  // thread flywheelControl = thread(runFlywheel);
+  thread flywheelControl = thread(runFlywheel);
+  s(1000);
+  wc.turnTo(wc.botPos().angleTo({50, 50}));
+  // wc.prevStopExit();
+  // wc.driveTo(-20, 48);
 
-  // Competition.autonomous(autonomous);
-  // Competition.drivercontrol(drivercontrol);
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
 
   // Prevent main from exiting
   while (1)

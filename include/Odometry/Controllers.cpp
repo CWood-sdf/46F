@@ -156,7 +156,7 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input &input)
   double travelCurvature;
   {
     auto rPos = input.position;
-    auto lPos = input.target;
+    auto lPos = input.targetPt.bezierPt;
     double moddedAngle = input.currentAngle * DEG_TO_RAD;
     double
         side =
@@ -168,8 +168,14 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input &input)
     double x = abs(a * lPos.y + b * lPos.x + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
     travelCurvature = 2.0 * x / pow(input.dist, 2);
   }
+  double normAngle = posNeg180(input.angleTarget - input.currentAngle);
+  if (abs(normAngle) < 10)
+  {
+    travelCurvature /= 2.0;
+  }
   // Get the target speed of the robot
   double speed = -ctrl.getVal(input.dist);
+
   return {{speed, ForwardVel::pct}, {travelCurvature, AngularVel::curvature}};
 }
 void PurePursuitController::init()
@@ -253,14 +259,17 @@ DebugController::DebugController(BasicWheelController::PathFollowSettings settin
 }
 DebugController::followToRet DebugController::followTo(Input &input)
 {
+  static int i = 0;
   // Print all the input data
-  cout << "Target: " << input.target << endl;
-  cout << "Position: " << input.position << endl;
-  cout << "Current Angle: " << input.currentAngle << endl;
-  cout << "Target Angle: " << input.angleTarget << endl;
-  cout << "Distance: " << input.dist << endl;
-  cout << "Target Speed: " << input.targetPt.targetSpeed << endl;
-  cout << "Curvature: " << input.targetPt.curvature << endl;
-
-  return {{10, Controller::ForwardVel::pct}, {0, Controller::AngularVel::pctDiff}};
+  cout << "Point: " << i++ << "\n";
+  cout << "Target: " << input.target << "\n";
+  cout << "Position: " << input.position << "\n";
+  cout << "Current Angle: " << input.currentAngle << "\n";
+  cout << "Target Angle: " << input.angleTarget << "\n";
+  cout << "Distance: " << input.dist << "\n";
+  cout << "Target Speed: " << input.targetPt.targetSpeed << "\n";
+  cout << "Curvature: " << input.targetPt.curvature << "\n\n";
+  if (Greg.ButtonA.pressing())
+    return {{0, Controller::ForwardVel::pct}, {0, Controller::AngularVel::pctDiff}};
+  return {{30, Controller::ForwardVel::pct}, {0, Controller::AngularVel::pctDiff}};
 }

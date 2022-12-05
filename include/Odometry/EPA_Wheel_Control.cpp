@@ -101,21 +101,21 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
   // if(!callingInDrive && reversed){
   //   angle += 90;
   // }
-  int timeIn = 100;
+  int timeIn = 0;
   [[maybe_unused]] int i = 0;
   // Get the normAngle
   double normAngle = posNeg180(angle - posNeg180(botAngle()));
   // init PID
   turnCtrl.setTarget(0);
-  int sleepTime = 30;
-  int minTimeIn = 150;
+  int sleepTime = 20;
+  int minTimeIn = 200;
   double degRange = 4.0;
   int speedLimit = 60;
 
   //
   //
   //
-  cout << normAngle << endl;
+  // cout << normAngle << endl;
   if (normAngle < -degRange)
   {
     // It is off by 4 degrees, because:
@@ -154,6 +154,7 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
 
       angle = angleCalc();
       //
+      // cout << timeIn << endl;
       normAngle = posNeg180(angle - botAngle());
       if (abs(normAngle) < degRange)
       {
@@ -167,7 +168,7 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
     chassis->hardBrake();
   }
   chassis->hardBrake();
-  s(300);
+  // s(300);
 
   cout << botAngle() << endl;
   cout << angleCalc() << endl;
@@ -538,16 +539,23 @@ void BasicWheelController::generalFollow(VectorArr &arr, Controller *controller,
     // cout << virtualPursuit << endl;
     if (!controller->settings.useDistToGoal)
     {
-      if (bezierIndex != path.size() - 1)
+      // cout << "Using dist to goal" << endl;
+      // cout << bezierIndex << endl;
+      // cout << path.size() << endl;
+      if (bezierIndex == path.size() - 1)
       {
         PVector pathDir = (PVector)path[bezierIndex] - path[bezierIndex - 1];
+        // cout << "PathDir: " << pathDir << endl;
         PVector botDir = botPos() - path[bezierIndex - 1];
+        // cout << "BotDir: " << botDir << endl;
         double pathDirAngle = pathDir.heading2D();
+        // cout << "PathDirAngle: " << pathDirAngle << endl;
         // Rotate the vectors back by the pathDirAngle
         pathDir.rotateXY(-pathDirAngle);
         botDir.rotateXY(-pathDirAngle);
         // The dist is the difference in the y's
         dist = pathDir.y - botDir.y;
+        // cout << "Dist: " << dist << endl;
       }
       else
       {

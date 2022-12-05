@@ -37,7 +37,35 @@ Auton rightA = "Right" + []()
 };
 Auton skills = "Skills" + []()
 {
-  cout << "s" << endl;
+  wc.estimateStartPos(PVector(59.34, -38.83), 270.53);
+  wc.faceTarget({-49.96, -50.22});
+  wc.turnTo(-89.48);
+  spinRoller();
+  wc.followPath(&pidController, {PVector(41.17, -53.03)});
+  wc.backwardsFollow(&pidController, {PVector(41.34, -60.29)});
+  spinRoller();
+  wc.driveTo(-11.16, -55.67);
+  wc.faceTarget({-49.80, -50.22});
+  wc.followPath(&purePursuit, {PVector(41.01, -48.9), PVector(-19.58, -5.81)});
+  wc.faceTarget({-49.80, -50.22});
+  wc.driveTo(-42.53, 18.79);
+  wc.faceTarget({-49.80, -50.22});
+  wc.backwardsFollow(&purePursuit, {PVector(-51.94, 40.09)});
+  wc.backwardsFollow(&pidController, {PVector(-58.38, 39.92)});
+  spinRoller();
+  wc.driveTo(-42.37, 52.47);
+  wc.backwardsFollow(&pidController, {PVector(-42.20, 60.23)});
+  spinRoller();
+  wc.followPath(&pidController, {PVector(-25.52, 32.66), PVector(15.91, 36.29)});
+  wc.backwardsFollow(&pidController, {PVector(8.48, 35.63)});
+  wc.faceTarget({48.44, 48.84});
+  wc.backwardsFollow(&pidController, {PVector(-8.35, 38.93)});
+  wc.followPath(&pidController, {PVector(-5.21, 27.04), PVector(19.38, 5.25)});
+  wc.driveTo(23.67, 15.82);
+  wc.turnTo(36.86);
+  wc.driveTo(40.02, -19.51);
+  wc.driveTo(44.48, 10.7);
+  wc.faceTarget({48.44, 48.84});
 };
 Auton winPoint = "Win Point" + []()
 {
