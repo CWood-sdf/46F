@@ -173,6 +173,10 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input &input)
   {
     travelCurvature /= 2.0;
   }
+  if (input.dist < 10)
+  {
+    travelCurvature = 0;
+  }
   // Get the target speed of the robot
   double speed = -ctrl.getVal(input.dist);
 
