@@ -1,16 +1,32 @@
 #define NO_MAKE
 #include "src/Autons/Autons.h"
-
+void waitIntakeDone()
+{
+  while (intakeController.clearingDisks || intakeController.clearingLastDisk || intakeController.intaking)
+  {
+    wait(20, msec);
+  }
+}
 Auton leftA = "Left" + []()
 {
+  flyTBH.setDisabled(true);
+
+  flyTBH.setTargetSpeed(530);
+  flywheelNm.spin(fwd, 100);
   wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
-  spinRoller();
-  wc.faceTarget({49.60, 49.88});
-  // // Fire
-  // intakeController.setFiring();
+  // wc.faceTarget({49.60, 49.88});
+  // intake.spin(fwd, 100);
+  s(2000);
+  // Fire
+  intakeController.setFiring();
+  waitIntakeDone();
+  // flyTBH.setTargetSpeed(0);
+  // wc.turnTo(90);
+  // spinRoller();
   // // Drive to 3-stack
   // goalRaise.open();
-  // wc.driveTo(-22.45, -3.39);
+  // wc.driveTo(-30.48, 6.59);
+
   // goalRaise.close();
   // intakeController.intakeMultiple(3);
   // wc.faceTarget({49.42, 50.22});

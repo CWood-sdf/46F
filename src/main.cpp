@@ -20,6 +20,8 @@ using namespace ClassFns;
 using namespace vex;
 void spinRoller()
 {
+  bool intakeDisabled = intakeController.disabled;
+  intakeController.disable();
   rachetColor.setLightPower(50, percent);
   bool targetRed = wc.isRed();
 
@@ -35,7 +37,7 @@ void spinRoller()
     {
       break;
     }
-    intake.spin(vex::reverse, 50);
+    intake.spin(vex::reverse, 100);
     auto hue = rachetColor.hue();
     lastRed = isRed;
     isRed = hue > 300 || hue < 60;
@@ -50,22 +52,24 @@ void spinRoller()
     if (count == 20)
     {
       countUp = false;
-      chassis.driveFromDiff(30, 0, fwd);
+      chassis.driveFromDiff(10, 0, fwd);
     }
     else if (count == 0)
     {
       countUp = true;
-      chassis.driveFromDiff(-80, 0, fwd);
+      chassis.driveFromDiff(-20, 0, fwd);
     }
     s(10);
   }
   intake.spin(vex::reverse, -100);
-  chassis.driveFromDiff(-60, 0, fwd);
+  chassis.driveFromDiff(-10, 0, fwd);
   s(500);
   chassis.coastBrake();
   intake.stop(hold);
-  // Give the system some time to clear momentum
-  s(300);
+  if (!intakeDisabled)
+  {
+    intakeController.enable();
+  }
 }
 competition Competition;
 
@@ -83,6 +87,8 @@ void autonInit()
   rachetColor.setLight(ledState::on);
   rachetColor.setLightPower(100, percent);
   rachetColor.integrationTime(50);
+  intakeController.autonInit();
+  intakeController.enable();
   cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -158,7 +164,7 @@ void drivercontrol()
   [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
-  flyTBH.setTargetSpeed(352);
+  flyTBH.setTargetSpeed(367);
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -176,7 +182,7 @@ void drivercontrol()
   countsExist.push_back({true, &primary});
   // The index of this drivercontrol instance in countsExist
   int localCount = count;
-  int flywheelSpeed = 510;
+  double flywheelSpeed = 367;
   count++;
   // TODO: intake controls
   while (1)
@@ -198,7 +204,7 @@ void drivercontrol()
       double s2 = Y1 - X1;
       if (Greg.ButtonL1.pressing())
       {
-        flywheelSpeed += 600 * 0.5 / 600;
+        flywheelSpeed += 0.5;
         if (flywheelSpeed > 600)
         {
           flywheelSpeed = 600;
@@ -207,7 +213,7 @@ void drivercontrol()
       }
       if (Greg.ButtonL2.pressing())
       {
-        flywheelSpeed -= 600 * 0.5 / 600;
+        flywheelSpeed -= 0.5;
         if (flywheelSpeed < 0)
         {
           flywheelSpeed = 0;
@@ -222,7 +228,12 @@ void drivercontrol()
       {
         s1 = 50, s2 = -50;
       }
-      if (driveReversed)
+      if (s1 == s2 && s2 == 0)
+      {
+        leftWheels.stop(coast);
+        rightWheels.stop(coast);
+      }
+      else if (driveReversed)
       {
         leftWheels.spin(vex::reverse, s1, pct);
         rightWheels.spin(vex::reverse, s2, pct);
@@ -246,6 +257,17 @@ void drivercontrol()
       {
         intakeController.enable();
         intake.stop(hold);
+      }
+      if (UpLatch.pressing())
+      {
+        if (wc.isRed())
+        {
+          wc.faceTarget({50, 50});
+        }
+        else
+        {
+          wc.faceTarget({-50, -50});
+        }
       }
       // if (BLatch.pressing()) {
       //   driveReversed = !driveReversed;
@@ -309,16 +331,17 @@ void runIntake()
     if (!intakeController.disabled)
     {
       bool flywheelReady = flyTBH.ready();
+      // cout << flywheelReady << endl;
       intakeController.updateValues(flywheelReady);
       // cout << hex;
       // cout << intakeController.diskMask << endl;
       if (intakeController.spinMotor())
       {
-        intake.spinVolt(fwd, 100);
+        intake.spin(fwd, 100);
       }
       else if (intakeController.reverseMotor())
       {
-        intake.spinVolt(vex::reverse, 100);
+        intake.spin(vex::reverse, 100);
       }
       else
       {
@@ -395,6 +418,8 @@ bool helpAlignBot(bool)
 }
 void brainOS()
 {
+  ButtonLatch leftLatch = ButtonLatch(Greg.ButtonLeft);
+  ButtonLatch rightLatch = ButtonLatch(Greg.ButtonRight);
   while (!init)
   {
     s(500);
@@ -437,7 +462,7 @@ void brainOS()
       break;
     }
     // Have buttons clicked first so that clicking them overrides the screenx
-    if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent())
+    if ((screenLeft.clicked() || (!Competition.isDriverControl() && leftLatch.pressing())) && &bos::bosFns.getBase() != &bos::bosFns.getCurrent())
     {
       if (bos::bosFns.getCurrent()->lvgl())
       {
@@ -455,7 +480,7 @@ void brainOS()
         bos::bosFns.getCurrent()->call(true);
       }
     }
-    else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent())
+    else if ((screenRight.clicked() || (!Competition.isDriverControl() && rightLatch.pressing())) && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent())
     {
       if (bos::bosFns.getCurrent()->lvgl())
       {
@@ -529,6 +554,7 @@ int main()
     flyTBH.setTargetSpeed(0);
     intakeController.enable();
     cout << "<< Flywheel initialized >>" << endl;
+    intakeController.autonInit();
     s(500);
     init = true; });
   while (!init)
@@ -541,18 +567,18 @@ int main()
   [[maybe_unused]] KillThread otherThreads = thread(executeThreads);
 
   // TODO: Intake thread
-  // thread intakeThread = thread(runIntake);
+  thread intakeThread = thread(runIntake);
   // Awesome brain screen control thread
   thread loader = thread(brainOS);
 
   thread flywheelControl = thread(runFlywheel);
-  s(1000);
-  wc.turnTo(wc.botPos().angleTo({50, 50}));
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
-
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(drivercontrol);
+  // autonomous();
+  chassis.coastBrake();
+  drivercontrol();
+  // Competition.autonomous(autonomous);
+  // Competition.drivercontrol(drivercontrol);
 
   // Prevent main from exiting
   while (1)

@@ -103,6 +103,11 @@ struct AutoIntake
    *
    */
   void waitForIntake();
+  /**
+   * @brief Sets the intake to be ready for auton
+   *
+   */
+  void autonInit();
 };
 
 #endif

@@ -58,6 +58,7 @@ void AutoIntake::enable()
 
 void AutoIntake::updateValues(bool flywheelReady)
 {
+  static int i = 0;
   makeMask();
 
   //   for(int i = 0; i < sensors.size(); i++){
@@ -110,12 +111,16 @@ void AutoIntake::updateValues(bool flywheelReady)
     direction = -1;
     fixingUnstable = true;
   }
-  cout << "Mask: " << diskMask << endl;
-  cout << "Stable: " << stable() << endl;
-  cout << "Fixable: " << fixableUnstable() << endl;
-  cout << "Count: " << count << endl;
-  cout << "Direction: " << direction << endl;
-  if (fixingUnstable && stable() && count != 0)
+  if (i++ == 10)
+  {
+    cout << "Mask: " << diskMask << endl;
+    cout << "Stable: " << stable() << endl;
+    cout << "Fixable: " << fixableUnstable() << endl;
+    cout << "Count: " << count << endl;
+    cout << "Direction: " << direction << endl;
+    i = 0;
+  }
+  if (fixingUnstable && stable() && count == 0)
   {
     fixingUnstable = false;
   }
@@ -171,4 +176,13 @@ void AutoIntake::waitForIntake()
   {
     wait(10, msec);
   }
+}
+
+void AutoIntake::autonInit()
+{
+  fixingUnstable = false;
+  clearingDisks = false;
+  intaking = false;
+  clearingLastDisk = false;
+  lastCount = count;
 }
