@@ -166,7 +166,7 @@ void drivercontrol()
   [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
-  flyTBH.setTargetSpeed(530);
+  flyTBH.setTargetSpeed(367);
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -257,7 +257,7 @@ void drivercontrol()
       }
       else
       {
-        intakeController.enable();
+        intakeController.disable();
         intake.stop(hold);
       }
       if (UpLatch.pressing())
@@ -580,9 +580,9 @@ int main()
   // autonomous();
   // chassis.coastBrake();
   // flyTBH.setTargetSpeed(0);
-  drivercontrol();
-  // Competition.autonomous(autonomous);
-  // Competition.drivercontrol(drivercontrol);
+  // drivercontrol();
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
 
   // Prevent main from exiting
   while (1)
