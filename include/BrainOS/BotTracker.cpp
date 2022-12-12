@@ -1,65 +1,74 @@
 #define NO_MAKE
 #include "BotTracker.h"
 #include "Odometry/EPA_Wheel_Control.h"
-std::vector<lv_point_t> pts = { {0, 0}, {100, 100}, {50, 100}, {150, 150} };
+std::vector<lv_point_t> pts = {{0, 0}, {100, 100}, {50, 100}, {150, 150}};
 std::vector<lv_point_t> actualPts;
 std::vector<lv_point_t> pathPts = {};
 extern Chassis chassis;
-extern Omni_6Controller wc;
-void displayBot(bool remake) {
-  static lv_obj_t* botContainer;
-  static lv_obj_t* line2;
-  static lv_obj_t* centerPt;
-  static lv_obj_t* labelX;
-  static lv_obj_t* labelY;
-  static lv_obj_t* labelA;
-  static lv_obj_t* pathLine;
-  if(remake){
+extern WheelController wc;
+void displayBot(bool remake)
+{
+  static lv_obj_t *botContainer;
+  static lv_obj_t *line2;
+  static lv_obj_t *centerPt;
+  static lv_obj_t *labelX;
+  static lv_obj_t *labelY;
+  static lv_obj_t *labelA;
+  static lv_obj_t *pathLine;
+  if (remake)
+  {
     short gridHeight = LV_VER_RES;
     short sixthHeight = (LV_VER_RES / 6);
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(100, 100, 100), 0);
-    lv_obj_t* gridContainer = lv_obj_create(lv_scr_act());
+    lv_obj_t *gridContainer = lv_obj_create(lv_scr_act());
     lv_obj_set_style_pad_all(lv_scr_act(), 0, 0);
     lv_obj_set_style_bg_opa(gridContainer, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_opa(gridContainer, LV_OPA_TRANSP, 0);
     lv_obj_set_size(gridContainer, gridHeight + 1, gridHeight + 1);
     lv_obj_set_style_pad_all(gridContainer, -2, 0);
     lv_obj_set_pos(gridContainer, 0, 0);
-    
+
     pts.clear();
-    for (int i = 1; i < 6; i++) {   
-      if (i % 2 == 0) {
-        pts.push_back({ (short)(sixthHeight * (i)), (short)0 });
-        pts.push_back({ (short)(sixthHeight * (i)), gridHeight });
+    for (int i = 1; i < 6; i++)
+    {
+      if (i % 2 == 0)
+      {
+        pts.push_back({(short)(sixthHeight * (i)), (short)0});
+        pts.push_back({(short)(sixthHeight * (i)), gridHeight});
       }
-      else {
-        pts.push_back({ (short)(sixthHeight * (i)), gridHeight });
-        pts.push_back({ (short)(sixthHeight * (i)), (short)0 });
-      }
-    }
-    pts.push_back({ gridHeight, (short)0 });
-    for (int i = 1; i < 6; i++) {
-      if (i % 2 == 0) {
-        pts.push_back({ (short)0, (short)(sixthHeight * (i)) });
-        pts.push_back({ gridHeight, (short)(sixthHeight * (i)) });
-      }
-      else {
-        pts.push_back({ gridHeight, (short)(sixthHeight * (i)) });
-        pts.push_back({ (short)0, (short)(sixthHeight * (i)) });
+      else
+      {
+        pts.push_back({(short)(sixthHeight * (i)), gridHeight});
+        pts.push_back({(short)(sixthHeight * (i)), (short)0});
       }
     }
-    pts.push_back({ (short)0, (short)0 });
-    pts.push_back({ gridHeight, (short)0 });
-    pts.push_back({ gridHeight, gridHeight });
-    pts.push_back({ (short)0, gridHeight });
-    
-    lv_obj_t* line = lv_line_create(gridContainer);
+    pts.push_back({gridHeight, (short)0});
+    for (int i = 1; i < 6; i++)
+    {
+      if (i % 2 == 0)
+      {
+        pts.push_back({(short)0, (short)(sixthHeight * (i))});
+        pts.push_back({gridHeight, (short)(sixthHeight * (i))});
+      }
+      else
+      {
+        pts.push_back({gridHeight, (short)(sixthHeight * (i))});
+        pts.push_back({(short)0, (short)(sixthHeight * (i))});
+      }
+    }
+    pts.push_back({(short)0, (short)0});
+    pts.push_back({gridHeight, (short)0});
+    pts.push_back({gridHeight, gridHeight});
+    pts.push_back({(short)0, gridHeight});
+
+    lv_obj_t *line = lv_line_create(gridContainer);
     lv_line_set_points(line, pts.data(), pts.size());
-    //lv_obj_add_style(line, &style_title, 0);
+    // lv_obj_add_style(line, &style_title, 0);
     lv_obj_set_style_line_width(line, 1, 0);
     lv_obj_set_style_line_rounded(line, true, 0);
     {
-      auto basicAlign = [](lv_obj_t* obj, int y) {
+      auto basicAlign = [](lv_obj_t *obj, int y)
+      {
         lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
         lv_obj_align(obj, LV_ALIGN_TOP_LEFT, 260, y);
       };
@@ -83,11 +92,10 @@ void displayBot(bool remake) {
       setTextA += "3";
       lv_label_set_text(labelA, setTextA.data());
       basicAlign(labelA, 45);
-
     }
     double lvObjWidth = 0.6;
     double dSixthHeight = static_cast<double>(sixthHeight);
-    lv_obj_t* redGoal = lv_obj_create(gridContainer);
+    lv_obj_t *redGoal = lv_obj_create(gridContainer);
     lv_obj_align(redGoal, LV_ALIGN_TOP_LEFT, (int)(dSixthHeight * (5.4 - lvObjWidth / 2)), (int)(dSixthHeight * (0.6 - lvObjWidth / 2)));
     lv_obj_set_size(redGoal, dSixthHeight * lvObjWidth, dSixthHeight * lvObjWidth);
     lv_obj_set_style_bg_color(redGoal, lv_color_make(255, 0, 0), 0);
@@ -95,7 +103,7 @@ void displayBot(bool remake) {
     lv_obj_set_style_border_color(redGoal, lv_color_make(0, 0, 0), 0);
     lv_obj_set_style_radius(redGoal, dSixthHeight * lvObjWidth, 0);
 
-    lv_obj_t* blueGoal = lv_obj_create(gridContainer);
+    lv_obj_t *blueGoal = lv_obj_create(gridContainer);
     lv_obj_align(blueGoal, LV_ALIGN_TOP_LEFT, dSixthHeight * (0.6 - lvObjWidth / 2), dSixthHeight * (5.4 - lvObjWidth / 2));
     lv_obj_set_size(blueGoal, dSixthHeight * lvObjWidth, dSixthHeight * lvObjWidth);
     lv_obj_set_style_bg_color(blueGoal, lv_color_make(0, 0, 255), 0);
@@ -107,7 +115,6 @@ void displayBot(bool remake) {
     line2 = lv_line_create(botContainer);
     pathLine = lv_line_create(gridContainer);
     centerPt = lv_obj_create(botContainer);
-
 
     lv_obj_set_style_line_width(line2, 3, 0);
     lv_obj_set_style_line_rounded(line2, true, 0);
@@ -126,7 +133,6 @@ void displayBot(bool remake) {
     lv_obj_set_align(centerPt, LV_ALIGN_CENTER);
     lv_obj_set_style_radius(centerPt, 5, 0);
     lv_obj_set_size(centerPt, 5, 5);
-
   }
 
   PVector pos = chassis.botPos();
@@ -134,38 +140,39 @@ void displayBot(bool remake) {
 
   short height = LV_VER_RES;
 
-  //Zero position
+  // Zero position
   /*pos.x += 72;
   pos.y += 72;*/
 
   pos *= height / 144.0;
 
-  
   double width = 10;
   double halfContWidth = lv_obj_get_width(botContainer) / 2 - 3;
   std::vector<PVector> lineCorners = {
       {-width, width},
       {-width, -width},
       {width, -width},
-      {width, width}
-  };
+      {width, width}};
   actualPts.clear();
-  for (PVector& v : lineCorners) {
-      v.rotate(angle);
-      actualPts.push_back(v + PVector(halfContWidth, halfContWidth));
+  for (PVector &v : lineCorners)
+  {
+    v.rotate(angle);
+    actualPts.push_back(v + PVector(halfContWidth, halfContWidth));
   }
   lv_line_set_points(line2, actualPts.data(), actualPts.size());
 
-  if(wc.drawArr){
+  if (wc.drawArr)
+  {
     auto p = wc.publicPath;
     pathPts.clear();
-    for(auto pt : p){
-      
-      pt += {72, 72}; 
+    for (auto pt : p)
+    {
+
+      pt += {72, 72};
       pt *= height / 144.0;
       pathPts.push_back(pt);
     }
-  }  
+  }
   lv_line_set_points(pathLine, pathPts.data(), pathPts.size());
 
   lv_obj_align(botContainer, LV_ALIGN_CENTER, pos.x, pos.y);
@@ -173,11 +180,10 @@ void displayBot(bool remake) {
   std::string setTextY = "y: ";
   setTextY += toCcp(chassis.botPos().y);
   lv_label_set_text(labelY, setTextY.data());
-  
+
   std::string setTextA = "a: ";
   setTextA += toCcp(angle);
   lv_label_set_text(labelA, setTextA.data());
-
 
   std::string setTextX = "x: ";
   setTextX += toCcp(chassis.botPos().x);

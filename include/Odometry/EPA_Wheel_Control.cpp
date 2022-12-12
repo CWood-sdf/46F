@@ -22,30 +22,30 @@ double sign(double v)
 // void BasicWheelController::addTurnPid(double p, double i, double d){
 //   addTurnPid(PidAdder(p, i, d));
 // }
-double BasicWheelController::botAngle()
+double WheelController::botAngle()
 {
   return chassis->botAngle();
 }
-PVector &BasicWheelController::botPos()
+PVector &WheelController::botPos()
 {
   return chassis->botPos();
 }
 // Add a function to be called at a specified distance
-void BasicWheelController::addDistFn(double dist, std::function<void()> fn)
+void WheelController::addDistFn(double dist, std::function<void()> fn)
 {
   distFns[dist] = fn;
 }
 // Reuse the old map
-void BasicWheelController::reuseDistFns()
+void WheelController::reuseDistFns()
 {
   distFns = oldFns;
 }
-void BasicWheelController::setFn(std::function<void()> fn)
+void WheelController::setFn(std::function<void()> fn)
 {
   afterTurn = fn;
   hasFn = true;
 }
-void BasicWheelController::callFn()
+void WheelController::callFn()
 {
   if (hasFn)
   {
@@ -53,18 +53,18 @@ void BasicWheelController::callFn()
   }
   hasFn = false;
 }
-void BasicWheelController::reuseFn()
+void WheelController::reuseFn()
 {
   hasFn = true;
 }
 
 // A hard brake
 
-void BasicWheelController::setOldDistFns()
+void WheelController::setOldDistFns()
 {
   oldFns = distFns;
 }
-void BasicWheelController::useDistFns(double dist)
+void WheelController::useDistFns(double dist)
 {
   for (auto it = distFns.begin(); it != distFns.end() /* not hoisted */; /* no increment */)
   {
@@ -80,7 +80,7 @@ void BasicWheelController::useDistFns(double dist)
     }
   }
 }
-void BasicWheelController::turnTo(std::function<double()> angleCalc)
+void WheelController::turnTo(std::function<double()> angleCalc)
 {
   //
   auto oldAngleCalc = angleCalc;
@@ -116,80 +116,55 @@ void BasicWheelController::turnTo(std::function<double()> angleCalc)
   //
   //
   // cout << normAngle << endl;
-  if (normAngle < -degRange)
+
+  // It is off by 4 degrees, because:
+  //     A: if it is within 4 degrees, without the minSpeed
+  //           it is too slow; but, with minSpeed, it overshoots too much
+  while (timeIn * sleepTime < minTimeIn)
   {
-    // It is off by 4 degrees, because:
-    //     A: if it is within 4 degrees, without the minSpeed
-    //           it is too slow; but, with minSpeed, it overshoots too much
-    while (timeIn * sleepTime < minTimeIn)
+
+    double speed = turnCtrl.getVal(normAngle);
+
+    chassis->turnLeft(speed > speedLimit ? speedLimit : speed);
+    s(sleepTime);
+
+    angle = angleCalc();
+
+    normAngle = posNeg180(angle - botAngle());
+    if (abs(normAngle) < degRange)
     {
-
-      double speed = turnCtrl.getVal(normAngle);
-      chassis->turnLeft(speed > speedLimit ? speedLimit : speed);
-      s(sleepTime);
-
-      angle = angleCalc();
-
-      normAngle = posNeg180(angle - botAngle());
-      if (abs(normAngle) < degRange)
-      {
-        timeIn++;
-      }
-      else
-      {
-        timeIn = 0;
-      }
-      //
+      timeIn++;
     }
-    chassis->hardBrake();
-  }
-  else if (normAngle > degRange)
-  {
-    while (timeIn * sleepTime < minTimeIn)
+    else
     {
-
-      double speed = -turnCtrl.getVal(normAngle);
-      chassis->turnRight(speed > speedLimit ? speedLimit : speed);
-      s(sleepTime);
-
-      angle = angleCalc();
-      //
-      // cout << timeIn << endl;
-      normAngle = posNeg180(angle - botAngle());
-      if (abs(normAngle) < degRange)
-      {
-        timeIn++;
-      }
-      else
-      {
-        timeIn = 0;
-      }
+      timeIn = 0;
     }
-    chassis->hardBrake();
+    //
   }
   chassis->hardBrake();
+
   // s(300);
 
   cout << botAngle() << endl;
   cout << angleCalc() << endl;
 }
-void BasicWheelController::turnTo(double angle)
+void WheelController::turnTo(double angle)
 {
   turnTo([=]()
          { return angle; });
 }
 // Implement faceTarget
-void BasicWheelController::faceTarget(PVector target)
+void WheelController::faceTarget(PVector target)
 {
   turnTo(botPos().angleTo(target));
 }
 
-bool BasicWheelController::isMoving()
+bool WheelController::isMoving()
 {
   return moving;
 }
 #ifndef WINDOWS
-BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVector v, double a)
+WheelController::chain_method WheelController::estimateStartPos(PVector v, double a)
 {
   cout << sign(botPos().x) << ", " << sign(v.x) << endl;
   // If it thinks it is at (0, 0), just use the given value
@@ -213,61 +188,61 @@ BasicWheelController::chain_method BasicWheelController::estimateStartPos(PVecto
   CHAIN;
 }
 #endif
-BasicWheelController::chain_method BasicWheelController::forceEarlyExit()
+WheelController::chain_method WheelController::forceEarlyExit()
 {
   exitEarly = true;
   CHAIN;
 }
 
-BasicWheelController::chain_method BasicWheelController::setExitMode(exitMode m)
+WheelController::chain_method WheelController::setExitMode(exitMode m)
 {
   BrakeMode = m;
   CHAIN;
 }
 
-BasicWheelController::chain_method BasicWheelController::setExitDist(double v)
+WheelController::chain_method WheelController::setExitDist(double v)
 {
   exitDist = v;
   CHAIN;
 }
-PVector BasicWheelController::getLastTarget()
+PVector WheelController::getLastTarget()
 {
   return lastTarget;
 }
-BasicWheelController::chain_method BasicWheelController::prevStopExit()
+WheelController::chain_method WheelController::prevStopExit()
 {
   stopExitPrev = true;
   CHAIN
 }
-BasicWheelController::chain_method BasicWheelController::setPathRadius(double r)
+WheelController::chain_method WheelController::setPathRadius(double r)
 {
   pathRadius = r;
   CHAIN
 }
-double BasicWheelController::getPathRadius()
+double WheelController::getPathRadius()
 {
   return pathRadius;
 }
-BasicWheelController::chain_method BasicWheelController::setFollowPathDist(double d)
+WheelController::chain_method WheelController::setFollowPathDist(double d)
 {
   followPathDist = d;
   CHAIN;
 }
-double BasicWheelController::getFollowPathDist()
+double WheelController::getFollowPathDist()
 {
   return followPathDist;
 }
-BasicWheelController::chain_method BasicWheelController::setFollowPathMaxTimeIn(int t)
+WheelController::chain_method WheelController::setFollowPathMaxTimeIn(int t)
 {
   followPathMaxTimeIn = t;
   CHAIN;
 }
-int BasicWheelController::getFollowPathMaxTimeIn()
+int WheelController::getFollowPathMaxTimeIn()
 {
   return followPathMaxTimeIn;
 }
 template <class Arr>
-size_t BasicWheelController::getNearest(Arr arr, PVector obj)
+size_t WheelController::getNearest(Arr arr, PVector obj)
 {
   size_t i = 0;
   double minDist = obj.dist2D(arr[0]);
@@ -281,7 +256,7 @@ size_t BasicWheelController::getNearest(Arr arr, PVector obj)
   return i;
 }
 template <class Arr>
-size_t BasicWheelController::getNearest(Arr arr, PVector obj, size_t start)
+size_t WheelController::getNearest(Arr arr, PVector obj, size_t start)
 {
   size_t i = start;
   double minDist = obj.dist2D(arr[start]);
@@ -299,18 +274,18 @@ size_t BasicWheelController::getNearest(Arr arr, PVector obj, size_t start)
   return i;
 }
 
-void BasicWheelController::ramseteFollow(VectorArr arr, bool isNeg)
+void WheelController::ramseteFollow(VectorArr arr, bool isNeg)
 {
   generalFollow(arr, defaultRamsete, isNeg);
 }
 
 // }
 
-void BasicWheelController::driveTo(double x, double y)
+void WheelController::driveTo(double x, double y)
 {
   generalFollow({PVector(x, y)}, defaultPid, false);
 }
-void BasicWheelController::backInto(double x, double y)
+void WheelController::backInto(double x, double y)
 {
   generalFollow({PVector(x, y)}, defaultPid, true);
 }
@@ -327,7 +302,91 @@ void BasicWheelController::backInto(double x, double y)
  *  - follow path distance
  *  - max time in
  */
-void BasicWheelController::generalFollow(VectorArr &arr, Controller *controller, bool isNeg)
+void WheelController::generalFollowTurnAtStart(VectorArr &arr, double &purePursuitDist, bool &isNeg)
+{
+  this->drawArr = true;
+  auto arrCopy = arr;
+  arrCopy.push_front(botPos());
+  // Construct the original bezier
+  VectorArr bezier = bezierCurve(arrCopy);
+
+  // cout << "sdfa" << endl; s(100);
+  this->publicPath = bezier;
+  // Turn to the first point purePursuitDist away
+  //  get first point
+  double dist = botPos().dist2D(bezier[0]);
+  int i = 0;
+  // cout << "Cool" << endl;
+  while (dist < purePursuitDist)
+  {
+    dist += bezier[i].dist2D(bezier[i + 1]);
+    i++;
+  }
+  callingInDrive = true;
+  auto angle = botPos().angleTo(bezier[i - 1]);
+  turnTo(angle + 180.0 * isNeg);
+  callingInDrive = false;
+  // cout << "Cool" << endl;
+  cout << "Turn Done" << endl;
+  afterTurn();
+  afterTurn = []() {};
+}
+PVector WheelController::generalFollowGetVirtualPursuit(PVector &pursuit, Controller *controller)
+{
+  PVector virtualPursuit = pursuit;
+  if (!(botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last()))
+  {
+    return virtualPursuit;
+  }
+  // A vector that is parallel wih last point
+  PVector last = (PVector)path.last() - path[path.size() - 4];
+  // Distance to be added so that virtualPursuit is still purePursuitDist away from bot
+  double addDist = controller->settings.virtualPursuitDist - botPos().dist2D(pursuit);
+  // Make last to be proper size
+
+  last *= addDist / last.mag();
+  virtualPursuit += last;
+  return virtualPursuit;
+}
+double WheelController::generalFollowGetDist(int &bezierIndex, Controller *controller, PVector &pursuit)
+{
+  double dist = 0.0;
+  if (controller->settings.useDistToGoal)
+  {
+    dist = botPos().dist2D(pursuit);
+    // Make the dist signed so that PID will work
+    // If we're not at the end, just return the distance, it won't be signed bc the point is always ahead
+    if (bezierIndex != path.size() - 1)
+    {
+      return dist;
+    }
+    // Get a point near the end
+    PVector pathNearEnd = path[path.size() - 3];
+    // Multiply dist by -1 if the bot is past the target
+    // Something abt dot products is that they are negative when the angle between is greater than 90
+    double distSign = sign((pathNearEnd - path.last()).dot(botPos() - path.last()));
+    dist *= distSign;
+    return dist;
+  }
+  // If we're not near the end, let's not do fancy math
+  if (bezierIndex != path.size() - 1)
+  {
+    return botPos().dist2D(path[bezierIndex]);
+  }
+  // A vector that is parallel with the end
+  PVector pathDir = (PVector)path[bezierIndex] - path[bezierIndex - 1];
+  // The bot's point centered with the 2nd to last point
+  PVector botDir = botPos() - path[bezierIndex - 1];
+  // The angle to make the parallel vector straight
+  double pathDirAngle = pathDir.heading2D();
+  // Rotate the vectors back by the pathDirAngle
+  pathDir.rotateXY(-pathDirAngle);
+  botDir.rotateXY(-pathDirAngle);
+  // The dist is the difference in the y's
+  dist = pathDir.y - botDir.y;
+  return dist;
+}
+void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool isNeg)
 {
   double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
@@ -348,35 +407,7 @@ void BasicWheelController::generalFollow(VectorArr &arr, Controller *controller,
   if (controller->settings.turnAtStart)
   // Simple initialization and turn to first point
   {
-
-    // cout << "sdfa" << endl; s(100);
-    // Allow the array to be drawn
-    this->drawArr = true;
-    auto arrCopy = arr;
-    arrCopy.push_front(botPos());
-    // Construct the original bezier
-    VectorArr bezier = bezierCurve(arrCopy);
-
-    // cout << "sdfa" << endl; s(100);
-    this->publicPath = bezier;
-    // Turn to the first point purePursuitDist away
-    //  get first point
-    double dist = botPos().dist2D(bezier[0]);
-    int i = 0;
-    // cout << "Cool" << endl;
-    while (dist < purePursuitDist)
-    {
-      dist += bezier[i].dist2D(bezier[i + 1]);
-      i++;
-    }
-    callingInDrive = true;
-    auto angle = botPos().angleTo(bezier[i - 1]);
-    turnTo(angle + 180.0 * isNeg);
-    callingInDrive = false;
-    // cout << "Cool" << endl;
-    cout << "Turn Done" << endl;
-    afterTurn();
-    afterTurn = []() {};
+    generalFollowTurnAtStart(arr, purePursuitDist, isNeg);
   }
 
   // cout << "sdddfa" << endl; s(100);
@@ -523,58 +554,9 @@ void BasicWheelController::generalFollow(VectorArr &arr, Controller *controller,
     // Use the distFns for the current dist
     useDistFns(botPos().dist2D(path.last()));
     // The point extended beyond the path to make sure normAngle doesn't get big near the target
-    PVector virtualPursuit = pursuit;
+    PVector virtualPursuit = generalFollowGetVirtualPursuit(pursuit, controller);
     // cout << virtualPursuit << endl;
-    if (botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last())
-    {
-      // A vector that is parallel wih last point
-      PVector last = (PVector)path.last() - path[path.size() - 4];
-      // Distance to be added so that virtualPursuit is still purePursuitDist away from bot
-      double addDist = controller->settings.virtualPursuitDist - botPos().dist2D(pursuit);
-      // Make last to be proper size
-
-      last *= addDist / last.mag();
-      virtualPursuit += last;
-    }
-    // cout << virtualPursuit << endl;
-    if (!controller->settings.useDistToGoal)
-    {
-      // cout << "Using dist to goal" << endl;
-      // cout << bezierIndex << endl;
-      // cout << path.size() << endl;
-      if (bezierIndex == path.size() - 1)
-      {
-        PVector pathDir = (PVector)path[bezierIndex] - path[bezierIndex - 1];
-        // cout << "PathDir: " << pathDir << endl;
-        PVector botDir = botPos() - path[bezierIndex - 1];
-        // cout << "BotDir: " << botDir << endl;
-        double pathDirAngle = pathDir.heading2D();
-        // cout << "PathDirAngle: " << pathDirAngle << endl;
-        // Rotate the vectors back by the pathDirAngle
-        pathDir.rotateXY(-pathDirAngle);
-        botDir.rotateXY(-pathDirAngle);
-        // The dist is the difference in the y's
-        dist = pathDir.y - botDir.y;
-        // cout << "Dist: " << dist << endl;
-      }
-      else
-      {
-        dist = botPos().dist2D(path[bezierIndex]);
-      }
-    }
-    else
-    {
-      dist = botPos().dist2D(pursuit);
-      // Make the dist signed so that PID will work
-      if (bezierIndex == path.size() - 1)
-      {
-        PVector pathNearEnd = path[path.size() - 3];
-        // Multiply dist by -1 if the bot is past the target
-        double distSign = sign((pathNearEnd - path.last()).dot(botPos() - path.last()));
-        dist *= distSign;
-      }
-    }
-
+    dist = generalFollowGetDist(bezierIndex, controller, pursuit);
     // cout << "Cool" << endl;
     // Angle of robot to target
     double angle = baseAngle(botPos().angleTo(virtualPursuit));
@@ -864,23 +846,23 @@ void BasicWheelController::generalFollow(VectorArr &arr, Controller *controller,
 #endif
 }
 // The beefiest function in this file
-void BasicWheelController::purePursuitFollow(VectorArr arr, bool isNeg)
+void WheelController::purePursuitFollow(VectorArr arr, bool isNeg)
 {
   generalFollow(arr, defaultPurePursuit, isNeg);
 }
-bool BasicWheelController::isRed()
+bool WheelController::isRed()
 {
   return !reversed;
 }
-void BasicWheelController::setRed()
+void WheelController::setRed()
 {
   reversed = false;
 }
-void BasicWheelController::setBlue()
+void WheelController::setBlue()
 {
   reversed = true;
 }
-bool BasicWheelController::isBlue()
+bool WheelController::isBlue()
 {
   return reversed;
 }

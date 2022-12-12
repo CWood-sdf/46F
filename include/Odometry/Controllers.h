@@ -13,7 +13,7 @@ class Controller
   bool defaultTurn = true;
 
 public:
-  BasicWheelController::PathFollowSettings settings;
+  WheelController::PathFollowSettings settings;
   bool isTurnAtStart()
   {
     return turnAtStart;
@@ -80,7 +80,7 @@ public:
   followToRet followTo(Input &input) override;
   void init() override;
   PurePursuitController(PID input);
-  PurePursuitController(PID input, BasicWheelController::PathFollowSettings settings);
+  PurePursuitController(PID input, WheelController::PathFollowSettings settings);
   PurePursuitController() = delete;
 };
 class RamseteController : public Controller
@@ -95,7 +95,7 @@ public:
   followToRet followTo(Input &input) override;
   //[b > 0], [0 < zeta < 1]
   RamseteController(double beta, double zeta);
-  RamseteController(double beta, double zeta, BasicWheelController::PathFollowSettings settings);
+  RamseteController(double beta, double zeta, WheelController::PathFollowSettings settings);
   RamseteController() = delete;
 };
 class BasicPidController : public Controller
@@ -106,7 +106,7 @@ class BasicPidController : public Controller
 public:
   void init() override;
   BasicPidController(PID, PID);
-  BasicPidController(PID, PID, BasicWheelController::PathFollowSettings settings);
+  BasicPidController(PID, PID, WheelController::PathFollowSettings settings);
   followToRet followTo(Input &input) override;
   BasicPidController() = delete;
 };
@@ -114,6 +114,6 @@ class DebugController : public Controller
 {
 public:
   followToRet followTo(Input &input) override;
-  DebugController(BasicWheelController::PathFollowSettings settings);
+  DebugController(WheelController::PathFollowSettings settings);
 };
 #endif

@@ -186,10 +186,10 @@ void PurePursuitController::init()
 {
   ctrl.setTarget(0);
 }
-PurePursuitController::PurePursuitController(PID input) : PurePursuitController(input, BasicWheelController::PathFollowSettings())
+PurePursuitController::PurePursuitController(PID input) : PurePursuitController(input, WheelController::PathFollowSettings())
 {
 }
-PurePursuitController::PurePursuitController(PID input, BasicWheelController::PathFollowSettings settings)
+PurePursuitController::PurePursuitController(PID input, WheelController::PathFollowSettings settings)
 {
   ctrl = input;
   this->settings = settings;
@@ -219,22 +219,22 @@ RamseteController::followToRet RamseteController::followTo(Input &input)
   double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / (eTheta + eTheta == 0 ? 0.00001 : 0) * error(0, 0);
   return {{speed, ForwardVel::inps}, {turnVel, AngularVel::radps}};
 }
-RamseteController::RamseteController(double beta, double zeta, BasicWheelController::PathFollowSettings settings) : Controller()
+RamseteController::RamseteController(double beta, double zeta, WheelController::PathFollowSettings settings) : Controller()
 {
   this->beta = beta;
   this->zeta = zeta;
   this->settings = settings;
 }
-RamseteController::RamseteController(double beta, double zeta) : RamseteController(beta, zeta, BasicWheelController::PathFollowSettings())
+RamseteController::RamseteController(double beta, double zeta) : RamseteController(beta, zeta, WheelController::PathFollowSettings())
 {
 }
-BasicPidController::BasicPidController(PID ctrl, PID slave, BasicWheelController::PathFollowSettings settings) : Controller()
+BasicPidController::BasicPidController(PID ctrl, PID slave, WheelController::PathFollowSettings settings) : Controller()
 {
   this->ctrl = ctrl;
   this->slave = slave;
   this->settings = settings;
 }
-BasicPidController::BasicPidController(PID ctrl, PID slave) : BasicPidController(ctrl, slave, BasicWheelController::PathFollowSettings())
+BasicPidController::BasicPidController(PID ctrl, PID slave) : BasicPidController(ctrl, slave, WheelController::PathFollowSettings())
 {
 }
 
@@ -257,7 +257,7 @@ void BasicPidController::init()
   ctrl.setTarget(0);
   slave.setTarget(0);
 }
-DebugController::DebugController(BasicWheelController::PathFollowSettings settings) : Controller()
+DebugController::DebugController(WheelController::PathFollowSettings settings) : Controller()
 {
   this->settings = settings;
 }

@@ -1,5 +1,5 @@
 {
-    "C_Cpp.enhancedColorization": "Enabled",
+    "C_Cpp.enhancedColorization": "enabled",
     "editor.semanticTokenColorCustomizations": {
         "[Tokyo Night]": {
             "rules": {
@@ -12,6 +12,11 @@
             "rules": {
                 "variable.global": "#ce8787",
                 "enumMember": "#db892c"
+            }
+        },
+        "[Syntax Material Dark Level 1 (beta)]": {
+            "rules": {
+                "property": "#efbea5"
             }
         }
         

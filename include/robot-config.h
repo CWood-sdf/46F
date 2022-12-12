@@ -1,4 +1,4 @@
-//#include "EPA_Tracker.h"
+// #include "EPA_Tracker.h"
 #ifndef ROBOT_CONFIG_H
 #define ROBOT_CONFIG_H
 #include "Sensors/PotDial.h"
@@ -103,7 +103,7 @@ extern GPS_Share share;
 
 extern Positioner positioner;
 // Wheel controller
-extern Omni_6Controller wc;
+extern WheelController wc;
 extern vision Vision1;
 extern vision::signature BLUEGOAL;
 extern vision::signature REDGOAL;
