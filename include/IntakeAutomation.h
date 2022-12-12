@@ -14,6 +14,8 @@ struct AutoIntake
   long clearStartTime = 0;
   bool fixingUnstable = false;
   int direction = 0;
+  bool tempClearReady = false;
+  int tempClearStop = 200;
   //   struct {
   //     bool top = false;
   //     bool middle = false;

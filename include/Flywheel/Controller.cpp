@@ -41,6 +41,7 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
   static lv_chart_series_t *serFilt;
   static lv_chart_series_t *serErr;
   static lv_chart_series_t *serSent;
+  static lv_chart_series_t *serDeriv;
   static lv_obj_t *chartLabel;
   static lv_obj_t *key;
   // cout << "LO" << endl;
@@ -64,6 +65,7 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
     serFilt = lv_chart_add_series(chart, lv_color_make(0, 0, 255), LV_CHART_AXIS_PRIMARY_Y);
     serErr = lv_chart_add_series(chart, lv_color_make(0, 255, 0), LV_CHART_AXIS_PRIMARY_Y);
     serSent = lv_chart_add_series(chart, lv_color_make(0, 255, 255), LV_CHART_AXIS_PRIMARY_Y);
+    serDeriv = lv_chart_add_series(chart, lv_color_make(255, 150, 0), LV_CHART_AXIS_PRIMARY_Y);
 
     // Make the label
     chartLabel = lv_label_create(chart);
@@ -85,6 +87,7 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
     makeKeyCont(key, "meas", serMeas->color, 40);
     makeKeyCont(key, "Filt", serFilt->color, 60);
     makeKeyCont(key, "Sent", serSent->color, 80);
+    makeKeyCont(key, "Deriv", serDeriv->color, 100);
     // cout << remake << endl;
     lv_chart_set_next_value(chart, serTarg, out.targetVel);
     lv_chart_set_next_value(chart, serErr, out.error);
@@ -100,6 +103,7 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
     lv_chart_set_next_value(chart, serMeas, out.measuredVel);
     lv_chart_set_next_value(chart, serFilt, out.filterVel);
     lv_chart_set_next_value(chart, serSent, out.sentVel * 6);
+    lv_chart_set_next_value(chart, serDeriv, out.deriv);
   }
 }
 void FlywheelTBHEncoder::init()
@@ -242,15 +246,15 @@ void FlywheelTBHEncoder::step()
   // Vary the gain value to optimize the flywheel acceleration
   if (abs(err) < 10)
   {
-    gain = 0.05;
+    gain = 0.1;
   }
   if (abs(err) < 60)
   {
-    gain = 0.07;
+    gain = 0.1;
   }
   else
   {
-    gain = 0.02;
+    gain = 0.09;
   }
   if (calcTbh)
   {
@@ -307,19 +311,27 @@ void FlywheelTBHEncoder::step()
   {
     velSent = 100;
   }
-  if (abs(err) > 60)
+  if (abs(err) > 80)
   {
     freeAccel = true;
   }
   if (freeAccel)
   {
-    velSent = initialTbh[target];
+    if (speedEst < desiredVel)
+    {
+      velSent = 100;
+    }
+    else
+    {
+      velSent = initialTbh[target];
+    }
+    // initialTbh[target];
     if (abs(err) < 60)
     {
       freeAccel = false;
     }
   }
-  debug.set(err, speedEst, speed, desiredVel, velSent);
+  debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 20 + 50);
   prevErr = err;
   if (!disabled)
   {

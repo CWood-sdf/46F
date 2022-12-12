@@ -88,7 +88,7 @@ void AutoIntake::updateValues(bool flywheelReady)
     clearingLastDisk = false;
   }
   int lastDisk = 1 << (sensors.size() - 1);
-  if ((diskMask & lastDisk) == lastDisk && clearingDisks)
+  if (diskMask == lastDisk && clearingDisks)
   {
     clearingLastDisk = true;
   }
@@ -96,13 +96,30 @@ void AutoIntake::updateValues(bool flywheelReady)
   {
     clearingLastDisk = false;
   }
+  if ((diskMask & lastDisk) == lastDisk && clearingDisks)
+  {
+    tempClearReady = true;
+  }
+  else
+  {
+    tempClearReady = false;
+  }
+  if (clearingDisks && tempClearReady && (diskMask & lastDisk) == 0)
+  {
+    tempClearStop = 200;
+    tempClearReady = false;
+  }
+  if (tempClearStop > 0)
+  {
+    tempClearStop -= 10;
+  }
   // If seconds of clearing disks, then stop
   if (clearingDisks && (Brain.Timer.system() - clearStartTime) > 10000)
   {
     // clearingDisks = false;
   }
   direction = 0;
-  if (intaking || (clearingDisks && (flywheelReady || !sensors.back()())))
+  if (intaking || (clearingDisks && (flywheelReady || !sensors.back()()) && tempClearStop <= 0))
   {
     direction = 1;
   }
@@ -111,13 +128,13 @@ void AutoIntake::updateValues(bool flywheelReady)
     direction = -1;
     fixingUnstable = true;
   }
-  if (i++ == 10)
+  if (i++ == 30)
   {
-    cout << "Mask: " << diskMask << endl;
-    cout << "Stable: " << stable() << endl;
-    cout << "Fixable: " << fixableUnstable() << endl;
-    cout << "Count: " << count << endl;
-    cout << "Direction: " << direction << endl;
+    // cout << "Mask: " << diskMask << endl;
+    // cout << "Stable: " << stable() << endl;
+    // cout << "Fixable: " << fixableUnstable() << endl;
+    // cout << "Count: " << count << endl;
+    // cout << "Direction: " << direction << endl;
     i = 0;
   }
   if (fixingUnstable && stable() && count == 0)

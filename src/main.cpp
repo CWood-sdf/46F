@@ -31,9 +31,10 @@ void spinRoller()
   chassis.driveFromDiff(-60, 0, fwd);
   int count = 0;
   bool countUp = true;
+  int i = 0;
   while (1)
   {
-    if (isRed != lastRed && isRed != targetRed)
+    if (isRed != lastRed && isRed == targetRed && i > 10)
     {
       break;
     }
@@ -59,11 +60,12 @@ void spinRoller()
       countUp = true;
       chassis.driveFromDiff(-20, 0, fwd);
     }
+    i++;
     s(10);
   }
-  intake.spin(vex::reverse, -100);
+  // intake.spin(vex::reverse, -100);
   chassis.driveFromDiff(-10, 0, fwd);
-  s(500);
+  // s(500);
   chassis.coastBrake();
   intake.stop(hold);
   if (!intakeDisabled)
@@ -88,7 +90,7 @@ void autonInit()
   rachetColor.setLightPower(100, percent);
   rachetColor.integrationTime(50);
   intakeController.autonInit();
-  intakeController.enable();
+  intakeController.disable();
   cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -164,7 +166,7 @@ void drivercontrol()
   [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
   // int currentVelocity = 510;
   // int flywheelI = 1;
-  flyTBH.setTargetSpeed(367);
+  flyTBH.setTargetSpeed(530);
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -337,7 +339,7 @@ void runIntake()
       // cout << intakeController.diskMask << endl;
       if (intakeController.spinMotor())
       {
-        intake.spin(fwd, 100);
+        intake.spin(fwd, 70);
       }
       else if (intakeController.reverseMotor())
       {
@@ -552,9 +554,10 @@ int main()
     wc.path.setK(1.2);
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
-    intakeController.enable();
+    intakeController.disable();
     cout << "<< Flywheel initialized >>" << endl;
     intakeController.autonInit();
+
     s(500);
     init = true; });
   while (!init)
@@ -567,7 +570,7 @@ int main()
   [[maybe_unused]] KillThread otherThreads = thread(executeThreads);
 
   // TODO: Intake thread
-  thread intakeThread = thread(runIntake);
+  [[maybe_unused]] KillThread intakeThread = thread(runIntake);
   // Awesome brain screen control thread
   thread loader = thread(brainOS);
 
@@ -575,7 +578,8 @@ int main()
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
   // autonomous();
-  chassis.coastBrake();
+  // chassis.coastBrake();
+  // flyTBH.setTargetSpeed(0);
   drivercontrol();
   // Competition.autonomous(autonomous);
   // Competition.drivercontrol(drivercontrol);

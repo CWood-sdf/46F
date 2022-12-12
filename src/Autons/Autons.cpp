@@ -9,20 +9,42 @@ void waitIntakeDone()
 }
 Auton leftA = "Left" + []()
 {
-  flyTBH.setDisabled(true);
+  // flyTBH.setDisabled(true);
 
-  flyTBH.setTargetSpeed(530);
-  flywheelNm.spin(fwd, 100);
+  flyTBH.setTargetSpeed(520);
+  // flywheelNm.spin(fwd, 100);
   wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
-  // wc.faceTarget({49.60, 49.88});
+  wc.faceTarget({49.60, 49.88});
+  wc.faceTarget({49.60, 49.88});
   // intake.spin(fwd, 100);
-  s(2000);
+  // s(2000);
+  // flyTBH.setDisabled(false);
+  s(100);
   // Fire
-  intakeController.setFiring();
-  waitIntakeDone();
+  intakeController.disable();
+  while (!flyTBH.ready())
+  {
+    wait(20, msec);
+  }
+  intake.spin(fwd, 100);
+  s(100);
+  intake.stop(hold);
+  s(500);
+  while (!flyTBH.ready())
+  {
+    wait(20, msec);
+  }
+  intake.spin(fwd, 100);
+  while (!flyTBH.ready())
+  {
+    wait(20, msec);
+  }
+  intake.stop(hold);
+  // intakeController.setFiring();
+  // waitIntakeDone();
   // flyTBH.setTargetSpeed(0);
-  // wc.turnTo(90);
-  // spinRoller();
+  wc.turnTo(90);
+  spinRoller();
   // // Drive to 3-stack
   // goalRaise.open();
   // wc.driveTo(-30.48, 6.59);
