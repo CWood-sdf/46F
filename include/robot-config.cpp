@@ -39,9 +39,9 @@ TestDevice(BR);
 motor_group Left = motor_group(BL, FL);
 motor_group Right = motor_group(BR, FR);
 
-motor intakeMot = motor(PORT10, gearSetting::ratio18_1, true);
+motor intakeMot = motor(PORT10, gearSetting::ratio18_1, !true);
 TestDevice(intakeMot);
-motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, false);
+motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, !false);
 TestDevice(intakeMot2);
 
 motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
@@ -100,7 +100,7 @@ inertial angler = inertial(PORT16);
 TestDevice(angler);
 
 // gps
-gps GPS = gps(PORT7, 6, 4.0, inches, 0);
+gps GPS = gps(PORT6, 6, 4.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);
@@ -171,13 +171,15 @@ RamseteController ramsete = RamseteController(
 WheelController::PathFollowSettings pidSettings = WheelController::PathFollowSettings();
 BasicPidController pidController = BasicPidController(
     PIDF(6.0, 0.1, 2.4325, 20, 6, 1),
-    PID(1.0, 0, 0.3, 0, 0, 0),
+    PID(0.8, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(WheelController::exitMode::normal)
         .setExitDist(2)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
-        .setVirtualPursuitDist(5));
+        .setTurnAtStart(true)
+        .setVirtualPursuitDist(9)
+        .setMaxTimeIn(200));
 
 WheelController::PathFollowSettings debugSettings = WheelController::PathFollowSettings();
 DebugController debugController = DebugController(

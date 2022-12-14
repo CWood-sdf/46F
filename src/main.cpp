@@ -34,11 +34,11 @@ void spinRoller()
   int i = 0;
   while (1)
   {
-    if (isRed != lastRed && isRed == targetRed && i > 10)
+    if (isRed != lastRed && !isRed == targetRed && i > 10)
     {
       break;
     }
-    intake.spin(vex::reverse, 100);
+    intake.spin(vex::reverse, 40);
     auto hue = rachetColor.hue();
     lastRed = isRed;
     isRed = hue > 300 || hue < 60;
@@ -177,7 +177,8 @@ void drivercontrol()
   static vector<pair<bool, bool *>> countsExist = {};
   // The count of drivercontrol instances
   static int count = 0;
-
+  vector<int> speeds = {367, 421, 457, 502};
+  int speedIndex = 0;
   // Is true if this drivercontrol instance should be running
   bool primary = count == 0 || allEmpty ? true : false;
   // Push back the array
@@ -204,23 +205,34 @@ void drivercontrol()
 
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
-      if (Greg.ButtonL1.pressing())
+      if (L1Latch.pressing())
       {
-        flywheelSpeed += 0.5;
-        if (flywheelSpeed > 600)
-        {
-          flywheelSpeed = 600;
-        }
-        flyTBH.setTargetSpeed(flywheelSpeed);
+        speedIndex = (speedIndex + 1) % speeds.size();
+        flyTBH.setTargetSpeed(speeds[speedIndex]);
+        Greg.rumble(string(speedIndex + 1, '.').data());
+        // flywheelSpeed += 0.5;
+        // if (flywheelSpeed > 600)
+        // {
+        //   flywheelSpeed = 600;
+        // }
+        // flyTBH.setTargetSpeed(flywheelSpeed);
       }
-      if (Greg.ButtonL2.pressing())
+      if (L2Latch.pressing())
       {
-        flywheelSpeed -= 0.5;
-        if (flywheelSpeed < 0)
+        speedIndex--;
+        if (speedIndex < 0)
         {
-          flywheelSpeed = 0;
+          speedIndex = speeds.size() - 1;
         }
-        flyTBH.setTargetSpeed(flywheelSpeed);
+        speedIndex = speedIndex % speeds.size();
+        flyTBH.setTargetSpeed(speeds[speedIndex]);
+        Greg.rumble(string(speedIndex + 1, '.').data());
+        // flywheelSpeed -= 0.5;
+        // if (flywheelSpeed < 0)
+        // {
+        //   flywheelSpeed = 0;
+        // }
+        // flyTBH.setTargetSpeed(flywheelSpeed);
       }
       if (Greg.ButtonLeft.pressing())
       {
@@ -248,12 +260,12 @@ void drivercontrol()
       if (Greg.ButtonR1.pressing())
       {
         intakeController.disable();
-        intake.spin(fwd, 100);
+        intake.spin(fwd, 50);
       }
       else if (Greg.ButtonR2.pressing())
       {
         intakeController.disable();
-        intake.spin(vex::reverse, 100);
+        intake.spin(vex::reverse, 50);
       }
       else
       {
@@ -577,7 +589,7 @@ int main()
   thread flywheelControl = thread(runFlywheel);
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
-  // autonomous();
+  autonomous();
   // chassis.coastBrake();
   // flyTBH.setTargetSpeed(0);
   // drivercontrol();
