@@ -142,6 +142,13 @@
         "cinttypes": "cpp",
         "*.rh": "cpp",
         "cerrno": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "complex": "cpp",
+        "mutex": "cpp",
+        "ranges": "cpp",
+        "set": "cpp",
+        "span": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     }
 }
