@@ -84,14 +84,14 @@ void WheelController::turnTo(std::function<double()> angleCalc)
 {
   //
   auto oldAngleCalc = angleCalc;
-  if (reversed && !callingInDrive)
+  if (!isRed() && !callingInDrive)
   {
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Turning add)
 #endif
     angleCalc = [&]()
     {
-      return oldAngleCalc();
+      return posNeg180(oldAngleCalc() + 180);
     };
   }
   // If the auton is on the other side, turn to the opposite angle
@@ -156,7 +156,14 @@ void WheelController::turnTo(double angle)
 // Implement faceTarget
 void WheelController::faceTarget(PVector target)
 {
+  if (!isRed())
+  {
+    target.x *= -1.0;
+    target.y *= -1.0;
+  }
+  callingInDrive = true;
   turnTo(botPos().angleTo(target));
+  callingInDrive = false;
 }
 
 bool WheelController::isMoving()

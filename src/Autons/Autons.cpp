@@ -7,10 +7,11 @@ void waitIntakeDone()
     wait(20, msec);
   }
 }
-void waitFlywheelReady()
+void waitFlywheelReady(int minTime = 0)
 {
   int readyCount = 5;
-  while (readyCount > 0)
+  bool canExit = false;
+  while (readyCount > 0 || minTime > 0)
   {
     if (flyTBH.ready())
     {
@@ -20,16 +21,29 @@ void waitFlywheelReady()
     {
       readyCount = 5;
     }
+    if (readyCount < 0)
+    {
+      canExit = true;
+    }
+    if (canExit && minTime < 0)
+    {
+      break;
+    }
     wait(50, msec);
+    minTime -= 50;
   }
 }
+void graphFlywheelTBH(bool);
 Auton leftA = "Left" + []()
 {
   // flyTBH.setDisabled(true);
   LinkedList<bool> flywheelReady = {};
+  bos::bosFns.moveCurrentLeft();
+  bos::bosFns.moveCurrentRight();
   flyTBH.setTargetSpeed(520);
   // flywheelNm.spin(fwd, 100);
   wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
+
   // wc.faceTarget({49.60, 49.88});
   // wc.faceTarget({49.60, 49.88});
   // intake.spin(fwd, 100);
@@ -42,7 +56,7 @@ Auton leftA = "Left" + []()
   {
     wait(20, msec);
   }
-  intake.spin(fwd, 60);
+  intake.spin(fwd, 50);
   waitFlywheelReady();
   intake.stop(hold);
   s(500);
@@ -50,8 +64,8 @@ Auton leftA = "Left" + []()
   {
     wait(20, msec);
   }
-  intake.spin(fwd, 60);
-  waitFlywheelReady();
+  intake.spin(fwd, 50);
+  waitFlywheelReady(1000);
   intake.stop(hold);
   // intakeController.setFiring();
   // waitIntakeDone();
@@ -71,16 +85,39 @@ Auton leftA = "Left" + []()
 };
 Auton rightA = "Right" + []()
 {
+  // wc.setBlue();
   wc.estimateStartPos(PVector(16.81, -62.47), 0);
+
   wc.faceTarget({48.57, 50.05});
+  flyTBH.setTargetSpeed(526);
+  s(100);
+  // Fire
+  intakeController.disable();
+  while (!flyTBH.ready())
+  {
+    wait(20, msec);
+  }
+  intake.spin(fwd, 50);
+  waitFlywheelReady();
+  intake.stop(hold);
+  s(500);
+  while (!flyTBH.ready())
+  {
+    wait(20, msec);
+  }
+  intake.spin(fwd, 50);
+  waitFlywheelReady(1000);
+  intake.stop(hold);
+
   // // Fire
   // intakeController.setFiring();
   // // Move fwd to allow for roller
-  // wc.driveTo(21.59, -42.32);
+  wc.driveTo(21.59, -44.32);
   // // Drive to roller
-  // wc.backwardsFollow(&pidController, {PVector(39.01, -54.1)});
-  // wc.backwardsFollow(&pidController, {PVector(39.18, -60.76)});
-  // spinRoller();
+  // wc.backwardsFollow(&pidController, {PVector(39.01, -56.1)});
+  wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
+  wc.turnTo(0);
+  spinRoller();
   // // Drive along 3-ground
   // wc.followPath(&pidController, {PVector(-14.26, -11.07)});
   // wc.faceTarget({48.57, 50.05});
@@ -155,15 +192,9 @@ Auton skills = "Skills" + []()
 };
 Auton winPoint = "Win Point" + []()
 {
-  wc.estimateStartPos(PVector(57.46, -38.45), 269.79);
-  wc.faceTarget({-49.05, -50.13});
-  wc.turnTo(269.62);
-  spinRoller();
-  wc.driveTo(30.72, -6.09);
-  wc.faceTarget({-50.40, -49.46});
-  wc.driveTo(-17.14, 41.09);
-  wc.faceTarget({-50.40, -49.46});
-  wc.backwardsFollow(&pidController, {PVector(-40.28, 57.95)});
-  wc.backwardsFollow(&pidController, {PVector(-40.51, 61.32)});
-  spinRoller();
+  wc.estimateStartPos(PVector(-60.26, 40.17), 102.22);
+  wc.followPath(&pidController, {PVector(-44.54, 0.13), PVector(18.49, -50.82)});
+  wc.driveTo(21.59, -44.32);
+  wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
+  wc.turnTo(0);
 };
