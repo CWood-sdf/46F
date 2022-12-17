@@ -58,7 +58,7 @@ void spinRoller()
     else if (count == 0)
     {
       countUp = true;
-      chassis.driveFromDiff(-20, 0, fwd);
+      chassis.driveFromDiff(-30, 0, fwd);
     }
     i++;
     s(10);
@@ -167,6 +167,7 @@ void drivercontrol()
   // int currentVelocity = 510;
   // int flywheelI = 1;
   flyTBH.setTargetSpeed(367);
+  flyTBH.setDisabled(false);
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -205,17 +206,29 @@ void drivercontrol()
 
       double s1 = Y1 + X1;
       double s2 = Y1 - X1;
+      // if (Greg.ButtonL1.pressing())
+      // {
+      //   flywheelSpeed += 0.5;
+      //   if (flywheelSpeed > 600)
+      //   {
+      //     flywheelSpeed = 600;
+      //   }
+      //   flyTBH.setTargetSpeed(flywheelSpeed);
+      // }
+      // if (Greg.ButtonL2.pressing())
+      // {
+      //   flywheelSpeed -= 0.5;
+      //   if (flywheelSpeed < 0)
+      //   {
+      //     flywheelSpeed = 0;
+      //   }
+      //   flyTBH.setTargetSpeed(flywheelSpeed);
+      // }
       if (L1Latch.pressing())
       {
         speedIndex = (speedIndex + 1) % speeds.size();
         flyTBH.setTargetSpeed(speeds[speedIndex]);
         Greg.rumble(string(speedIndex + 1, '.').data());
-        // flywheelSpeed += 0.5;
-        // if (flywheelSpeed > 600)
-        // {
-        //   flywheelSpeed = 600;
-        // }
-        // flyTBH.setTargetSpeed(flywheelSpeed);
       }
       if (L2Latch.pressing())
       {
@@ -227,12 +240,6 @@ void drivercontrol()
         speedIndex = speedIndex % speeds.size();
         flyTBH.setTargetSpeed(speeds[speedIndex]);
         Greg.rumble(string(speedIndex + 1, '.').data());
-        // flywheelSpeed -= 0.5;
-        // if (flywheelSpeed < 0)
-        // {
-        //   flywheelSpeed = 0;
-        // }
-        // flyTBH.setTargetSpeed(flywheelSpeed);
       }
       if (Greg.ButtonLeft.pressing())
       {
@@ -563,6 +570,8 @@ int main()
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
     wc.path.setK(1.2);
+    chassis.setMaxAcc(200);
+    chassis.setMaxDAcc(160);
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
     intakeController.disable();
@@ -588,9 +597,15 @@ int main()
   thread flywheelControl = thread(runFlywheel);
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
-  autonomous();
-  // chassis.coastBrake();
+
+  // autonomous();
+  // // chassis.coastBrake();
   // flyTBH.setTargetSpeed(0);
+  // flyTBH.setDisabled(false);
+  // while (1)
+  // {
+  //   s(100);
+  // }
   // drivercontrol();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);

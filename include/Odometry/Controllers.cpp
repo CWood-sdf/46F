@@ -244,13 +244,13 @@ BasicPidController::followToRet BasicPidController::followTo(Input &input)
   double normAngle = posNeg180(input.angleTarget - input.currentAngle);
   // cout << normAngle << endl;
   double fwdVel = -ctrl.getVal(dist);
-  if (dist < 0)
-  {
-    normAngle = posNeg180(normAngle + 180);
-  }
+  // if (dist < 0)
+  // {
+  //   normAngle = posNeg180(normAngle + 180);
+  // }
   double turnVel = slave.getVal(posNeg180(normAngle));
 
-  return {{fwdVel * 0.8, Controller::ForwardVel::pct}, {turnVel * 3.0, Controller::AngularVel::pctDiff}};
+  return {{fwdVel * 0.8, Controller::ForwardVel::pct}, {turnVel * 2.0, Controller::AngularVel::pctDiff}};
 }
 void BasicPidController::init()
 {

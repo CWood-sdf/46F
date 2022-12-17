@@ -160,7 +160,7 @@ class FlywheelTBHEncoder : public Empty
   vector<double> initialTbh = {10};
   double tbh = 0;
   double gain;
-  Settled velCheck = Settled(5, 0.5, 500);
+  Settled velCheck = Settled(10, 0.5, 500);
   int target;
   FlywheelDebugEl debug;
   bool hasTarget = false;

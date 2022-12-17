@@ -84,7 +84,7 @@ Pneumatics
 
 *************************************/
 
-pneumatics endgame = pneumatics(Brain.ThreeWirePort.B);
+pneumatics endgame = pneumatics(Brain.ThreeWirePort.H);
 pneumatics goalRaise = pneumatics(Brain.ThreeWirePort.C);
 /*************************************
 
@@ -100,7 +100,7 @@ inertial angler = inertial(PORT16);
 TestDevice(angler);
 
 // gps
-gps GPS = gps(PORT6, 6, 4.0, inches, 0);
+gps GPS = gps(PORT6, 8, 0.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);

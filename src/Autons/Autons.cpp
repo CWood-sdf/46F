@@ -19,6 +19,32 @@ void waitFlywheelReady(int minTime = 0)
     }
     else
     {
+      readyCount = 8;
+    }
+    if (readyCount < 0)
+    {
+      canExit = true;
+    }
+    if (canExit && minTime < 0)
+    {
+      break;
+    }
+    wait(50, msec);
+    minTime -= 50;
+  }
+}
+void waitFlywheelNotReady(int minTime = 0)
+{
+  int readyCount = 5;
+  bool canExit = false;
+  while (readyCount > 0 || minTime > 0)
+  {
+    if (!flyTBH.ready())
+    {
+      readyCount--;
+    }
+    else
+    {
       readyCount = 5;
     }
     if (readyCount < 0)
@@ -37,10 +63,16 @@ void graphFlywheelTBH(bool);
 Auton leftA = "Left" + []()
 {
   // flyTBH.setDisabled(true);
+  // bos::bosFns.moveCurrentLeft();
+  // bos::bosFns.moveCurrentLeft();
   LinkedList<bool> flywheelReady = {};
   bos::bosFns.moveCurrentLeft();
-  bos::bosFns.moveCurrentRight();
-  flyTBH.setTargetSpeed(520);
+  bos::bosFns.moveCurrentLeft();
+  bos::bosFns.getCurrent()->call(true);
+  flyTBH.setTargetSpeed(528);
+  flyTBH.setDisabled(true);
+  s(100);
+  flywheelNm.spinVolt(fwd, 528.0 / 6.0);
   // flywheelNm.spin(fwd, 100);
   wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
 
@@ -52,26 +84,34 @@ Auton leftA = "Left" + []()
   s(100);
   // Fire
   intakeController.disable();
-  while (!flyTBH.ready())
-  {
-    wait(20, msec);
-  }
+  // waitFlywheelReady();
+  s(3500);
+  cout << "0" << endl;
   intake.spin(fwd, 50);
-  waitFlywheelReady();
+  s(600);
+  cout << "1" << endl;
   intake.stop(hold);
-  s(500);
-  while (!flyTBH.ready())
-  {
-    wait(20, msec);
-  }
+  // spinRoller();
+  // chassis.driveFromDiff(20, 0, fwd);
+  // s(300);
+  // chassis.coastBrake();
+
+  // wc.faceTarget({49.60, 49.88});
+  // s(500);
+  // waitFlywheelReady();
+  cout << 1.5 << endl;
+  s(3000);
   intake.spin(fwd, 50);
-  waitFlywheelReady(1000);
+  // waitFlywheelNotReady(1000);
+  s(1000);
+  cout << "2" << endl;
   intake.stop(hold);
   // intakeController.setFiring();
   // waitIntakeDone();
-  // flyTBH.setTargetSpeed(0);
+  flyTBH.setTargetSpeed(0);
   wc.turnTo(90);
   spinRoller();
+  flyTBH.setDisabled(false);
   // // // Drive to 3-stack
   // // goalRaise.open();
   // wc.driveTo(-30.48, 6.59);
@@ -86,28 +126,53 @@ Auton leftA = "Left" + []()
 Auton rightA = "Right" + []()
 {
   // wc.setBlue();
+  cout << "Red: " << wc.isRed() << endl;
   wc.estimateStartPos(PVector(16.81, -62.47), 0);
 
-  wc.faceTarget({48.57, 50.05});
-  flyTBH.setTargetSpeed(526);
+  bos::bosFns.moveCurrentLeft();
+  bos::bosFns.moveCurrentLeft();
+  bos::bosFns.getCurrent()->call(true);
+  flyTBH.setTargetSpeed(530);
+  flyTBH.setDisabled(true);
+  s(100);
+  flywheelNm.spinVolt(fwd, 530.0 / 6.0);
+  // flywheelNm.spin(fwd, 100);
+  wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
+
+  // wc.faceTarget({49.60, 49.88});
+  // wc.faceTarget({49.60, 49.88});
+  // intake.spin(fwd, 100);
+  // s(2000);
+  // flyTBH.setDisabled(false);
   s(100);
   // Fire
   intakeController.disable();
-  while (!flyTBH.ready())
-  {
-    wait(20, msec);
-  }
+  // waitFlywheelReady();
+  s(3500);
+  cout << "0" << endl;
   intake.spin(fwd, 50);
-  waitFlywheelReady();
+  s(600);
+  cout << "1" << endl;
   intake.stop(hold);
-  s(500);
-  while (!flyTBH.ready())
-  {
-    wait(20, msec);
-  }
+  // spinRoller();
+  // chassis.driveFromDiff(20, 0, fwd);
+  // s(300);
+  // chassis.coastBrake();
+
+  // wc.faceTarget({49.60, 49.88});
+  // s(500);
+  // waitFlywheelReady();
+  cout << 1.5 << endl;
+  s(3000);
   intake.spin(fwd, 50);
-  waitFlywheelReady(1000);
+  // waitFlywheelNotReady(1000);
+  s(1000);
+  cout << "2" << endl;
   intake.stop(hold);
+  // intakeController.setFiring();
+  // waitIntakeDone();
+  flyTBH.setTargetSpeed(0);
+  flyTBH.setDisabled(false);
 
   // // Fire
   // intakeController.setFiring();
@@ -115,7 +180,10 @@ Auton rightA = "Right" + []()
   wc.driveTo(21.59, -44.32);
   // // Drive to roller
   // wc.backwardsFollow(&pidController, {PVector(39.01, -56.1)});
-  wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
+  pidController.settings.setBrakeMode(WheelController::exitMode::hold);
+  wc.backwardsFollow(&pidController, {PVector(37.18, -56.76)});
+  wc.turnTo(0);
+  s(500);
   wc.turnTo(0);
   spinRoller();
   // // Drive along 3-ground
@@ -124,71 +192,117 @@ Auton rightA = "Right" + []()
   // // Fire
   // intakeController.setFiring();
 };
+bool intaking = false;
 Auton skills = "Skills" + []()
 {
-  /***
-   * TODO: Test like this:
-   * - Work out wheelbase mvts
-   * - Add intake and goal raise
-   * - Test one cmd at a time
-   *
-   */
-  wc.estimateStartPos(PVector(59.34, -38.83), 270.53);
-  wc.faceTarget({-49.96, -50.22});
-  // Fire
-  // intakeController.setFiring();
+  thread runIntakeThread = thread([]()
+                                  {
+    while(1){
+      if(intaking){
+        intake.spin(fwd, 50);
+      }
+      if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
+      {
+        intaking = false;
+        intake.stop(hold);
+      }
+      s(10);
+    } });
+  wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
+  flyTBH.setTargetSpeed(528);
+  flyTBH.setDisabled(true);
+  s(100);
+  flywheelNm.spinVolt(fwd, 84.8);
+  // flywheelNm.spin(fwd, 100);
+  wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
+  // flywheelNm.stop(coast);
   wc.turnTo(-90);
   spinRoller();
-  // // Drive to 3-stack
-  // wc.driveTo(35.21, -36.43);
-  // wc.faceTarget({-49.27, -50.13});
-  // // Fire
-  // intakeController.setFiring();
-  // // Continue to roller
-  // wc.backwardsFollow(&pidController, {PVector(40.16, -58.45)});
-  // wc.turnTo(-0.41);
-  // spinRoller();
-  // // Drive to 3-row
-  // wc.followPath(&pidController, {PVector(21.06, -47.21), PVector(-15.34, -7.66)});
-  // wc.faceTarget({-49.72, -49.68});
-  // // Fire
-  // intakeController.setFiring();
-  // // Drive to 3-stack
-  // wc.driveTo(-36.91, 12.78);
-  // wc.faceTarget({-49.72, -49.68});
-  // // Fire
-  // intakeController.setFiring();
-  // // Drive to roller
-  // wc.backwardsFollow(&pidController, {PVector(-57.14, 38.84)});
-  // wc.backwardsFollow(&pidController, {PVector(-60.96, 39.07)});
-  // spinRoller();
-  // // Drive to next roller, prolly picks up a disk, but whatevs
-  // wc.driveTo(-41.63, 53.45);
-  // wc.backwardsFollow(&pidController, {PVector(-41.63, 60.87)});
-  // spinRoller();
-  // // Drive to 3-stack
-  // wc.driveTo(-35.79, 37.27);
-  // // Drive to closer to goal
-  // wc.driveTo(-9.72, 53.45);
-  // wc.faceTarget({50.49, 49.86});
-  // // Fire
-  // intakeController.setFiring();
-  // // Drive along 3-row
-  // wc.backwardsFollow(&pidController, {PVector(-23.88, 44.91)});
-  // wc.driveTo(19.71, 3.56);
-  // wc.faceTarget({50.49, 49.86});
-  // // Fire
-  // intakeController.setFiring();
-  // // Drive to 3-stack
-  // wc.driveTo(45.10, -20.25);
-  // wc.faceTarget({49.37, 50.31});
-  // // Fire
-  // intakeController.setFiring();
-  // // Endgame time!
-  // wc.backwardsFollow(&pidController, {PVector(59.48, -60.25)});
-  // // Face the endgame direction
-  // wc.turnTo(-44.79);
-  // // Fire endgame
+  chassis.driveFromDiff(20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  intaking = true;
+  wc.driveTo(40.66, -52.97);
+  wc.faceTarget({-50.00, -50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  flywheelNm.spinVolt(fwd, 76.8);
+  wc.backwardsFollow(&pidController, {PVector(40.99, -60.09)});
+  wc.turnTo(0);
+  chassis.driveFromDiff(-20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  spinRoller();
+  chassis.driveFromDiff(20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  intaking = true;
+  wc.driveTo(15.50, -42.05);
+  wc.faceTarget({-50.00, -50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  wc.faceTarget({-35, -23});
+  intaking = true;
+  chassis.driveFromDiff(80, 0, fwd);
+  s(400);
+  chassis.hardBrake();
+  // wc.driveTo(9.29, -23.52);
+  wc.faceTarget({-50.00, -50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  intaking = true;
+  flywheelNm.spinVolt(fwd, 72);
+  wc.faceTarget({-42, -30});
+  chassis.driveFromDiff(80, 0, fwd);
+  s(400);
+  chassis.hardBrake();
+  wc.faceTarget({-50.00, -50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  intaking = true;
+  flywheelNm.spinVolt(fwd, 77);
+  wc.driveTo(-40.77, 12.54);
+  wc.faceTarget({-50.00, -50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  flywheelNm.spinVolt(fwd, 84.8);
+  wc.driveTo(-58.94, 41.33);
+  wc.turnTo(89.83);
+  chassis.driveFromDiff(-20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  spinRoller();
+  chassis.driveFromDiff(20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  intaking = true;
+  wc.driveTo(-48.40, 52.25);
+  wc.faceTarget({50.00, 50.16});
+  intake.spin(fwd, 50);
+  s(1000);
+  intaking = false;
+  intake.stop(hold);
+  wc.backwardsFollow(&pidController, {PVector(-41.07, 57.7)});
+  wc.turnTo(180);
+  chassis.driveFromDiff(-20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  spinRoller();
+  chassis.driveFromDiff(20, 0, fwd);
+  s(500);
+  chassis.coastBrake();
+  wc.faceTarget({68.79, -69.19});
+  endgame.open();
 };
 Auton winPoint = "Win Point" + []()
 {

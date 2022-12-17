@@ -109,9 +109,9 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
 void FlywheelTBHEncoder::init()
 {
   gain = 0.025;
-  maxRateGain = 0.1;
-  maxRateDrop = 0.1;
-  velCheck = Settled(10, 0.2, 500);
+  maxRateGain = 0.15;
+  maxRateDrop = 0.2;
+  velCheck = Settled(6, 10, 500);
 }
 void FlywheelTBHEncoder::setDisabled(bool p)
 {
@@ -197,6 +197,7 @@ bool FlywheelTBHEncoder::ready()
 }
 void FlywheelTBHEncoder::step()
 {
+  static double lastEst = 0;
   if (!hasTarget)
     return;
   // A lot of variables
@@ -213,6 +214,8 @@ void FlywheelTBHEncoder::step()
   double rotation = en.position(rev);
   // An estimate of the velocity
   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
+  speedEst = (speedEst + lastEst) / 2.0;
+  lastEst = speedEst;
   lastRotation = rotation;
   // Get a filtered velocity
   filter.update(speedEst);
@@ -246,15 +249,15 @@ void FlywheelTBHEncoder::step()
   // Vary the gain value to optimize the flywheel acceleration
   if (abs(err) < 10)
   {
-    gain = 0.1;
+    gain = 0.3;
   }
   if (abs(err) < 60)
   {
-    gain = 0.1;
+    gain = 0.25;
   }
   else
   {
-    gain = 0.09;
+    gain = 0.2;
   }
   if (calcTbh)
   {
@@ -311,9 +314,13 @@ void FlywheelTBHEncoder::step()
   {
     velSent = 100;
   }
-  if (abs(err) > 80)
+  if (abs(err) > 100 && speedEst < desiredVel)
   {
     freeAccel = true;
+  }
+  else
+  {
+    freeAccel = false;
   }
   if (freeAccel)
   {
@@ -323,11 +330,7 @@ void FlywheelTBHEncoder::step()
     }
     else
     {
-      velSent = initialTbh[target];
-    }
-    // initialTbh[target];
-    if (abs(err) < 60)
-    {
+      // velSent = initialTbh[target];
       freeAccel = false;
     }
   }
