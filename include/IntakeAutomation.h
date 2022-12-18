@@ -23,6 +23,7 @@ struct AutoIntake
   //   } disk;
   vector<std::function<bool()>> sensors;
   int diskMask = 0;
+  int lastMask = 0;
   AutoIntake(vector<std::function<bool()>> sensors);
   /**
    * @brief For internal use only, stores all the sensor values in a mask for easy comparison

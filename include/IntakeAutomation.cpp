@@ -10,7 +10,7 @@ void AutoIntake::makeMask()
   diskMask = 0;
   for (int i = 0; i < sensors.size(); i++)
   {
-    diskMask |= (sensors[i]() << i);
+    diskMask |= (sensors[i]() << 2 * i);
   }
 }
 bool AutoIntake::stable()
@@ -60,14 +60,88 @@ void AutoIntake::updateValues(bool flywheelReady)
 {
   static int i = 0;
   makeMask();
-
-  //   for(int i = 0; i < sensors.size(); i++){
-  //     ((bool*)&disk)[i] = (diskMask >> i) & 1;
-  //   }
-  count = 0;
-  for (int i = 0; i < sensors.size(); i++)
+  // Mask correction
+  if (diskMask != lastMask)
   {
-    count += sensors[i]();
+    if ((diskMask & 0b10000) == 0 && (lastMask & 0b10000) == 1)
+    {
+      if (direction == 1)
+      {
+        // Disk has exited
+      }
+      if (direction == -1)
+      {
+        // Move disk to interstage, only if there isn't a disk there
+        if ((lastMask & 0b1000) == 0)
+        {
+          // Move disk to interstage
+          diskMask |= 0b1000;
+        }
+        else
+        {
+          // Leave disk up top
+          diskMask |= 0b10000;
+        }
+      }
+    }
+    if ((diskMask & 0b100) == 0 && (lastMask & 0b100) == 1)
+    {
+      if (direction == 1)
+      {
+        // Move disk to middle interstage, only if there isn't a disk there
+        if ((lastMask & 0b1000) == 0)
+        {
+          // Move disk to interstage
+          diskMask |= 0b1000;
+        }
+        else
+        {
+          // Leave disk there
+          diskMask |= 0b100;
+        }
+      }
+      if (direction == -1)
+      {
+        // Move disk to interstage, only if there isn't a disk there
+        if ((lastMask & 0b10) == 0)
+        {
+          // Move disk to interstage
+          diskMask |= 0b10;
+        }
+        else
+        {
+          // Leave disk there
+          diskMask |= 0b100;
+        }
+      }
+    }
+    if ((diskMask & 0b1) == 0 && (lastMask & 0b1) == 1)
+    {
+      if (direction == 1)
+      {
+        // Move disk to bottom interstage, only if there isn't a disk there
+        if ((lastMask & 0b10) == 0)
+        {
+          // Move disk to interstage
+          diskMask |= 0b10;
+        }
+        else
+        {
+          // Leave disk there
+          diskMask |= 0b1;
+        }
+      }
+      if (direction == -1)
+      {
+        // Disk is out
+      }
+    }
+  }
+  lastMask = diskMask;
+  int count = 0;
+  for (int i = 0; i < sensors.size() * 2 - 1; i++)
+  {
+    count += (diskMask >> i) & 1;
   }
   // cout << "Intaking: " << intaking << endl;
   if (intaking && sensors.back()())
@@ -78,16 +152,12 @@ void AutoIntake::updateValues(bool flywheelReady)
   {
     intaking = false;
   }
-  if (!intaking)
-  {
-    lastCount = count;
-  }
   if (clearingDisks && count == 0 && clearingLastDisk)
   {
     clearingDisks = false;
     clearingLastDisk = false;
   }
-  int lastDisk = 1 << (sensors.size() - 1);
+  int lastDisk = 1 << (2 * sensors.size() - 2);
   if (diskMask == lastDisk && clearingDisks)
   {
     clearingLastDisk = true;
@@ -140,6 +210,10 @@ void AutoIntake::updateValues(bool flywheelReady)
   if (fixingUnstable && stable() && count == 0)
   {
     fixingUnstable = false;
+  }
+  if (direction != 0)
+  {
+    lastCount = count;
   }
 }
 

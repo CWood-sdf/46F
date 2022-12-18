@@ -852,6 +852,137 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   cout << endl;
 #endif
 }
+void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
+{
+  PVector startPos = botPos();
+  double startAngle = botAngle();
+  int timeIn = 0;
+  int maxTimeIn = pid->settings.maxTimeIn;
+  double maxDist = pid->settings.followPathDist;
+  int sleepTime = 10;
+  setOldDistFns();
+  moving = true;
+  double dist = 0.0;
+  timer t = timer();
+  int timesStopped = 0;
+  pid->init();
+  while (1)
+  {
+    // Basic exit conditions
+    if (timeIn * sleepTime > maxTimeIn)
+    {
+      break;
+    }
+    // 50 ms not moving -> exit
+    if (timesStopped * sleepTime > 50 && !stopExitPrev)
+    {
+      cout << "Stop Exit" << endl;
+      break;
+    }
+    // If the bot's not moving, and it's not currently accelerating
+    if (chassis->pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000)
+    {
+      timesStopped++;
+    }
+    else
+    {
+      timesStopped = 0;
+    }
+    if (exitEarly)
+    {
+      cout << "Exit due to external thread request" << endl;
+      exitEarly = false;
+      break;
+    }
+    // If near target, start the timer
+    if (dist < pid->settings.exitDist)
+    {
+      timeIn++;
+    }
+    else
+    {
+      timeIn = 0;
+    }
+    double angle = botAngle();
+    PVector pos = botPos();
+    double dist = targetDist - pos.dist(startPos);
+    Controller::Input input = Controller::Input();
+    // Construct the inpur
+    input.angleTarget = startAngle;
+    input.currentAngle = angle;
+    input.chassis = chassis;
+    input.dist = dist > maxDist ? maxDist : dist;
+    auto speeds = pid->followTo(input);
+    double speed = 0;
+    // Convert the speed to a percentage
+    switch (speeds.first.second)
+    {
+    case Controller::ForwardVel::inps:
+      speed = chassis->realToPct(speeds.first.first);
+      break;
+    case Controller::ForwardVel::pct:
+      speed = speeds.first.first;
+      break;
+    }
+
+    double rightExtra;
+    // get the turn speed
+    {
+      double targetRobotVel = chassis->pctToReal(speed);
+      switch (speeds.second.second)
+      {
+      case Controller::AngularVel::curvature:
+        rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
+        break;
+      case Controller::AngularVel::pctDiff:
+        rightExtra = speeds.second.first;
+        break;
+      case Controller::AngularVel::radps:
+        rightExtra = chassis->realToPct(speeds.second.first * chassis->trackWidth / -2.0);
+        break;
+      }
+    }
+    if (isNeg)
+    {
+      speed *= -1.0;
+    }
+    chassis->driveFromDiff(speed, -rightExtra, fwd);
+
+    s(sleepTime);
+  }
+  moving = false;
+  // Stop drawing the path
+  // De-init code
+  {
+    // Stop the bot
+    switch (BrakeMode)
+    {
+    case exitMode::normal:
+      chassis->hardBrake();
+      break;
+    case exitMode::coast:
+      chassis->coastBrake();
+      break;
+    case exitMode::nothing:
+      break;
+    }
+    this->drawArr = false;
+    cout << "Path stop" << endl;
+    // Print postion and target position
+    cout << dist << ", " << targetDist << endl;
+    exitDist = 0.0;
+  }
+  stopExitPrev = false;
+  pid->deInit();
+}
+void WheelController::driveDistance(double dist, BasicPidController *pid)
+{
+  generalDriveDistance(dist, false, pid);
+}
+void WheelController::backwardsDriveDistance(double dist, BasicPidController *pid)
+{
+  generalDriveDistance(dist, true, pid);
+}
 // The beefiest function in this file
 void WheelController::purePursuitFollow(VectorArr arr, bool isNeg)
 {

@@ -8,7 +8,7 @@
 //   Manage it elsewhere in the program
 class Settled
 {
-  EMA derivFilter = EMA(0.3);
+  EMA derivFilter = EMA(0.7);
   double maxDeriv;
   timer time;
   double maxErr;

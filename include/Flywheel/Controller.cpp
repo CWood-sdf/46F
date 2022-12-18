@@ -109,9 +109,9 @@ void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
 void FlywheelTBHEncoder::init()
 {
   gain = 0.025;
-  maxRateGain = 0.15;
-  maxRateDrop = 0.2;
-  velCheck = Settled(6, 10, 500);
+  maxRateGain = 10;
+  maxRateDrop = 10;
+  velCheck = Settled(4, 0.5, 500);
 }
 void FlywheelTBHEncoder::setDisabled(bool p)
 {
@@ -286,10 +286,7 @@ void FlywheelTBHEncoder::step()
   }
   // cout << velSent << endl;
   // cout << (abs(err) < 200) << ", " << abs(velSent - lastVel) << ", " << (abs(velSent - lastVel) < 4.0) << ", " << !settled << endl;
-  if (abs(err) < 200 && abs(err) > 50 && abs(velSent - lastVel) < 1.0 && !settled)
-  {
-    velSent += -1.0 * (2.0 * std::signbit(err) - 1.0);
-  }
+
   // cout << signbit(err) << endl;
   // cout << velSent << endl << endl;
 
@@ -334,12 +331,12 @@ void FlywheelTBHEncoder::step()
       freeAccel = false;
     }
   }
-  debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 20 + 50);
+  debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 100);
   prevErr = err;
   if (!disabled)
   {
     mots.spinVolt(fwd, velSent);
   }
   lastVel = velSent;
-  s(5);
+  // s(5);
 }

@@ -385,7 +385,7 @@ void runFlywheel()
     // else {
     flyTBH.step();
     // }
-    s(50);
+    s(10);
   }
 }
 //}
