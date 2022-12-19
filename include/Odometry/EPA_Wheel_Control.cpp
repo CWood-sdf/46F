@@ -475,16 +475,27 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     vector<PVector> pos, pursuit;
     void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit)
     {
-      outSpeeds.push_back(out);
-      encSpeeds.push_back(enc);
-      targSpeeds.push_back(targ);
-      pos.push_back(p);
-      angles.push_back(angle);
-      cp.push_back(acp);
-      cd.push_back(acd);
-      sp.push_back(asp);
-      sd.push_back(asd);
-      pursuit.push_back(apursuit);
+      cout << "%"
+           << "outputVel: " << out << ", "
+           << "encVel: " << enc << ", "
+           << "targetVel: " << targ << ", "
+           << "main.pos: " << p.x << "@" << p.y << ", "
+           << "main.angle: " << angle << ", "
+           << "slaveP: " << asp << ", "
+           << "slaveD: " << asd << ", "
+           << "ctrlP: " << acp << ", "
+           << "ctrlD: " << acd << ", "
+           << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
+      // outSpeeds.push_back(out);
+      // encSpeeds.push_back(enc);
+      // targSpeeds.push_back(targ);
+      // pos.push_back(p);
+      // angles.push_back(angle);
+      // cp.push_back(acp);
+      // cd.push_back(acd);
+      // sp.push_back(asp);
+      // sd.push_back(asd);
+      // pursuit.push_back(apursuit);
     }
   } realTime;
 #endif
@@ -504,6 +515,14 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     }
   };
   double dist = 0.0; // The distance from the target
+#ifdef DEBUG
+  cout.precision(1);
+  // Loop through path and print out all the points
+  for (int i = 0; i < path.size(); i++)
+  {
+    cout << "%main: " << path[i].x << "@" << path[i].y << endl;
+  }
+#endif
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
@@ -755,101 +774,101 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   controller->deInit();
 // Print all the lists
 #ifdef DEBUG
-  s(20000);
-  cout << endl
-       << endl;
-  cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";
-  cout << "main.inputData([";
-  int line = 0;
-  for (auto i : bezier)
-  {
-    cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-    s(20);
-  }
-  s(100);
-  cout << "]);";
-  cout << "\nmain.auxiliaryData.pos = [";
-  for (auto i : realTime.pos)
-  {
-    cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-    s(20);
-  }
-  s(100);
-  cout << "];\n\nmain.auxiliaryData.angle = [";
-  for (auto i : realTime.angles)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "];\n\nmain.auxiliaryData.pursuit = [";
-  for (auto i : realTime.pursuit)
-  {
-    cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-    s(20);
-  }
-  s(100);
-  cout << "];\n";
-  cout << "main.resetI();main.setHighlight(0);\n";
-  cout << "outputVel.inputData([" << flush;
-  s(100);
-  for (auto i : realTime.outSpeeds)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(20);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "encVel.inputData([";
-  for (auto i : realTime.encSpeeds)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(20);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "targetVel.inputData([";
-  for (auto i : realTime.targSpeeds)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "slaveP.inputData([";
-  for (auto i : realTime.sp)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "slaveD.inputData([";
-  for (auto i : realTime.sd)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "ctrlP.inputData([";
-  for (auto i : realTime.cp)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "ctrlD.inputData([";
-  for (auto i : realTime.cd)
-  {
-    cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-    s(10);
-  }
-  s(100);
-  cout << "]);\n";
-  cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
-  cout << endl;
+  // s(20000);
+  // cout << endl
+  //      << endl;
+  // cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";
+  // cout << "main.inputData([";
+  // int line = 0;
+  // for (auto i : bezier)
+  // {
+  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(20);
+  // }
+  // s(100);
+  // cout << "]);";
+  // cout << "\nmain.auxiliaryData.pos = [";
+  // for (auto i : realTime.pos)
+  // {
+  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(20);
+  // }
+  // s(100);
+  // cout << "];\n\nmain.auxiliaryData.angle = [";
+  // for (auto i : realTime.angles)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "];\n\nmain.auxiliaryData.pursuit = [";
+  // for (auto i : realTime.pursuit)
+  // {
+  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(20);
+  // }
+  // s(100);
+  // cout << "];\n";
+  // cout << "main.resetI();main.setHighlight(0);\n";
+  // cout << "outputVel.inputData([" << flush;
+  // s(100);
+  // for (auto i : realTime.outSpeeds)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(20);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "encVel.inputData([";
+  // for (auto i : realTime.encSpeeds)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(20);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "targetVel.inputData([";
+  // for (auto i : realTime.targSpeeds)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "slaveP.inputData([";
+  // for (auto i : realTime.sp)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "slaveD.inputData([";
+  // for (auto i : realTime.sd)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "ctrlP.inputData([";
+  // for (auto i : realTime.cp)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "ctrlD.inputData([";
+  // for (auto i : realTime.cd)
+  // {
+  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
+  //   s(10);
+  // }
+  // s(100);
+  // cout << "]);\n";
+  // cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
+  // cout << endl;
 #endif
 }
 void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
