@@ -58,6 +58,7 @@ void AutoIntake::enable()
 
 void AutoIntake::updateValues(bool flywheelReady)
 {
+  this->flywheelReady = flywheelReady;
   static int i = 0;
   makeMask();
   // Mask correction
@@ -276,4 +277,201 @@ void AutoIntake::autonInit()
   intaking = false;
   clearingLastDisk = false;
   lastCount = count;
+}
+short operator"" _s(unsigned long long x)
+{
+  return static_cast<short>(x);
+}
+void AutoIntake::drawState(bool refresh)
+{
+  static lv_obj_t *buttonLeft;
+  static lv_obj_t *buttonRight;
+  static vector<lv_obj_t *> lines = {};
+  static lv_obj_t *upLine;
+  static lv_obj_t *downLine;
+  static short upEndpointsX = 140;
+  static short upEndpointsY = 100;
+  static short downEndpointsY = upEndpointsY + 30;
+  static lv_point_t upEndpoints[3] = {
+      {static_cast<short>(-15_s + upEndpointsX), static_cast<short>(upEndpointsY)},
+      {static_cast<short>(upEndpointsX), static_cast<short>(-15_s + upEndpointsY)},
+      {static_cast<short>(15_s + upEndpointsX), static_cast<short>(upEndpointsY)}};
+  static lv_point_t downEndpoints[3] = {
+      {static_cast<short>(-15_s + upEndpointsX), static_cast<short>(downEndpointsY)},
+      {static_cast<short>(upEndpointsX), static_cast<short>(15_s + downEndpointsY)},
+      {static_cast<short>(15_s + upEndpointsX), static_cast<short>(downEndpointsY)}};
+  static lv_obj_t *readyLabel;
+  static const char *readyYes = "#ffffff Flywheel";
+  static const char *readyNo = "#646464 Flywheel";
+  static lv_obj_t *intakingLabel;
+  static const char *intakingYes = "#ffffff Intaking";
+  static const char *intakingNo = "#646464 Intaking";
+  static lv_obj_t *clearingLabel;
+  static const char *clearingYes = "#ffffff Clearing";
+  static const char *clearingNo = "#646464 Clearing";
+  static lv_color_t inactiveLine = lv_color_make(100, 100, 100);
+  static lv_color_t activeLine = lv_color_make(255, 255, 255);
+  static bool init = false;
+  static vector<lv_point_t> linePositions = {
+      {-50, 0},
+      {0, 0},
+      {-95, -38},
+      {-64, -5},
+      {-97, -103},
+      {-97, -51},
+      {-60, -152},
+      {-93, -115},
+      {-50, -158},
+      {0, -158}};
+  static vector<lv_point_t *> lineEndpoints = {};
+  if (!init)
+  {
+    for (auto &p : linePositions)
+    {
+      p.x += 140;
+      p.y += 200;
+    }
+    for (int i = 0; i < linePositions.size() / 2; i++)
+    {
+      auto arr = new lv_point_t[2];
+      arr[0] = linePositions[2 * i];
+      arr[1] = linePositions[2 * i + 1];
+      lineEndpoints.push_back(arr);
+    }
+    init = true;
+  }
+  if (refresh)
+  {
+    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(50, 50, 50), 0);
+    buttonLeft = lv_btn_create(lv_scr_act());
+    lv_obj_set_size(buttonLeft, 40, 40);
+    lv_obj_align(buttonLeft, LV_ALIGN_TOP_LEFT, 0, 180);
+    buttonRight = lv_btn_create(lv_scr_act());
+    lv_obj_set_size(buttonRight, 40, 40);
+    lv_obj_align(buttonRight, LV_ALIGN_TOP_RIGHT, 0, 180);
+    lines.clear();
+    for (int i = 0; i < lineEndpoints.size(); i++)
+    {
+      bool active = (diskMask >> i) & 1;
+      lv_obj_t *line = lv_line_create(lv_scr_act());
+      // lv_obj_align(line, LV_ALIGN_CENTER, 0, 50);
+      lv_line_set_points(line, lineEndpoints[i], 2);
+      lv_obj_set_style_line_width(line, 5, 0);
+      lv_obj_set_style_line_rounded(line, true, 0);
+      if (active)
+      {
+        lv_obj_set_style_line_color(line, activeLine, 0);
+      }
+      else
+      {
+        lv_obj_set_style_line_color(line, inactiveLine, 0);
+      }
+      lines.push_back(line);
+    }
+    upLine = lv_line_create(lv_scr_act());
+    lv_line_set_points(upLine, upEndpoints, 3);
+    lv_obj_set_style_line_width(upLine, 5, 0);
+    lv_obj_set_style_line_rounded(upLine, true, 0);
+    if (direction == 1)
+    {
+      lv_obj_set_style_line_color(upLine, activeLine, 0);
+    }
+    else
+    {
+      lv_obj_set_style_line_color(upLine, inactiveLine, 0);
+    }
+    downLine = lv_line_create(lv_scr_act());
+    lv_line_set_points(downLine, downEndpoints, 3);
+    lv_obj_set_style_line_width(downLine, 5, 0);
+    lv_obj_set_style_line_rounded(downLine, true, 0);
+    if (direction == -1)
+    {
+      lv_obj_set_style_line_color(downLine, activeLine, 0);
+    }
+    else
+    {
+      lv_obj_set_style_line_color(downLine, inactiveLine, 0);
+    }
+    readyLabel = lv_label_create(lv_scr_act());
+    lv_label_set_recolor(readyLabel, true);
+    if (flywheelReady)
+    {
+      lv_label_set_text(readyLabel, readyYes);
+    }
+    else
+    {
+      lv_label_set_text(readyLabel, readyNo);
+    }
+    lv_obj_align(readyLabel, LV_ALIGN_CENTER, 0, -50);
+
+    clearingLabel = lv_label_create(lv_scr_act());
+    lv_label_set_recolor(clearingLabel, true);
+    if (clearingDisks)
+    {
+      lv_label_set_text(clearingLabel, clearingYes);
+    }
+    else
+    {
+      lv_label_set_text(clearingLabel, clearingNo);
+    }
+    lv_obj_align(clearingLabel, LV_ALIGN_CENTER, 0, -30);
+
+    intakingLabel = lv_label_create(lv_scr_act());
+    lv_label_set_recolor(intakingLabel, true);
+    if (intaking)
+    {
+      lv_label_set_text(intakingLabel, intakingYes);
+    }
+    else
+    {
+      lv_label_set_text(intakingLabel, intakingNo);
+    }
+    lv_obj_align(intakingLabel, LV_ALIGN_CENTER, 0, -10);
+  }
+  for (int i = 0; i < lines.size(); i++)
+  {
+    bool active = (diskMask >> i) & 1;
+    if (active)
+    {
+      lv_obj_set_style_line_color(lines[i], activeLine, 0);
+    }
+    else
+    {
+      lv_obj_set_style_line_color(lines[i], inactiveLine, 0);
+    }
+  }
+  lv_obj_set_style_line_color(upLine, inactiveLine, 0);
+  lv_obj_set_style_line_color(downLine, inactiveLine, 0);
+  if (direction == 1)
+  {
+    lv_obj_set_style_line_color(upLine, activeLine, 0);
+  }
+  else if (direction == -1)
+  {
+    lv_obj_set_style_line_color(downLine, activeLine, 0);
+  }
+  if (flywheelReady)
+  {
+    lv_label_set_text(readyLabel, readyYes);
+  }
+  else
+  {
+    lv_label_set_text(readyLabel, readyNo);
+  }
+  if (clearingDisks)
+  {
+    lv_label_set_text(clearingLabel, clearingYes);
+  }
+  else
+  {
+    lv_label_set_text(clearingLabel, clearingNo);
+  }
+  if (intaking)
+  {
+    lv_label_set_text(intakingLabel, intakingYes);
+  }
+  else
+  {
+    lv_label_set_text(intakingLabel, intakingNo);
+  }
 }

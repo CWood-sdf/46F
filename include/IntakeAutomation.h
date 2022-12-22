@@ -16,6 +16,7 @@ struct AutoIntake
   int direction = 0;
   bool tempClearReady = false;
   int tempClearStop = 200;
+  bool flywheelReady = false;
   //   struct {
   //     bool top = false;
   //     bool middle = false;
@@ -111,6 +112,11 @@ struct AutoIntake
    *
    */
   void autonInit();
+  /**
+   * @brief Draws the intake state
+   *
+   */
+  void drawState(bool);
 };
 
 #endif

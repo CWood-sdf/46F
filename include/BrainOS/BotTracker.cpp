@@ -19,7 +19,7 @@ void displayBot(bool remake)
   {
     short gridHeight = LV_VER_RES;
     short sixthHeight = (LV_VER_RES / 6);
-    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(100, 100, 100), 0);
+    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(50, 50, 50), 0);
     lv_obj_t *gridContainer = lv_obj_create(lv_scr_act());
     lv_obj_set_style_pad_all(lv_scr_act(), 0, 0);
     lv_obj_set_style_bg_opa(gridContainer, LV_OPA_TRANSP, 0);

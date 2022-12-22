@@ -13,9 +13,9 @@
 
 */
 // main.cpp
-#include "BrainOS/VariableConfig.h"
-#include "BrainOS/ConnectionTest.h"
 #include "Autons/Autons.h"
+#include "BrainOS/ConnectionTest.h"
+#include "BrainOS/VariableConfig.h"
 using namespace ClassFns;
 using namespace vex;
 void spinRoller()
@@ -123,7 +123,7 @@ class ButtonLatch
   int stateLim;
   const controller::button &b;
 
-public:
+  public:
   ButtonLatch(const controller::button &b, int stateLim = 2) : stateLim(stateLim), b(b)
   {
   }
@@ -458,6 +458,9 @@ void brainOS()
   setAlliance.addBypass([]()
                         { return Auton::selectedName() == skills.getName(); });
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+  bos::bosFns.pushBack(bos::BosFn([](bool refresh)
+                                  { intakeController.drawState(refresh); },
+                                  true));
   bos::bosFns.pushBack(testConnection);
   bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
   bos::bosFns.pushBack(bos::BosFn(displayBot, true));
@@ -466,10 +469,14 @@ void brainOS()
   // bos::bosFns.pushBack(bos::BosFn(printTestData));
   // bos::bosFns.push_back(fn);
   bos::bosFns.pushBack(windowsLoader);
-
   // Make the buttons
-  Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, color(50, 50, 50), "<", -40, -30);
-  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, color(50, 50, 50), ">", -40, -30);
+  // Set it to 50 gray and 10 transparent
+  color buttonColor = color(0x0a323232);
+  // Set the transparency to true
+  // HACK:
+  *((bool *)(((uint32_t *)&buttonColor) + 1)) = true;
+  Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, "<", -40, -30);
+  Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, ">", -40, -30);
   bos::bosFns.getCurrent()->call(true);
   while (1)
   {
