@@ -467,25 +467,30 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = controller->settings.exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
-#undef DEBUG
+#define DEBUG
 #ifdef DEBUG
   struct
   {
+    timer t;
     vector<double> outSpeeds, encSpeeds, targSpeeds, angles, cp, cd, sp, sd;
     vector<PVector> pos, pursuit;
     void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit)
     {
-      cout << "%"
-           << "outputVel: " << out << ", "
-           << "encVel: " << enc << ", "
-           << "targetVel: " << targ << ", "
-           << "main.pos: " << p.x << "@" << p.y << ", "
-           << "main.angle: " << angle << ", "
-           << "slaveP: " << asp << ", "
-           << "slaveD: " << asd << ", "
-           << "ctrlP: " << acp << ", "
-           << "ctrlD: " << acd << ", "
-           << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
+      if (t.time() > 25)
+      {
+        cout << "%"
+             << "outputVel: " << out << ", "
+             << "encVel: " << enc << ", "
+             << "targetVel: " << targ << ", "
+             << "main.pos: " << p.x << "@" << p.y << ", "
+             << "main.angle: " << angle << ", "
+             << "slaveP: " << asp << ", "
+             << "slaveD: " << asd << ", "
+             << "ctrlP: " << acp << ", "
+             << "ctrlD: " << acd << ", "
+             << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
+        t.reset();
+      }
       // outSpeeds.push_back(out);
       // encSpeeds.push_back(enc);
       // targSpeeds.push_back(targ);
@@ -517,10 +522,12 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   double dist = 0.0; // The distance from the target
 #ifdef DEBUG
   cout.precision(1);
+  cout << "%"
+       << "frameRate: 40" << endl;
   // Loop through path and print out all the points
   for (int i = 0; i < path.size(); i++)
   {
-    cout << "%main: " << path[i].x << "@" << path[i].y << endl;
+    cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << endl;
   }
 #endif
   // Loop
@@ -588,7 +595,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     double angle = baseAngle(botPos().angleTo(virtualPursuit));
 
     // The angle that it needs to travel at
-    // double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
+    double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
     // cout << "N " << normAngle << endl;
     // cout << "D " << dist << endl;
     Controller::Input input = Controller::Input();
