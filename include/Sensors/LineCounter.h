@@ -3,53 +3,58 @@
 #define LINECOUNTER_H
 
 #include "Sensors/KillThread.h"
-//Oh, this lovely class
-//It just always works (unless there's a sun there)
+// Oh, this lovely class
+// It just always works (unless there's a sun there)
 
-//Class that uses a line tracker to count objects
-class LineCounter {
-  
+// Class that uses a line tracker to count objects
+class LineCounter
+{
+
   static const KillThread updater;
   friend class LineGroup;
-  line* sensor;
+  line *sensor;
   bool isActive = false;
   int threshold = startThreshold;
   static const int startThreshold = 85;
-  //May have to increase lowThreshold to prevent 2 balls in a row from counting as one
+  // May have to increase lowThreshold to prevent 2 balls in a row from counting as one
   static const int lowThreshold = 85;
   bool wasActiveLast = false;
   unsigned int countOut = 0;
   unsigned int countIn = 0;
   bool fHit = false;
-public:
-  static vector<LineCounter*> instances;
-  LineCounter(line& se) : sensor(&se){
-    ADD_THIS;
+
+  public:
+  static vector<LineCounter *> instances;
+  LineCounter(line &se) : sensor(&se)
+  {
+    instances.push_back(this);
   }
-  LineCounter(LineCounter& counter) : sensor(counter.sensor){
+  LineCounter(LineCounter &counter) : sensor(counter.sensor)
+  {
     isActive = counter.isActive;
     threshold = counter.threshold;
-    ADD_THIS;
+    instances.push_back(this);
   }
-  
-  LineCounter(triport::port& p) : sensor(new line(p)) {
-    ADD_THIS;
+
+  LineCounter(triport::port &p) : sensor(new line(p))
+  {
+    instances.push_back(this);
   }
-  //Return true if its the first time called after a hit
+  // Return true if its the first time called after a hit
   bool firstHit();
-  //Return true if obj near
+  // Return true if obj near
   bool active();
-  //Update the values
+  // Update the values
   void update();
-  //Reset the counts
+  // Reset the counts
   void reset();
-  //Get the number of objs that entered field of view, then left
+  // Get the number of objs that entered field of view, then left
   int getCountOut();
-  //Get the number of objs that entered field of view
+  // Get the number of objs that entered field of view
   int getCountIn();
-  //Same as active()
+  // Same as active()
   bool pressing();
-  //Returns raw line tracker value
+  // Returns raw line tracker value
   int rawData();
 };
 void microWait(uint time);
