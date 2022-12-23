@@ -2,7 +2,7 @@
 #include "src/Autons/Autons.h"
 void waitIntakeDone()
 {
-  while (intakeController.clearingDisks || intakeController.clearingLastDisk || intakeController.intaking)
+  while (intakeController.clearingDisks || intakeController.intaking)
   {
     wait(20, msec);
   }

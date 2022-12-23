@@ -4,26 +4,37 @@
 
 struct AutoIntake
 {
+  // The count of disks in the intake
   int count = 0;
+  // The count of disks in the intake last time it was checked
   int lastCount = 0;
+  // Is true when the intake is disabled
   bool disabled = false;
+  // Is true when the intake is in firing mode
   bool clearingDisks = false;
-  bool clearingLastDisk = false;
+  // Is true when the intake can intake more disks
   bool readyState = false;
+  // Is true when the intake is in intake mode
   bool intaking = false;
+  // The time of when the last firing started
   long clearStartTime = 0;
+  // Is true when the intake is in the process of fixing an unstable position
   bool fixingUnstable = false;
+  // The motor direction
   int direction = 0;
+  // Is true when the intake is ready to tempClearStop
   bool tempClearReady = false;
+  // How much tempClearStop is left
   int tempClearStop = 200;
+  // Is true when the flywheel is ready to fire
   bool flywheelReady = false;
-  //   struct {
-  //     bool top = false;
-  //     bool middle = false;
-  //     bool bottom = false;
-  //   } disk;
+  // The count of disks that should be in the intake
+  int targetCount = 0;
+  // The sensors
   vector<std::function<bool()>> sensors;
+  // The mask of the sensors
   int diskMask = 0;
+  // The mask of the sensors last time it was checked
   int lastMask = 0;
   AutoIntake(vector<std::function<bool()>> sensors);
   /**

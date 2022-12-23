@@ -139,34 +139,38 @@ void AutoIntake::updateValues(bool flywheelReady)
     }
   }
   lastMask = diskMask;
-  int count = 0;
+  count = 0;
+  // Get the count of disks
   for (int i = 0; i < sensors.size() * 2 - 1; i++)
   {
     count += (diskMask >> i) & 1;
   }
-  // cout << "Intaking: " << intaking << endl;
+  // If we're intaking, and a disk is at the top, then stop intaking
   if (intaking && sensors.back()())
   {
     intaking = false;
   }
-  if (intaking && count == lastCount + 1)
+  // If we're intaking, and we have the target count, then stop intaking
+  if (intaking && count == targetCount)
   {
     intaking = false;
   }
-  if (clearingDisks && count == 0 && clearingLastDisk)
+  if (clearingDisks && count == 0)
   {
     clearingDisks = false;
-    clearingLastDisk = false;
+    // clearingLastDisk = false;
   }
+  // The mask for the last disk
   int lastDisk = 1 << (2 * sensors.size() - 2);
-  if (diskMask == lastDisk && clearingDisks)
-  {
-    clearingLastDisk = true;
-  }
-  else
-  {
-    clearingLastDisk = false;
-  }
+  // if (diskMask == lastDisk && clearingDisks)
+  // {
+  //   clearingLastDisk = true;
+  // }
+  // else
+  // {
+  //   clearingLastDisk = false;
+  // }
+  // If there is a disk in the last spot, then tempClearReady is true
   if ((diskMask & lastDisk) == lastDisk && clearingDisks)
   {
     tempClearReady = true;
@@ -175,6 +179,7 @@ void AutoIntake::updateValues(bool flywheelReady)
   {
     tempClearReady = false;
   }
+  // If the last disk is gone, then stop the intake for a little bit
   if (clearingDisks && tempClearReady && (diskMask & lastDisk) == 0)
   {
     tempClearStop = 200;
@@ -184,16 +189,24 @@ void AutoIntake::updateValues(bool flywheelReady)
   {
     tempClearStop -= 10;
   }
-  // If seconds of clearing disks, then stop
+  // If n seconds of clearing disks, then stop
   if (clearingDisks && (Brain.Timer.system() - clearStartTime) > 10000)
   {
     // clearingDisks = false;
   }
+  // Direction is default stop
   direction = 0;
+  // If it's intaking or
+  //    clearing disks and
+  //    either the flywheel is ready or there is no disk up top and
+  //    it's not in a tempClearStop
   if (intaking || (clearingDisks && (flywheelReady || !sensors.back()()) && tempClearStop <= 0))
   {
     direction = 1;
   }
+  // If it's not moving forward
+  //    and it's not stable and it's fixable or it's fixing an unstable state
+  //    and it's not clearing disks (aka it's not in a tempClearStop)
   if (direction != 1 && ((!stable() && fixableUnstable()) || fixingUnstable) && !clearingDisks)
   {
     direction = -1;
@@ -208,14 +221,12 @@ void AutoIntake::updateValues(bool flywheelReady)
     // cout << "Direction: " << direction << endl;
     i = 0;
   }
-  if (fixingUnstable && stable() && count == 0)
+  // If it's fixing an unstable state and either it's stable or there are no disks, then stop fixing
+  if (fixingUnstable && (stable() || count == 0))
   {
     fixingUnstable = false;
   }
-  if (direction != 0)
-  {
-    lastCount = count;
-  }
+  lastCount = count;
 }
 
 bool AutoIntake::hasDisks()
@@ -232,15 +243,17 @@ void AutoIntake::setFiring()
 void AutoIntake::intake()
 {
   intaking = true;
+  targetCount = count + 1;
 }
 
 void AutoIntake::intakeMultiple(int count)
 {
   intake();
-  lastCount += count - 1;
-  if (lastCount >= 3)
+  // Override the target count
+  targetCount = this->count + count;
+  if (targetCount > 3)
   {
-    lastCount = 2;
+    targetCount = 3;
   }
 }
 
@@ -256,6 +269,7 @@ bool AutoIntake::reverseMotor()
 
 void AutoIntake::waitForFiring()
 {
+  // Wait for the firing to be done
   while (clearingDisks)
   {
     wait(10, msec);
@@ -264,6 +278,7 @@ void AutoIntake::waitForFiring()
 
 void AutoIntake::waitForIntake()
 {
+  // Wait for the intake to be done
   while (intaking)
   {
     wait(10, msec);
@@ -272,10 +287,10 @@ void AutoIntake::waitForIntake()
 
 void AutoIntake::autonInit()
 {
+  // This is to make preloads work
   fixingUnstable = false;
   clearingDisks = false;
   intaking = false;
-  clearingLastDisk = false;
   lastCount = count;
 }
 short operator"" _s(unsigned long long x)
@@ -284,8 +299,6 @@ short operator"" _s(unsigned long long x)
 }
 void AutoIntake::drawState(bool refresh)
 {
-  static lv_obj_t *buttonLeft;
-  static lv_obj_t *buttonRight;
   static vector<lv_obj_t *> lines = {};
   static lv_obj_t *upLine;
   static lv_obj_t *downLine;
@@ -323,7 +336,7 @@ void AutoIntake::drawState(bool refresh)
       {-93, -115},
       {-50, -158},
       {0, -158}};
-  static vector<lv_point_t *> lineEndpoints = {};
+  static vector<vector<lv_point_t>> lineEndpoints = {};
   if (!init)
   {
     for (auto &p : linePositions)
@@ -333,9 +346,9 @@ void AutoIntake::drawState(bool refresh)
     }
     for (int i = 0; i < linePositions.size() / 2; i++)
     {
-      auto arr = new lv_point_t[2];
-      arr[0] = linePositions[2 * i];
-      arr[1] = linePositions[2 * i + 1];
+      vector<lv_point_t> arr = {};
+      arr.push_back(linePositions[2 * i]);
+      arr.push_back(linePositions[2 * i + 1]);
       lineEndpoints.push_back(arr);
     }
     init = true;
@@ -343,19 +356,13 @@ void AutoIntake::drawState(bool refresh)
   if (refresh)
   {
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(50, 50, 50), 0);
-    buttonLeft = lv_btn_create(lv_scr_act());
-    lv_obj_set_size(buttonLeft, 40, 40);
-    lv_obj_align(buttonLeft, LV_ALIGN_TOP_LEFT, 0, 180);
-    buttonRight = lv_btn_create(lv_scr_act());
-    lv_obj_set_size(buttonRight, 40, 40);
-    lv_obj_align(buttonRight, LV_ALIGN_TOP_RIGHT, 0, 180);
     lines.clear();
     for (int i = 0; i < lineEndpoints.size(); i++)
     {
       bool active = (diskMask >> i) & 1;
       lv_obj_t *line = lv_line_create(lv_scr_act());
       // lv_obj_align(line, LV_ALIGN_CENTER, 0, 50);
-      lv_line_set_points(line, lineEndpoints[i], 2);
+      lv_line_set_points(line, lineEndpoints[i].data(), lineEndpoints[i].size());
       lv_obj_set_style_line_width(line, 5, 0);
       lv_obj_set_style_line_rounded(line, true, 0);
       if (active)
