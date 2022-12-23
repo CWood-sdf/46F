@@ -781,6 +781,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   controller->deInit();
 // Print all the lists
 #ifdef DEBUG
+  cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
   // s(20000);
   // cout << endl
   //      << endl;
