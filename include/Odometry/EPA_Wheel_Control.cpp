@@ -479,7 +479,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     vector<PVector> pos, pursuit;
     void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit)
     {
-      if (t.time() > 25)
+      if (t.time() > 10)
       {
         cout << "%"
              << "outputVel: " << out << ", "
@@ -524,13 +524,17 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   };
   double dist = 0.0; // The distance from the target
 #ifdef DEBUG
-  cout.precision(1);
+  cout.precision(3);
   cout << "%"
        << "frameRate: 40" << endl;
   // Loop through path and print out all the points
   for (int i = 0; i < path.size(); i++)
   {
     cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << endl;
+    if (i % 3 == 0)
+    {
+      s(10);
+    }
   }
 #endif
   // Loop
@@ -753,7 +757,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #endif
 
 #ifdef DEBUG
-    realTime.add(speed, 0, path[nearestIndex].targetSpeed, botPos(), botAngle(), normAngle, input.dist, -rightExtra, 0, pursuit);
+    realTime.add(speed, chassis->pos.velocity(), path[nearestIndex].targetSpeed, botPos(), botAngle(), -rightExtra, 0, normAngle, dist, pursuit);
 #endif
   }
   moving = false;

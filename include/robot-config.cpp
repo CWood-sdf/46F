@@ -104,7 +104,7 @@ inertial angler = inertial(PORT16);
 TestDevice(angler);
 
 // gps
-gps GPS = gps(PORT6, 8, 0.0, inches, 0);
+gps GPS = gps(PORT6, 7, 0.0, inches, 0);
 TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);
@@ -142,7 +142,7 @@ Odometry
 posTp::xPortArr arrX = {};
 
 posTp::yPortArr arrY = {Port(PORT15)};
-// Make a positioner that measures x and y with smallest omni wheel rad
+// Make a positioner that measures x and y witxh smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY,
                          {-1.0}, {-1.0}, {-1.0}, {-1.0},
                          0.0, 0.0,
@@ -159,7 +159,7 @@ PurePursuitController purePursuit = PurePursuitController(
     PID(6.25, 0.001, 2.4325, 0, 8, 1),
     purePursuitSettings
         .setBrakeMode(WheelController::exitMode::nothing)
-        .setExitDist(12)
+        .setExitDist(2)
         .setUseDistToGoal(true)
         .setFollowPathDist(16)
         .setVirtualPursuitDist(11));

@@ -64,6 +64,28 @@ void AutoIntake::updateValues(bool flywheelReady)
   // Mask correction
   if (diskMask != lastMask)
   {
+    if ((lastMask & 0b10) == 0b10)
+    {
+      if (direction == 1 && (diskMask & 0b100) == 0b0)
+      {
+        diskMask |= 0b10;
+      }
+      if (direction == -1 && (diskMask & 0b1) == 0b0)
+      {
+        diskMask |= 0b10;
+      }
+    }
+    if ((lastMask & 0b1000) == 0b1000)
+    {
+      if (direction == 1 && (diskMask & 0b10000) == 0b0)
+      {
+        diskMask |= 0b1000;
+      }
+      if (direction == -1 && (diskMask & 0b100) == 0b0)
+      {
+        diskMask |= 0b1000;
+      }
+    }
     if ((diskMask & 0b10000) == 0 && (lastMask & 0b10000) == 1)
     {
       if (direction == 1)

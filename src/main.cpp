@@ -283,8 +283,8 @@ void drivercontrol()
       }
       else
       {
-        intakeController.disable();
-        intake.stop(hold);
+        intakeController.enable();
+        // intake.stop(hold);
       }
       if (UpLatch.pressing())
       {
@@ -299,14 +299,14 @@ void drivercontrol()
       //   driveReversed = !driveReversed;
       // }
 
-      // if (XLatch.pressing())
-      // {
-      //   intakeController.intake();
-      // }
-      // if (BLatch.pressing())
-      // {
-      //   intakeController.setFiring();
-      // }
+      if (XLatch.pressing())
+      {
+        intakeController.intake();
+      }
+      if (BLatch.pressing())
+      {
+        intakeController.setFiring();
+      }
       // if(XLatch.pressing()){
       //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
       // }
@@ -622,6 +622,7 @@ int main()
   //   s(100);
   // }
   // drivercontrol();
+  // wc.followPath(&purePursuit, {{0, 30}, {30, 30}});
   Competition.autonomous(autonomous);
   Competition.drivercontrol(drivercontrol);
 

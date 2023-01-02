@@ -138,13 +138,13 @@ void FlywheelTBHEncoder::graph(bool remake)
   text[i] = '\0';
   basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.15)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.5)
 {
   init();
   filter.seed(0);
   en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m) : mots(m), filter(0.15)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m) : mots(m), filter(0.5)
 {
   en = Encoder(m[0]);
   init();
@@ -198,11 +198,13 @@ bool FlywheelTBHEncoder::ready()
 void FlywheelTBHEncoder::step()
 {
   static double lastEst = 0;
+  static double last2Est = 0;
+  static LinkedList<double> lastEsts = LinkedList<double>();
   if (!hasTarget)
     return;
   // A lot of variables
   static double lastRotation = 0;
-  static double lastVel;
+  static double lastVel = 0.0;
   static double lastDesiredVel = 0;
   static double prevErr = 0;
   static int settledCount = 0;
@@ -214,8 +216,34 @@ void FlywheelTBHEncoder::step()
   double rotation = en.position(rev);
   // An estimate of the velocity
   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
-  speedEst = (speedEst + lastEst) / 2.0;
-  lastEst = speedEst;
+  // speedEst = (speedEst + lastEst) / 2.0;
+  lastEsts.pushBase(speedEst);
+  int normalCount = 0;
+  bool isNormal = true;
+  while (lastEsts.size() > 10)
+  {
+    lastEsts.popEnd();
+  }
+  speedEst = 0;
+  int i = 0;
+  for (auto est : lastEsts)
+  {
+    speedEst += est;
+    if (abs(est - lastEst) < 1)
+    {
+      normalCount++;
+    }
+    else
+    {
+      isNormal = false;
+    }
+    i++;
+    if (!isNormal && i >= normalCount * 2)
+    {
+      break;
+    }
+  }
+  speedEst /= normalCount * 2;
   lastRotation = rotation;
   // Get a filtered velocity
   filter.update(speedEst);
@@ -249,15 +277,15 @@ void FlywheelTBHEncoder::step()
   // Vary the gain value to optimize the flywheel acceleration
   if (abs(err) < 10)
   {
-    gain = 0.3;
+    gain = 0.06;
   }
   if (abs(err) < 60)
   {
-    gain = 0.25;
+    gain = 0.002;
   }
   else
   {
-    gain = 0.2;
+    gain = 0.002;
   }
   if (calcTbh)
   {
