@@ -124,7 +124,10 @@ void WheelController::turnTo(std::function<double()> angleCalc)
   {
 
     double speed = turnCtrl.getVal(normAngle);
-
+    if (abs(speed) < 10)
+    {
+      speed = 10 * sign(speed);
+    }
     chassis->turnLeft(speed > speedLimit ? speedLimit : speed);
     s(sleepTime);
 

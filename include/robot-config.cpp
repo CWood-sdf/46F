@@ -44,7 +44,7 @@ TestDevice(intakeMot);
 motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, !false);
 TestDevice(intakeMot2);
 
-motor flyWheelMot = motor(PORT3, gearSetting::ratio6_1, false);
+motor flyWheelMot = motor(PORT5, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
 motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);

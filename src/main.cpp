@@ -32,8 +32,13 @@ void spinRoller()
   int count = 0;
   bool countUp = true;
   int i = 0;
+  int time = 0;
   while (1)
   {
+    if (time > 3000)
+    {
+      break;
+    }
     if (isRed != lastRed && !isRed == targetRed && i > 10)
     {
       break;
@@ -53,15 +58,16 @@ void spinRoller()
     if (count == 20)
     {
       countUp = false;
-      chassis.driveFromDiff(10, 0, fwd);
+      chassis.driveFromDiff(50, 0, fwd);
     }
     else if (count == 0)
     {
       countUp = true;
-      chassis.driveFromDiff(-30, 0, fwd);
+      chassis.driveFromDiff(-80, 0, fwd);
     }
     i++;
     s(10);
+    time += 10;
   }
   // intake.spin(vex::reverse, -100);
   chassis.driveFromDiff(-10, 0, fwd);
@@ -168,6 +174,7 @@ void drivercontrol()
   // int flywheelI = 1;
   flyTBH.setTargetSpeed(367);
   flyTBH.setDisabled(false);
+  int endgameRelease = 0;
   static bool driveReversed = false;
   // Protection from multiple instances of drivercontrol running
   // Is true if there is no instance of drivercontrol running
@@ -281,15 +288,13 @@ void drivercontrol()
       }
       if (UpLatch.pressing())
       {
-        if (wc.isRed())
-        {
-          wc.faceTarget({50, 50});
-        }
-        else
-        {
-          wc.faceTarget({-50, -50});
-        }
+        wc.faceTarget({50, 50});
       }
+      if (DownLatch.pressing())
+      {
+        wc.faceTarget({-50, -50});
+      }
+
       // if (BLatch.pressing()) {
       //   driveReversed = !driveReversed;
       // }
@@ -308,19 +313,22 @@ void drivercontrol()
       // if(YLatch.pressing()){
       //   wc.turnTo(wc.botPos().angleTo({50, 50}));
       // }
-      // if(Greg.ButtonRight.pressing()){
-      //   //If continuously pressing for 0.5s, release endgame
-      //   int time = 0;
-      //   while(Greg.ButtonRight.pressing()){
-      //     s(10);
-      //     time += 10;
-      //     if(time >= 500){
-      //       endgame.open();
-      //       Greg.rumble("....");
-      //       break;
-      //     }
-      //   }
-      // }
+      if (Greg.ButtonY.pressing())
+      {
+        // If continuously pressing for 0.5s, release endgame
+        int time = 0;
+        while (Greg.ButtonY.pressing())
+        {
+          s(10);
+          time += 10;
+          if (time >= 250)
+          {
+            endgame.open();
+            Greg.rumble("....");
+            break;
+          }
+        }
+      }
     }
     else
     {
@@ -577,7 +585,7 @@ int main()
     intakeController.disable();
     cout << "<< Flywheel initialized >>" << endl;
     intakeController.autonInit();
-
+    endgame.close();
     s(500);
     init = true; });
   while (!init)

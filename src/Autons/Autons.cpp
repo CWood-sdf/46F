@@ -128,14 +128,14 @@ Auton rightA = "Right" + []()
   // wc.setBlue();
   cout << "Red: " << wc.isRed() << endl;
   wc.estimateStartPos(PVector(16.81, -62.47), 0);
-
+  pidController.settings.setBrakeMode(WheelController::exitMode::hold);
   bos::bosFns.moveCurrentLeft();
   bos::bosFns.moveCurrentLeft();
   bos::bosFns.getCurrent()->call(true);
   flyTBH.setTargetSpeed(530);
   flyTBH.setDisabled(true);
   s(100);
-  flywheelNm.spinVolt(fwd, 530.0 / 6.0);
+  flywheelNm.spinVolt(fwd, 533.0 / 6.0);
   // flywheelNm.spin(fwd, 100);
   wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
 
@@ -154,23 +154,7 @@ Auton rightA = "Right" + []()
   s(600);
   cout << "1" << endl;
   intake.stop(hold);
-  // spinRoller();
-  // chassis.driveFromDiff(20, 0, fwd);
-  // s(300);
-  // chassis.coastBrake();
 
-  // wc.faceTarget({49.60, 49.88});
-  // s(500);
-  // waitFlywheelReady();
-  cout << 1.5 << endl;
-  s(3000);
-  intake.spin(fwd, 50);
-  // waitFlywheelNotReady(1000);
-  s(1000);
-  cout << "2" << endl;
-  intake.stop(hold);
-  // intakeController.setFiring();
-  // waitIntakeDone();
   flyTBH.setTargetSpeed(0);
   flyTBH.setDisabled(false);
 
@@ -182,9 +166,10 @@ Auton rightA = "Right" + []()
   // wc.backwardsFollow(&pidController, {PVector(39.01, -56.1)});
   pidController.settings.setBrakeMode(WheelController::exitMode::hold);
   wc.backwardsFollow(&pidController, {PVector(37.18, -56.76)});
-  wc.turnTo(0);
-  s(500);
-  wc.turnTo(0);
+  wc.turnTo(-10);
+  chassis.driveFromDiff(-20, 0, fwd);
+  s(300);
+  chassis.coastBrake();
   spinRoller();
   // // Drive along 3-ground
   // wc.followPath(&pidController, {PVector(-14.26, -11.07)});
@@ -195,6 +180,7 @@ Auton rightA = "Right" + []()
 bool intaking = false;
 Auton skills = "Skills" + []()
 {
+  wc.setBlue();
   thread runIntakeThread = thread([]()
                                   {
     while(1){
