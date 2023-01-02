@@ -214,6 +214,9 @@ public:
   {
     generalFollow(arr, controller, true);
   }
+  void generalDriveDistance(double dist, bool isNeg, BasicPidController *pid);
+  void driveDistance(double dist, BasicPidController *pid);
+  void backwardsDriveDistance(double dist, BasicPidController *pid);
   bool isRed();
   bool isBlue();
   void setRed();

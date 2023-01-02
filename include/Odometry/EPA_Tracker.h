@@ -2,11 +2,11 @@
 #define EPA_TRACKER_H
 #include "FieldCoord.h"
 #include "Sensors/Wrappers/Encoder.h"
-//EPA_Tracker.h -- Use this file to track the robot's absolute position on the field
-//This file does so much math that it be like Beethoven 9 if it all works properly
+// EPA_Tracker.h -- Use this file to track the robot's absolute position on the field
+// This file does so much math that it be like Beethoven 9 if it all works properly
 
-//Make some basic conversion numbers
-//To use, just multiply the number by the conversion
+// Make some basic conversion numbers
+// To use, just multiply the number by the conversion
 #define CM_TO_IN (1.0 / 2.54)
 #define IN_TO_CM 2.54
 #define DEG_TO_RAD (M_PI / 180.0)
@@ -16,25 +16,31 @@ typedef unsigned int uint;
 double baseAngle(double);
 double posNeg180(double);
 void updateBotAngle(bool add = false);
-//A class that stores a reference of something as a pointer
-//  this is used so that I can put references in arrays
-template<class tp>
-struct Ref {
-  tp* val;
-  Ref(){}
-  Ref(tp& v){
+// A class that stores a reference of something as a pointer
+//   this is used so that I can put references in arrays
+template <class tp>
+struct Ref
+{
+  tp *val;
+  Ref() {}
+  Ref(tp &v)
+  {
     val = &v;
   }
-  tp& operator*(){
+  tp &operator*()
+  {
     return *val;
   }
-  operator tp& (){
+  operator tp &()
+  {
     return *val;
   }
-  operator tp*(){
+  operator tp *()
+  {
     return val;
   }
-  tp* operator->(){
+  tp *operator->()
+  {
     return val;
   }
 };
@@ -42,36 +48,41 @@ struct Ref {
 // //Each encoder is used for each dimension
 // //Positioner<2, 2> has four encoders total 2x, 2y
 // template<uint encodersX, uint encodersY>
-class Port {
+class Port
+{
   const int32_t port;
+
   public:
-  Port(int32_t p): port(p){}
-  int32_t getPort(){
+  Port(int32_t p) : port(p) {}
+  int32_t getPort()
+  {
     return port;
   }
 };
 
 #ifndef WINDOWS
-struct AddDevice {
-  AddDevice(string name, vex::device* device);
+struct AddDevice
+{
+  AddDevice(string name, vex::device *device);
+  AddDevice(string name, vex::motor *deivce);
 };
-class Positioner {
-//A few typedefs
-public:
-  typedef vector<Encoder*> yEncoderArr; // Defines the type of the arrays
-      //That the encoders will be stored in and names it encoderArr
-  typedef vector<Encoder*> xEncoderArr;
+class Positioner
+{
+  // A few typedefs
+  public:
+  typedef vector<Encoder *> yEncoderArr; // Defines the type of the arrays
+                                         // That the encoders will be stored in and names it encoderArr
+  typedef vector<Encoder *> xEncoderArr;
   typedef vector<Ref<vex::triport::port>> xTriportArr; // Defines the type of the arrays
-      //That the encoders will be stored in and names it encoderArr
+                                                       // That the encoders will be stored in and names it encoderArr
   typedef vector<Ref<vex::triport::port>> yTriportArr;
   typedef vector<Port> xPortArr;
   typedef vector<Port> yPortArr;
-  //const double size = encodersX + encodersY;
-//Private variables
-private:
-
-  double encXAmnt;// = (double) encodersX;
-  double encYAmnt;// = (double) encodersY;
+  // const double size = encodersX + encodersY;
+  // Private variables
+  private:
+  double encXAmnt; // = (double) encodersX;
+  double encYAmnt; // = (double) encodersY;
   typedef vector<double> xDoubleArr;
   typedef vector<double> yDoubleArr;
   xDoubleArr lastX;
@@ -89,23 +100,26 @@ private:
   yEncoderArr EncodersY;
   double lastLeft = 0.0, lastRight = 0.0;
   friend void waitForReset();
-  void resetPos(PVector pos){
+  void resetPos(PVector pos)
+  {
     this->pos = pos;
   }
-public:
-private:
-  //array<double, encodersY> lastY;
-  //array<double, encodersX> lastX;
-  //PVector lastAngles = PVector(0.0, 0.0); // Make a vector that stores the last angles
+
+  public:
+  private:
+  // array<double, encodersY> lastY;
+  // array<double, encodersX> lastX;
+  // PVector lastAngles = PVector(0.0, 0.0); // Make a vector that stores the last angles
   PVector pos = PVector(0.0, 0.0); // Make a vector to store the current position
-  double wheelRad = 0.0; // A variable that stores the wheel radius in inches for
-          // distance calculations later
-  //Useless variables that I'm keeping just in case they become useful eventually
-  //double updates_p_second = 500;
-  //double& ups = updates_p_second;
+  double wheelRad = 0.0;           // A variable that stores the wheel radius in inches for
+                                   // distance calculations later
+  // Useless variables that I'm keeping just in case they become useful eventually
+  // double updates_p_second = 500;
+  // double& ups = updates_p_second;
   double speed = 0.0;
-  //The main functions: constructor, updater...
-  Positioner(xDoubleArr mX, yDoubleArr mY, xDoubleArr mNX, yDoubleArr mNY, double cDistX, double cDistY, double rad){
+  // The main functions: constructor, updater...
+  Positioner(xDoubleArr mX, yDoubleArr mY, xDoubleArr mNX, yDoubleArr mNY, double cDistX, double cDistY, double rad)
+  {
     wheelRad = rad;
     multX = mX;
     multY = mY;
@@ -114,35 +128,34 @@ private:
     distFromCenterX = cDistX;
     distFromCenterY = cDistY;
   }
-public:
-  //The constructors
 
-  //Accepts port array and radius
+  public:
+  // The constructors
+
+  // Accepts port array and radius
   Positioner(
-    xTriportArr xPorts, yTriportArr yPorts, 
-    xDoubleArr mX, yDoubleArr mY, 
-    xDoubleArr mNX, yDoubleArr mNY, 
-    double cDistX, double cDistY, 
-    double rad
-  );
-  //Accepts port array and radius
+      xTriportArr xPorts, yTriportArr yPorts,
+      xDoubleArr mX, yDoubleArr mY,
+      xDoubleArr mNX, yDoubleArr mNY,
+      double cDistX, double cDistY,
+      double rad);
+  // Accepts port array and radius
   Positioner(
-    xPortArr xPorts, yPortArr yPorts, 
-    xDoubleArr mX, yDoubleArr mY, 
-    xDoubleArr mNX, yDoubleArr mNY, 
-    double cDistX, double cDistY, 
-    double rad
-  );
+      xPortArr xPorts, yPortArr yPorts,
+      xDoubleArr mX, yDoubleArr mY,
+      xDoubleArr mNX, yDoubleArr mNY,
+      double cDistX, double cDistY,
+      double rad);
   Positioner();
-  //Function that updates the position
-  //80+ lines of trig, vector math, and some sensor stuff
+  // Function that updates the position
+  // 80+ lines of trig, vector math, and some sensor stuff
   PVector update();
   PVector getPos();
-  double xPosition(distanceUnits=inches);
-  double yPosition(distanceUnits=inches);
+  double xPosition(distanceUnits = inches);
+  double yPosition(distanceUnits = inches);
   double heading();
   FieldCoord fullPos();
-  bool moving ();
+  bool moving();
   double velocity(int sleepTime);
   void clearMove();
 };

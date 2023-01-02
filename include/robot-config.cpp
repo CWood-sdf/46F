@@ -1,10 +1,14 @@
 #define NO_MAKE
 #include "robot-config.h"
-std::vector<tuple<string, vex::device *>> connectedDevices = {};
+std::vector<tuple<string, vex::device *, bool>> connectedDevices = {};
 
 AddDevice::AddDevice(string name, vex::device *device)
 {
-  connectedDevices.push_back(make_tuple(name, device));
+  connectedDevices.push_back(make_tuple(name, device, false));
+}
+AddDevice::AddDevice(string name, vex::motor *device)
+{
+  connectedDevices.push_back(make_tuple(name, device, false));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
 #define TestDevices(device, ...) \

@@ -19,14 +19,14 @@ void displayBot(bool remake)
   {
     short gridHeight = LV_VER_RES;
     short sixthHeight = (LV_VER_RES / 6);
-    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(100, 100, 100), 0);
+    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_make(50, 50, 50), 0);
     lv_obj_t *gridContainer = lv_obj_create(lv_scr_act());
     lv_obj_set_style_pad_all(lv_scr_act(), 0, 0);
     lv_obj_set_style_bg_opa(gridContainer, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_opa(gridContainer, LV_OPA_TRANSP, 0);
     lv_obj_set_size(gridContainer, gridHeight + 1, gridHeight + 1);
     lv_obj_set_style_pad_all(gridContainer, -2, 0);
-    lv_obj_set_pos(gridContainer, 0, 0);
+    lv_obj_set_pos(gridContainer, 40, 0);
 
     pts.clear();
     for (int i = 1; i < 6; i++)
@@ -70,7 +70,7 @@ void displayBot(bool remake)
       auto basicAlign = [](lv_obj_t *obj, int y)
       {
         lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
-        lv_obj_align(obj, LV_ALIGN_TOP_LEFT, 260, y);
+        lv_obj_align(obj, LV_ALIGN_TOP_LEFT, 300, y);
       };
       // lv_obj_t* labelX;
       labelX = lv_label_create(lv_scr_act());
