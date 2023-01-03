@@ -1,8 +1,8 @@
-#include "EMA_Filter.h"
+#include "Filters.h"
 #include "Odometry/PID.h"
-#include <cstdint>
-#include <algorithm>
 #include "Sensors/Wrappers/Encoder.h"
+#include <algorithm>
+#include <cstdint>
 // Determines if a flywheel is at the proper velocity
 // Also calculates time between steps so that I don't have to
 //   Manage it elsewhere in the program
@@ -18,7 +18,7 @@ class Settled
   LinkedList<double> lastDerivs;
   bool isSettled;
 
-public:
+  public:
   Settled(double me, double md, double ms = 500)
   {
     maxErr = me;
@@ -125,37 +125,17 @@ struct FlywheelDebugLog
 
 class Empty
 {
-public:
+  public:
   virtual void step();
 };
-// class FlywheelTBH : public Empty {
-//   encoder* en;
-//   NewMotor& mots;
-//   EMA filter;
-//   vector<double> velTargets = {550};
-//   vector<double> initialTbh = {10};
-//   double tbh = 0;
-//   double gain;
-//   Settled velCheck = Settled(10, 10, 500);
-//   int target;
-//   double maxRateDrop = 5;
-//   double maxRateGain = 2;
-//   FlywheelDebugEl debug;
-//   bool hasTarget = false;
-// public:
-//   FlywheelTBH(NewMotor& m, vex::encoder& e);
-//   void setTarget(int i);
-//   void addTarget(double t);
-//   void step() override;
-//   void graph(bool);
-//   void init();
-//   bool ready();
-// };
+
 class FlywheelTBHEncoder : public Empty
 {
   Encoder en;
   NewMotor &mots;
   EMA filter;
+  MinMaxFilter minMaxFilter;
+  SMA sma;
   vector<double> velTargets = {550};
   vector<double> initialTbh = {10};
   double tbh = 0;
@@ -166,7 +146,7 @@ class FlywheelTBHEncoder : public Empty
   bool hasTarget = false;
   bool disabled = false;
 
-public:
+  public:
   double maxRateDrop = 2;
   double maxRateGain = 4;
   FlywheelTBHEncoder(NewMotor &m, Encoder en);
@@ -184,7 +164,7 @@ class EMA_D : public PIDF_Extension
 {
   EMA dFilter = EMA(0.7, 0);
 
-public:
+  public:
   void manageD(double &d) override
   {
     dFilter.update(d);

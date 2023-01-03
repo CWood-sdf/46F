@@ -1,10 +1,11 @@
 #ifndef GPS_SHARE_H
 #define GPS_SHARE_H
 #include "EPA_Tracker.h"
-#include "EMA_Filter.h"
+#include "Filters.h"
 #ifndef WINDOWS
-class BasicConfirmationOdom {
-public:
+class BasicConfirmationOdom
+{
+  public:
   virtual ~BasicConfirmationOdom() {}
   virtual double xPosition(distanceUnits) = 0;
   virtual double yPosition(distanceUnits) = 0;
@@ -13,13 +14,14 @@ public:
   virtual double variance() = 0;
   virtual void updateEstimate() = 0;
 };
-//Sleeps itself because it is top level odometry math
-class GPS_Share {
-  Positioner& odom;
-  gps& GPS;
+// Sleeps itself because it is top level odometry math
+class GPS_Share
+{
+  Positioner &odom;
+  gps &GPS;
   LinkedList<FieldCoord> gpsReadings;
   LinkedList<FieldCoord> odomReadings;
-  vector<std::unique_ptr<BasicConfirmationOdom>> confirmOdoms; 
+  vector<std::unique_ptr<BasicConfirmationOdom>> confirmOdoms;
   FieldCoord pos = FieldCoord(PVector(0, 0), 0);
   FieldCoord lastOdom = FieldCoord(PVector(0, 0), 0);
   double speed = 0.0;
@@ -28,15 +30,16 @@ class GPS_Share {
   bool isFirstBad = false;
   static const int sleepTime = 10;
   static const int badTime = 200;
-  //returns true if it's first call since reading gone bad
-  //Resets when a good reading is obtained
+  // returns true if it's first call since reading gone bad
+  // Resets when a good reading is obtained
   bool firstBad();
   bool readingBad();
-public:
-  GPS_Share(Positioner& o, gps& g);
-  
-  FieldCoord& fullPos();
-  PVector& position();
+
+  public:
+  GPS_Share(Positioner &o, gps &g);
+
+  FieldCoord &fullPos();
+  PVector &position();
   double heading();
   double velocity();
   bool gpsBad();

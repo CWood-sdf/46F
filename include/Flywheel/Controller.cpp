@@ -138,17 +138,14 @@ void FlywheelTBHEncoder::graph(bool remake)
   text[i] = '\0';
   basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.5)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.5), minMaxFilter(4), sma(2)
 {
   init();
   filter.seed(0);
   en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m) : mots(m), filter(0.5)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m) : FlywheelTBHEncoder(m, Encoder(m[0]))
 {
-  en = Encoder(m[0]);
-  init();
-  filter.seed(0);
 }
 
 void FlywheelTBHEncoder::setTarget(int i)
@@ -197,9 +194,6 @@ bool FlywheelTBHEncoder::ready()
 }
 void FlywheelTBHEncoder::step()
 {
-  static double lastEst = 0;
-  static double last2Est = 0;
-  static LinkedList<double> lastEsts = LinkedList<double>();
   if (!hasTarget)
     return;
   // A lot of variables
@@ -217,37 +211,12 @@ void FlywheelTBHEncoder::step()
   // An estimate of the velocity
   double speedEst = abs(rotation - lastRotation) / max((double)timeStep, 1.0) * 60.0 * 1000.0;
   // speedEst = (speedEst + lastEst) / 2.0;
-  lastEsts.pushBase(speedEst);
-  int normalCount = 0;
-  bool isNormal = true;
-  while (lastEsts.size() > 10)
-  {
-    lastEsts.popEnd();
-  }
-  speedEst = 0;
-  int i = 0;
-  for (auto est : lastEsts)
-  {
-    speedEst += est;
-    if (abs(est - lastEst) < 1)
-    {
-      normalCount++;
-    }
-    else
-    {
-      isNormal = false;
-    }
-    i++;
-    if (!isNormal && i >= normalCount * 2)
-    {
-      break;
-    }
-  }
-  speedEst /= normalCount * 2;
   lastRotation = rotation;
   // Get a filtered velocity
-  filter.update(speedEst);
-  double speed = filter.value();
+  minMaxFilter.update(speedEst);
+  sma.update(minMaxFilter);
+  filter.update(sma);
+  double speed = filter;
   double err = desiredVel - speed;
   // Check if the flywheel speed is stable and if the error is small
   bool settled = velCheck.settled(err);
