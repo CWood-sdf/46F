@@ -479,31 +479,59 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     vector<PVector> pos, pursuit;
     void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit)
     {
-      if (t.time() > 10)
+      // if (t.time() > 10)
+      // {
+      //   cout << "%"
+      //        << "outputVel: " << out << ", "
+      //        << "encVel: " << enc << ", "
+      //        << "targetVel: " << targ << ", "
+      //        << "main.pos: " << p.x << "@" << p.y << ", "
+      //        << "main.angle: " << angle << ", "
+      //        << "slaveP: " << asp << ", "
+      //        << "slaveD: " << asd << ", "
+      //        << "ctrlP: " << acp << ", "
+      //        << "ctrlD: " << acd << ", "
+      //        << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
+      //   t.reset();
+      // }
+      outSpeeds.push_back(out);
+      encSpeeds.push_back(enc);
+      targSpeeds.push_back(targ);
+      pos.push_back(p);
+      angles.push_back(angle);
+      cp.push_back(acp);
+      cd.push_back(acd);
+      sp.push_back(asp);
+      sd.push_back(asd);
+      pursuit.push_back(apursuit);
+    }
+    void flush(){
+      for (int i = 0; i < outSpeeds.size(); i++)
       {
         cout << "%"
-             << "outputVel: " << out << ", "
-             << "encVel: " << enc << ", "
-             << "targetVel: " << targ << ", "
-             << "main.pos: " << p.x << "@" << p.y << ", "
-             << "main.angle: " << angle << ", "
-             << "slaveP: " << asp << ", "
-             << "slaveD: " << asd << ", "
-             << "ctrlP: " << acp << ", "
-             << "ctrlD: " << acd << ", "
-             << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
-        t.reset();
+             << "o: " << outSpeeds[i] << ", "
+             << "e: " << encSpeeds[i] << ", "
+             << "t: " << targSpeeds[i] << ", "
+             << "mp: " << pos[i].x << "@" << pos[i].y << ", "
+             << "ma: " << angles[i] << ", "
+             << "sp: " << sp[i] << ", "
+             << "sd: " << sd[i] << ", "
+             << "cp: " << cp[i] << ", "
+             << "cd: " << cd[i] << ", "
+             << "mpu: " << pursuit[i].x << "@" << pursuit[i].y << endl;
+        s(20);
       }
-      // outSpeeds.push_back(out);
-      // encSpeeds.push_back(enc);
-      // targSpeeds.push_back(targ);
-      // pos.push_back(p);
-      // angles.push_back(angle);
-      // cp.push_back(acp);
-      // cd.push_back(acd);
-      // sp.push_back(asp);
-      // sd.push_back(asd);
-      // pursuit.push_back(apursuit);
+      cout << std::flush;
+      outSpeeds.clear();
+      encSpeeds.clear();
+      targSpeeds.clear(); 
+      pos.clear();
+      angles.clear();
+      cp.clear();
+      cd.clear();
+      sp.clear();
+      sd.clear();
+      pursuit.clear();
     }
   } realTime;
 #endif
@@ -526,16 +554,18 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #ifdef DEBUG
   cout.precision(3);
   cout << "%"
-       << "frameRate: 40" << endl;
+       << "frameRate: 40, "
+       << "main.pos: def mp, "
+       << "main.angle: def ma, "
+       << "main.pursuit: def mpu, "
+       << "outputVel: def o, encVel: def e, targetVel: def t, slaveD: def sd, slaveP: def sd, ctrlP: def cp, ctrlD: def cd" << endl;
   // Loop through path and print out all the points
   for (int i = 0; i < path.size(); i++)
   {
-    cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << endl;
-    if (i % 3 == 0)
-    {
-      s(10);
-    }
+    cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << "\n";
+    s(15);
   }
+  cout << flush;
 #endif
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
