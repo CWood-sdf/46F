@@ -15,21 +15,21 @@ void testConnection(bool)
     {
       if (isMotor && ((motor *)dev)->temperature() > 50)
       {
-        Brain.Screen.setPenColor(vex::color::orange);
-        Brain.Screen.printAt(10 + j * 130, 20 + i * 19, true, "%s-%d-%d", name.c_str(), dev->index() + 1, ((motor *)dev)->temperature());
+        Brain.Screen.setPenColor(16);
+        Brain.Screen.printAt(10 + j * 180, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
       }
       else
       {
         Brain.Screen.setPenColor(vex::color::green);
-        Brain.Screen.printAt(10 + j * 130, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
+        Brain.Screen.printAt(10 + j * 180, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
       }
     }
     else
     {
       Brain.Screen.setPenColor(vex::color::red);
-      Brain.Screen.printAt(10 + j * 130, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
+      Brain.Screen.printAt(10 + j * 180, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
     }
-    if (i * 19 + 20 > BRAIN_HEIGHT - 70)
+    if (i * 19 + 20 > BRAIN_HEIGHT - 20)
     {
       i = 0;
       j++;

@@ -111,7 +111,7 @@ void FlywheelTBHEncoder::init()
   gain = 0.025;
   maxRateGain = 10;
   maxRateDrop = 10;
-  velCheck = Settled(4, 0.5, 500);
+  velCheck = Settled(10, 1000, 500);
 }
 void FlywheelTBHEncoder::setDisabled(bool p)
 {
@@ -138,7 +138,7 @@ void FlywheelTBHEncoder::graph(bool remake)
   text[i] = '\0';
   basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.5), minMaxFilter(4), sma(2)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
 {
   init();
   filter.seed(0);
@@ -196,6 +196,44 @@ void FlywheelTBHEncoder::step()
 {
   if (!hasTarget)
     return;
+  static LinkedList<double> lastVals = {0, 1, 5, 10, 2, 6, 10};
+  auto removeExtremes = [](LinkedList<double> list)
+  {
+    double min = list.getBase();
+    double max = list.getBase();
+    for (auto val : list)
+    {
+      if (val < min)
+      {
+        min = val;
+      }
+      if (val > max)
+      {
+        max = val;
+      }
+    }
+    bool removeMin = false;
+    bool removeMax = false;
+    for (auto val : list)
+    {
+      if (val == min && !removeMin)
+      {
+        removeMin = true;
+        list.popCurrent();
+      }
+      if (val == max && !removeMax)
+      {
+        removeMax = true;
+        list.popCurrent();
+      }
+      // break on both removed
+      if (removeMin && removeMax)
+      {
+        break;
+      }
+    }
+    return list;
+  };
   // A lot of variables
   static double lastRotation = 0;
   static double lastVel = 0.0;
@@ -213,9 +251,23 @@ void FlywheelTBHEncoder::step()
   // speedEst = (speedEst + lastEst) / 2.0;
   lastRotation = rotation;
   // Get a filtered velocity
-  minMaxFilter.update(speedEst);
-  sma.update(minMaxFilter);
-  filter.update(sma);
+  lastVals.pushBack(speedEst);
+  while (lastVals.size() > 8)
+  {
+    lastVals.popBase();
+  }
+  auto list = removeExtremes(removeExtremes(removeExtremes(lastVals)));
+  // Average
+  double sum = 0;
+  for (auto val : list)
+  {
+    sum += val;
+  }
+  double extremeRemoved = sum / list.size();
+  sma.update(extremeRemoved);
+  minMaxFilter.update(sma);
+  weightFilter.update(sma);
+  filter.update(weightFilter);
   double speed = filter;
   double err = desiredVel - speed;
   // Check if the flywheel speed is stable and if the error is small
@@ -246,15 +298,15 @@ void FlywheelTBHEncoder::step()
   // Vary the gain value to optimize the flywheel acceleration
   if (abs(err) < 10)
   {
-    gain = 0.06;
+    gain = 0.0002;
   }
-  if (abs(err) < 60)
+  if (abs(err) < 40)
   {
-    gain = 0.002;
+    gain = 0.001;
   }
   else
   {
-    gain = 0.002;
+    gain = 0.004;
   }
   if (calcTbh)
   {
@@ -308,7 +360,7 @@ void FlywheelTBHEncoder::step()
   {
     velSent = 100;
   }
-  if (abs(err) > 100 && speedEst < desiredVel)
+  if (abs(err) > 100 && speed < desiredVel)
   {
     freeAccel = true;
   }

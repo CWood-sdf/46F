@@ -222,7 +222,7 @@ void AutoIntake::updateValues(bool flywheelReady)
   //    clearing disks and
   //    either the flywheel is ready or there is no disk up top and
   //    it's not in a tempClearStop
-  if (intaking || (clearingDisks && (flywheelReady || !sensors.back()()) && tempClearStop <= 0))
+  if (intaking || (clearingDisks && (flywheelReady || (!sensors.back()() && (diskMask & 0b1000) == 0)) && tempClearStop <= 0))
   {
     direction = 1;
   }

@@ -393,7 +393,7 @@ void runFlywheel()
     // else {
     flyTBH.step();
     // }
-    s(10);
+    s(20);
   }
 }
 //}
@@ -463,15 +463,13 @@ void brainOS()
       wc.setBlue();
     } });
   // Make it skip the color set screen if were in skills
-  setAlliance.addBypass([]()
-                        { return Auton::selectedName() == skills.getName(); });
+  bos::bosFns.pushBack(testConnection);
+  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
+  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
   bos::bosFns.pushBack(bos::BosFn([](bool refresh)
                                   { intakeController.drawState(refresh); },
                                   true));
-  bos::bosFns.pushBack(testConnection);
-  bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
-  bos::bosFns.pushBack(bos::BosFn(displayBot, true));
   // bos::bosFns.pushBack(helpAlignBot);
   bos::bosFns.pushBack(VariableConfig::drawAll);
   // bos::bosFns.pushBack(bos::BosFn(printTestData));
@@ -555,8 +553,8 @@ void brainOS()
       bos::bosFns.getCurrent()->call(true);
     }
     // Draw the buttons
-    screenLeft.draw();
-    screenRight.draw();
+    // screenLeft.draw();
+    // screenRight.draw();
 
     // Allow other tasks to run
     vex::task::sleep(V5_LVGL_RATE);
@@ -567,6 +565,8 @@ void brainOS()
 //}
 extern motor ML;
 extern pneumatics pto;
+extern motor intakeMot;
+extern motor intakeMot2;
 int main()
 {
   // Init has to be in thread, otherwise it won't work with comp switch
@@ -593,6 +593,8 @@ int main()
     cout << "<< Flywheel initialized >>" << endl;
     intakeController.autonInit();
     endgame.close();
+    cout << intakeMot.temperature(vex::percentUnits::pct) << endl;
+    cout << intakeMot2.temperature(vex::percentUnits::pct) << endl;
     s(500);
     init = true; });
   while (!init)

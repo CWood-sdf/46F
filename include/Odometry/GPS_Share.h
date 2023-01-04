@@ -19,6 +19,7 @@ class GPS_Share
 {
   Positioner &odom;
   gps &GPS;
+  BasicEMA<FieldCoord> gpsEma;
   LinkedList<FieldCoord> gpsReadings;
   LinkedList<FieldCoord> odomReadings;
   vector<std::unique_ptr<BasicConfirmationOdom>> confirmOdoms;

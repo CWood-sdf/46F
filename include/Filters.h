@@ -172,4 +172,64 @@ class MinMaxFilter
     return *this;
   }
 };
+class WeightFilter
+{
+  size_t size;
+  LinkedList<double> vals = {};
+  double stdDev;
+
+  public:
+  WeightFilter(size_t size, size_t stdDev) : size(size), stdDev(stdDev)
+  {
+  }
+  WeightFilter(size_t size, size_t stdDev, double val) : WeightFilter(size, stdDev)
+  {
+    seed(val);
+  }
+  void update(double sensorVal)
+  {
+    vals.pushBack(sensorVal);
+    while (vals.size() > size)
+    {
+      vals.popBase();
+    }
+  }
+  double value()
+  {
+    // Get the mean
+    double sum = 0;
+    for (auto &val : vals)
+    {
+      sum += val;
+    }
+    double mean = sum / vals.size();
+    // Get the standard deviation
+    double stdev = sqrt(sum / vals.size());
+    auto listCopy = vals;
+    // Remove all values that are outside the standard deviation
+    for (auto &val : listCopy)
+    {
+      if (abs(val - mean) > stdDev)
+      {
+        listCopy.popCurrent();
+      }
+    }
+    // Get the mean of the remaining values
+    sum = 0;
+    for (auto &val : listCopy)
+    {
+      sum += val;
+    }
+    return sum / listCopy.size();
+  }
+  operator double()
+  {
+    return value();
+  }
+  void seed(double value)
+  {
+    vals.clear();
+    vals.pushBack(value);
+  }
+};
 #endif

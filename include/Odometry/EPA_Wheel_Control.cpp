@@ -83,7 +83,7 @@ void WheelController::useDistFns(double dist)
 void WheelController::turnTo(std::function<double()> angleCalc)
 {
   //
-  auto oldAngleCalc = angleCalc;
+  double oldAngleCalc = angleCalc();
   if (!isRed() && !callingInDrive)
   {
 #ifndef USE_GAME_SPECIFIC
@@ -91,7 +91,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
 #endif
     angleCalc = [&]()
     {
-      return posNeg180(oldAngleCalc() + 180);
+      return posNeg180(oldAngleCalc + 180);
     };
   }
   // If the auton is on the other side, turn to the opposite angle
@@ -110,7 +110,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
   int sleepTime = 20;
   int minTimeIn = 200;
   double degRange = 4.0;
-  int speedLimit = 60;
+  int speedLimit = 100;
 
   //
   //
@@ -470,7 +470,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = controller->settings.exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
-#define DEBUG
+#undef DEBUG
 #ifdef DEBUG
   struct
   {
@@ -505,7 +505,8 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       sd.push_back(asd);
       pursuit.push_back(apursuit);
     }
-    void flush(){
+    void flush()
+    {
       for (int i = 0; i < outSpeeds.size(); i++)
       {
         cout << "%"
@@ -524,7 +525,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       cout << std::flush;
       outSpeeds.clear();
       encSpeeds.clear();
-      targSpeeds.clear(); 
+      targSpeeds.clear();
       pos.clear();
       angles.clear();
       cp.clear();
@@ -567,6 +568,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   }
   cout << flush;
 #endif
+  cout << "Target: " << path.last().bezierPt << endl;
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
@@ -820,7 +822,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #ifdef DEBUG
   realTime.flush();
   cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
-  
+  s(20000);
 #endif
 }
 void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
