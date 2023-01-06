@@ -181,108 +181,106 @@ bool intaking = false;
 Auton skills = "Skills" + []()
 {
   wc.setRed();
-  thread runIntakeThread = thread([]()
-                                  {
-    while(1){
-      if(intaking){
-        intake.spin(fwd, 50);
-      }
-      if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
-      {
-        intaking = false;
-        intake.stop(hold);
-      }
-      s(10);
-    } });
-  wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
-  flyTBH.setTargetSpeed(528);
-  flyTBH.setDisabled(true);
-  s(100);
-  flywheelNm.spinVolt(fwd, 84.8);
+  // thread runIntakeThread = thread([]()
+  //                                 {
+  //   while(1){
+  //     if(intaking){
+  //       intake.spin(fwd, 50);
+  //     }
+  //     if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
+  //     {
+  //       intaking = false;
+  //       intake.stop(hold);
+  //     }
+  //     s(10);
+  //   } });
+  botAngles.x = 90;
+  // wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
+  flyTBH.setTargetSpeed(535);
   // flywheelNm.spin(fwd, 100);
-  wc.estimateStartPos(PVector(-61.39, 41.17), 88.59);
+  wc.estimateStartPos(PVector(-61.39, 41.17), 90);
   // flywheelNm.stop(coast);
+
   wc.turnTo(90);
   spinRoller();
   chassis.driveFromDiff(20, 0, fwd);
-  s(500);
+  s(700);
   chassis.coastBrake();
-  intaking = true;
+
+  // intaking = true;
+
+  intakeController.intake();
   wc.driveTo(-40.66, 56.97);
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
-  flywheelNm.spinVolt(fwd, 76.8);
-  wc.backwardsFollow(&pidController, {PVector(-40.99, 63.09)});
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  flyTBH.setTargetSpeed(461);
+  wc.backInto(-40.99, 63.09);
   wc.turnTo(180);
   chassis.driveFromDiff(-20, 0, fwd);
-  s(500);
+  s(700);
   chassis.coastBrake();
   spinRoller();
   chassis.driveFromDiff(20, 0, fwd);
   s(500);
   chassis.coastBrake();
-  intaking = true;
+
+  // intaking = true;
+
+  intakeController.intake();
   wc.driveTo(-12, 35);
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  intakeController.intake();
   wc.driveTo(0, 25);
-  intaking = true;
-
-  // wc.driveTo(9.29, -23.52);
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
-  intaking = true;
-  flywheelNm.spinVolt(fwd, 72);
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  intakeController.intake();
+  flyTBH.setTargetSpeed(432);
   wc.driveTo(12, 12);
-
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
-  intaking = true;
-  flywheelNm.spinVolt(fwd, 77);
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  intakeController.intake();
+  flyTBH.setTargetSpeed(462);
   wc.driveTo(36, -13);
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
-  flywheelNm.spinVolt(fwd, 84.8);
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  flyTBH.setTargetSpeed(535);
   wc.driveTo(58.94, -41.33);
   wc.turnTo(-89.83);
   chassis.driveFromDiff(-20, 0, fwd);
-  s(500);
+  s(700);
   chassis.coastBrake();
   spinRoller();
   chassis.driveFromDiff(20, 0, fwd);
   s(500);
   chassis.coastBrake();
-  intaking = true;
+
+  intakeController.intake();
   wc.driveTo(48.40, -52.25);
   wc.faceTarget({50.00, 50.16});
-  intake.spin(fwd, 50);
-  s(1000);
-  intaking = false;
-  intake.stop(hold);
-  wc.backwardsFollow(&pidController, {PVector(41.07, -57.7)});
+  intakeController.setFiring();
+  intakeController.waitForFiring();
+
+  wc.backInto(41.07, -57.7);
   wc.turnTo(0);
   chassis.driveFromDiff(-20, 0, fwd);
-  s(500);
+  s(700);
   chassis.coastBrake();
   spinRoller();
   chassis.driveFromDiff(20, 0, fwd);
   s(500);
   chassis.coastBrake();
+
   wc.faceTarget({-68.79, 69.19});
   endgame.open();
 };

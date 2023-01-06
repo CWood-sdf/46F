@@ -293,11 +293,16 @@ void WheelController::ramseteFollow(VectorArr arr, bool isNeg)
 
 void WheelController::driveTo(double x, double y)
 {
-  generalFollow({PVector(x, y)}, defaultPid, false);
+  // generalFollow({PVector(x, y)}, defaultPid, false);
+  faceTarget({x, y});
+  driveDistance(botPos().dist2D({x, y}), defaultPid);
+  cout << "Sorta target: " << PVector(x, y) << ", " << botPos() << endl;
 }
 void WheelController::backInto(double x, double y)
 {
-  generalFollow({PVector(x, y)}, defaultPid, true);
+  turnTo(botPos().angleTo({x, y}) + 180);
+  backwardsDriveDistance(botPos().dist2D({x, y}), defaultPid);
+  cout << "Sorta target: " << PVector(x, y) << ", " << botPos() << endl;
 }
 
 /**
@@ -470,7 +475,8 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       // Going with an hopefully possible 1 in accuracy
       minAllowedDist = controller->settings.exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
-#undef DEBUG
+#define DEBUG
+  const bool debug = Greg.ButtonA.pressing();
 #ifdef DEBUG
   struct
   {
@@ -553,20 +559,23 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   };
   double dist = 0.0; // The distance from the target
 #ifdef DEBUG
-  cout.precision(3);
-  cout << "%"
-       << "frameRate: 40, "
-       << "main.pos: def mp, "
-       << "main.angle: def ma, "
-       << "main.pursuit: def mpu, "
-       << "outputVel: def o, encVel: def e, targetVel: def t, slaveD: def sd, slaveP: def sp, ctrlP: def cp, ctrlD: def cd" << endl;
-  // Loop through path and print out all the points
-  for (int i = 0; i < path.size(); i++)
+  if (debug)
   {
-    cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << "\n";
-    s(15);
+    cout.precision(3);
+    cout << "%"
+         << "frameRate: 40, "
+         << "main.pos: def mp, "
+         << "main.angle: def ma, "
+         << "main.pursuit: def mpu, "
+         << "outputVel: def o, encVel: def e, targetVel: def t, slaveD: def sd, slaveP: def sp, ctrlP: def cp, ctrlD: def cd" << endl;
+    // Loop through path and print out all the points
+    for (int i = 0; i < path.size(); i++)
+    {
+      cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << "\n";
+      s(15);
+    }
+    cout << flush;
   }
-  cout << flush;
 #endif
   cout << "Target: " << path.last().bezierPt << endl;
   // Loop
@@ -789,7 +798,10 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #endif
 
 #ifdef DEBUG
-    realTime.add(speed, chassis->pos.velocity(), path[nearestIndex].targetSpeed, botPos(), botAngle(), -rightExtra, 0, normAngle, dist, pursuit);
+    if (debug)
+    {
+      realTime.add(speed, chassis->pos.velocity(), path[nearestIndex].targetSpeed, botPos(), botAngle(), -rightExtra, 0, normAngle, dist, pursuit);
+    }
 #endif
   }
   moving = false;
@@ -820,26 +832,31 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   controller->deInit();
 // Print all the lists
 #ifdef DEBUG
-  realTime.flush();
-  cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
-  s(20000);
+  if (debug)
+  {
+    realTime.flush();
+    cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
+    s(20000);
+  }
 #endif
 }
+extern Positioner positioner;
 void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
 {
-  PVector startPos = botPos();
-  double startAngle = botAngle();
+  PVector startPos = positioner.getPos();
+  double startAngle = positioner.heading();
   int timeIn = 0;
   int maxTimeIn = pid->settings.maxTimeIn;
   double maxDist = pid->settings.followPathDist;
   int sleepTime = 10;
   setOldDistFns();
   moving = true;
-  double dist = 0.0;
+  double dist = 1000.0;
   timer t = timer();
   int timesStopped = 0;
   pid->init();
   double lastSpeed = 0.0;
+  cout << "%ctrlP: def d" << endl;
   while (1)
   {
     // Basic exit conditions
@@ -868,8 +885,12 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
       exitEarly = false;
       break;
     }
+    double angle = positioner.heading();
+    PVector pos = positioner.getPos();
+    // auto newRotation = chassis->rightWheels[0].rotation(rev);
+    dist = targetDist - pos.dist2D(startPos);
     // If near target, start the timer
-    if (dist < pid->settings.exitDist)
+    if (abs(dist) < pid->settings.exitDist)
     {
       timeIn++;
     }
@@ -877,9 +898,6 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     {
       timeIn = 0;
     }
-    double angle = botAngle();
-    PVector pos = botPos();
-    double dist = targetDist - pos.dist(startPos);
     Controller::Input input = Controller::Input();
     // Construct the inpur
     input.angleTarget = startAngle;
@@ -924,25 +942,26 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     // Slew speed on vf2 = vi2 + 2ad
     double maxAccel = chassis->maxAcc;
     double maxDecel = chassis->maxDAcc;
-    if (speed > lastSpeed)
-    {
-      double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) - 2 * maxDecel * sleepTime);
-      if (abs(speed) < maxSpeed)
-      {
-        speed = maxSpeed * speedSign;
-      }
-    }
-    else if (speed < lastSpeed)
-    {
-      double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) + 2 * maxAccel * sleepTime);
-      if (abs(speed) > maxSpeed)
-      {
-        speed = maxSpeed * speedSign;
-      }
-    }
+    // if (speed > lastSpeed)
+    // {
+    //   double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) - 2 * maxDecel * sleepTime);
+    //   if (abs(speed) < maxSpeed)
+    //   {
+    //     speed = maxSpeed * speedSign;
+    //   }
+    // }
+    // else if (speed < lastSpeed)
+    // {
+    //   double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) + 2 * maxAccel * sleepTime);
+    //   if (abs(speed) > maxSpeed)
+    //   {
+    //     speed = maxSpeed * speedSign;
+    //   }
+    // }
     chassis->driveFromDiff(speed, -rightExtra, fwd);
     lastSpeed = speed;
     s(sleepTime);
+    // cout << "%d: " << dist << endl;
   }
   moving = false;
   // Stop drawing the path
@@ -961,9 +980,10 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
       break;
     }
     this->drawArr = false;
-    cout << "Path stop" << endl;
+    cout << "PID stop: ";
     // Print postion and target position
-    cout << dist << ", " << targetDist << endl;
+    cout << -dist + targetDist << ", " << targetDist << endl;
+    cout << positioner.heading() - startAngle << endl;
     exitDist = 0.0;
   }
   stopExitPrev = false;

@@ -96,7 +96,7 @@ void autonInit()
   rachetColor.setLightPower(100, percent);
   rachetColor.integrationTime(50);
   intakeController.autonInit();
-  intakeController.disable();
+  intakeController.enable();
   cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -595,6 +595,7 @@ int main()
     endgame.close();
     cout << intakeMot.temperature(vex::percentUnits::pct) << endl;
     cout << intakeMot2.temperature(vex::percentUnits::pct) << endl;
+    share.setUseGps(true);
     s(500);
     init = true; });
   while (!init)
@@ -614,7 +615,6 @@ int main()
   thread flywheelControl = thread(runFlywheel);
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
-
   // autonomous();
   // // chassis.coastBrake();
   // flyTBH.setTargetSpeed(0);

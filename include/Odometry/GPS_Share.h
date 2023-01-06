@@ -28,6 +28,7 @@ class GPS_Share
   double speed = 0.0;
   EMA speedFilter = EMA(0.2, 0);
   bool lastBad = false;
+  bool useGps = false;
   bool isFirstBad = false;
   static const int sleepTime = 10;
   static const int badTime = 200;
@@ -46,6 +47,10 @@ class GPS_Share
   bool gpsBad();
   void update();
   void setPos(PVector v, double a);
+  void setUseGps(bool s)
+  {
+    useGps = s;
+  }
 };
 #endif
 #endif

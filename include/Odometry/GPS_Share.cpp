@@ -54,11 +54,13 @@ double GPS_Share::velocity()
 }
 bool GPS_Share::gpsBad()
 {
-  return GPS.quality() != 100 || !GPS.installed();
+  return (GPS.quality() != 100 || !GPS.installed()) || !useGps;
 }
+extern inertial angler;
 void GPS_Share::update()
 {
   static FieldCoord lastPosReading = FieldCoord(PVector(0, 0), 0);
+  static int lastGps = 0;
   odom.update();
 
   // Get the odometry position
@@ -75,28 +77,39 @@ void GPS_Share::update()
   speed = speedFilter.value();
   // Get GPS coordinate
   FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
-
-  // If GPS can't see position
-  if (gpsBad())
+  bool useGps = !gpsBad() && ++lastGps > 0;
+  // If GPS can see position
+  if (useGps)
+  {
+    lastGps = 0;
+    // Set position to GPS value
+    pos = gpsCoord;
+    lastPosReading = gpsCoord;
+    cout.precision(4);
+    // cout << "$" << pos.pos.x << "@" << pos.pos.y << "@" << pos.angle << ", limit@60" << endl;
+  }
+  else
   {
     // Use change in odometry
     pos.pos += deltaOdom.pos;
     pos.angle += deltaOdom.angle;
   }
-  else
+  // if (!gpsBad())
+  // {
+  //   // Avg last 2
+  //   pos.pos = (pos.pos + lastPosReading.pos) / 2.0;
+  //   pos.angle = (pos.angle + lastPosReading.angle) / 2.0;
+  if (useGps)
   {
-    // Set position to GPS value
-    pos = gpsCoord;
-  }
-  if (!gpsBad())
-  {
-    // Avg last 2
-    pos.pos = (pos.pos + lastPosReading.pos) / 2.0;
-    pos.angle = (pos.angle + lastPosReading.angle) / 2.0;
     gpsEma.update(pos);
     pos = gpsEma.value();
   }
-  lastPosReading = pos;
+  if (angler.installed())
+  {
+    pos.angle = botAngles.x;
+  }
+  // }
+  // lastPosReading = pos;
   // Sleep
   s(sleepTime);
 }
@@ -106,5 +119,7 @@ void GPS_Share::setPos(PVector v, double a)
   // botAngles.x = a;
   pos.angle = a;
   update();
+  odom.setPos(v);
+  botAngles.x = a;
 }
 #endif
