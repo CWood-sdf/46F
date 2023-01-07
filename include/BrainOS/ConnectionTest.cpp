@@ -15,7 +15,7 @@ void testConnection(bool)
     {
       if (isMotor && ((motor *)dev)->temperature() > 50)
       {
-        Brain.Screen.setPenColor(16);
+        Brain.Screen.setPenColor(27);
         Brain.Screen.printAt(10 + j * 180, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
       }
       else

@@ -26,7 +26,7 @@ double WheelController::botAngle()
 {
   return chassis->botAngle();
 }
-PVector &WheelController::botPos()
+PVector& WheelController::botPos()
 {
   return chassis->botPos();
 }
@@ -182,6 +182,11 @@ WheelController::chain_method WheelController::estimateStartPos(PVector v, doubl
   {
     chassis->pos.setPos(v, a);
   }
+  botAngles.x = a;
+  if (isBlue())
+  {
+    botAngles.x = posNeg180(a + 180);
+  }
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Conditions for reversing auton)
 #endif
@@ -317,7 +322,7 @@ void WheelController::backInto(double x, double y)
  *  - follow path distance
  *  - max time in
  */
-void WheelController::generalFollowTurnAtStart(VectorArr &arr, double &purePursuitDist, bool &isNeg)
+void WheelController::generalFollowTurnAtStart(VectorArr& arr, double& purePursuitDist, bool& isNeg)
 {
   this->drawArr = true;
   auto arrCopy = arr;
@@ -346,7 +351,7 @@ void WheelController::generalFollowTurnAtStart(VectorArr &arr, double &purePursu
   afterTurn();
   afterTurn = []() {};
 }
-PVector WheelController::generalFollowGetVirtualPursuit(PVector &pursuit, Controller *controller)
+PVector WheelController::generalFollowGetVirtualPursuit(PVector& pursuit, Controller* controller)
 {
   PVector virtualPursuit = pursuit;
   if (!(botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last()))
@@ -363,7 +368,7 @@ PVector WheelController::generalFollowGetVirtualPursuit(PVector &pursuit, Contro
   virtualPursuit += last;
   return virtualPursuit;
 }
-double WheelController::generalFollowGetDist(int &bezierIndex, Controller *controller, PVector &pursuit)
+double WheelController::generalFollowGetDist(int& bezierIndex, Controller* controller, PVector& pursuit)
 {
   double dist = 0.0;
   if (controller->settings.useDistToGoal)
@@ -401,7 +406,7 @@ double WheelController::generalFollowGetDist(int &bezierIndex, Controller *contr
   dist = pathDir.y - botDir.y;
   return dist;
 }
-void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool isNeg)
+void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool isNeg)
 {
   double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
@@ -412,7 +417,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   // Change to new game dependency
   if (reversed)
   {
-    for (auto &a : arr)
+    for (auto& a : arr)
     {
       a *= -1.0;
     }
@@ -841,7 +846,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #endif
 }
 extern Positioner positioner;
-void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
+void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController* pid)
 {
   PVector startPos = positioner.getPos();
   double startAngle = positioner.heading();
@@ -989,11 +994,11 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
   stopExitPrev = false;
   pid->deInit();
 }
-void WheelController::driveDistance(double dist, BasicPidController *pid)
+void WheelController::driveDistance(double dist, BasicPidController* pid)
 {
   generalDriveDistance(dist, false, pid);
 }
-void WheelController::backwardsDriveDistance(double dist, BasicPidController *pid)
+void WheelController::backwardsDriveDistance(double dist, BasicPidController* pid)
 {
   generalDriveDistance(dist, true, pid);
 }

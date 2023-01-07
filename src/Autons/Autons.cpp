@@ -66,9 +66,10 @@ Auton leftA = "Left" + []()
   // bos::bosFns.moveCurrentLeft();
   // bos::bosFns.moveCurrentLeft();
   LinkedList<bool> flywheelReady = {};
-  bos::bosFns.moveCurrentLeft();
-  bos::bosFns.moveCurrentLeft();
-  bos::bosFns.getCurrent()->call(true);
+  // bos::bosFns.moveCurrentLeft();
+  // bos::bosFns.moveCurrentLeft();
+  // bos::bosFns.getCurrent()->call(true);
+  intakeController.disable();
   flyTBH.setTargetSpeed(528);
   flyTBH.setDisabled(true);
   s(100);
@@ -83,7 +84,6 @@ Auton leftA = "Left" + []()
   // flyTBH.setDisabled(false);
   s(100);
   // Fire
-  intakeController.disable();
   // waitFlywheelReady();
   s(3500);
   cout << "0" << endl;
@@ -127,11 +127,12 @@ Auton rightA = "Right" + []()
 {
   // wc.setBlue();
   cout << "Red: " << wc.isRed() << endl;
+  intakeController.disable();
   wc.estimateStartPos(PVector(16.81, -62.47), 0);
-  pidController.settings.setBrakeMode(WheelController::exitMode::hold);
-  bos::bosFns.moveCurrentLeft();
-  bos::bosFns.moveCurrentLeft();
-  bos::bosFns.getCurrent()->call(true);
+  // pidController.settings.setBrakeMode(WheelController::exitMode::hold);
+  // bos::bosFns.moveCurrentLeft();
+  // bos::bosFns.moveCurrentLeft();
+  // bos::bosFns.getCurrent()->call(true);
   flyTBH.setTargetSpeed(530);
   flyTBH.setDisabled(true);
   s(100);
@@ -146,7 +147,6 @@ Auton rightA = "Right" + []()
   // flyTBH.setDisabled(false);
   s(100);
   // Fire
-  intakeController.disable();
   // waitFlywheelReady();
   s(3500);
   cout << "0" << endl;
@@ -165,7 +165,7 @@ Auton rightA = "Right" + []()
   // // Drive to roller
   // wc.backwardsFollow(&pidController, {PVector(39.01, -56.1)});
   pidController.settings.setBrakeMode(WheelController::exitMode::hold);
-  wc.backwardsFollow(&pidController, {PVector(37.18, -56.76)});
+  wc.backInto(37.18, -56.76);
   wc.turnTo(-10);
   chassis.driveFromDiff(-20, 0, fwd);
   s(300);

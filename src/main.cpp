@@ -58,12 +58,12 @@ void spinRoller()
     if (count == 20)
     {
       countUp = false;
-      chassis.driveFromDiff(50, 0, fwd);
+      chassis.driveFromDiff(40, 0, fwd);
     }
     else if (count == 0)
     {
       countUp = true;
-      chassis.driveFromDiff(-80, 0, fwd);
+      chassis.driveFromDiff(-100, 0, fwd);
     }
     i++;
     s(10);
@@ -127,10 +127,10 @@ class ButtonLatch
   bool isPressing = false;
   int state = 0;
   int stateLim;
-  const controller::button &b;
+  const controller::button& b;
 
   public:
-  ButtonLatch(const controller::button &b, int stateLim = 2) : stateLim(stateLim), b(b)
+  ButtonLatch(const controller::button& b, int stateLim = 2) : stateLim(stateLim), b(b)
   {
   }
   ButtonLatch() = delete;
@@ -182,7 +182,7 @@ void drivercontrol()
   // An array of the current and past instances of drivercontrol
   // The pair::first is whether the instance has exited or not
   // The pair::second is a pointer to the primary bool a few lines down
-  static vector<pair<bool, bool *>> countsExist = {};
+  static vector<pair<bool, bool*>> countsExist = {};
   // The count of drivercontrol instances
   static int count = 0;
   vector<int> speeds = {367, 421, 457, 502};
@@ -480,7 +480,7 @@ void brainOS()
   color buttonColor = color(0x0a323232);
   // Set the transparency to true
   // HACK:
-  *((bool *)(((uint32_t *)&buttonColor) + 1)) = true;
+  *((bool*)(((uint32_t*)&buttonColor) + 1)) = true;
   Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, "<", -40, -30);
   Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, ">", -40, -30);
   bos::bosFns.getCurrent()->call(true);
@@ -615,7 +615,7 @@ int main()
   thread flywheelControl = thread(runFlywheel);
   // wc.prevStopExit();
   // wc.driveTo(-20, 48);
-  // autonomous();
+  autonomous();
   // // chassis.coastBrake();
   // flyTBH.setTargetSpeed(0);
   // flyTBH.setDisabled(false);

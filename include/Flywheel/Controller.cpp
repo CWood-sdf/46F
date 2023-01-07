@@ -1,10 +1,10 @@
 #define NO_MAKE
 #include "Flywheel/Controller.h"
 const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
-void makeKeyCont(lv_obj_t *key, const char *lbl, lv_color_t color, lv_coord_t distDown)
+void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown)
 {
   // Create primary container and set padding
-  lv_obj_t *keyCont = lv_obj_create(key);
+  lv_obj_t* keyCont = lv_obj_create(key);
   lv_obj_set_style_pad_all(keyCont, 0, 0);
 
   // Set container size
@@ -18,7 +18,7 @@ void makeKeyCont(lv_obj_t *key, const char *lbl, lv_color_t color, lv_coord_t di
   lv_obj_set_pos(keyCont, 0, -distDown);
 
   // Make colored square
-  lv_obj_t *squ = lv_obj_create(keyCont);
+  lv_obj_t* squ = lv_obj_create(keyCont);
   lv_obj_set_size(squ, 15, 15);
   lv_obj_set_style_radius(squ, 03, 0);
   lv_obj_set_style_bg_color(squ, color, 0);
@@ -27,23 +27,23 @@ void makeKeyCont(lv_obj_t *key, const char *lbl, lv_color_t color, lv_coord_t di
   lv_obj_set_scrollbar_mode(squ, LV_SCROLLBAR_MODE_OFF);
 
   // Make label
-  lv_obj_t *label2 = lv_label_create(keyCont);
+  lv_obj_t* label2 = lv_label_create(keyCont);
   lv_obj_set_align(label2, LV_ALIGN_LEFT_MID);
   lv_obj_set_pos(label2, 20, 0);
   lv_label_set_text(label2, lbl);
 }
 
-void basicGraph(bool remake, const char *text, FlywheelDebugEl out)
+void basicGraph(bool remake, const char* text, FlywheelDebugEl out)
 {
-  static lv_obj_t *chart;
-  static lv_chart_series_t *serTarg;
-  static lv_chart_series_t *serMeas;
-  static lv_chart_series_t *serFilt;
-  static lv_chart_series_t *serErr;
-  static lv_chart_series_t *serSent;
-  static lv_chart_series_t *serDeriv;
-  static lv_obj_t *chartLabel;
-  static lv_obj_t *key;
+  static lv_obj_t* chart;
+  static lv_chart_series_t* serTarg;
+  static lv_chart_series_t* serMeas;
+  static lv_chart_series_t* serFilt;
+  static lv_chart_series_t* serErr;
+  static lv_chart_series_t* serSent;
+  static lv_chart_series_t* serDeriv;
+  static lv_obj_t* chartLabel;
+  static lv_obj_t* key;
   // cout << "LO" << endl;
   if (remake)
   {
@@ -120,10 +120,10 @@ void FlywheelTBHEncoder::setDisabled(bool p)
 void FlywheelTBHEncoder::graph(bool remake)
 {
   static char text[80] = "TBHE ctrl";
-  const char *newName = "TBHE ctrl - ";
+  const char* newName = "TBHE ctrl - ";
   stringstream thing = stringstream();
   thing << debug.targetVel / 6;
-  const char *otherName = thing.str().c_str();
+  const char* otherName = thing.str().c_str();
   // cout << otherName << endl;
   int i = 0;
   for (; newName[i] != '\0'; i++)
@@ -138,13 +138,13 @@ void FlywheelTBHEncoder::graph(bool remake)
   text[i] = '\0';
   basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
 {
   init();
   filter.seed(0);
   en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor &m) : FlywheelTBHEncoder(m, Encoder(m[0]))
+FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m) : FlywheelTBHEncoder(m, Encoder(m[0]))
 {
 }
 
@@ -380,7 +380,7 @@ void FlywheelTBHEncoder::step()
       freeAccel = false;
     }
   }
-  debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 100);
+  debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 100.0);
   prevErr = err;
   if (!disabled)
   {

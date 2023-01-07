@@ -8,7 +8,7 @@
 //   Manage it elsewhere in the program
 class Settled
 {
-  EMA derivFilter = EMA(0.7);
+  SMA derivFilter = SMA(9, 0);
   double maxDeriv;
   timer time;
   double maxErr;
@@ -47,7 +47,7 @@ class Settled
     {
       lastDerivs.popBase();
     }
-    // cout << abs(derivFilter) << "\n";
+    cout << abs(derivFilter) << "\n";
     isSettled = abs(derivFilter) < maxDeriv && abs(err) < maxErr;
     return isSettled;
   }
@@ -95,11 +95,11 @@ struct FlywheelDebugEl
     this->deriv = deriv;
   }
   // Sussy version
-  void set(double *arr)
+  void set(double* arr)
   {
     for (int i = 0; i < size; i++)
     {
-      ((double *)this)[i] = arr[i];
+      ((double*)this)[i] = arr[i];
     }
   }
 };
@@ -132,7 +132,7 @@ class Empty
 class FlywheelTBHEncoder : public Empty
 {
   Encoder en;
-  NewMotor &mots;
+  NewMotor& mots;
   EMA filter;
   MinMaxFilter minMaxFilter;
   WeightFilter weightFilter;
@@ -150,8 +150,8 @@ class FlywheelTBHEncoder : public Empty
   public:
   double maxRateDrop = 2;
   double maxRateGain = 4;
-  FlywheelTBHEncoder(NewMotor &m, Encoder en);
-  FlywheelTBHEncoder(NewMotor &m);
+  FlywheelTBHEncoder(NewMotor& m, Encoder en);
+  FlywheelTBHEncoder(NewMotor& m);
   void setTarget(int i);
   void addTarget(double t);
   void setTargetSpeed(double t);
@@ -166,7 +166,7 @@ class EMA_D : public PIDF_Extension
   EMA dFilter = EMA(0.7, 0);
 
   public:
-  void manageD(double &d) override
+  void manageD(double& d) override
   {
     dFilter.update(d);
     // d = dFilter.value();

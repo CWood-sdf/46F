@@ -32,15 +32,15 @@ bool GPS_Share::readingBad()
   }
   return true;
 }
-GPS_Share::GPS_Share(Positioner &o, gps &g) : odom(o), GPS(g), gpsEma(0.7, FieldCoord(PVector(0, 0), 0))
+GPS_Share::GPS_Share(Positioner& o, gps& g) : odom(o), GPS(g), gpsEma(0.7, FieldCoord(PVector(0, 0), 0))
 {
 }
 
-FieldCoord &GPS_Share::fullPos()
+FieldCoord& GPS_Share::fullPos()
 {
   return pos;
 }
-PVector &GPS_Share::position()
+PVector& GPS_Share::position()
 {
   return pos.pos;
 }
@@ -60,6 +60,7 @@ extern inertial angler;
 void GPS_Share::update()
 {
   static FieldCoord lastPosReading = FieldCoord(PVector(0, 0), 0);
+  static LinkedList<FieldCoord> gpsReadings = {};
   static int lastGps = 0;
   odom.update();
 
@@ -79,17 +80,25 @@ void GPS_Share::update()
   FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
   bool useGps = !gpsBad() && ++lastGps > 0;
   // If GPS can see position
-  if (useGps)
+  if (useGps && speed < 0.1)
   {
-    lastGps = 0;
+    gpsReadings.pushBack(gpsCoord);
+    FieldCoord avgPos = FieldCoord(PVector(0, 0), 0);
+    for (auto p : gpsReadings)
+    {
+      avgPos += p;
+    }
+    avgPos.pos /= gpsReadings.size();
+    avgPos.angle /= gpsReadings.size();
     // Set position to GPS value
-    pos = gpsCoord;
-    lastPosReading = gpsCoord;
-    cout.precision(4);
+    pos = avgPos;
+    lastPosReading = pos;
+    // cout.precision(4);
     // cout << "$" << pos.pos.x << "@" << pos.pos.y << "@" << pos.angle << ", limit@60" << endl;
   }
   else
   {
+    gpsReadings.clear();
     // Use change in odometry
     pos.pos += deltaOdom.pos;
     pos.angle += deltaOdom.angle;
