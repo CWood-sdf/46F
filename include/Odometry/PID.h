@@ -40,7 +40,7 @@ struct PIDF_Extension
     {
         return new PIDF_Extension(*this);
     }
-    virtual double manageInput(double in)
+    virtual double manageError(double in)
     {
         return in;
     }
@@ -86,38 +86,182 @@ public:
 
 public:
     std::shared_ptr<PIDF_Extension> manager = std::shared_ptr<PIDF_Extension>(NULL);
+    /**
+     * @brief Construct a new PIDF object, with zero for everything
+     *
+     */
     PIDF();
-    PIDF(KVals vals, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
-    PIDF(double p, double i, double d, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
-    PIDF(double p, double i, double d, double f, PIDF_Extension& mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
-    // Constructors
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param vals The kPIDF values
+     * @param mgr A reference to a manager
+     * @param iCap The absolute value cap for the integral, if less than 0, allows integral to grow infinitely
+     * @param iGrowthRange The absolute value error range for integral growth, if less than 0, grows infinitely
+     * @param iZeroRange The range to zero the integral, if less than 0, never zeros
+     */
+    PIDF(KVals vals, std::shared_ptr<PIDF_Extension> mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     * @param mgr manager
+     * @param iCap integral cap
+     * @param iGrowthRange integral growth range
+     * @param iZeroRange Integral zero range
+     */
+    PIDF(double p, double i, double d, std::shared_ptr<PIDF_Extension> mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     * @param f kF
+     * @param mgr manager
+     * @param iCap integral cap
+     * @param iGrowthRange integral growth range
+     * @param iZeroRange integral zero range
+     */
+    PIDF(double p, double i, double d, double f, std::shared_ptr<PIDF_Extension> mgr, double iCap = 0.0, double iGrowthRange = 0.0, double iZeroRange = 0.0);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param vals kPIDF
+     * @param iCap integral cap
+     * @param iGrowthRange integral growth
+     * @param iZeroRange integral zero
+     */
     PIDF(KVals vals, double iCap, double iGrowthRange, double iZeroRange);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     * @param iCap integral cap
+     * @param iGrowthRange integral growth
+     * @param iZeroRange integral zero
+     */
     PIDF(double p, double i, double d, double iCap, double iGrowthRange, double iZeroRange);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     * @param f kF
+     * @param iCap integral cap
+     * @param iGrowthRange integral growth
+     * @param iZeroRange integral zero
+     */
     PIDF(double p, double i, double d, double f, double iCap, double iGrowthRange, double iZeroRange);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     * @param f kF
+     */
     PIDF(double p, double i, double d, double f);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param p kP
+     * @param i kI
+     * @param d kD
+     */
     PIDF(double p, double i, double d);
+    /**
+     * @brief Construct a new PIDF object
+     *
+     * @param vals kPIDF
+     */
     PIDF(KVals vals);
+    /**
+     * @brief Copy Construct a new PIDF object
+     *
+     * @param v
+     */
     PIDF(const PIDF& v);
+    /**
+     * @brief Move Construct a new PIDF object
+     *
+     * @param v
+     */
     PIDF(PIDF&& v);
-    // Get the error
+    /**
+     * @brief Get the Error
+     *
+     * @return double
+     */
     double getError();
-    // Clear out the previous PID usage
+    /**
+     * @brief Prepares the PID for a new movement
+     *
+     */
     void resetVals();
-    // Set the target value of the PID
+    /**
+     * @brief Sets the target value
+     *
+     * @param val the value to target
+     */
     void setTarget(double val);
-    // Apply the error
+    /**
+     * @brief Updates the PID with the given sensor value
+     *
+     * @param sensorVal sensor value
+     */
     void incVals(double sensorVal);
-    // Get the speed value given that error has already been applied
+    /**
+     * @brief Get the speed value, requires the incVals has already been called
+     *
+     * @return double
+     */
     double getVal();
-    // Apply error, then return getVal()
+    /**
+     * @brief Calls incVals, then getVal
+     *
+     * @param sensorVal sensor value
+     * @return double
+     */
     double getVal(double sensorVal);
-    // Add a PidAdder
+    /**
+     * @brief Add kPIDF constants
+     *
+     * @param a the adder
+     * @return PIDF& *this
+     */
     PIDF& operator+=(PidfAdder a);
-    // Subtract a PidAdder
+    /**
+     * @brief Subtract kPIDF constants
+     *
+     * @param a the adder
+     * @return PIDF& *this
+     */
     PIDF& operator-=(PidfAdder a);
+    /**
+     * @brief Move =
+     *
+     * @param a
+     * @return PIDF&
+     */
     PIDF& operator=(PIDF&& a);
-    // Directly taken from the copy constructor
+    /**
+     * @brief Copy =
+     *
+     * @param a
+     * @return PIDF&
+     */
     PIDF& operator=(const PIDF& a);
+    /**
+     * @brief Get a copy of kPIDF
+     *
+     * @return KVals
+     */
     KVals getKVals();
 };
 
