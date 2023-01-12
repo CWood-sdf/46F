@@ -8,7 +8,7 @@ AddDevice::AddDevice(string name, vex::device *device)
 }
 AddDevice::AddDevice(string name, vex::motor *device)
 {
-  connectedDevices.push_back(make_tuple(name, device, false));
+  connectedDevices.push_back(make_tuple(name, device, true));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
 #define TestDevices(device, ...) \

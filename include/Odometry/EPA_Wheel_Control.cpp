@@ -26,7 +26,7 @@ double WheelController::botAngle()
 {
   return chassis->botAngle();
 }
-PVector &WheelController::botPos()
+PVector& WheelController::botPos()
 {
   return chassis->botPos();
 }
@@ -83,7 +83,7 @@ void WheelController::useDistFns(double dist)
 void WheelController::turnTo(std::function<double()> angleCalc)
 {
   //
-  auto oldAngleCalc = angleCalc;
+  double oldAngleCalc = angleCalc();
   if (!isRed() && !callingInDrive)
   {
 #ifndef USE_GAME_SPECIFIC
@@ -91,7 +91,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
 #endif
     angleCalc = [&]()
     {
-      return posNeg180(oldAngleCalc() + 180);
+      return posNeg180(oldAngleCalc + 180);
     };
   }
   // If the auton is on the other side, turn to the opposite angle
@@ -110,7 +110,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
   int sleepTime = 20;
   int minTimeIn = 200;
   double degRange = 4.0;
-  int speedLimit = 60;
+  int speedLimit = 100;
 
   //
   //
@@ -181,6 +181,11 @@ WheelController::chain_method WheelController::estimateStartPos(PVector v, doubl
   if (botPos().mag() < 6)
   {
     chassis->pos.setPos(v, a);
+  }
+  botAngles.x = a;
+  if (isBlue())
+  {
+    botAngles.x = posNeg180(a + 180);
   }
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Conditions for reversing auton)
@@ -293,11 +298,16 @@ void WheelController::ramseteFollow(VectorArr arr, bool isNeg)
 
 void WheelController::driveTo(double x, double y)
 {
-  generalFollow({PVector(x, y)}, defaultPid, false);
+  // generalFollow({PVector(x, y)}, defaultPid, false);
+  faceTarget({x, y});
+  driveDistance(botPos().dist2D({x, y}), defaultPid);
+  cout << "Sorta target: " << PVector(x, y) << ", " << botPos() << endl;
 }
 void WheelController::backInto(double x, double y)
 {
-  generalFollow({PVector(x, y)}, defaultPid, true);
+  turnTo(botPos().angleTo({x, y}) + 180);
+  backwardsDriveDistance(botPos().dist2D({x, y}), defaultPid);
+  cout << "Sorta target: " << PVector(x, y) << ", " << botPos() << endl;
 }
 
 /**
@@ -312,7 +322,7 @@ void WheelController::backInto(double x, double y)
  *  - follow path distance
  *  - max time in
  */
-void WheelController::generalFollowTurnAtStart(VectorArr &arr, double &purePursuitDist, bool &isNeg)
+void WheelController::generalFollowTurnAtStart(VectorArr& arr, double& purePursuitDist, bool& isNeg)
 {
   this->drawArr = true;
   auto arrCopy = arr;
@@ -341,7 +351,7 @@ void WheelController::generalFollowTurnAtStart(VectorArr &arr, double &purePursu
   afterTurn();
   afterTurn = []() {};
 }
-PVector WheelController::generalFollowGetVirtualPursuit(PVector &pursuit, Controller *controller)
+PVector WheelController::generalFollowGetVirtualPursuit(PVector& pursuit, Controller* controller)
 {
   PVector virtualPursuit = pursuit;
   if (!(botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last()))
@@ -358,7 +368,7 @@ PVector WheelController::generalFollowGetVirtualPursuit(PVector &pursuit, Contro
   virtualPursuit += last;
   return virtualPursuit;
 }
-double WheelController::generalFollowGetDist(int &bezierIndex, Controller *controller, PVector &pursuit)
+double WheelController::generalFollowGetDist(int& bezierIndex, Controller* controller, PVector& pursuit)
 {
   double dist = 0.0;
   if (controller->settings.useDistToGoal)
@@ -396,7 +406,7 @@ double WheelController::generalFollowGetDist(int &bezierIndex, Controller *contr
   dist = pathDir.y - botDir.y;
   return dist;
 }
-void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool isNeg)
+void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool isNeg)
 {
   double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
@@ -407,7 +417,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   // Change to new game dependency
   if (reversed)
   {
-    for (auto &a : arr)
+    for (auto& a : arr)
     {
       a *= -1.0;
     }
@@ -471,6 +481,7 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
       minAllowedDist = controller->settings.exitDist; // The maximum distance from target before starting timeIn count
   // cout << minAllowedDist << endl;
 #define DEBUG
+  const bool debug = Greg.ButtonA.pressing();
 #ifdef DEBUG
   struct
   {
@@ -479,31 +490,60 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
     vector<PVector> pos, pursuit;
     void add(double out, double enc, double targ, PVector p, double angle, double acp, double acd, double asp, double asd, PVector apursuit)
     {
-      if (t.time() > 10)
+      // if (t.time() > 10)
+      // {
+      //   cout << "%"
+      //        << "outputVel: " << out << ", "
+      //        << "encVel: " << enc << ", "
+      //        << "targetVel: " << targ << ", "
+      //        << "main.pos: " << p.x << "@" << p.y << ", "
+      //        << "main.angle: " << angle << ", "
+      //        << "slaveP: " << asp << ", "
+      //        << "slaveD: " << asd << ", "
+      //        << "ctrlP: " << acp << ", "
+      //        << "ctrlD: " << acd << ", "
+      //        << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
+      //   t.reset();
+      // }
+      outSpeeds.push_back(out);
+      encSpeeds.push_back(enc);
+      targSpeeds.push_back(targ);
+      pos.push_back(p);
+      angles.push_back(angle);
+      cp.push_back(acp);
+      cd.push_back(acd);
+      sp.push_back(asp);
+      sd.push_back(asd);
+      pursuit.push_back(apursuit);
+    }
+    void flush()
+    {
+      for (int i = 0; i < outSpeeds.size(); i++)
       {
         cout << "%"
-             << "outputVel: " << out << ", "
-             << "encVel: " << enc << ", "
-             << "targetVel: " << targ << ", "
-             << "main.pos: " << p.x << "@" << p.y << ", "
-             << "main.angle: " << angle << ", "
-             << "slaveP: " << asp << ", "
-             << "slaveD: " << asd << ", "
-             << "ctrlP: " << acp << ", "
-             << "ctrlD: " << acd << ", "
-             << "main.pursuit: " << apursuit.x << "@" << apursuit.y << endl;
-        t.reset();
+             << "o: " << outSpeeds[i] << ", "
+             << "e: " << encSpeeds[i] << ", "
+             << "t: " << targSpeeds[i] << ", "
+             << "mp: " << pos[i].x << "@" << pos[i].y << ", "
+             << "ma: " << angles[i] << ", "
+             << "sp: " << sp[i] << ", "
+             << "sd: " << sd[i] << ", "
+             << "cp: " << cp[i] << ", "
+             << "cd: " << cd[i] << ", "
+             << "mpu: " << pursuit[i].x << "@" << pursuit[i].y << endl;
+        s(20);
       }
-      // outSpeeds.push_back(out);
-      // encSpeeds.push_back(enc);
-      // targSpeeds.push_back(targ);
-      // pos.push_back(p);
-      // angles.push_back(angle);
-      // cp.push_back(acp);
-      // cd.push_back(acd);
-      // sp.push_back(asp);
-      // sd.push_back(asd);
-      // pursuit.push_back(apursuit);
+      cout << std::flush;
+      outSpeeds.clear();
+      encSpeeds.clear();
+      targSpeeds.clear();
+      pos.clear();
+      angles.clear();
+      cp.clear();
+      cd.clear();
+      sp.clear();
+      sd.clear();
+      pursuit.clear();
     }
   } realTime;
 #endif
@@ -524,19 +564,25 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   };
   double dist = 0.0; // The distance from the target
 #ifdef DEBUG
-  cout.precision(3);
-  cout << "%"
-       << "frameRate: 40" << endl;
-  // Loop through path and print out all the points
-  for (int i = 0; i < path.size(); i++)
+  if (debug)
   {
-    cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << endl;
-    if (i % 3 == 0)
+    cout.precision(3);
+    cout << "%"
+         << "frameRate: 40, "
+         << "main.pos: def mp, "
+         << "main.angle: def ma, "
+         << "main.pursuit: def mpu, "
+         << "outputVel: def o, encVel: def e, targetVel: def t, slaveD: def sd, slaveP: def sp, ctrlP: def cp, ctrlD: def cd" << endl;
+    // Loop through path and print out all the points
+    for (int i = 0; i < path.size(); i++)
     {
-      s(10);
+      cout << "%main: " << path[i].bezierPt.x << "@" << path[i].bezierPt.y << "\n";
+      s(15);
     }
+    cout << flush;
   }
 #endif
+  cout << "Target: " << path.last().bezierPt << endl;
   // Loop
   while (timeIn * sleepTime < maxTimeIn)
   {
@@ -757,7 +803,10 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
 #endif
 
 #ifdef DEBUG
-    realTime.add(speed, chassis->pos.velocity(), path[nearestIndex].targetSpeed, botPos(), botAngle(), -rightExtra, 0, normAngle, dist, pursuit);
+    if (debug)
+    {
+      realTime.add(speed, chassis->pos.velocity(), path[nearestIndex].targetSpeed, botPos(), botAngle(), -rightExtra, 0, normAngle, dist, pursuit);
+    }
 #endif
   }
   moving = false;
@@ -788,119 +837,31 @@ void WheelController::generalFollow(VectorArr &arr, Controller *controller, bool
   controller->deInit();
 // Print all the lists
 #ifdef DEBUG
-  cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
-  // s(20000);
-  // cout << endl
-  //      << endl;
-  // cout << "p.frameRate(" << 1.0 / (double)sleepTime * 1000 << ");\n";
-  // cout << "main.inputData([";
-  // int line = 0;
-  // for (auto i : bezier)
-  // {
-  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(20);
-  // }
-  // s(100);
-  // cout << "]);";
-  // cout << "\nmain.auxiliaryData.pos = [";
-  // for (auto i : realTime.pos)
-  // {
-  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(20);
-  // }
-  // s(100);
-  // cout << "];\n\nmain.auxiliaryData.angle = [";
-  // for (auto i : realTime.angles)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "];\n\nmain.auxiliaryData.pursuit = [";
-  // for (auto i : realTime.pursuit)
-  // {
-  //   cout << "p.createVector(" << i << "), " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(20);
-  // }
-  // s(100);
-  // cout << "];\n";
-  // cout << "main.resetI();main.setHighlight(0);\n";
-  // cout << "outputVel.inputData([" << flush;
-  // s(100);
-  // for (auto i : realTime.outSpeeds)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(20);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "encVel.inputData([";
-  // for (auto i : realTime.encSpeeds)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(20);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "targetVel.inputData([";
-  // for (auto i : realTime.targSpeeds)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "slaveP.inputData([";
-  // for (auto i : realTime.sp)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "slaveD.inputData([";
-  // for (auto i : realTime.sd)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "ctrlP.inputData([";
-  // for (auto i : realTime.cp)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "ctrlD.inputData([";
-  // for (auto i : realTime.cd)
-  // {
-  //   cout << i << ", " << (line++ % 3 == 0 ? "\n" : "");
-  //   s(10);
-  // }
-  // s(100);
-  // cout << "]);\n";
-  // cout << "main.xRange = [48, -48]; main.yRange = [60, -60]; \nctrlD.customizeRange();\nctrlP.customizeRange();\nslaveP.customizeRange();\nslaveD.customizeRange();\ntargetVel.customizeRange();\nencVel.customizeRange();\noutputVel.customizeRange();";
-  // cout << endl;
+  if (debug)
+  {
+    realTime.flush();
+    cout << "%outputVel: fit, encVel: fit, targetVel: fit, slaveP: fit, slaveD: fit, ctrlP: fit, ctrlD: fit" << endl;
+    s(20000);
+  }
 #endif
 }
-void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController *pid)
+extern Positioner positioner;
+void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController* pid)
 {
-  PVector startPos = botPos();
-  double startAngle = botAngle();
+  PVector startPos = positioner.getPos();
+  double startAngle = positioner.heading();
   int timeIn = 0;
   int maxTimeIn = pid->settings.maxTimeIn;
   double maxDist = pid->settings.followPathDist;
   int sleepTime = 10;
   setOldDistFns();
   moving = true;
-  double dist = 0.0;
+  double dist = 1000.0;
   timer t = timer();
   int timesStopped = 0;
   pid->init();
   double lastSpeed = 0.0;
+  cout << "%ctrlP: def d" << endl;
   while (1)
   {
     // Basic exit conditions
@@ -929,8 +890,12 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
       exitEarly = false;
       break;
     }
+    double angle = positioner.heading();
+    PVector pos = positioner.getPos();
+    // auto newRotation = chassis->rightWheels[0].rotation(rev);
+    dist = targetDist - pos.dist2D(startPos);
     // If near target, start the timer
-    if (dist < pid->settings.exitDist)
+    if (abs(dist) < pid->settings.exitDist)
     {
       timeIn++;
     }
@@ -938,9 +903,6 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     {
       timeIn = 0;
     }
-    double angle = botAngle();
-    PVector pos = botPos();
-    double dist = targetDist - pos.dist(startPos);
     Controller::Input input = Controller::Input();
     // Construct the inpur
     input.angleTarget = startAngle;
@@ -985,25 +947,26 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     // Slew speed on vf2 = vi2 + 2ad
     double maxAccel = chassis->maxAcc;
     double maxDecel = chassis->maxDAcc;
-    if (speed > lastSpeed)
-    {
-      double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) - 2 * maxDecel * sleepTime);
-      if (abs(speed) < maxSpeed)
-      {
-        speed = maxSpeed * speedSign;
-      }
-    }
-    else if (speed < lastSpeed)
-    {
-      double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) + 2 * maxAccel * sleepTime);
-      if (abs(speed) > maxSpeed)
-      {
-        speed = maxSpeed * speedSign;
-      }
-    }
+    // if (speed > lastSpeed)
+    // {
+    //   double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) - 2 * maxDecel * sleepTime);
+    //   if (abs(speed) < maxSpeed)
+    //   {
+    //     speed = maxSpeed * speedSign;
+    //   }
+    // }
+    // else if (speed < lastSpeed)
+    // {
+    //   double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) + 2 * maxAccel * sleepTime);
+    //   if (abs(speed) > maxSpeed)
+    //   {
+    //     speed = maxSpeed * speedSign;
+    //   }
+    // }
     chassis->driveFromDiff(speed, -rightExtra, fwd);
     lastSpeed = speed;
     s(sleepTime);
+    // cout << "%d: " << dist << endl;
   }
   moving = false;
   // Stop drawing the path
@@ -1022,19 +985,20 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
       break;
     }
     this->drawArr = false;
-    cout << "Path stop" << endl;
+    cout << "PID stop: ";
     // Print postion and target position
-    cout << dist << ", " << targetDist << endl;
+    cout << -dist + targetDist << ", " << targetDist << endl;
+    cout << positioner.heading() - startAngle << endl;
     exitDist = 0.0;
   }
   stopExitPrev = false;
   pid->deInit();
 }
-void WheelController::driveDistance(double dist, BasicPidController *pid)
+void WheelController::driveDistance(double dist, BasicPidController* pid)
 {
   generalDriveDistance(dist, false, pid);
 }
-void WheelController::backwardsDriveDistance(double dist, BasicPidController *pid)
+void WheelController::backwardsDriveDistance(double dist, BasicPidController* pid)
 {
   generalDriveDistance(dist, true, pid);
 }

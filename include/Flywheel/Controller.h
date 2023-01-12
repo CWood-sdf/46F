@@ -8,168 +8,145 @@
 //   Manage it elsewhere in the program
 class Settled
 {
-  EMA derivFilter = EMA(0.7);
-  double maxDeriv;
-  timer time;
-  double maxErr;
-  double prevErr;
-  double maxSleep = 500;
-  uint32_t lastTimeStep;
-  LinkedList<double> lastDerivs;
-  bool isSettled;
+    SMA derivFilter = SMA(1, 0);
+    double maxDeriv;
+    timer time;
+    double maxErr;
+    double prevErr = 0.0;
+    double maxSleep = 500;
+    uint32_t lastTimeStep;
+    LinkedList<double> lastDerivs;
+    bool isSettled;
 
-  public:
-  Settled(double me, double md, double ms = 500)
-  {
-    maxErr = me;
-    maxDeriv = md;
-    maxSleep = ms;
-  }
-  bool settled(double err)
-  {
-    lastTimeStep = time;
-    uint32_t timeStep = time;
-    time.reset();
-    double deriv = (err - prevErr) / (double)timeStep;
-    isSettled = false;
-    if (timeStep > 1000)
+public:
+    Settled(double me, double md, double ms = 500)
     {
-      return false;
+        maxErr = me;
+        maxDeriv = md;
+        maxSleep = ms;
     }
-    if (timeStep < 30)
+    bool settled(double err)
     {
-      return false;
-    }
+        lastTimeStep = time;
+        uint32_t timeStep = time;
+        time.reset();
+        double deriv = (err - prevErr) / (double)timeStep;
+        prevErr = err;
+        isSettled = false;
+        if (timeStep > 1000)
+        {
+            return false;
+        }
+        if (timeStep < 30)
+        {
+            return false;
+        }
 
-    derivFilter.update(deriv);
-    lastDerivs.pushBack(derivFilter);
-    if (lastDerivs.size() > 5)
-    {
-      lastDerivs.popBase();
+        derivFilter.update(deriv);
+        lastDerivs.pushBack(derivFilter);
+        if (lastDerivs.size() > 5)
+        {
+            lastDerivs.popBase();
+        }
+        // cout << abs(derivFilter) << "\n";
+        isSettled = abs(derivFilter) < maxDeriv && abs(err) < maxErr;
+        return isSettled;
     }
-    // cout << abs(derivFilter) << "\n";
-    isSettled = abs(derivFilter) < maxDeriv && abs(err) < maxErr;
-    return isSettled;
-  }
-  bool stableSpeed()
-  {
-    // If all the lastDerivs are less than maxDeriv, return true
-    for (auto deriv : lastDerivs)
+    bool stableSpeed()
     {
-      if (abs(deriv) > maxDeriv)
-      {
-        return false;
-      }
+        // If all the lastDerivs are less than maxDeriv, return true
+        for (auto deriv : lastDerivs)
+        {
+            if (abs(deriv) > maxDeriv)
+            {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
-  }
-  bool settled()
-  {
-    return isSettled;
-  }
-  uint32_t timeStep()
-  {
-    return lastTimeStep;
-  }
-  double getDeriv()
-  {
-    return derivFilter;
-  }
+    bool settled()
+    {
+        return isSettled;
+    }
+    uint32_t timeStep()
+    {
+        return lastTimeStep;
+    }
+    double getDeriv()
+    {
+        return derivFilter;
+    }
 };
 struct FlywheelDebugEl
 {
-  double error;
-  double measuredVel;
-  double filterVel;
-  double targetVel;
-  double sentVel;
-  double deriv;
-  static const int size;
-  void set(double err, double raw, double filtRetVal, double targ, double sent, double deriv)
-  {
-    error = err;
-    measuredVel = raw;
-    filterVel = filtRetVal;
-    targetVel = targ;
-    sentVel = sent;
-    this->deriv = deriv;
-  }
-  // Sussy version
-  void set(double *arr)
-  {
-    for (int i = 0; i < size; i++)
+    double error;
+    double measuredVel;
+    double filterVel;
+    double targetVel;
+    double sentVel;
+    double deriv;
+    static const int size;
+    void set(double err, double raw, double filtRetVal, double targ, double sent, double deriv)
     {
-      ((double *)this)[i] = arr[i];
+        error = err;
+        measuredVel = raw;
+        filterVel = filtRetVal;
+        targetVel = targ;
+        sentVel = sent;
+        this->deriv = deriv;
     }
-  }
-};
-struct FlywheelDebugLog
-{
-  vector<FlywheelDebugEl> arr;
-  void flush()
-  {
-    flushing = true;
-    arr.clear();
-    flushing = false;
-  }
-  bool flushing = false;
-  void add(FlywheelDebugEl el)
-  {
-    while (flushing)
+    // Sussy version
+    void set(double* arr)
     {
-      s(10);
+        for (int i = 0; i < size; i++)
+        {
+            ((double*)this)[i] = arr[i];
+        }
     }
-    arr.push_back(el);
-  }
 };
 
-class Empty
+class FlywheelTBHEncoder
 {
-  public:
-  virtual void step();
-};
+    Encoder en;
+    NewMotor& mots;
+    EMA filter;
+    MinMaxFilter minMaxFilter;
+    WeightFilter weightFilter;
+    SMA sma;
+    vector<double> velTargets = {550};
+    vector<double> initialTbh = {10};
+    double tbh = 0;
+    double gain;
+    Settled velCheck = Settled(10, 100, 500);
+    int target;
+    FlywheelDebugEl debug;
+    bool hasTarget = false;
+    bool disabled = false;
 
-class FlywheelTBHEncoder : public Empty
-{
-  Encoder en;
-  NewMotor &mots;
-  EMA filter;
-  MinMaxFilter minMaxFilter;
-  SMA sma;
-  vector<double> velTargets = {550};
-  vector<double> initialTbh = {10};
-  double tbh = 0;
-  double gain;
-  Settled velCheck = Settled(10, 0.5, 500);
-  int target;
-  FlywheelDebugEl debug;
-  bool hasTarget = false;
-  bool disabled = false;
-
-  public:
-  double maxRateDrop = 2;
-  double maxRateGain = 4;
-  FlywheelTBHEncoder(NewMotor &m, Encoder en);
-  FlywheelTBHEncoder(NewMotor &m);
-  void setTarget(int i);
-  void addTarget(double t);
-  void setTargetSpeed(double t);
-  void step() override;
-  void graph(bool);
-  void init();
-  bool ready();
-  void setDisabled(bool d);
+public:
+    double maxRateDrop = 2;
+    double maxRateGain = 4;
+    FlywheelTBHEncoder(NewMotor& m, Encoder en);
+    FlywheelTBHEncoder(NewMotor& m);
+    void setTarget(int i);
+    void addTarget(double t);
+    void setTargetSpeed(double t);
+    void step();
+    void graph(bool);
+    void init();
+    bool ready();
+    void setDisabled(bool d);
 };
 class EMA_D : public PIDF_Extension
 {
-  EMA dFilter = EMA(0.7, 0);
+    EMA dFilter = EMA(0.7, 0);
 
-  public:
-  void manageD(double &d) override
-  {
-    dFilter.update(d);
-    // d = dFilter.value();
-  }
+public:
+    void manageD(double& d) override
+    {
+        dFilter.update(d);
+        // d = dFilter.value();
+    }
 };
 // class FlywheelPID : public Empty {
 //   encoder* en;

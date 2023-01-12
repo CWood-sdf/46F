@@ -27,7 +27,7 @@
 			"compilerPath": "${vex_compilerPath}",
 			"cStandard": "gnu99",
 			"cppStandard": "c++17",
-			"intelliSenseMode": "windows-clang-x86",
+			"intelliSenseMode": "windows-clang-x64",
 			"configurationProvider": "ms-vscode.cpptools"
 		},
 		{
@@ -44,7 +44,9 @@
 			"name": "Linux",
 			"includePath": [
 				"${vex_sdkIncludes}",
-				"${workspaceFolder}"
+				"${workspaceFolder}/**",
+				"${workspaceFolder}",
+				"${workspaceFolder}/include"
 			],
 			"compilerPath": "",
 			"cStandard": "gnu99",

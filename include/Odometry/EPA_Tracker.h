@@ -130,6 +130,10 @@ class Positioner
   }
 
   public:
+  void setPos(PVector pos)
+  {
+    this->pos = pos;
+  }
   // The constructors
 
   // Accepts port array and radius
