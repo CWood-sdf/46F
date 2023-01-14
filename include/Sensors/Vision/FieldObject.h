@@ -72,7 +72,7 @@ struct CircFieldObject {
     // double hypotenuse = PVector(dist, sensorHeight).mag();
     double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
     PVector endPt = {est, distEst};
-    PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
+    PVector linePt = PVector(dFront, 0).rotate(endPt.heading() + 180);
     endPt += linePt;
     PVector posEst = endPt + PVector(farthestPt.x, farthestPt.z);
     return posEst;
@@ -89,7 +89,7 @@ struct CircFieldObject {
     // double hypotenuse = PVector(dist, sensorHeight).mag();
     double dFront = dist / sensorHeight * (farthestPt.y + groundToMid);
     PVector endPt = {est, distEst};
-    PVector linePt = PVector(dFront, 0).rotate(endPt.heading2D() + 180);
+    PVector linePt = PVector(dFront, 0).rotate(endPt.heading() + 180);
     endPt += linePt;
     PVector posEst = endPt + PVector(farthestPt.x, farthestPt.z);
     return posEst;
