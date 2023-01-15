@@ -1,14 +1,14 @@
 // #include "EPA_Tracker.h"
 #ifndef ROBOT_CONFIG_H
 #define ROBOT_CONFIG_H
-#include "Sensors/PotDial.h"
 #include "Sensors/LineCounter.h"
+#include "Sensors/PotDial.h"
 // #include "Sensors/Distance.h"
-#include "Sensors/VisionOdom.h"
-#include "Odometry/Controllers.h"
 #include "Flywheel/Controller.h"
-#include "Sensors/Wrappers/Encoder.h"
 #include "IntakeAutomation.h"
+#include "Odometry/Controllers.h"
+#include "Sensors/VisionOdom.h"
+#include "Sensors/Wrappers/Encoder.h"
 /*************************************
 
 Motors
@@ -36,18 +36,18 @@ Motors
 // extern motor flyWheelMot;
 // extern motor flywheel2;
 
-extern NewMotor intake;
+extern MotorGroup intake;
 
-extern NewMotor flywheelNm;
+extern MotorGroup flywheelNm;
 // extern FlywheelPID flyPID;
 extern FlywheelTBHEncoder flyTBH;
 // extern bool flywheelPID;
 // New Motors, a few reasons for this:
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-// extern NewMotor wheels;
-extern NewMotor leftWheels;
-extern NewMotor rightWheels;
+// extern MotorGroup wheels;
+extern MotorGroup leftWheels;
+extern MotorGroup rightWheels;
 
 extern Chassis chassis;
 extern PurePursuitController purePursuit;

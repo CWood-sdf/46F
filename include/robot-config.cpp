@@ -1,19 +1,19 @@
 #define NO_MAKE
 #include "robot-config.h"
-std::vector<tuple<string, vex::device *, bool>> connectedDevices = {};
+std::vector<tuple<string, vex::device*, bool>> connectedDevices = {};
 
-AddDevice::AddDevice(string name, vex::device *device)
+AddDevice::AddDevice(string name, vex::device* device)
 {
-  connectedDevices.push_back(make_tuple(name, device, false));
+    connectedDevices.push_back(make_tuple(name, device, false));
 }
-AddDevice::AddDevice(string name, vex::motor *device)
+AddDevice::AddDevice(string name, vex::motor* device)
 {
-  connectedDevices.push_back(make_tuple(name, device, true));
+    connectedDevices.push_back(make_tuple(name, device, true));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
 #define TestDevices(device, ...) \
-  TestDevice(device);            \
-  TestDevices(__VA_ARGS__)
+    TestDevice(device);          \
+    TestDevices(__VA_ARGS__)
 // Make a brain
 brain Brain;
 
@@ -52,7 +52,7 @@ motor flyWheelMot = motor(PORT5, gearSetting::ratio6_1, false);
 TestDevice(flyWheelMot);
 motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
-NewMotor flywheelNm = NewMotor(flyWheelMot, flywheel2);
+MotorGroup flywheelNm = MotorGroup(flyWheelMot, flywheel2);
 // encoder flySensor = encoder(Brain.ThreeWirePort.A);
 // rotation flywheelRotation = rotation(PORT5);
 Encoder e = Encoder(flyWheelMot);
@@ -62,10 +62,10 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 // New Motors, a few reasons for this:
 //    1 - less upfront code for stuff
 //    2 - Simplified spin cmd
-// NewMotor wheels = NewMotor(FL, ML, BL, FR, MR, BR);
-NewMotor leftWheels = NewMotor(BL, FL);
-NewMotor rightWheels = NewMotor(BR, FR);
-NewMotor intake = NewMotor(intakeMot, intakeMot2);
+// MotorGroup wheels = MotorGroup(FL, ML, BL, FR, MR, BR);
+MotorGroup leftWheels = MotorGroup(BL, FL);
+MotorGroup rightWheels = MotorGroup(BR, FR);
+MotorGroup intake = MotorGroup(intakeMot, intakeMot2);
 // pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
 // Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
 // Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
@@ -116,17 +116,17 @@ TestDevice(intakeMiddle);
 LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
 LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
 AutoIntake intakeController = AutoIntake({[]()
-                                          {
-                                            return intakeBottom.pressing();
-                                          },
-                                          []()
-                                          {
-                                            return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
-                                          },
-                                          []()
-                                          {
-                                            return intakeTop.pressing();
-                                          }});
+    {
+        return intakeBottom.pressing();
+    },
+    []()
+    {
+        return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
+    },
+    []()
+    {
+        return intakeTop.pressing();
+    }});
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
@@ -144,9 +144,9 @@ posTp::xPortArr arrX = {};
 posTp::yPortArr arrY = {Port(PORT15)};
 // Make a positioner that measures x and y witxh smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY,
-                         {-1.0}, {-1.0}, {-1.0}, {-1.0},
-                         0.0, 0.0,
-                         1.375);
+    {-1.0}, {-1.0}, {-1.0}, {-1.0},
+    0.0, 0.0,
+    1.375);
 
 GPS_Share share = GPS_Share(positioner, GPS);
 
@@ -208,52 +208,52 @@ Autonomous System Controllers
 // }
 void graphFlywheelTBH(bool remake)
 {
-  if (remake)
-  {
-    // flywheelPID = false;
-  }
-  flyTBH.graph(remake);
+    if (remake)
+    {
+        // flywheelPID = false;
+    }
+    flyTBH.graph(remake);
 }
 
-#define TEST_MOT(m)   \
-  cout << #m << endl; \
-  m.spin(fwd);        \
-  s(1000);            \
-  m.stop();           \
-  s(500);
+#define TEST_MOT(m)     \
+    cout << #m << endl; \
+    m.spin(fwd);        \
+    s(1000);            \
+    m.stop();           \
+    s(500);
 void testMotorConfiguration()
 {
-  TEST_MOT(FL)
-  // TEST_MOT(ML)
-  TEST_MOT(BL)
-  s(1000);
-  TEST_MOT(FR)
-  // TEST_MOT(MR)
-  TEST_MOT(BR)
+    TEST_MOT(FL)
+    // TEST_MOT(ML)
+    TEST_MOT(BL)
+    s(1000);
+    TEST_MOT(FR)
+    // TEST_MOT(MR)
+    TEST_MOT(BR)
 }
-#define TMC(m)                                              \
-  if (!m.installed())                                       \
-  {                                                         \
-    cout << "Motor " << #m << " is not connected!" << endl; \
-    Greg.rumble(".");                                       \
-  }
+#define TMC(m)                                                  \
+    if (!m.installed())                                         \
+    {                                                           \
+        cout << "Motor " << #m << " is not connected!" << endl; \
+        Greg.rumble(".");                                       \
+    }
 void testMotorConnection()
 {
-  // TMC(FL)
-  // TMC(ML)
-  // TMC(BL)
-  // TMC(FR)
-  // TMC(MR)
-  // TMC(BR)
-  for (auto i : connectedDevices)
-  {
-    if (!get<1>(i)->installed())
+    // TMC(FL)
+    // TMC(ML)
+    // TMC(BL)
+    // TMC(FR)
+    // TMC(MR)
+    // TMC(BR)
+    for (auto i : connectedDevices)
     {
-      int32_t port = get<1>(i)->index() + 1;
-      cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
-      Greg.rumble(".");
+        if (!get<1>(i)->installed())
+        {
+            int32_t port = get<1>(i)->index() + 1;
+            cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
+            Greg.rumble(".");
+        }
     }
-  }
 }
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
@@ -262,12 +262,12 @@ void testMotorConnection()
  */
 void vexcodeInit(void)
 {
-  // wheels.set(hold);
+    // wheels.set(hold);
 }
 
 bool toBool(double v)
 {
-  return (bool)(int)(v + 0.5);
+    return (bool)(int)(v + 0.5);
 }
 
 /*************************************

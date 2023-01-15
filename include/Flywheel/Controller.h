@@ -108,7 +108,7 @@ struct FlywheelDebugEl
 class FlywheelTBHEncoder
 {
     Encoder en;
-    NewMotor& mots;
+    MotorGroup& mots;
     EMA filter;
     MinMaxFilter minMaxFilter;
     WeightFilter weightFilter;
@@ -126,8 +126,8 @@ class FlywheelTBHEncoder
 public:
     double maxRateDrop = 2;
     double maxRateGain = 4;
-    FlywheelTBHEncoder(NewMotor& m, Encoder en);
-    FlywheelTBHEncoder(NewMotor& m);
+    FlywheelTBHEncoder(MotorGroup& m, Encoder en);
+    FlywheelTBHEncoder(MotorGroup& m);
     void setTarget(int i);
     void addTarget(double t);
     void setTargetSpeed(double t);

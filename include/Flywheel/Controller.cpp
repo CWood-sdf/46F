@@ -139,13 +139,13 @@ void FlywheelTBHEncoder::graph(bool remake)
     text[i] = '\0';
     basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
 {
     init();
     filter.seed(0);
     en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(NewMotor& m) : FlywheelTBHEncoder(m, Encoder(m[0]))
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m) : FlywheelTBHEncoder(m, Encoder(m[0]))
 {
 }
 
