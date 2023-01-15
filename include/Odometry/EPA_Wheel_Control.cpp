@@ -398,7 +398,7 @@ double WheelController::generalFollowGetDist(int& bezierIndex, Controller* contr
   // The bot's point centered with the 2nd to last point
   PVector botDir = botPos() - path[bezierIndex - 1];
   // The angle to make the parallel vector straight
-  double pathDirAngle = pathDir.heading2D();
+  double pathDirAngle = pathDir.heading();
   // Rotate the vectors back by the pathDirAngle
   pathDir.rotateXY(-pathDirAngle);
   botDir.rotateXY(-pathDirAngle);

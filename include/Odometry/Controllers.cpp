@@ -39,7 +39,7 @@ void Path::make(VectorArr &arr, Chassis *chassis)
   // cout << "Derivative size: " << deriv.size() << endl; s(100);
   for (auto i : deriv)
   {
-    targetAngles.push_back(i.heading2D());
+    targetAngles.push_back(i.heading());
   }
   // cout << "Target angles size: " << targetAngles.size() << endl; s(100);
   curvatures = bezierCurvature(arrCopy);
