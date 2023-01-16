@@ -193,7 +193,7 @@ DebugController debugController = DebugController(
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
         .setVirtualPursuitDist(4));
-WheelController wc = WheelController(&chassis, &ramsete, &purePursuit, &pidController, PID(1.42, 0.05, 1.35 / 2, 0, 20, 4), 1.0);
+WheelController wc = WheelController(&chassis, &ramsete, &purePursuit, &pidController, PID(1.92, 0.05, 1.35 / 2, -1, 20, 4), 1.0);
 
 /*************************************
 

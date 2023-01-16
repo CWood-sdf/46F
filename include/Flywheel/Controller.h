@@ -8,7 +8,7 @@
 //   Manage it elsewhere in the program
 class Settled
 {
-    SMA derivFilter = SMA(1, 0);
+    SMA derivFilter = SMA(5, 0);
     double maxDeriv;
     timer time;
     double maxErr;
@@ -28,16 +28,12 @@ public:
     bool settled(double err)
     {
         lastTimeStep = time;
-        uint32_t timeStep = time;
+        int32_t timeStep = time;
         time.reset();
         double deriv = (err - prevErr) / (double)timeStep;
         prevErr = err;
         isSettled = false;
         if (timeStep > 1000)
-        {
-            return false;
-        }
-        if (timeStep < 30)
         {
             return false;
         }

@@ -170,7 +170,7 @@ void PIDF::incVals(double sensorVal)
     {
         i = iCap;
     }
-    if (abs(error) <= iZero && iZero > 0.0)
+    if (abs(error) <= iZero && iZero >= 0.0)
     {
         i = 0.0;
     }

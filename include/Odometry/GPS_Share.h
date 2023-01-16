@@ -26,6 +26,7 @@ class GPS_Share
     vector<std::unique_ptr<BasicConfirmationOdom>> confirmOdoms;
     FieldCoord pos = FieldCoord(PVector(0, 0), 0);
     FieldCoord lastOdom = FieldCoord(PVector(0, 0), 0);
+    long long lastGpsUpdate = 0;
     double speed = 0.0;
     EMA speedFilter = EMA(0.2, 0);
     bool lastBad = false;
@@ -51,6 +52,10 @@ public:
     void setUseGps(bool s)
     {
         useGps = s;
+    }
+    long long timeSinceLastGpsMs()
+    {
+        return Brain.Timer.system() - lastGpsUpdate;
     }
 };
 #endif
