@@ -28,7 +28,7 @@ class GPS_Share
     FieldCoord lastOdom = FieldCoord(PVector(0, 0), 0);
     long long lastGpsUpdate = 0;
     double speed = 0.0;
-    EMA speedFilter = EMA(0.2, 0);
+    EMA speedFilter = EMA(1, 0);
     bool lastBad = false;
     bool useGps = false;
     bool isFirstBad = false;
