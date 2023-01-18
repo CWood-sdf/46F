@@ -146,7 +146,7 @@ posTp::yPortArr arrY = {Port(PORT15)};
 posTp positioner = posTp(arrX, arrY,
     {-1.0}, {-1.0}, {-1.0}, {-1.0},
     0.0, 0.0,
-    1.375);
+    1.385);
 
 GPS_Share share = GPS_Share(positioner, GPS);
 

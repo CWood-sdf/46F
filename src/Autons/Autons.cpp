@@ -187,12 +187,14 @@ void forceGpsUpdate()
         time += 10;
         if (time > 2000)
         {
+            cout << "GPS update fail" << endl;
             break;
         }
     }
 }
 Auton skills = "Skills" + []()
 {
+    PVector goal = {46, 50};
     wc.setRed();
     // thread runIntakeThread = thread([]()
     //                                 {
@@ -207,9 +209,9 @@ Auton skills = "Skills" + []()
     //     }
     //     s(10);
     //   } });
-    botAngles.x = 90;
+    // botAngles.x = 90;
     // wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
-    flyTBH.setTargetSpeed(535);
+    flyTBH.setTargetSpeed(510);
     // flywheelNm.spin(fwd, 100);
     wc.estimateStartPos(PVector(-61.39, 41.17), 90);
     // flywheelNm.stop(coast);
@@ -225,11 +227,12 @@ Auton skills = "Skills" + []()
 
     intakeController.intake();
     wc.driveTo(-40.66, 56.97);
-    wc.faceTarget({50.00, 50.16});
+    forceGpsUpdate();
+    wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
 
-    flyTBH.setTargetSpeed(461);
+    flyTBH.setTargetSpeed(431);
     wc.backInto(-40.99, 63.09);
     wc.turnTo(180);
     chassis.driveFromDiff(-20, 0, fwd);
@@ -244,37 +247,45 @@ Auton skills = "Skills" + []()
     // intaking = true;
 
     intakeController.intake();
-    wc.driveTo(-12, 35);
-    wc.faceTarget({50.00, 50.16});
+    wc.driveTo(-12, 36);
+    forceGpsUpdate();
+    wc.faceTarget(goal);
+    intakeController.setFiring();
+    intakeController.waitForFiring();
+
+    intakeController.intake();
+    wc.driveTo(-6, 26);
+    forceGpsUpdate();
+    wc.faceTarget(goal);
+    intakeController.setFiring();
+    intakeController.waitForFiring();
+
+    intakeController.intake();
+    flyTBH.setTargetSpeed(425);
+    wc.driveTo(-3, 17);
+    wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
     forceGpsUpdate();
 
     intakeController.intake();
-    wc.driveTo(0, 25);
-    wc.faceTarget({50.00, 50.16});
+    flyTBH.setTargetSpeed(467);
+    wc.driveTo(37, -13);
+    forceGpsUpdate();
+    wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
-    forceGpsUpdate();
-
-    intakeController.intake();
-    flyTBH.setTargetSpeed(432);
-    wc.driveTo(12, 12);
-    wc.faceTarget({50.00, 50.16});
-    intakeController.setFiring();
-    intakeController.waitForFiring();
-    forceGpsUpdate();
-
-    intakeController.intake();
-    flyTBH.setTargetSpeed(462);
-    wc.driveTo(36, -13);
-    wc.faceTarget({50.00, 50.16});
-    intakeController.setFiring();
-    intakeController.waitForFiring();
-    forceGpsUpdate();
 
     flyTBH.setTargetSpeed(535);
-    wc.driveTo(58.94, -41.33);
+    wc.driveTo(50.94, -37.33);
+    // intakeController.intake();
+    // wc.driveTo(45.40, -50.25);
+    // forceGpsUpdate();
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    wc.backInto(59, -37);
     wc.turnTo(-89.83);
     chassis.driveFromDiff(-20, 0, fwd);
     s(700);
@@ -285,14 +296,8 @@ Auton skills = "Skills" + []()
     chassis.coastBrake();
     forceGpsUpdate();
 
-    intakeController.intake();
-    wc.driveTo(48.40, -52.25);
-    wc.faceTarget({50.00, 50.16});
-    intakeController.setFiring();
-    intakeController.waitForFiring();
-    forceGpsUpdate();
-
-    wc.backInto(41.07, -57.7);
+    wc.driveTo(42.54, -45.91);
+    wc.backInto(42.07, -57.7);
     wc.turnTo(0);
     chassis.driveFromDiff(-20, 0, fwd);
     s(700);

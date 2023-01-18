@@ -75,13 +75,12 @@ void GPS_Share::update()
     // Get the speed
     // Uses odometry for speed because the GPS has random, slight variation
     // Odometry speed returns 0 when the speed is 0
-    speedFilter.update(deltaOdom.pos.mag() / (double)sleepTime * 1000.0);
-    speed = speedFilter.value();
+    speed = deltaOdom.pos.mag() / (double)sleepTime * 1000.0;
     // Get GPS coordinate
     FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
     bool useGps = !gpsBad();
     // If GPS can see position
-    if (useGps && speed < 0.1)
+    if (useGps && speed < 0.001)
     {
         gpsReadings.push_back(gpsCoord);
     }
@@ -103,13 +102,17 @@ void GPS_Share::update()
         pos = avgPos;
         lastPosReading = pos;
         // cout.precision(4);
-        // cout << "$" << pos.pos.x << "@" << pos.pos.y << "@" << pos.angle << ", limit@60" << endl;
     }
     else
     {
         // Use change in odometry
         pos.pos += deltaOdom.pos;
         pos.angle += deltaOdom.angle;
+    }
+    if (++i == 30)
+    {
+        i = 0;
+        // cout << "$" << pos.pos.x << "@" << pos.pos.y << "@" << pos.angle << ", limit@60" << endl;
     }
     // if (!gpsBad())
     // {
@@ -118,13 +121,13 @@ void GPS_Share::update()
     //   pos.angle = (pos.angle + lastPosReading.angle) / 2.0;
     if (useGps)
     {
-        gpsEma.update(pos);
-        pos = gpsEma.value();
+        // gpsEma.update(pos);
+        // pos = gpsEma.value();
     }
-    if (angler.installed())
-    {
-        pos.angle = botAngles.x;
-    }
+    // if (angler.installed())
+    // {
+    //     pos.angle = botAngles.x;
+    // }
     // }
     // lastPosReading = pos;
     // Sleep

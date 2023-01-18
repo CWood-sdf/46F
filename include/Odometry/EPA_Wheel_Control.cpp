@@ -96,8 +96,8 @@ void WheelController::turnTo(std::function<double()> angleCalc)
     }
     // If the auton is on the other side, turn to the opposite angle
     double angle = angleCalc();
-    cout << "A: " << angle << endl;
-    cout << "A2: " << botAngle() << endl;
+    // cout << "A: " << angle << endl;
+    // cout << "A2: " << botAngle() << endl;
     // if(!callingInDrive && reversed){
     //   angle += 90;
     // }
@@ -148,8 +148,8 @@ void WheelController::turnTo(std::function<double()> angleCalc)
 
     // s(300);
 
-    cout << botAngle() << endl;
-    cout << angleCalc() << endl;
+    cout << "current: " << botAngle() << endl;
+    cout << "target: " << angleCalc() << endl;
 }
 void WheelController::turnTo(double angle)
 {
@@ -165,6 +165,8 @@ void WheelController::faceTarget(PVector target)
         target.y *= -1.0;
     }
     callingInDrive = true;
+    turnTo(botPos().angleTo(target));
+    // Reinvoke just in case the turn messed things up
     turnTo(botPos().angleTo(target));
     callingInDrive = false;
 }
@@ -182,11 +184,11 @@ WheelController::chain_method WheelController::estimateStartPos(PVector v, doubl
     {
         chassis->pos.setPos(v, a);
     }
-    botAngles.x = a;
-    if (isBlue())
-    {
-        botAngles.x = posNeg180(a + 180);
-    }
+    // botAngles.x = a;
+    // if (isBlue())
+    // {
+    //     botAngles.x = posNeg180(a + 180);
+    // }
 #ifndef USE_GAME_SPECIFIC
 #warning GSD (Conditions for reversing auton)
 #endif
