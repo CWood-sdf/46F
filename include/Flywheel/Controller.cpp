@@ -1,6 +1,7 @@
 #define NO_MAKE
 #include "Flywheel/Controller.h"
 #include <sstream>
+#if BOT != 2
 const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
 void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown)
 {
@@ -139,7 +140,7 @@ void FlywheelTBHEncoder::graph(bool remake)
     text[i] = '\0';
     basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), sma(5), weightFilter(4, 2.0, 0)
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), weightFilter(4, 2.0, 0), sma(5)
 {
     init();
     filter.seed(0);
@@ -390,3 +391,4 @@ void FlywheelTBHEncoder::step()
     lastVel = velSent;
     // s(5);
 }
+#endif

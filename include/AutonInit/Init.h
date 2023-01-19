@@ -10,8 +10,8 @@ class Auton
     static inline Auton* auton;
     static inline bool autonSelected = false;
     static inline bool ready = false;
-    static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, green, color(0, 200, 0), "Confirm");
-    static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, red, color(200, 0, 0), "Deny");
+    static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(0, 255, 0), color(0, 200, 0), "Confirm");
+    static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(255, 0, 0), color(200, 0, 0), "Deny");
     static void configCallback(int i)
     {
         auton = refList[i];

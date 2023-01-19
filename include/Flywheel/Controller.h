@@ -3,6 +3,7 @@
 #include "Sensors/Wrappers/Encoder.h"
 #include <algorithm>
 #include <cstdint>
+#if BOT != 2
 // Determines if a flywheel is at the proper velocity
 // Also calculates time between steps so that I don't have to
 //   Manage it elsewhere in the program
@@ -161,3 +162,4 @@ public:
 //   void graph(bool);
 //   void initPID();
 // };
+#endif

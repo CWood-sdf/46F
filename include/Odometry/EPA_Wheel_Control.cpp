@@ -947,10 +947,10 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         {
             speed *= -1.0;
         }
-        double speedSign = sign(speed);
+        // double speedSign = sign(speed);
         // Slew speed on vf2 = vi2 + 2ad
-        double maxAccel = chassis->maxAcc;
-        double maxDecel = chassis->maxDAcc;
+        // double maxAccel = chassis->maxAcc;
+        // double maxDecel = chassis->maxDAcc;
         // if (speed > lastSpeed)
         // {
         //   double maxSpeed = sqrt(pow(chassis->pctToReal(lastSpeed), 2) - 2 * maxDecel * sleepTime);

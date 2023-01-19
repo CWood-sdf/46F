@@ -1,5 +1,6 @@
 #define NO_MAKE
 #include "src/Autons/Autons.h"
+#if BOT == 1
 void waitIntakeDone()
 {
     while (intakeController.clearingDisks || intakeController.intaking)
@@ -318,3 +319,17 @@ Auton winPoint = "Win Point" + []()
     wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
     wc.turnTo(0);
 };
+#elif BOT == 2
+Auton leftA = "Left" + []() {
+
+};
+Auton rightA = "Right" + []() {
+
+};
+Auton skills = "Skills" + []() {
+
+};
+Auton winPoint = "Win Point" + []() {
+
+};
+#endif

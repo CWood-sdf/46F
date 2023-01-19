@@ -1,6 +1,6 @@
 #define NO_MAKE
 #include "IntakeAutomation.h"
-
+#if BOT == 1
 AutoIntake::AutoIntake(vector<std::function<bool()>> sensors)
 {
     this->sensors = sensors;
@@ -504,3 +504,4 @@ void AutoIntake::drawState(bool refresh)
         lv_label_set_text(intakingLabel, intakingNo);
     }
 }
+#endif

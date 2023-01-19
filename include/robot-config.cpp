@@ -33,16 +33,16 @@ TestDevice(BL);
 // Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
 TestDevice(BR);
-// // Middle Left Wheel (ML)
-// motor ML = motor(PORT20, gearSetting::ratio18_1, true);
-// TestDevice(ML);
-// // Middle Right Wheel (MR)
-// motor MR = motor(PORT8, gearSetting::ratio18_1, false);
-// TestDevice(MR);
+#if BOT == 2
+// Middle Left Wheel (ML)
+motor ML = motor(PORT20, gearSetting::ratio18_1, true);
+TestDevice(ML);
+// Middle Right Wheel (MR)
+motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+TestDevice(MR);
+#endif
 
-motor_group Left = motor_group(BL, FL);
-motor_group Right = motor_group(BR, FR);
-
+#if BOT == 1
 motor intakeMot = motor(PORT10, gearSetting::ratio18_1, !true);
 TestDevice(intakeMot);
 motor intakeMot2 = motor(PORT8, gearSetting::ratio18_1, !false);
@@ -53,6 +53,20 @@ TestDevice(flyWheelMot);
 motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
 MotorGroup flywheelNm = MotorGroup(flyWheelMot, flywheel2);
+#elif BOT == 2
+motor intakeMot = motor(PORT10, gearSetting::ratio18_1, !true);
+TestDevice(intakeMot);
+
+motor slingMot = motor(PORT5, gearSetting::ratio6_1, false);
+TestDevice(slingMot);
+
+MotorGroup intake = MotorGroup(intakeMot);
+MotorGroup sling = MotorGroup(slingMot);
+MotorGroup leftWheels = MotorGroup(BL, FL, ML);
+MotorGroup rightWheels = MotorGroup(BR, FR, MR);
+#endif
+
+#if BOT == 1
 // encoder flySensor = encoder(Brain.ThreeWirePort.A);
 // rotation flywheelRotation = rotation(PORT5);
 Encoder e = Encoder(flyWheelMot);
@@ -66,6 +80,7 @@ FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, e);
 MotorGroup leftWheels = MotorGroup(BL, FL);
 MotorGroup rightWheels = MotorGroup(BR, FR);
 MotorGroup intake = MotorGroup(intakeMot, intakeMot2);
+#endif
 // pneumatics pto = pneumatics(Brain.ThreeWirePort.A);
 // Pto leftPto = leftWheels.addPto(pto, {&ML}, true);
 // Pto rightPto = rightWheels.addPto(pto, {&MR}, true);
@@ -110,6 +125,7 @@ TestDevice(GPS);
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
 
+#if BOT == 1
 vex::distance intakeMiddle = vex::distance(PORT19);
 TestDevice(intakeMiddle);
 
@@ -127,6 +143,9 @@ AutoIntake intakeController = AutoIntake({[]()
     {
         return intakeTop.pressing();
     }});
+#elif BOT == 2
+LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C);
+#endif
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
 
@@ -139,26 +158,28 @@ Odometry
 // VisionOdom visionTest = VisionOdom(goalFrontVision, {0, 0}, 12.5, 32, 0);
 
 // Positioner init
-posTp::xPortArr arrX = {};
+#if BOT == 1
+posTp::encoderArr arrX = {};
 
-posTp::yPortArr arrY = {Port(PORT15)};
-// Make a positioner that measures x and y witxh smallest omni wheel rad
-posTp positioner = posTp(arrX, arrY,
-    {-1.0}, {-1.0}, {-1.0}, {-1.0},
-    0.0, 0.0,
-    1.385);
+posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 1.385)};
+#elif BOT == 2
+posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 1.385)};
+posTp::encoderArr arrY = {TrackingWheel(PORT14, true, 1.385)};
+#endif
+// Make a positioner that measures x and y with smallest omni wheel rad
+posTp positioner = posTp(arrX, arrY, {0, 0});
 
 GPS_Share share = GPS_Share(positioner, GPS);
 
 // Wheel controller
 
-Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio6_1);
+Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio18_1);
 WheelController::PathFollowSettings purePursuitSettings = WheelController::PathFollowSettings();
 
 PurePursuitController purePursuit = PurePursuitController(
     PID(6.25, 0.001, 2.4325, 0, 8, 1),
     purePursuitSettings
-        .setBrakeMode(WheelController::exitMode::nothing)
+        .setBrakeMode(WheelController::exitMode::normal)
         .setExitDist(2)
         .setUseDistToGoal(true)
         .setFollowPathDist(16)
@@ -206,6 +227,7 @@ Autonomous System Controllers
 //   }
 //   flyPID.graph(remake);
 // }
+#if BOT == 1
 void graphFlywheelTBH(bool remake)
 {
     if (remake)
@@ -214,22 +236,23 @@ void graphFlywheelTBH(bool remake)
     }
     flyTBH.graph(remake);
 }
+#endif
 
-#define TEST_MOT(m)     \
-    cout << #m << endl; \
-    m.spin(fwd);        \
-    s(1000);            \
-    m.stop();           \
-    s(500);
+#define TEST_MOT(m, n) \
+    cout << n << endl; \
+    m->spin(fwd);      \
+    s(1000);           \
+    m->stop();         \
+    s(1000);
 void testMotorConfiguration()
 {
-    TEST_MOT(FL)
-    // TEST_MOT(ML)
-    TEST_MOT(BL)
-    s(1000);
-    TEST_MOT(FR)
-    // TEST_MOT(MR)
-    TEST_MOT(BR)
+    for (auto i : connectedDevices)
+    {
+        if (get<2>(i))
+        {
+            TEST_MOT(((motor*)get<1>(i)), get<0>(i))
+        }
+    }
 }
 #define TMC(m)                                                  \
     if (!m.installed())                                         \

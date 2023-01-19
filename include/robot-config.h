@@ -37,15 +37,13 @@ Motors
 // extern motor flywheel2;
 
 extern MotorGroup intake;
-
+#if BOT == 1
 extern MotorGroup flywheelNm;
-// extern FlywheelPID flyPID;
 extern FlywheelTBHEncoder flyTBH;
-// extern bool flywheelPID;
-// New Motors, a few reasons for this:
-//    1 - less upfront code for stuff
-//    2 - Simplified spin cmd
-// extern MotorGroup wheels;
+#elif BOT == 2
+extern MotorGroup sling;
+#endif
+
 extern MotorGroup leftWheels;
 extern MotorGroup rightWheels;
 
@@ -81,10 +79,14 @@ extern gps GPS;
 
 extern optical rachetColor;
 
+#if BOT == 1
 extern LineCounter intakeBottom;
 extern vex::distance intakeMiddle;
 extern LineCounter intakeTop;
 extern AutoIntake intakeController;
+#elif BOT == 2
+extern LineCounter intakeCounter;
+#endif
 // Distance goalFront;
 // Distance goalBack;
 
@@ -104,31 +106,19 @@ extern GPS_Share share;
 extern Positioner positioner;
 // Wheel controller
 extern WheelController wc;
-extern vision Vision1;
-extern vision::signature BLUEGOAL;
-extern vision::signature REDGOAL;
 
 /*************************************
 
 Autonomous System Controllers
 
 *************************************/
+#if BOT == 1
 void graphFlywheelPID(bool remake);
 void graphFlywheelTBH(bool remake);
+#endif
 
-#define TEST_MOT(m)     \
-    cout << #m << endl; \
-    m.spin(fwd);        \
-    s(1000);            \
-    m.stop();           \
-    s(500);
 void testMotorConfiguration();
-#define TMC(m)                                                  \
-    if (!m.installed())                                         \
-    {                                                           \
-        cout << "Motor " << #m << " is not connected!" << endl; \
-        Greg.rumble(".");                                       \
-    }
+
 void testMotorConnection();
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

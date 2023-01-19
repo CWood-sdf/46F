@@ -61,7 +61,7 @@ void GPS_Share::update()
 {
     static FieldCoord lastPosReading = FieldCoord(PVector(0, 0), 0);
     static vector<FieldCoord> gpsReadings = {};
-    static int lastGps = 0;
+    // static int lastGps = 0;
     static int i = 0;
     odom.update();
 

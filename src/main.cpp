@@ -21,8 +21,10 @@ using namespace ClassFns;
 using namespace vex;
 void spinRoller()
 {
+#if BOT == 1
     bool intakeDisabled = intakeController.disabled;
     intakeController.disable();
+#endif
     rachetColor.setLightPower(50, percent);
     bool targetRed = wc.isRed();
 
@@ -75,10 +77,12 @@ void spinRoller()
     // s(500);
     chassis.coastBrake();
     intake.stop(hold);
+#if BOT == 1
     if (!intakeDisabled)
     {
         intakeController.enable();
     }
+#endif
 }
 competition Competition;
 
@@ -96,8 +100,10 @@ void autonInit()
     rachetColor.setLight(ledState::on);
     rachetColor.setLightPower(100, percent);
     rachetColor.integrationTime(50);
+#if BOT == 1
     intakeController.autonInit();
     intakeController.enable();
+#endif
     cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -135,11 +141,15 @@ void drivercontrol()
     [[maybe_unused]] ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
     [[maybe_unused]] ButtonLatch L1Latch = ButtonLatch(Greg.ButtonL1);
     [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
-    // int currentVelocity = 510;
-    // int flywheelI = 1;
+// int currentVelocity = 510;
+// int flywheelI = 1;
+#if BOT == 1
     flyTBH.setTargetSpeed(367);
     flyTBH.setDisabled(false);
-    int endgameRelease = 0;
+    vector<int> speeds = {367, 421, 457, 502};
+    int speedIndex = 0;
+#endif
+
     static bool driveReversed = false;
     // Protection from multiple instances of drivercontrol running
     // Is true if there is no instance of drivercontrol running
@@ -150,15 +160,12 @@ void drivercontrol()
     static vector<pair<bool, bool*>> countsExist = {};
     // The count of drivercontrol instances
     static int count = 0;
-    vector<int> speeds = {367, 421, 457, 502};
-    int speedIndex = 0;
     // Is true if this drivercontrol instance should be running
     bool primary = count == 0 || allEmpty ? true : false;
     // Push back the array
     countsExist.push_back({true, &primary});
     // The index of this drivercontrol instance in countsExist
     int localCount = count;
-    double flywheelSpeed = 367;
     count++;
     // TODO: intake controls
     while (1)
@@ -178,24 +185,62 @@ void drivercontrol()
 
             double s1 = Y1 + X1;
             double s2 = Y1 - X1;
-            // if (Greg.ButtonL1.pressing())
-            // {
-            //   flywheelSpeed += 0.5;
-            //   if (flywheelSpeed > 600)
-            //   {
-            //     flywheelSpeed = 600;
-            //   }
-            //   flyTBH.setTargetSpeed(flywheelSpeed);
+            if (Greg.ButtonLeft.pressing())
+            {
+                s1 = -50, s2 = 50;
+            }
+            if (Greg.ButtonRight.pressing())
+            {
+                s1 = 50, s2 = -50;
+            }
+            if (s1 == 0)
+            {
+                leftWheels.stop(coast);
+            }
+            if (s2 == 0)
+            {
+                rightWheels.stop(coast);
+            }
+            else if (driveReversed)
+            {
+                leftWheels.spin(vex::reverse, s1, pct);
+                rightWheels.spin(vex::reverse, s2, pct);
+            }
+            else
+            {
+                leftWheels.spin(fwd, s1, pct);
+                rightWheels.spin(fwd, s2, pct);
+            }
+            if (UpLatch.pressing())
+            {
+                wc.faceTarget({50, 50});
+            }
+            if (DownLatch.pressing())
+            {
+                wc.faceTarget({-50, -50});
+            }
+            // if(XLatch.pressing()){
+            //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
             // }
-            // if (Greg.ButtonL2.pressing())
-            // {
-            //   flywheelSpeed -= 0.5;
-            //   if (flywheelSpeed < 0)
-            //   {
-            //     flywheelSpeed = 0;
-            //   }
-            //   flyTBH.setTargetSpeed(flywheelSpeed);
+            // if(YLatch.pressing()){
+            //   wc.turnTo(wc.botPos().angleTo({50, 50}));
             // }
+            if (Greg.ButtonY.pressing())
+            {
+                int time = 0;
+                while (Greg.ButtonY.pressing())
+                {
+                    s(10);
+                    time += 10;
+                    if (time >= 100)
+                    {
+                        endgame.open();
+                        Greg.rumble("....");
+                        break;
+                    }
+                }
+            }
+#if BOT == 1
             if (L1Latch.pressing())
             {
                 speedIndex = (speedIndex + 1) % speeds.size();
@@ -213,29 +258,7 @@ void drivercontrol()
                 flyTBH.setTargetSpeed(speeds[speedIndex]);
                 Greg.rumble(string(speedIndex + 1, '.').data());
             }
-            if (Greg.ButtonLeft.pressing())
-            {
-                s1 = -50, s2 = 50;
-            }
-            if (Greg.ButtonRight.pressing())
-            {
-                s1 = 50, s2 = -50;
-            }
-            if (s1 == s2 && s2 == 0)
-            {
-                leftWheels.stop(coast);
-                rightWheels.stop(coast);
-            }
-            else if (driveReversed)
-            {
-                leftWheels.spin(vex::reverse, s1, pct);
-                rightWheels.spin(vex::reverse, s2, pct);
-            }
-            else
-            {
-                leftWheels.spin(fwd, s1, pct);
-                rightWheels.spin(fwd, s2, pct);
-            }
+
             if (Greg.ButtonR1.pressing())
             {
                 intakeController.disable();
@@ -251,14 +274,6 @@ void drivercontrol()
                 intakeController.enable();
                 // intake.stop(hold);
             }
-            if (UpLatch.pressing())
-            {
-                wc.faceTarget({50, 50});
-            }
-            if (DownLatch.pressing())
-            {
-                wc.faceTarget({-50, -50});
-            }
 
             // if (BLatch.pressing()) {
             //   driveReversed = !driveReversed;
@@ -272,28 +287,20 @@ void drivercontrol()
             {
                 intakeController.setFiring();
             }
-            // if(XLatch.pressing()){
-            //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
-            // }
-            // if(YLatch.pressing()){
-            //   wc.turnTo(wc.botPos().angleTo({50, 50}));
-            // }
-            if (Greg.ButtonY.pressing())
+#elif BOT == 2
+            if (Greg.ButtonR1.pressing())
             {
-                // If continuously pressing for 0.5s, release endgame
-                int time = 0;
-                while (Greg.ButtonY.pressing())
-                {
-                    s(10);
-                    time += 10;
-                    if (time >= 250)
-                    {
-                        endgame.open();
-                        Greg.rumble("....");
-                        break;
-                    }
-                }
+                intake.spin(fwd, 100);
             }
+            else if (Greg.ButtonR2.pressing())
+            {
+                intake.spin(vex::reverse, 100);
+            }
+            else
+            {
+                intake.stop(hold);
+            }
+#endif
         }
         else
         {
@@ -318,6 +325,7 @@ void drivercontrol()
         }
     }
 }
+#if BOT == 1
 void runIntake()
 {
     while (1)
@@ -361,6 +369,7 @@ void runFlywheel()
         s(20);
     }
 }
+#endif
 //}
 
 // Brain Drawing Stuff {
@@ -429,12 +438,16 @@ void brainOS()
     } });
     // Make it skip the color set screen if were in skills
     bos::bosFns.pushBack(testConnection);
+#if BOT == 1
     bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
+#endif
     bos::bosFns.pushBack(bos::BosFn(displayBot, true));
-    // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+// VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
+#if BOT == 1
     bos::bosFns.pushBack(bos::BosFn([](bool refresh)
         { intakeController.drawState(refresh); },
         true));
+#endif
     // bos::bosFns.pushBack(helpAlignBot);
     bos::bosFns.pushBack(VariableConfig::drawAll);
     // bos::bosFns.pushBack(bos::BosFn(printTestData));
@@ -454,7 +467,8 @@ void brainOS()
         if (bos::bosFns.size(0))
         {
             cout << "bosFns is empty for some reason" << endl;
-            break;
+            s(500);
+            continue;
         }
         // Have buttons clicked first so that clicking them overrides the screen click functions
         if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent())
@@ -528,10 +542,6 @@ void brainOS()
     }
 }
 //}
-extern motor ML;
-extern pneumatics pto;
-extern motor intakeMot;
-extern motor intakeMot2;
 int main()
 {
     // Init has to be in thread, otherwise it won't work with comp switch
@@ -552,14 +562,14 @@ int main()
     wc.path.setK(1.2);
     chassis.setMaxAcc(200);
     chassis.setMaxDAcc(160);
+#if BOT == 1
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
     intakeController.disable();
     cout << "<< Flywheel initialized >>" << endl;
     intakeController.autonInit();
+#endif
     endgame.close();
-    cout << intakeMot.temperature(vex::percentUnits::pct) << endl;
-    cout << intakeMot2.temperature(vex::percentUnits::pct) << endl;
     share.setUseGps(true);
     s(500);
     init = true; });
@@ -567,17 +577,17 @@ int main()
     {
         s(100);
     }
-    [[maybe_unused]] KillThread gpsUpdate = thread(updateSharePos);
+    thread gpsUpdate = thread(updateSharePos);
 
     // Make a thread to execute some auton tasks concurrently
-    [[maybe_unused]] KillThread otherThreads = thread(executeThreads);
-
-    // TODO: Intake thread
-    [[maybe_unused]] KillThread intakeThread = thread(runIntake);
+    thread otherThreads = thread(executeThreads);
+#if BOT == 1
+    thread intakeThread = thread(runIntake);
+    thread flywheelControl = thread(runFlywheel);
+#endif
     // Awesome brain screen control thread
     thread loader = thread(brainOS);
 
-    thread flywheelControl = thread(runFlywheel);
     // wc.prevStopExit();
     // wc.driveTo(-20, 48);
     autonomous();

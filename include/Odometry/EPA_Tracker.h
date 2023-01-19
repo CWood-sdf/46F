@@ -21,28 +21,28 @@ void updateBotAngle(bool add = false);
 template <class tp>
 struct Ref
 {
-  tp *val;
-  Ref() {}
-  Ref(tp &v)
-  {
-    val = &v;
-  }
-  tp &operator*()
-  {
-    return *val;
-  }
-  operator tp &()
-  {
-    return *val;
-  }
-  operator tp *()
-  {
-    return val;
-  }
-  tp *operator->()
-  {
-    return val;
-  }
+    tp* val;
+    Ref() {}
+    Ref(tp& v)
+    {
+        val = &v;
+    }
+    tp& operator*()
+    {
+        return *val;
+    }
+    operator tp&()
+    {
+        return *val;
+    }
+    operator tp*()
+    {
+        return val;
+    }
+    tp* operator->()
+    {
+        return val;
+    }
 };
 // //Use the template command for the amount of encoders used
 // //Each encoder is used for each dimension
@@ -50,118 +50,101 @@ struct Ref
 // template<uint encodersX, uint encodersY>
 class Port
 {
-  const int32_t port;
+    const int32_t port;
 
-  public:
-  Port(int32_t p) : port(p) {}
-  int32_t getPort()
-  {
-    return port;
-  }
+public:
+    Port(int32_t p) : port(p) {}
+    int32_t getPort()
+    {
+        return port;
+    }
 };
 
 #ifndef WINDOWS
 struct AddDevice
 {
-  AddDevice(string name, vex::device *device);
-  AddDevice(string name, vex::motor *deivce);
+    AddDevice(string name, vex::device* device);
+    AddDevice(string name, vex::motor* deivce);
+};
+class Positioner;
+class TrackingWheel
+{
+    friend class Positioner;
+    Encoder* encoder;
+    bool reverse;
+    double wheelDiameter;
+    TrackingWheel(bool reverse, double wheelDiameter);
+    rotation* rot = NULL;
+
+public:
+    TrackingWheel(int32_t port, bool reverse, double wheelDiameter);
+    TrackingWheel(vex::triport::port port, bool reverset, double wheelDiameter);
+    TrackingWheel(motor& m, bool reverse, double wheelDiameter);
+    TrackingWheel(Encoder& e, bool reverse, double wheelDiameter);
+    Encoder* operator->()
+    {
+        return encoder;
+    }
+    double mult()
+    {
+        return reverse ? -1.0 : 1.0;
+    }
+    double wheelRadius()
+    {
+        return wheelDiameter / 2.0;
+    }
 };
 class Positioner
 {
-  // A few typedefs
-  public:
-  typedef vector<Encoder *> yEncoderArr; // Defines the type of the arrays
-                                         // That the encoders will be stored in and names it encoderArr
-  typedef vector<Encoder *> xEncoderArr;
-  typedef vector<Ref<vex::triport::port>> xTriportArr; // Defines the type of the arrays
-                                                       // That the encoders will be stored in and names it encoderArr
-  typedef vector<Ref<vex::triport::port>> yTriportArr;
-  typedef vector<Port> xPortArr;
-  typedef vector<Port> yPortArr;
-  // const double size = encodersX + encodersY;
-  // Private variables
-  private:
-  double encXAmnt; // = (double) encodersX;
-  double encYAmnt; // = (double) encodersY;
-  typedef vector<double> xDoubleArr;
-  typedef vector<double> yDoubleArr;
-  xDoubleArr lastX;
-  yDoubleArr lastY;
-  xDoubleArr multX;
-  yDoubleArr multY;
-  xDoubleArr multNegX;
-  yDoubleArr multNegY;
-  double distFromCenterX;
-  double distFromCenterY;
+    // A few typedefs
+public:
+    typedef vector<TrackingWheel> encoderArr;
 
-  timer time;
+    double speed = 0.0;
+    // const double size = encodersX + encodersY;
+    // Private variables
+private:
+    double encXAmnt;
+    double encYAmnt;
+    typedef vector<double> doubleArr;
+    doubleArr lastX;
+    doubleArr lastY;
+    PVector fromCenter = PVector(0.0, 0.0);
 
-  xEncoderArr EncodersX; // Make the x encoder array
-  yEncoderArr EncodersY;
-  double lastLeft = 0.0, lastRight = 0.0;
-  friend void waitForReset();
-  void resetPos(PVector pos)
-  {
-    this->pos = pos;
-  }
+    timer time;
 
-  public:
-  private:
-  // array<double, encodersY> lastY;
-  // array<double, encodersX> lastX;
-  // PVector lastAngles = PVector(0.0, 0.0); // Make a vector that stores the last angles
-  PVector pos = PVector(0.0, 0.0); // Make a vector to store the current position
-  double wheelRad = 0.0;           // A variable that stores the wheel radius in inches for
-                                   // distance calculations later
-  // Useless variables that I'm keeping just in case they become useful eventually
-  // double updates_p_second = 500;
-  // double& ups = updates_p_second;
-  double speed = 0.0;
-  // The main functions: constructor, updater...
-  Positioner(xDoubleArr mX, yDoubleArr mY, xDoubleArr mNX, yDoubleArr mNY, double cDistX, double cDistY, double rad)
-  {
-    wheelRad = rad;
-    multX = mX;
-    multY = mY;
-    multNegX = mNX;
-    multNegY = mNY;
-    distFromCenterX = cDistX;
-    distFromCenterY = cDistY;
-  }
+    encoderArr xEncoders; // Make the x encoder array
+    encoderArr yEncoders;
 
-  public:
-  void setPos(PVector pos)
-  {
-    this->pos = pos;
-  }
-  // The constructors
+public:
+    void resetPos(PVector pos)
+    {
+        this->pos = pos;
+    }
 
-  // Accepts port array and radius
-  Positioner(
-      xTriportArr xPorts, yTriportArr yPorts,
-      xDoubleArr mX, yDoubleArr mY,
-      xDoubleArr mNX, yDoubleArr mNY,
-      double cDistX, double cDistY,
-      double rad);
-  // Accepts port array and radius
-  Positioner(
-      xPortArr xPorts, yPortArr yPorts,
-      xDoubleArr mX, yDoubleArr mY,
-      xDoubleArr mNX, yDoubleArr mNY,
-      double cDistX, double cDistY,
-      double rad);
-  Positioner();
-  // Function that updates the position
-  // 80+ lines of trig, vector math, and some sensor stuff
-  PVector update();
-  PVector getPos();
-  double xPosition(distanceUnits = inches);
-  double yPosition(distanceUnits = inches);
-  double heading();
-  FieldCoord fullPos();
-  bool moving();
-  double velocity(int sleepTime);
-  void clearMove();
+private:
+    PVector pos = PVector(0.0, 0.0); // Make a vector to store the current position
+
+public:
+    void setPos(PVector pos)
+    {
+        this->pos = pos;
+    }
+    // The constructors
+
+    Positioner(encoderArr encodersX, encoderArr encodersY, PVector fromCenter = PVector(0.0, 0.0));
+    Positioner() = delete;
+    // Function that updates the position
+    // 80+ lines of trig, vector math, and some sensor stuff
+    PVector update();
+    PVector getPos();
+    double xPosition(distanceUnits = inches);
+    double yPosition(distanceUnits = inches);
+    double heading();
+    FieldCoord fullPos();
+    bool moving();
+    double velocity();
+    void clearMove();
 };
 #endif
 #endif
