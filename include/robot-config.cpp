@@ -129,8 +129,8 @@ TestDevice(rachetColor);
 vex::distance intakeMiddle = vex::distance(PORT19);
 TestDevice(intakeMiddle);
 
-LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C);
-LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E);
+LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C, true);
+LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E, true);
 AutoIntake intakeController = AutoIntake({[]()
     {
         return intakeBottom.pressing();
@@ -144,7 +144,7 @@ AutoIntake intakeController = AutoIntake({[]()
         return intakeTop.pressing();
     }});
 #elif BOT == 2
-LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C);
+LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C, true);
 #endif
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
