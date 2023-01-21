@@ -551,8 +551,6 @@ int main()
     cout << "<< Lvgl initialized >>" << endl;
     s(100);
     gyroInit(angler);
-    s(500);
-    gyroInit(GPS);
     cout << "<< Gyros initialized >>" << endl;
     //Gyro's initialized
     testMotorConnection();
