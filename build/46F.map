@@ -458,10 +458,6 @@ Discarded input sections
  .group         0x00000000        0x8 build/src/main.o
  .llvm_addrsig  0x00000000       0x72 build/src/main.o
  .text          0x00000000        0x0 build/src/Autons/Autons.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/src/Autons/Autons.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/src/Autons/Autons.o
  .group         0x00000000        0xc build/src/Autons/Autons.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/src/Autons/Autons.o
@@ -534,9 +530,9 @@ Discarded input sections
                 0x00000000        0x8 build/src/Autons/Autons.o
  .group         0x00000000        0xc build/src/Autons/Autons.o
  .group         0x00000000       0x18 build/src/Autons/Autons.o
- .text.__cxx_global_var_init.26
+ .text.__cxx_global_var_init.23
                 0x00000000       0x40 build/src/Autons/Autons.o
- .ARM.exidx.text.__cxx_global_var_init.26
+ .ARM.exidx.text.__cxx_global_var_init.23
                 0x00000000        0x8 build/src/Autons/Autons.o
  .group         0x00000000        0xc build/src/Autons/Autons.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -646,12 +642,8 @@ Discarded input sections
  .group         0x00000000        0x8 build/src/Autons/Autons.o
  .bss._ZN5Auton5readyE
                 0x00000000        0x1 build/src/Autons/Autons.o
- .llvm_addrsig  0x00000000       0x35 build/src/Autons/Autons.o
+ .llvm_addrsig  0x00000000       0x30 build/src/Autons/Autons.o
  .text          0x00000000        0x0 build/include/robot-config.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/robot-config.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/robot-config.o
  .group         0x00000000        0xc build/include/robot-config.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/robot-config.o
@@ -714,9 +706,9 @@ Discarded input sections
  .ARM.exidx.text._Z6toBoold
                 0x00000000        0x8 build/include/robot-config.o
  .group         0x00000000       0x18 build/include/robot-config.o
- .text.__cxx_global_var_init.65
+ .text.__cxx_global_var_init.63
                 0x00000000       0x40 build/include/robot-config.o
- .ARM.exidx.text.__cxx_global_var_init.65
+ .ARM.exidx.text.__cxx_global_var_init.63
                 0x00000000        0x8 build/include/robot-config.o
  .group         0x00000000        0xc build/include/robot-config.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -809,10 +801,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/robot-config.o
  .llvm_addrsig  0x00000000       0x79 build/include/robot-config.o
  .text          0x00000000        0x0 build/include/IntakeAutomation.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/IntakeAutomation.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/IntakeAutomation.o
  .group         0x00000000        0xc build/include/IntakeAutomation.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/IntakeAutomation.o
@@ -828,8 +816,6 @@ Discarded input sections
                 0x00000000       0x50 build/include/IntakeAutomation.o
  .ARM.exidx.text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
                 0x00000000        0x8 build/include/IntakeAutomation.o
- .rodata.str1.1
-                0x00000000       0x22 build/include/IntakeAutomation.o
  .group         0x00000000        0xc build/include/IntakeAutomation.o
  .bss._ZN10MotorGroup9ptoMotorsE
                 0x00000000       0x18 build/include/IntakeAutomation.o
@@ -840,12 +826,8 @@ Discarded input sections
                 0x00000000        0xc build/include/IntakeAutomation.o
  .bss._ZGVN10KillThread9instancesE
                 0x00000000        0x4 build/include/IntakeAutomation.o
- .llvm_addrsig  0x00000000        0x6 build/include/IntakeAutomation.o
+ .llvm_addrsig  0x00000000        0x5 build/include/IntakeAutomation.o
  .text          0x00000000        0x0 build/include/BrainOS/ConnectionTest.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/BrainOS/ConnectionTest.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/BrainOS/ConnectionTest.o
  .group         0x00000000        0xc build/include/BrainOS/ConnectionTest.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/BrainOS/ConnectionTest.o
@@ -861,12 +843,8 @@ Discarded input sections
                 0x00000000       0x18 build/include/BrainOS/ConnectionTest.o
  .bss._ZGVN10MotorGroup9ptoMotorsE
                 0x00000000        0x4 build/include/BrainOS/ConnectionTest.o
- .llvm_addrsig  0x00000000        0xa build/include/BrainOS/ConnectionTest.o
+ .llvm_addrsig  0x00000000        0x9 build/include/BrainOS/ConnectionTest.o
  .text          0x00000000        0x0 build/include/BrainOS/BotTracker.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/BrainOS/BotTracker.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/BrainOS/BotTracker.o
  .group         0x00000000        0xc build/include/BrainOS/BotTracker.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/BrainOS/BotTracker.o
@@ -880,9 +858,9 @@ Discarded input sections
  .ARM.exidx.text._ZN7PVectorC2ESt16initializer_listIdE
                 0x00000000        0x8 build/include/BrainOS/BotTracker.o
  .group         0x00000000       0x18 build/include/BrainOS/BotTracker.o
- .text.__cxx_global_var_init.12
+ .text.__cxx_global_var_init.9
                 0x00000000       0x40 build/include/BrainOS/BotTracker.o
- .ARM.exidx.text.__cxx_global_var_init.12
+ .ARM.exidx.text.__cxx_global_var_init.9
                 0x00000000        0x8 build/include/BrainOS/BotTracker.o
  .group         0x00000000        0xc build/include/BrainOS/BotTracker.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -933,10 +911,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/BrainOS/BotTracker.o
  .llvm_addrsig  0x00000000       0x14 build/include/BrainOS/BotTracker.o
  .text          0x00000000        0x0 build/include/BrainOS/VariableConfig.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/BrainOS/VariableConfig.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/BrainOS/VariableConfig.o
  .group         0x00000000        0xc build/include/BrainOS/VariableConfig.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/BrainOS/VariableConfig.o
@@ -1048,29 +1022,23 @@ Discarded input sections
                 0x00000000       0x14 build/include/BrainOS/VariableConfig.o
  .bss._ZGVN14VariableConfig9variablesE
                 0x00000000        0x4 build/include/BrainOS/VariableConfig.o
- .llvm_addrsig  0x00000000       0x18 build/include/BrainOS/VariableConfig.o
+ .llvm_addrsig  0x00000000       0x15 build/include/BrainOS/VariableConfig.o
  .text          0x00000000        0x0 build/include/Flywheel/Controller.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Flywheel/Controller.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Flywheel/Controller.o
  .group         0x00000000        0xc build/include/Flywheel/Controller.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Flywheel/Controller.o
  .ARM.exidx.text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000        0x8 build/include/Flywheel/Controller.o
  .group         0x00000000       0x18 build/include/Flywheel/Controller.o
- .text.__cxx_global_var_init.4
+ .text.__cxx_global_var_init.2
                 0x00000000       0x40 build/include/Flywheel/Controller.o
- .ARM.exidx.text.__cxx_global_var_init.4
+ .ARM.exidx.text.__cxx_global_var_init.2
                 0x00000000        0x8 build/include/Flywheel/Controller.o
  .group         0x00000000        0xc build/include/Flywheel/Controller.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
                 0x00000000       0x50 build/include/Flywheel/Controller.o
  .ARM.exidx.text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
                 0x00000000        0x8 build/include/Flywheel/Controller.o
- .rodata.str1.1
-                0x00000000       0x22 build/include/Flywheel/Controller.o
  .group         0x00000000        0xc build/include/Flywheel/Controller.o
  .bss._ZN10MotorGroup9ptoMotorsE
                 0x00000000       0x18 build/include/Flywheel/Controller.o
@@ -1080,12 +1048,8 @@ Discarded input sections
                 0x00000000       0x18 build/include/Flywheel/Controller.o
  .bss._ZGVN15BasicLinkedListIdRdPddE9emptyNodeE
                 0x00000000        0x4 build/include/Flywheel/Controller.o
- .llvm_addrsig  0x00000000        0x7 build/include/Flywheel/Controller.o
+ .llvm_addrsig  0x00000000        0x6 build/include/Flywheel/Controller.o
  .text          0x00000000        0x0 build/include/Odometry/Controllers.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/Controllers.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/Controllers.o
  .group         0x00000000        0xc build/include/Odometry/Controllers.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/Controllers.o
@@ -1116,9 +1080,9 @@ Discarded input sections
  .ARM.exidx.text._ZN18BasicPidControllerC2E4PIDFS0_
                 0x00000000        0x8 build/include/Odometry/Controllers.o
  .group         0x00000000       0x18 build/include/Odometry/Controllers.o
- .text.__cxx_global_var_init.18
+ .text.__cxx_global_var_init.15
                 0x00000000       0x40 build/include/Odometry/Controllers.o
- .ARM.exidx.text.__cxx_global_var_init.18
+ .ARM.exidx.text.__cxx_global_var_init.15
                 0x00000000        0x8 build/include/Odometry/Controllers.o
  .group         0x00000000        0xc build/include/Odometry/Controllers.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -1260,10 +1224,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/Odometry/Controllers.o
  .llvm_addrsig  0x00000000        0xd build/include/Odometry/Controllers.o
  .text          0x00000000        0x0 build/include/Odometry/EPA_Tracker.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/EPA_Tracker.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/EPA_Tracker.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Tracker.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/EPA_Tracker.o
@@ -1420,10 +1380,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/Odometry/EPA_Tracker.o
  .llvm_addrsig  0x00000000       0x21 build/include/Odometry/EPA_Tracker.o
  .text          0x00000000        0x0 build/include/Odometry/GPS_Share.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/GPS_Share.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/GPS_Share.o
  .group         0x00000000        0xc build/include/Odometry/GPS_Share.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/GPS_Share.o
@@ -1453,9 +1409,9 @@ Discarded input sections
  .ARM.exidx.text._ZN9GPS_Share6setPosE7PVectord
                 0x00000000        0x8 build/include/Odometry/GPS_Share.o
  .group         0x00000000       0x18 build/include/Odometry/GPS_Share.o
- .text.__cxx_global_var_init.4
+ .text.__cxx_global_var_init.2
                 0x00000000       0x40 build/include/Odometry/GPS_Share.o
- .ARM.exidx.text.__cxx_global_var_init.4
+ .ARM.exidx.text.__cxx_global_var_init.2
                 0x00000000        0x8 build/include/Odometry/GPS_Share.o
  .group         0x00000000       0x18 build/include/Odometry/GPS_Share.o
  .group         0x00000000        0xc build/include/Odometry/GPS_Share.o
@@ -1477,10 +1433,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/Odometry/GPS_Share.o
  .llvm_addrsig  0x00000000        0xa build/include/Odometry/GPS_Share.o
  .text          0x00000000        0x0 build/include/Odometry/Bezier.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/Bezier.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/Bezier.o
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/Bezier.o
@@ -1547,9 +1499,9 @@ Discarded input sections
  .ARM.exidx.text._ZN7PVector9normalizeEv
                 0x00000000        0x8 build/include/Odometry/Bezier.o
  .group         0x00000000       0x18 build/include/Odometry/Bezier.o
- .text.__cxx_global_var_init.4
+ .text.__cxx_global_var_init.2
                 0x00000000       0x40 build/include/Odometry/Bezier.o
- .ARM.exidx.text.__cxx_global_var_init.4
+ .ARM.exidx.text.__cxx_global_var_init.2
                 0x00000000        0x8 build/include/Odometry/Bezier.o
  .group         0x00000000        0xc build/include/Odometry/Bezier.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -1697,10 +1649,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/Odometry/Bezier.o
  .llvm_addrsig  0x00000000        0xb build/include/Odometry/Bezier.o
  .text          0x00000000        0x0 build/include/Odometry/EPA_Wheel_Control.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/EPA_Wheel_Control.o
@@ -1862,9 +1810,9 @@ Discarded input sections
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000       0x18 build/include/Odometry/EPA_Wheel_Control.o
- .text.__cxx_global_var_init.24
+ .text.__cxx_global_var_init.21
                 0x00000000       0x40 build/include/Odometry/EPA_Wheel_Control.o
- .ARM.exidx.text.__cxx_global_var_init.24
+ .ARM.exidx.text.__cxx_global_var_init.21
                 0x00000000        0x8 build/include/Odometry/EPA_Wheel_Control.o
  .group         0x00000000        0xc build/include/Odometry/EPA_Wheel_Control.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -2035,10 +1983,6 @@ Discarded input sections
                 0x00000000        0x1 build/include/Odometry/EPA_Wheel_Control.o
  .llvm_addrsig  0x00000000       0x26 build/include/Odometry/EPA_Wheel_Control.o
  .text          0x00000000        0x0 build/include/Odometry/PID.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/PID.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/PID.o
  .group         0x00000000        0xc build/include/Odometry/PID.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/PID.o
@@ -2152,20 +2096,16 @@ Discarded input sections
  .group         0x00000000        0xc build/include/Odometry/PID.o
  .group         0x00000000        0xc build/include/Odometry/PID.o
  .group         0x00000000        0xc build/include/Odometry/PID.o
- .rodata.str1.1
-                0x00000000       0x25 build/include/Odometry/PID.o
  .group         0x00000000        0xc build/include/Odometry/PID.o
  .bss._ZN10MotorGroup9ptoMotorsE
                 0x00000000       0x18 build/include/Odometry/PID.o
  .bss._ZGVN10MotorGroup9ptoMotorsE
                 0x00000000        0x4 build/include/Odometry/PID.o
+ .rodata.str1.1
+                0x00000000        0x3 build/include/Odometry/PID.o
  .group         0x00000000        0x8 build/include/Odometry/PID.o
- .llvm_addrsig  0x00000000        0x7 build/include/Odometry/PID.o
+ .llvm_addrsig  0x00000000        0x5 build/include/Odometry/PID.o
  .text          0x00000000        0x0 build/include/Odometry/Chassis.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Odometry/Chassis.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Odometry/Chassis.o
  .group         0x00000000        0xc build/include/Odometry/Chassis.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Odometry/Chassis.o
@@ -2214,9 +2154,9 @@ Discarded input sections
  .ARM.exidx.text._ZN7Chassis11driveFromLREdd
                 0x00000000        0x8 build/include/Odometry/Chassis.o
  .group         0x00000000       0x18 build/include/Odometry/Chassis.o
- .text.__cxx_global_var_init.4
+ .text.__cxx_global_var_init.2
                 0x00000000       0x40 build/include/Odometry/Chassis.o
- .ARM.exidx.text.__cxx_global_var_init.4
+ .ARM.exidx.text.__cxx_global_var_init.2
                 0x00000000        0x8 build/include/Odometry/Chassis.o
  .group         0x00000000        0xc build/include/Odometry/Chassis.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -2243,8 +2183,6 @@ Discarded input sections
                 0x00000000       0x5c build/include/Odometry/Chassis.o
  .ARM.exidx.text._ZNSt6vectorIdSaIdEE14_M_move_assignEOS1_St17integral_constantIbLb1EE
                 0x00000000        0x8 build/include/Odometry/Chassis.o
- .rodata.str1.1
-                0x00000000       0x31 build/include/Odometry/Chassis.o
  .group         0x00000000        0xc build/include/Odometry/Chassis.o
  .bss._ZN10MotorGroup9ptoMotorsE
                 0x00000000       0x18 build/include/Odometry/Chassis.o
@@ -2254,7 +2192,9 @@ Discarded input sections
                 0x00000000       0x18 build/include/Odometry/Chassis.o
  .bss._ZGVN15BasicLinkedListIdRdPddE9emptyNodeE
                 0x00000000        0x4 build/include/Odometry/Chassis.o
- .llvm_addrsig  0x00000000        0x8 build/include/Odometry/Chassis.o
+ .rodata.str1.1
+                0x00000000        0xf build/include/Odometry/Chassis.o
+ .llvm_addrsig  0x00000000        0x7 build/include/Odometry/Chassis.o
  .text          0x00000000        0x0 build/include/Sensors/KillThread.o
  .comment       0x00000000       0x2e build/include/Sensors/KillThread.o
  .note.GNU-stack
@@ -2263,10 +2203,6 @@ Discarded input sections
                 0x00000000       0x38 build/include/Sensors/KillThread.o
  .llvm_addrsig  0x00000000        0x0 build/include/Sensors/KillThread.o
  .text          0x00000000        0x0 build/include/Sensors/PotDial.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Sensors/PotDial.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Sensors/PotDial.o
  .group         0x00000000        0xc build/include/Sensors/PotDial.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Sensors/PotDial.o
@@ -2372,10 +2308,6 @@ Discarded input sections
                 0x00000000        0x4 build/include/Sensors/PotDial.o
  .llvm_addrsig  0x00000000        0xd build/include/Sensors/PotDial.o
  .text          0x00000000        0x0 build/include/Sensors/VisionOdom.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Sensors/VisionOdom.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Sensors/VisionOdom.o
  .group         0x00000000        0xc build/include/Sensors/VisionOdom.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Sensors/VisionOdom.o
@@ -2484,9 +2416,9 @@ Discarded input sections
  .ARM.exidx.text._ZN10VisionOdom19estimateRelativePosEPN3vex6vision9signatureEdd
                 0x00000000        0x8 build/include/Sensors/VisionOdom.o
  .group         0x00000000       0x18 build/include/Sensors/VisionOdom.o
- .text.__cxx_global_var_init.20
+ .text.__cxx_global_var_init.17
                 0x00000000       0x40 build/include/Sensors/VisionOdom.o
- .ARM.exidx.text.__cxx_global_var_init.20
+ .ARM.exidx.text.__cxx_global_var_init.17
                 0x00000000        0x8 build/include/Sensors/VisionOdom.o
  .group         0x00000000        0xc build/include/Sensors/VisionOdom.o
  .text._ZNSt8_Rb_treeIPN3vex5motorESt4pairIKS2_St6vectorIP10MotorGroupSaIS7_EEESt10_Select1stISA_ESt4lessIS2_ESaISA_EE8_M_eraseEPSt13_Rb_tree_nodeISA_E
@@ -2523,8 +2455,6 @@ Discarded input sections
                 0x00000000       0x84 build/include/Sensors/VisionOdom.o
  .ARM.exidx.text._ZNSt8_Rb_treeIN5Angle4TypeESt4pairIKS1_dESt10_Select1stIS4_ESt4lessIS1_ESaIS4_EE22_M_emplace_hint_uniqueIJRKSt21piecewise_construct_tSt5tupleIJRS3_EESF_IJEEEEESt17_Rb_tree_iteratorIS4_ESt23_Rb_tree_const_iteratorIS4_EDpOT_
                 0x00000000        0x8 build/include/Sensors/VisionOdom.o
- .rodata.str1.1
-                0x00000000      0x10b build/include/Sensors/VisionOdom.o
  .group         0x00000000        0xc build/include/Sensors/VisionOdom.o
  .bss._ZN10MotorGroup9ptoMotorsE
                 0x00000000       0x18 build/include/Sensors/VisionOdom.o
@@ -2537,6 +2467,8 @@ Discarded input sections
                 0x00000000        0x4 build/include/Sensors/VisionOdom.o
  .bss._ZZN5Angle4initEvE4done
                 0x00000000        0x1 build/include/Sensors/VisionOdom.o
+ .rodata.str1.1
+                0x00000000       0xe9 build/include/Sensors/VisionOdom.o
  .bss._ZN15BasicLinkedListIdRdPddE9emptyNodeE
                 0x00000000       0x18 build/include/Sensors/VisionOdom.o
  .bss._ZGVN15BasicLinkedListIdRdPddE9emptyNodeE
@@ -2545,10 +2477,6 @@ Discarded input sections
                 0x00000000        0x1 build/include/Sensors/VisionOdom.o
  .llvm_addrsig  0x00000000        0xd build/include/Sensors/VisionOdom.o
  .text          0x00000000        0x0 build/include/Sensors/LineCounter.o
- .text._Z8gyroInitRN3vex8inertialE
-                0x00000000      0x1b8 build/include/Sensors/LineCounter.o
- .ARM.exidx.text._Z8gyroInitRN3vex8inertialE
-                0x00000000        0x8 build/include/Sensors/LineCounter.o
  .group         0x00000000        0xc build/include/Sensors/LineCounter.o
  .text._ZNSt3mapIPN3vex5motorESt6vectorIP10MotorGroupSaIS5_EESt4lessIS2_ESaISt4pairIKS2_S7_EEED2Ev
                 0x00000000       0x1c build/include/Sensors/LineCounter.o
@@ -6956,7 +6884,7 @@ Linker script and memory map
  .text._ZN14VariableConfig7drawAllEb
                 0x0384e254       0x4c build/include/BrainOS/VariableConfig.o
                 0x0384e254                VariableConfig::drawAll(bool)
- .text.__cxx_global_var_init.10
+ .text.__cxx_global_var_init.7
                 0x0384e2a0       0x3c build/include/BrainOS/VariableConfig.o
  .text._ZNSt17_Function_handlerIFbvEN14VariableConfig6bypassMUlvE_EE9_M_invokeERKSt9_Any_data
                 0x0384e2dc        0x8 build/include/BrainOS/VariableConfig.o
@@ -7155,7 +7083,7 @@ Linker script and memory map
  .text._ZN10FieldCoordpLERS_
                 0x038518c8      0x1e0 build/include/Odometry/GPS_Share.o
                 0x038518c8                FieldCoord::operator+=(FieldCoord&)
- .text.__cxx_global_var_init.5
+ .text.__cxx_global_var_init.3
                 0x03851aa8       0x50 build/include/Odometry/GPS_Share.o
  .text._ZNSt6vectorI10FieldCoordSaIS0_EE19_M_emplace_back_auxIJRKS0_EEEvDpOT_
                 0x03851af8       0xf0 build/include/Odometry/GPS_Share.o
@@ -8666,21 +8594,20 @@ Linker script and memory map
                 0x0385fdfc        0xa build/src/main.o
  .rodata.str1.1
                 0x0385fe06       0x16 build/src/Autons/Autons.o
-                                 0x5e (size before relaxing)
+                                 0x3c (size before relaxing)
  .rodata.str1.1
                 0x0385fe1c       0x59 build/include/robot-config.o
-                                 0xc7 (size before relaxing)
+                                 0xa7 (size before relaxing)
  .rodata.str1.1
                 0x0385fe75        0x6 build/include/BrainOS/ConnectionTest.o
-                                 0x28 (size before relaxing)
  .rodata.str1.1
                 0x0385fe7b       0x54 build/include/BrainOS/BotTracker.o
-                                 0xc8 (size before relaxing)
+                                 0xa6 (size before relaxing)
  .rodata.str1.1
-                0x00000000       0x4c build/include/BrainOS/VariableConfig.o
+                0x00000000       0x2a build/include/BrainOS/VariableConfig.o
  .rodata.str1.1
                 0x0385fecf       0xcc build/include/Odometry/Controllers.o
-                                0x14b (size before relaxing)
+                                0x129 (size before relaxing)
  *fill*         0x0385ff9b        0x1 
  .rodata._ZTV21PurePursuitController
                 0x0385ff9c       0x14 build/include/Odometry/Controllers.o
@@ -8698,15 +8625,15 @@ Linker script and memory map
                 0x0385fff0                vtable for DebugController
  .rodata.str1.1
                 0x03860004       0x1d build/include/Odometry/EPA_Tracker.o
-                                 0x8b (size before relaxing)
+                                 0x69 (size before relaxing)
  .rodata.str1.1
-                0x00000000       0x40 build/include/Odometry/GPS_Share.o
+                0x00000000       0x1e build/include/Odometry/GPS_Share.o
  .rodata.str1.1
                 0x03860021       0x1a build/include/Odometry/Bezier.o
-                                 0xc7 (size before relaxing)
+                                 0xa5 (size before relaxing)
  .rodata.str1.1
                 0x0386003b      0x1c1 build/include/Odometry/EPA_Wheel_Control.o
-                                0x254 (size before relaxing)
+                                0x232 (size before relaxing)
  .rodata._ZTV15WheelController
                 0x038601fc       0x30 build/include/Odometry/EPA_Wheel_Control.o
                 0x038601fc                vtable for WheelController
@@ -8715,12 +8642,12 @@ Linker script and memory map
                 0x0386022c                vtable for std::_Sp_counted_ptr<PIDF_Extension*, (__gnu_cxx::_Lock_policy)0>
  .rodata.str1.1
                 0x03860248      0x12b build/include/Sensors/PotDial.o
-                                0x16c (size before relaxing)
+                                0x14a (size before relaxing)
  .rodata._ZStL19piecewise_construct
                 0x03860373        0x1 build/include/Sensors/PotDial.o
  .rodata.str1.1
                 0x03860374       0x30 build/include/Sensors/LineCounter.o
-                                 0x6e (size before relaxing)
+                                 0x4c (size before relaxing)
  .rodata.str1.1
                 0x038603a4       0x2e c:\Users\woodc\AppData\Roaming\Code\User\globalStorage\vexrobotics.vexcode\sdk\cpp\V5\V5_20220726_10_00_00/vexv5\libv5rt.a(v5_startup.c.obj)
  *fill*         0x038603d2        0x2 
@@ -9577,7 +9504,7 @@ Linker script and memory map
  .ARM.exidx.text._ZN14VariableConfig7drawAllEb
                 0x0386102c        0x0 build/include/BrainOS/VariableConfig.o
                                   0x8 (size before relaxing)
- .ARM.exidx.text.__cxx_global_var_init.10
+ .ARM.exidx.text.__cxx_global_var_init.7
                 0x0386102c        0x0 build/include/BrainOS/VariableConfig.o
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt17_Function_handlerIFbvEN14VariableConfig6bypassMUlvE_EE9_M_invokeERKSt9_Any_data
@@ -9772,7 +9699,7 @@ Linker script and memory map
  .ARM.exidx.text._ZN10FieldCoordpLERS_
                 0x0386102c        0x0 build/include/Odometry/GPS_Share.o
                                   0x8 (size before relaxing)
- .ARM.exidx.text.__cxx_global_var_init.5
+ .ARM.exidx.text.__cxx_global_var_init.3
                 0x0386102c        0x0 build/include/Odometry/GPS_Share.o
                                   0x8 (size before relaxing)
  .ARM.exidx.text._ZNSt6vectorI10FieldCoordSaIS0_EE19_M_emplace_back_auxIJRKS0_EEEvDpOT_
