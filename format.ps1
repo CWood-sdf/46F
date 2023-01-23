@@ -1,83 +1,18 @@
-cd include
-Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-    
-    cd $_.Name
-    if($_.Name -ne "lvgl"){
-        Get-ChildItem -Depth 0 -File | ForEach-Object {
-            # echo $_.Name
 
-            clang-format $_.Name
-        }
+function Format-Files($folder, $skipFolders, $depth = 5){
+    cd $folder
+    Get-ChildItem -Depth 0 -File | ForEach-Object {
+        clang-format $_.Name
+    }
+    if($depth -gt 0){
         Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-        
-            cd $_.Name
-            Get-ChildItem -Depth 0 -File | ForEach-Object {
-                # echo $_.Name
-
-                clang-format $_.Name
+            if($_.Name -notin $skipFolders){
+                Format-Files $_.Name $depth-1
             }
-            
-            cd..
-            # clang-format $_.Name
         }
     }
-    cd..
-    # clang-format $_.Name
+    cd..    
 }
-cd..
-
-cd src
-Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-    
-    cd $_.Name
-    if($_.Name -ne "lvgl"){
-        Get-ChildItem -Depth 0 -File | ForEach-Object {
-            # echo $_.Name
-
-            clang-format $_.Name
-        }
-        Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-        
-            cd $_.Name
-            Get-ChildItem -Depth 0 -File | ForEach-Object {
-                # echo $_.Name
-
-                clang-format $_.Name
-            }
-            
-            cd..
-            # clang-format $_.Name
-        }
-    }
-    cd..
-    # clang-format $_.Name
-}
-cd..
-cd Libs
-Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-    
-    cd $_.Name
-    if($_.Name -ne "Eigen"){
-        Get-ChildItem -Depth 0 -File | ForEach-Object {
-            # echo $_.Name
-
-            clang-format $_.Name
-        }
-        Get-ChildItem -Depth 0 -Directory | ForEach-Object {
-        
-            cd $_.Name
-            Get-ChildItem -Depth 0 -File | ForEach-Object {
-                # echo $_.Name
-
-                clang-format $_.Name
-            }
-            
-            cd..
-            # clang-format $_.Name
-        }
-    }
-    cd..
-    # clang-format $_.Name
-}
-cd..
-
+Format-Files "include" @("lvgl")
+Format-Files "src" @()
+Format-Files "Libs" @("Eigen")

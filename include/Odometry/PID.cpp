@@ -162,7 +162,7 @@ void PIDF::incVals(double sensorVal)
         error = target - sensorVal;
     }
     p = error;
-    if (abs(error) <= iGrowth && iGrowth >= 0.0)
+    if (abs(error) <= iGrowth || iGrowth < 0.0)
     {
         i += error;
     }
