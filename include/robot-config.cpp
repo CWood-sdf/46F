@@ -159,15 +159,15 @@ Odometry
 
 // Positioner init
 #if BOT == 1
-posTp::encoderArr arrX = {};
+posTp::encoderArr arrX = {TrackingWheel(PORT14, true, 2.77)};
 
-posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 1.385)};
+posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 2.77)};
 #elif BOT == 2
-posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 1.385)};
-posTp::encoderArr arrY = {TrackingWheel(PORT14, true, 1.385)};
+posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
+posTp::encoderArr arrY = {TrackingWheel(PORT14, true, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad
-posTp positioner = posTp(arrX, arrY, {0, 0});
+posTp positioner = posTp(arrX, arrY, {-2, 6});
 
 GPS_Share share = GPS_Share(positioner, GPS);
 

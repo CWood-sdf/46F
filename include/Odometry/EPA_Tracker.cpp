@@ -9,6 +9,7 @@ TrackingWheel::TrackingWheel(int32_t port, bool reverse, double wheelDiameter) :
 {
     rotation* rot = new rotation(port);
     encoder = new Encoder(rot);
+    encoder->resetPosition();
     this->rot = rot;
 }
 TrackingWheel::TrackingWheel(vex::triport::port port, bool reverse, double wheelDiameter) : TrackingWheel(reverse, wheelDiameter)
@@ -18,7 +19,7 @@ TrackingWheel::TrackingWheel(vex::triport::port port, bool reverse, double wheel
 }
 TrackingWheel::TrackingWheel(motor& m, bool reverse, double wheelDiameter) : TrackingWheel(reverse, wheelDiameter)
 {
-    encoder = new Encoder(m);
+    encoder = new Encoder(&m);
 }
 TrackingWheel::TrackingWheel(Encoder& encoder, bool reverse, double wheelDiameter) : TrackingWheel(reverse, wheelDiameter)
 {
@@ -34,6 +35,7 @@ Positioner::Positioner(encoderArr xArr, encoderArr yArr, PVector fromCenter)
         if (xEncoders[i].rot != NULL)
         {
             AddDevice("Odom X " + toCcp(i), xEncoders[i].rot);
+            lastX.push_back(xEncoders[i]->position(rotationUnits::deg));
         }
     }
     for (int i = 0; i < yEncoders.size(); i++)
@@ -41,8 +43,11 @@ Positioner::Positioner(encoderArr xArr, encoderArr yArr, PVector fromCenter)
         if (yEncoders[i].rot != NULL)
         {
             AddDevice("Odom Y " + toCcp(i), yEncoders[i].rot);
+            lastY.push_back(yEncoders[i]->position(rotationUnits::deg));
         }
     }
+    encXAmnt = xEncoders.size();
+    encYAmnt = yEncoders.size();
 }
 // Shifts angle to range of [0, 360)
 double baseAngle(double ang)
@@ -76,22 +81,21 @@ double posNeg180(double ang)
 // 80+ lines of trig, vector math, and some sensor stuff
 PVector Positioner::update()
 {
-    // static double lostDist = 0.0;
-    // static PVector last = PVector(1, 1);
     // Vector of the wheel angles
     PVector angles = PVector();
 
     // Get encoder rotation as fast as possible
     // Use raw array for speed
-    vector<double> rotX;
-    vector<double> rotY;
+    vector<double> rotX = {};
+    vector<double> rotY = {};
     // Update bot angle as close to rotation access as possible
     //  updateBotAngle(run);
     if (xEncoders.size() != 0)
     {
         for (int i = 0; i < xEncoders.size(); i++)
         {
-            rotX.push_back(xEncoders[i]->position(rotationUnits::deg));
+            double position = xEncoders[i]->position(rotationUnits::deg);
+            rotX.push_back(position);
         }
     }
     // cout << yEncoders.size() << endl;
@@ -152,6 +156,7 @@ PVector Positioner::update()
     PVector deltaPos = deltaAngles;
 
     speed = deltaPos.dist2D() / (time.time(seconds));
+    time.reset();
     pos += deltaPos; // Add deltaPos to pos
     return pos;      // Return pos so it can be used
 }

@@ -79,8 +79,9 @@ void GPS_Share::update()
     // Get GPS coordinate
     FieldCoord gpsCoord = FieldCoord(PVector(GPS.xPosition(inches), GPS.yPosition(inches)), GPS.heading());
     bool useGps = !gpsBad();
+    // cout << speed << endl;
     // If GPS can see position
-    if (useGps && speed < 0.001)
+    if (useGps && speed < 0.1)
     {
         gpsReadings.push_back(gpsCoord);
     }
@@ -88,7 +89,7 @@ void GPS_Share::update()
     {
         gpsReadings.clear();
     }
-    if (gpsReadings.size() > 30)
+    if (gpsReadings.size() > 50)
     {
         lastGpsUpdate = Brain.Timer.system();
         FieldCoord avgPos = FieldCoord(PVector(0, 0), 0);
@@ -98,6 +99,7 @@ void GPS_Share::update()
         }
         avgPos.pos /= gpsReadings.size();
         avgPos.angle /= gpsReadings.size();
+        botAngles.x = avgPos.angle;
         // Set position to GPS value
         pos = avgPos;
         lastPosReading = pos;
@@ -107,7 +109,8 @@ void GPS_Share::update()
     {
         // Use change in odometry
         pos.pos += deltaOdom.pos;
-        pos.angle += deltaOdom.angle;
+        // pos.angle += deltaOdom.angle;
+        pos.angle = botAngles.x;
     }
     if (++i == 30)
     {

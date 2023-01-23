@@ -1,6 +1,7 @@
 #ifndef INTAKE_AUTOMATION_H
 #define INTAKE_AUTOMATION_H
 #include "Sensors/LineCounter.h"
+#include <functional>
 #if BOT == 1
 struct AutoIntake
 {

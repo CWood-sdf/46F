@@ -234,6 +234,10 @@ void AutoIntake::updateValues(bool flywheelReady)
         direction = -1;
         fixingUnstable = true;
     }
+    if (direction == 0 && clearingDisks && sensors.back()())
+    {
+        direction = -1;
+    }
     if (i++ == 30)
     {
         // cout << "Mask: " << diskMask << endl;

@@ -186,7 +186,7 @@ void forceGpsUpdate()
     {
         s(10);
         time += 10;
-        if (time > 2000)
+        if (time > 10000)
         {
             cout << "GPS update fail" << endl;
             break;
@@ -227,13 +227,16 @@ Auton skills = "Skills" + []()
     // intaking = true;
 
     intakeController.intake();
-    wc.driveTo(-40.66, 56.97);
+    wc.turnTo(59.68);
+    wc.driveDistance(12, &pidController);
+
     forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
 
     flyTBH.setTargetSpeed(431);
+    wc.driveTo(-40, 48);
     wc.backInto(-40.99, 63.09);
     wc.turnTo(180);
     chassis.driveFromDiff(-20, 0, fwd);
@@ -255,7 +258,7 @@ Auton skills = "Skills" + []()
     intakeController.waitForFiring();
 
     intakeController.intake();
-    wc.driveTo(-6, 26);
+    wc.driveTo(-0, 26);
     forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
@@ -263,7 +266,7 @@ Auton skills = "Skills" + []()
 
     intakeController.intake();
     flyTBH.setTargetSpeed(425);
-    wc.driveTo(-3, 17);
+    wc.driveTo(-12, 12);
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
@@ -279,12 +282,13 @@ Auton skills = "Skills" + []()
 
     flyTBH.setTargetSpeed(535);
     wc.driveTo(50.94, -37.33);
-    // intakeController.intake();
-    // wc.driveTo(45.40, -50.25);
-    // forceGpsUpdate();
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
+    intakeController.intake();
+    wc.faceTarget({48, -48});
+    wc.driveDistance(12, &pidController);
+    forceGpsUpdate();
+    wc.faceTarget(goal);
+    intakeController.setFiring();
+    intakeController.waitForFiring();
 
     wc.backInto(59, -37);
     wc.turnTo(-89.83);
