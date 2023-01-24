@@ -77,7 +77,7 @@ void microWait(uint time);
 vector<LineCounter*> LineCounter::instances = {};
 const KillThread LineCounter::updater = thread([]()
     {
-    //Wait to allow initialization
+    //Wait to allow initialization 
     s(1000);
     if(LineCounter::instances.size() == 0){
         cout << "No Line Counter instances exist, exiting thread" << endl;
