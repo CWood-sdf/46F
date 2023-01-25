@@ -864,7 +864,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     int timesStopped = 0;
     pid->init();
     double lastSpeed = 0.0;
-    cout << "%ctrlP: def d" << endl;
+    // cout << "%ctrlP: def d" << endl;
     while (1)
     {
         // Basic exit conditions
@@ -991,7 +991,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         this->drawArr = false;
         cout << "PID stop: ";
         // Print postion and target position
-        cout << -dist + targetDist << ", " << targetDist << endl;
+        cout << -dist + targetDist << ", " << targetDist << ", " << botPos() << endl;
         cout << positioner.heading() - startAngle << endl;
         exitDist = 0.0;
     }

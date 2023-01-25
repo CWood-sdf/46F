@@ -29,7 +29,7 @@ void Inertial::update()
 {
 
     lastAngle = currentAngle;
-    currentAngle = sensor->orientation(orientationType::yaw, rotationUnits::deg);
+    currentAngle = sensor->orientation(orientationType::yaw, rotationUnits::deg) + offset;
     // cout << angle << endl;
     double gain = posNeg180(currentAngle - lastAngle);
     gain *= (gain > 0 ? errPos : errNeg);
@@ -89,6 +89,14 @@ Positioner::Positioner(encoderArr xArr, encoderArr yArr, Inertial s, PVector fro
     }
     encXAmnt = xEncoders.size();
     encYAmnt = yEncoders.size();
+}
+void Positioner::setPos(PVector pos, double a)
+{
+    this->pos = pos;
+    angleSensor.setAngle(a);
+    PVector newP = position();
+    PVector dir = newP - pos;
+    this->pos = pos + dir;
 }
 // Shifts angle to range of [0, 360)
 double baseAngle(double ang)
