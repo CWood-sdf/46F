@@ -1,7 +1,7 @@
 #ifndef CHASSIS_H
 #define CHASSIS_H
 #include "Bezier.h"
-#include "GPS_Share.h"
+#include "EPA_Tracker.h"
 #include "PID.h"
 #ifdef TEST
 class Timer
@@ -110,14 +110,14 @@ struct Chassis
 // If true, the chassis is on extra motors
 #ifndef WINDOWS
     bool ptoEngaged = true;
-    GPS_Share& pos;
+    Positioner& pos;
 #endif
     double trackWidth = 0.0;
     double gearRatio = 1.0;
     double wheelRad = 0.0;
     gearSetting cartridge = gearSetting::ratio18_1;
     double botAngle();
-    PVector& botPos();
+    PVector botPos();
     double revToInches(double rotation)
     {
         return rotation * 2.0 * M_PI * wheelRad / gearRatio;
@@ -181,7 +181,7 @@ struct Chassis
     chain_method setMaxDAcc(double v);
     chain_method setSpeedLimit(double v);
 #ifndef WINDOWS
-    Chassis(MotorGroup& left, MotorGroup& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
+    Chassis(MotorGroup& left, MotorGroup& right, Positioner& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 #else
     Chassis(double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
 #endif

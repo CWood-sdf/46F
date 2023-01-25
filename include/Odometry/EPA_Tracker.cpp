@@ -17,7 +17,7 @@ TrackingWheel::TrackingWheel(vex::triport::port port, bool reverse, double wheel
     class encoder* rot = new class encoder(port);
     encoder = new Encoder(rot);
 }
-TrackingWheel::TrackingWheel(motor& m, bool reverse, double wheelDiameter) : TrackingWheel(reverse, wheelDiameter)
+TrackingWheel::TrackingWheel(motor& m, bool reverse, double gearRatio, double wheelDiameter) : TrackingWheel(reverse, wheelDiameter / gearRatio)
 {
     encoder = new Encoder(&m);
 }
@@ -25,7 +25,48 @@ TrackingWheel::TrackingWheel(Encoder& encoder, bool reverse, double wheelDiamete
 {
     this->encoder = &encoder;
 }
-Positioner::Positioner(encoderArr xArr, encoderArr yArr, PVector fromCenter)
+void Inertial::update()
+{
+
+    lastAngle = currentAngle;
+    currentAngle = sensor->orientation(orientationType::yaw, rotationUnits::deg);
+    // cout << angle << endl;
+    double gain = posNeg180(currentAngle - lastAngle);
+    gain *= (gain > 0 ? errPos : errNeg);
+    currentAngle = lastAngle + gain;
+}
+Inertial::Inertial(int32_t port, double fullTurnNeg, double fullTurnPos)
+{
+    sensor = new inertial(port);
+    AddDevice("Inertial", sensor);
+    errNeg = 360.0 / fullTurnNeg;
+    errPos = 360.0 / fullTurnPos;
+    update();
+}
+Inertial::Inertial(inertial& sensor, double fullTurnNeg, double fullTurnPos)
+{
+    this->sensor = &sensor;
+    errNeg = 360.0 / fullTurnNeg;
+    errPos = 360.0 / fullTurnPos;
+    update();
+}
+double Inertial::heading()
+{
+    return currentAngle;
+}
+double Inertial::avgHeading()
+{
+    return (currentAngle + lastAngle) / 2.0;
+}
+double Inertial::lastHeading()
+{
+    return lastAngle;
+}
+double Inertial::deltaAngle()
+{
+    return posNeg180(currentAngle - lastAngle);
+}
+Positioner::Positioner(encoderArr xArr, encoderArr yArr, Inertial s, PVector fromCenter) : angleSensor(s)
 {
     this->fromCenter = fromCenter;
     this->xEncoders = xArr;
@@ -35,16 +76,16 @@ Positioner::Positioner(encoderArr xArr, encoderArr yArr, PVector fromCenter)
         if (xEncoders[i].rot != NULL)
         {
             AddDevice("Odom X " + toCcp(i), xEncoders[i].rot);
-            lastX.push_back(xEncoders[i]->position(rotationUnits::deg));
         }
+        lastX.push_back(xEncoders[i]->position(rotationUnits::deg));
     }
     for (int i = 0; i < yEncoders.size(); i++)
     {
         if (yEncoders[i].rot != NULL)
         {
             AddDevice("Odom Y " + toCcp(i), yEncoders[i].rot);
-            lastY.push_back(yEncoders[i]->position(rotationUnits::deg));
         }
+        lastY.push_back(yEncoders[i]->position(rotationUnits::deg));
     }
     encXAmnt = xEncoders.size();
     encYAmnt = yEncoders.size();
@@ -81,6 +122,8 @@ double posNeg180(double ang)
 // 80+ lines of trig, vector math, and some sensor stuff
 PVector Positioner::update()
 {
+
+    angleSensor.update();
     // Vector of the wheel angles
     PVector angles = PVector();
 
@@ -137,19 +180,19 @@ PVector Positioner::update()
     }
     PVector deltaAngles;
 
-    if (deltaBotAngle != 0.0)
+    if (angleSensor.deltaAngle() != 0.0)
     {
-        double deltaAngle = deltaBotAngle * DEG_TO_RAD;
+        double deltaAngle = angleSensor.deltaAngle() * DEG_TO_RAD;
         double sin2 = 2.0 * sin(deltaAngle / 2.0);
         double x = (angles.x / deltaAngle) * sin2;
         double y = (angles.y / deltaAngle) * sin2;
         deltaAngles = {x, y};
-        deltaAngles.rotate(avgBotAngle);
+        deltaAngles.rotate(angleSensor.avgHeading());
     }
     else
     {
         deltaAngles = angles;
-        deltaAngles.rotate(avgBotAngle);
+        deltaAngles.rotate(angleSensor.avgHeading());
     }
 
     // Get the change in the position
@@ -158,12 +201,13 @@ PVector Positioner::update()
     speed = deltaPos.dist2D() / (time.time(seconds));
     time.reset();
     pos += deltaPos; // Add deltaPos to pos
-    return pos;      // Return pos so it can be used
+    s(V5_SENSOR_REFRESH);
+    return pos; // Return pos so it can be used
 }
-PVector Positioner::getPos()
+PVector Positioner::position()
 {
     PVector fromCenterCopy = fromCenter;
-    fromCenterCopy.rotate(glblBotAngle);
+    fromCenterCopy.rotate(angleSensor.heading());
     PVector posCopy = pos;
     posCopy *= -1.0;
     posCopy += fromCenterCopy;
@@ -171,19 +215,19 @@ PVector Positioner::getPos()
 }
 double Positioner::xPosition(distanceUnits)
 {
-    return getPos().x;
+    return position().x;
 }
 double Positioner::yPosition(distanceUnits)
 {
-    return getPos().y;
+    return position().y;
 }
 double Positioner::heading()
 {
-    return glblBotAngle;
+    return angleSensor.heading();
 }
 FieldCoord Positioner::fullPos()
 {
-    return FieldCoord(getPos(), heading());
+    return FieldCoord(position(), heading());
 }
 bool Positioner::moving()
 {

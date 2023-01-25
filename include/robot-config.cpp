@@ -115,12 +115,10 @@ Sensors
 //  triport Expander = triport(PORT9);
 //  TestDevice(Expander);
 // Inertial Sensor
-inertial angler = inertial(PORT16);
-TestDevice(angler);
-
+Inertial angler = Inertial(PORT16, 358.0, 358.0);
 // gps
-gps GPS = gps(PORT6, 7, 0.0, inches, 0);
-TestDevice(GPS);
+// gps GPS = gps(PORT6, 7, 0.0, inches, 0);
+// TestDevice(GPS);
 
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
@@ -167,13 +165,13 @@ posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT14, true, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad
-posTp positioner = posTp(arrX, arrY, {-2, 6});
+posTp positioner = posTp(arrX, arrY, angler, {-2, 6});
 
-GPS_Share share = GPS_Share(positioner, GPS);
+// GPS_Share share = GPS_Share(positioner, GPS);
 
 // Wheel controller
 
-Chassis chassis = Chassis(leftWheels, rightWheels, share, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio18_1);
+Chassis chassis = Chassis(leftWheels, rightWheels, positioner, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio18_1);
 WheelController::PathFollowSettings purePursuitSettings = WheelController::PathFollowSettings();
 
 PurePursuitController purePursuit = PurePursuitController(
@@ -195,7 +193,7 @@ RamseteController ramsete = RamseteController(
         .setVirtualPursuitDist(2));
 WheelController::PathFollowSettings pidSettings = WheelController::PathFollowSettings();
 BasicPidController pidController = BasicPidController(
-    PIDF(6.0, 0.1, 2.4325, 20, 6, 1),
+    PIDF(6.25, 0.1, 2.4325, 20, 6, 1),
     PID(0.8, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(WheelController::exitMode::normal)

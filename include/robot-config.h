@@ -71,11 +71,8 @@ Sensors
 // Three wire expander
 extern triport Expander;
 
-// Inertial Sensor
-extern inertial angler;
-
 // gps
-extern gps GPS;
+// extern gps GPS;
 
 extern optical rachetColor;
 
@@ -101,7 +98,7 @@ Odometry
 // Positioner init
 typedef Positioner posTp;
 
-extern GPS_Share share;
+// extern GPS_Share share;
 
 extern Positioner positioner;
 // Wheel controller

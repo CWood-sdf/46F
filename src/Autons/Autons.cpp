@@ -179,20 +179,7 @@ Auton rightA = "Right" + []()
     // intakeController.setFiring();
 };
 bool intaking = false;
-void forceGpsUpdate()
-{
-    int time = 0;
-    while (share.timeSinceLastGpsMs() > 3000)
-    {
-        s(10);
-        time += 10;
-        if (time > 10000)
-        {
-            cout << "GPS update fail" << endl;
-            break;
-        }
-    }
-}
+
 Auton skills = "Skills" + []()
 {
     PVector goal = {46, 50};
@@ -222,7 +209,6 @@ Auton skills = "Skills" + []()
     chassis.driveFromDiff(20, 0, fwd);
     s(700);
     chassis.coastBrake();
-    forceGpsUpdate();
 
     // intaking = true;
 
@@ -230,7 +216,6 @@ Auton skills = "Skills" + []()
     wc.turnTo(59.68);
     wc.driveDistance(12, &pidController);
 
-    forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
@@ -246,20 +231,17 @@ Auton skills = "Skills" + []()
     chassis.driveFromDiff(20, 0, fwd);
     s(500);
     chassis.coastBrake();
-    forceGpsUpdate();
 
     // intaking = true;
 
     intakeController.intake();
     wc.driveTo(-12, 36);
-    forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
 
     intakeController.intake();
     wc.driveTo(-0, 26);
-    forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
@@ -270,12 +252,10 @@ Auton skills = "Skills" + []()
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
-    forceGpsUpdate();
 
     intakeController.intake();
     flyTBH.setTargetSpeed(467);
     wc.driveTo(37, -13);
-    forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
@@ -285,7 +265,6 @@ Auton skills = "Skills" + []()
     intakeController.intake();
     wc.faceTarget({48, -48});
     wc.driveDistance(12, &pidController);
-    forceGpsUpdate();
     wc.faceTarget(goal);
     intakeController.setFiring();
     intakeController.waitForFiring();
@@ -299,7 +278,6 @@ Auton skills = "Skills" + []()
     chassis.driveFromDiff(20, 0, fwd);
     s(500);
     chassis.coastBrake();
-    forceGpsUpdate();
 
     wc.driveTo(42.54, -45.91);
     wc.backInto(42.07, -57.7);

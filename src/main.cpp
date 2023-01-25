@@ -549,10 +549,8 @@ int main()
         {
     v5_lv_init();
     cout << "<< Lvgl initialized >>" << endl;
-    s(100);
-    gyroInit(angler);
-    cout << "<< Gyros initialized >>" << endl;
-    //Gyro's initialized
+    positioner.init();
+    cout << "<< Odometry initialized >>" << endl;
     testMotorConnection();
     // testMotorConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
@@ -560,6 +558,7 @@ int main()
     wc.path.setK(1.2);
     chassis.setMaxAcc(200);
     chassis.setMaxDAcc(160);
+    cout << "<< Chassis initialized >>" << endl;
 #if BOT == 1
     // flyTBH.setTarget(0);
     flyTBH.setTargetSpeed(0);
@@ -568,14 +567,13 @@ int main()
     intakeController.autonInit();
 #endif
     endgame.close();
-    share.setUseGps(true);
     s(500);
     init = true; });
     while (!init)
     {
         s(100);
     }
-    thread gpsUpdate = thread(updateSharePos);
+    thread posUpdate = thread(updatePos);
 
     // Make a thread to execute some auton tasks concurrently
     thread otherThreads = thread(executeThreads);

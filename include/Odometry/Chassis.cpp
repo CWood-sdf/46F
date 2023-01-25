@@ -3,7 +3,7 @@
 #ifndef DEG_TO_RAD
 #define DEG_TO_RAD 0.0174532925199432957692369076842
 #endif
-PVector& Chassis::botPos()
+PVector Chassis::botPos()
 {
 #ifndef TEST
     return pos.position();
@@ -20,7 +20,7 @@ double Chassis::botAngle()
 #endif
 }
 #ifndef WINDOWS
-Chassis::Chassis(MotorGroup& left, MotorGroup& right, GPS_Share& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : leftWheels(left), rightWheels(right), pos(p)
+Chassis::Chassis(MotorGroup& left, MotorGroup& right, Positioner& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge) : leftWheels(left), rightWheels(right), pos(p)
 {
 
     this->trackWidth = trackWidth;

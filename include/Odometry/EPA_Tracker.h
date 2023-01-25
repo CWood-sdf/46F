@@ -79,7 +79,7 @@ class TrackingWheel
 public:
     TrackingWheel(int32_t port, bool reverse, double wheelDiameter);
     TrackingWheel(vex::triport::port port, bool reverset, double wheelDiameter);
-    TrackingWheel(motor& m, bool reverse, double wheelDiameter);
+    TrackingWheel(motor& m, bool reverse, double gearRatio, double wheelDiameter);
     TrackingWheel(Encoder& e, bool reverse, double wheelDiameter);
     Encoder* operator->()
     {
@@ -94,6 +94,33 @@ public:
         return wheelDiameter / 2.0;
     }
 };
+class Inertial
+{
+    friend class Positioner;
+    inertial* sensor;
+    double errNeg = 1.0;
+    double errPos = 1.0;
+    double lastAngle = 0.0;
+    double currentAngle = 0.0;
+    void update();
+
+public:
+    Inertial(int32_t port, double fullTurnNeg, double fullTurnPos);
+    Inertial(inertial& sensor, double fullTurnNeg, double fullTurnPos);
+    double heading();
+    double avgHeading();
+    double lastHeading();
+    double deltaAngle();
+    void init()
+    {
+        gyroInit(*sensor);
+    }
+    void setAngle(double a)
+    {
+        currentAngle = a;
+        lastAngle = a;
+    }
+};
 class Positioner
 {
     // A few typedefs
@@ -106,6 +133,7 @@ public:
 private:
     double encXAmnt;
     double encYAmnt;
+    Inertial angleSensor;
     typedef vector<double> doubleArr;
     doubleArr lastX;
     doubleArr lastY;
@@ -116,28 +144,23 @@ private:
     encoderArr xEncoders; // Make the x encoder array
     encoderArr yEncoders;
 
-public:
-    void resetPos(PVector pos)
-    {
-        this->pos = pos;
-    }
-
 private:
     PVector pos = PVector(0.0, 0.0); // Make a vector to store the current position
 
 public:
-    void setPos(PVector pos)
+    void setPos(PVector pos, double a)
     {
         this->pos = pos;
+        angleSensor.setAngle(a);
     }
     // The constructors
 
-    Positioner(encoderArr encodersX, encoderArr encodersY, PVector fromCenter = PVector(0.0, 0.0));
+    Positioner(encoderArr encodersX, encoderArr encodersY, Inertial angler, PVector fromCenter = PVector(0.0, 0.0));
     Positioner() = delete;
     // Function that updates the position
     // 80+ lines of trig, vector math, and some sensor stuff
     PVector update();
-    PVector getPos();
+    PVector position();
     double xPosition(distanceUnits = inches);
     double yPosition(distanceUnits = inches);
     double heading();
@@ -145,6 +168,10 @@ public:
     bool moving();
     double velocity();
     void clearMove();
+    void init()
+    {
+        angleSensor.init();
+    }
 };
 #endif
 #endif

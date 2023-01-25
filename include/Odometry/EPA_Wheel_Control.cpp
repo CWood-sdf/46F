@@ -26,7 +26,7 @@ double WheelController::botAngle()
 {
     return chassis->botAngle();
 }
-PVector& WheelController::botPos()
+PVector WheelController::botPos()
 {
     return chassis->botPos();
 }

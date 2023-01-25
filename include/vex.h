@@ -62,14 +62,6 @@ extern controller Beethoven;
 // clang-format on
 #ifndef NO_MAKE
 
-// A vector to store the bot angles globally
-PVector botAngles = PVector(0.0, 0.0, 0.0);
-// The Actual Bot Angle
-double& glblBotAngle = botAngles.x;
-double deltaBotAngle = 0.0;
-double avgBotAngle = 0.0;
-double tiltAngle = botAngles.z;
-double startTilt = 0.0;
 ostream& operator<<(ostream& cout, PVector& v)
 {
     cout << VECT_OUT(v);
@@ -184,14 +176,7 @@ string toCcp(double v)
     return ret;
 }
 #else
-// A vector to store the bot angles globally
-extern PVector botAngles;
-// The Actual Bot Angle
-extern double& glblBotAngle;
-extern double deltaBotAngle;
-extern double avgBotAngle;
-extern double tiltAngle;
-extern double startTilt;
+
 ostream& operator<<(ostream& cout, PVector& v);
 ostream& operator<<(ostream& cout, PVector&& v);
 

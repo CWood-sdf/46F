@@ -1,6 +1,6 @@
 #ifndef BEZIER_H
 #define BEZIER_H
-#include "GPS_Share.h"
+#include "EPA_Tracker.h"
 #include <deque>
 // Makes an array of Vectors that can be efficiently modified at both ends
 struct VectorArr
