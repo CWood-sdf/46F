@@ -179,119 +179,196 @@ Auton rightA = "Right" + []()
     // intakeController.setFiring();
 };
 bool intaking = false;
-
+void launchDisks()
+{
+    intakeController.setFiring();
+    intakeController.waitForFiring();
+}
 Auton skills = "Skills" + []()
 {
     PVector goal = {46, 50};
     wc.setRed();
-    // thread runIntakeThread = thread([]()
-    //                                 {
-    //   while(1){
-    //     if(intaking){
-    //       intake.spin(fwd, 50);
-    //     }
-    //     if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
-    //     {
-    //       intaking = false;
-    //       intake.stop(hold);
-    //     }
-    //     s(10);
-    //   } });
-    // botAngles.x = 90;
-    // wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
+
     flyTBH.setTargetSpeed(510);
-    // flywheelNm.spin(fwd, 100);
-    wc.estimateStartPos(PVector(-61.39, 41.17), 90);
-    // flywheelNm.stop(coast);
-
-    wc.turnTo(90);
+    wc.estimateStartPos(PVector(-61.39, 41.34), 89.36);
     spinRoller();
-    chassis.driveFromDiff(20, 0, fwd);
-    s(700);
-    chassis.coastBrake();
-
-    // intaking = true;
-
+    // Get first disk
     intakeController.intake();
-    wc.turnTo(59.68);
-    wc.driveDistance(12, &pidController);
-
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
-
+    wc.turnTo(63.04);
+    wc.driveDistance(21.29);
+    wc.turnTo(90.79);
+    launchDisks();
     flyTBH.setTargetSpeed(431);
-    wc.driveTo(-40, 48);
-    wc.backInto(-40.99, 63.09);
-    wc.turnTo(180);
-    chassis.driveFromDiff(-20, 0, fwd);
-    s(700);
-    chassis.coastBrake();
+
+    // Spin roller
+    wc.turnTo(180.67);
+    wc.backwardsDriveDistance(10.38);
     spinRoller();
-    chassis.driveFromDiff(20, 0, fwd);
-    s(500);
-    chassis.coastBrake();
 
-    // intaking = true;
+    wc.driveDistance(2.23);
 
+    // Next disk
     intakeController.intake();
-    wc.driveTo(-12, 36);
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
+    wc.turnTo(127.59);
+    wc.driveDistance(37.53);
+    wc.turnTo(77.17);
+    launchDisks();
 
+    // Next disk
     intakeController.intake();
-    wc.driveTo(-0, 26);
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
+    wc.turnTo(135.38);
+    wc.driveDistance(19.26);
+    wc.turnTo(60.96);
+    launchDisks();
 
+    // Next disk
     intakeController.intake();
     flyTBH.setTargetSpeed(425);
-    wc.driveTo(-12, 12);
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
+    wc.turnTo(133.64);
+    wc.driveDistance(15.87);
+    wc.turnTo(44.00);
+    launchDisks();
 
+    // Big stack
     intakeController.intake();
     flyTBH.setTargetSpeed(467);
-    wc.driveTo(37, -13);
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
+    wc.turnTo(134.84);
+    wc.driveDistance(38.22);
+    wc.turnTo(9.45);
+    launchDisks();
 
+    // Roller
     flyTBH.setTargetSpeed(535);
-    wc.driveTo(50.94, -37.33);
+    wc.turnTo(143.77);
+    wc.driveDistance(33.70);
+    wc.turnTo(269.25);
+    spinRoller();
+
+    // Disk
     intakeController.intake();
-    wc.faceTarget({48, -48});
-    wc.driveDistance(12, &pidController);
-    wc.faceTarget(goal);
-    intakeController.setFiring();
-    intakeController.waitForFiring();
+    wc.driveDistance(3.08);
+    wc.turnTo(237.34);
+    wc.driveDistance(15.90);
+    wc.turnTo(-89.06);
+    launchDisks();
 
-    wc.backInto(59, -37);
-    wc.turnTo(-89.83);
-    chassis.driveFromDiff(-20, 0, fwd);
-    s(700);
-    chassis.coastBrake();
+    // Last roller
+    wc.turnTo(3.59);
+    wc.backwardsDriveDistance(9.27);
     spinRoller();
-    chassis.driveFromDiff(20, 0, fwd);
-    s(500);
-    chassis.coastBrake();
 
-    wc.driveTo(42.54, -45.91);
-    wc.backInto(42.07, -57.7);
-    wc.turnTo(0);
-    chassis.driveFromDiff(-20, 0, fwd);
-    s(700);
-    chassis.coastBrake();
-    spinRoller();
-    chassis.driveFromDiff(20, 0, fwd);
-    s(500);
-    chassis.coastBrake();
-
-    wc.faceTarget({-68.79, 69.19});
+    // Endgame
+    wc.turnTo(-41.99);
     endgame.open();
+
+    // // thread runIntakeThread = thread([]()
+    // //                                 {
+    // //   while(1){
+    // //     if(intaking){
+    // //       intake.spin(fwd, 50);
+    // //     }
+    // //     if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
+    // //     {
+    // //       intaking = false;
+    // //       intake.stop(hold);
+    // //     }
+    // //     s(10);
+    // //   } });
+    // // botAngles.x = 90;
+    // // wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
+    // flyTBH.setTargetSpeed(510);
+    // // flywheelNm.spin(fwd, 100);
+    // wc.estimateStartPos(PVector(-61.39, 41.17), 90);
+    // // flywheelNm.stop(coast);
+
+    // wc.turnTo(90);
+    // spinRoller();
+    // chassis.driveFromDiff(20, 0, fwd);
+    // s(700);
+    // chassis.coastBrake();
+
+    // // intaking = true;
+
+    // intakeController.intake();
+    // wc.turnTo(59.68);
+    // wc.driveDistance(12, &pidController);
+
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // flyTBH.setTargetSpeed(431);
+    // wc.driveTo(-40, 48);
+    // wc.backInto(-40.99, 63.09);
+    // wc.turnTo(180);
+    // chassis.driveFromDiff(-20, 0, fwd);
+    // s(700);
+    // chassis.coastBrake();
+    // spinRoller();
+    // chassis.driveFromDiff(20, 0, fwd);
+    // s(500);
+    // chassis.coastBrake();
+
+    // // intaking = true;
+
+    // intakeController.intake();
+    // wc.driveTo(-12, 36);
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // intakeController.intake();
+    // wc.driveTo(-0, 26);
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // intakeController.intake();
+    // flyTBH.setTargetSpeed(425);
+    // wc.driveTo(-12, 12);
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // intakeController.intake();
+    // flyTBH.setTargetSpeed(467);
+    // wc.driveTo(37, -13);
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // flyTBH.setTargetSpeed(535);
+    // wc.driveTo(50.94, -37.33);
+    // intakeController.intake();
+    // wc.faceTarget({48, -48});
+    // wc.driveDistance(12, &pidController);
+    // wc.faceTarget(goal);
+    // intakeController.setFiring();
+    // intakeController.waitForFiring();
+
+    // wc.backInto(59, -37);
+    // wc.turnTo(-89.83);
+    // chassis.driveFromDiff(-20, 0, fwd);
+    // s(700);
+    // chassis.coastBrake();
+    // spinRoller();
+    // chassis.driveFromDiff(20, 0, fwd);
+    // s(500);
+    // chassis.coastBrake();
+
+    // wc.driveTo(42.54, -45.91);
+    // wc.backInto(42.07, -57.7);
+    // wc.turnTo(0);
+    // chassis.driveFromDiff(-20, 0, fwd);
+    // s(700);
+    // chassis.coastBrake();
+    // spinRoller();
+    // chassis.driveFromDiff(20, 0, fwd);
+    // s(500);
+    // chassis.coastBrake();
+
+    // wc.faceTarget({-68.79, 69.19});
+    // endgame.open();
 };
 Auton winPoint = "Win Point" + []()
 {

@@ -998,13 +998,13 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     stopExitPrev = false;
     pid->deInit();
 }
-void WheelController::driveDistance(double dist, BasicPidController* pid)
+void WheelController::driveDistance(double dist)
 {
-    generalDriveDistance(dist, false, pid);
+    generalDriveDistance(dist, false, defaultPid);
 }
-void WheelController::backwardsDriveDistance(double dist, BasicPidController* pid)
+void WheelController::backwardsDriveDistance(double dist)
 {
-    generalDriveDistance(dist, true, pid);
+    generalDriveDistance(dist, true, defaultPid);
 }
 // The beefiest function in this file
 void WheelController::purePursuitFollow(VectorArr arr, bool isNeg)
