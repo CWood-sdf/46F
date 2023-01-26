@@ -3,21 +3,18 @@
 #include "vex.h"
 class Auton
 {
-    friend class Init;
     static inline size_t idSet = 0;
     static inline std::vector<Auton*> refList;
     static inline std::vector<Button*> buttons;
     static inline Auton* auton;
     static inline bool autonSelected = false;
     static inline bool ready = false;
-    static inline Button confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(0, 255, 0), color(0, 200, 0), "Confirm");
-    static inline Button deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(255, 0, 0), color(200, 0, 0), "Deny");
     static void configCallback(int i)
     {
         auton = refList[i];
         autonSelected = true;
         ready = true;
-        cout << "Select auton" << endl;
+        cout << "Auton Selected" << endl;
     }
     static inline VariableConfig conf = VariableConfig({}, "Auton", configCallback);
     string name;
