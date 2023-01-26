@@ -464,7 +464,7 @@ void brainOS()
     bos::bosFns.getCurrent()->call(true);
     while (1)
     {
-        if (bos::bosFns.size(0))
+        if (bos::bosFns.empty())
         {
             cout << "bosFns is empty for some reason" << endl;
             s(500);
@@ -481,15 +481,9 @@ void brainOS()
                 lv_obj_clean(lv_scr_act());
                 lv_anim_del_all();
             }
-            // Shift the linked list pointer
-            auto oldPtr = &bos::bosFns.getCurrent();
             bos::bosFns.moveCurrentLeft();
-            auto newPtr = &bos::bosFns.getCurrent();
-            if (oldPtr != newPtr)
-            {
-                // Tell it to remake
-                bos::bosFns.getCurrent()->call(true);
-            }
+            // Tell it to remake
+            bos::bosFns.getCurrent()->call(true);
         }
         else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent())
         {
@@ -501,14 +495,9 @@ void brainOS()
                 lv_anim_del_all();
             }
             // Shift the linked list pointer
-            auto oldPtr = &bos::bosFns.getCurrent();
             bos::bosFns.moveCurrentRight();
-            auto newPtr = &bos::bosFns.getCurrent();
-            if (oldPtr != newPtr)
-            {
-                // Tell it to remake
-                bos::bosFns.getCurrent()->call(true);
-            }
+            // Tell it to remake
+            bos::bosFns.getCurrent()->call(true);
         }
         // Draw the screen, and store it's pop result
         auto result = bos::bosFns.getCurrent()->call(false);
