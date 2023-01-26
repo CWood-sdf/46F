@@ -77,7 +77,7 @@ public: // Some Functions
     void driveTo(double x, double y);
     void backInto(double x, double y);
     virtual double botAngle();
-    PVector& botPos();
+    PVector botPos();
     // Add a function to be called at a specified distance
     void addDistFn(double dist, std::function<void()> fn);
     // Reuse the old map
@@ -227,8 +227,8 @@ public:
         generalFollow(arr, controller, true);
     }
     void generalDriveDistance(double dist, bool isNeg, BasicPidController* pid);
-    void driveDistance(double dist, BasicPidController* pid);
-    void backwardsDriveDistance(double dist, BasicPidController* pid);
+    void driveDistance(double dist);
+    void backwardsDriveDistance(double dist);
     bool isRed();
     bool isBlue();
     void setRed();

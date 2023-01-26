@@ -22,23 +22,23 @@ controller Greg = controller();
 controller Beethoven = controller(partner);
 
 // Front Left Wheel (FL)
-motor FL = motor(PORT17, gearSetting::ratio18_1, !true);
+motor FL = motor(PORT17, gearSetting::ratio6_1, !true);
 TestDevice(FL);
 // Front Right Wheel (FR)
-motor FR = motor(PORT9, gearSetting::ratio18_1, !false);
+motor FR = motor(PORT9, gearSetting::ratio6_1, !false);
 TestDevice(FR);
 // Back Left Wheel (BL)
-motor BL = motor(PORT21, gearSetting::ratio18_1, !true);
+motor BL = motor(PORT21, gearSetting::ratio6_1, !true);
 TestDevice(BL);
 // Back Right Wheel (BR)
-motor BR = motor(PORT12, gearSetting::ratio18_1, !false);
+motor BR = motor(PORT12, gearSetting::ratio6_1, !false);
 TestDevice(BR);
 #if BOT == 2
 // Middle Left Wheel (ML)
-motor ML = motor(PORT20, gearSetting::ratio18_1, true);
+motor ML = motor(PORT20, gearSetting::ratio6_1, true);
 TestDevice(ML);
 // Middle Right Wheel (MR)
-motor MR = motor(PORT8, gearSetting::ratio18_1, false);
+motor MR = motor(PORT8, gearSetting::ratio6_1, false);
 TestDevice(MR);
 #endif
 
@@ -171,7 +171,7 @@ posTp positioner = posTp(arrX, arrY, angler, {0, 5});
 
 // Wheel controller
 
-Chassis chassis = Chassis(leftWheels, rightWheels, positioner, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio18_1);
+Chassis chassis = Chassis(leftWheels, rightWheels, positioner, 11.25, 36.0 / 60.0, 3.75, gearSetting::ratio6_1);
 WheelController::PathFollowSettings purePursuitSettings = WheelController::PathFollowSettings();
 
 PurePursuitController purePursuit = PurePursuitController(
@@ -197,7 +197,7 @@ BasicPidController pidController = BasicPidController(
     PID(0.8, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(WheelController::exitMode::normal)
-        .setExitDist(2)
+        .setExitDist(1)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
         .setTurnAtStart(true)
@@ -288,5 +288,6 @@ void testMotorConnection()
  */
 void vexcodeInit(void)
 {
-    // wheels.set(hold);
+    leftWheels.setBrakeMode(hold);
+    rightWheels.setBrakeMode(hold);
 }
