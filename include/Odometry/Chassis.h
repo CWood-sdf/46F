@@ -3,52 +3,7 @@
 #include "Bezier.h"
 #include "EPA_Tracker.h"
 #include "PID.h"
-#ifdef TEST
-class Timer
-{
-    std::chrono::milliseconds startTime =
-        std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch());
 
-public:
-    Timer() { reset(); }
-    void reset()
-    {
-        startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch());
-    }
-    long long time()
-    {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch() - startTime)
-            .count();
-    }
-    long long time(timeUnits)
-    {
-        return time();
-    }
-    operator long long()
-    {
-        return time();
-    }
-};
-class Stopwatch
-{
-    Timer timer;
-
-public:
-    Stopwatch()
-    {
-        timer.reset();
-    }
-    long long getTime()
-    {
-        auto time = timer.time();
-        timer.reset();
-        return time;
-    }
-};
-#endif
 struct Chassis;
 class Controller;
 class Path
@@ -94,7 +49,7 @@ struct Chassis
     vector<bool> ptoMotorsRight = vector<bool>();
     double lastLeftSpeed = 0.0;
     double lastRightSpeed = 0.0;
-    GPS_Share& pos;
+    Positioner& pos;
     double trackWidth = 0.0;
     double gearRatio = 1.0;
     double wheelRad = 0.0;
@@ -163,13 +118,6 @@ struct Chassis
     chain_method setMaxAcc(double v);
     chain_method setMaxDAcc(double v);
     chain_method setSpeedLimit(double v);
-#ifndef WINDOWS
     Chassis(MotorGroup& left, MotorGroup& right, Positioner& p, double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
-#else
-    Chassis(double trackWidth, double gearRatio, double wheelRad, gearSetting cartridge);
-#endif
-#ifdef TEST
-    void runSimStep();
-#endif
 };
 #endif

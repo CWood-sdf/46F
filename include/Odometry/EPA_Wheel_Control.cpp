@@ -973,10 +973,8 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         this->drawArr = false;
         cout << "PID stop: ";
         // Print postion and target position
-        cout << -dist + targetDist << ", " << targetDist << endl;
-        cout << botAngle() - startAngle << endl;
         cout << -dist + targetDist << ", " << targetDist << ", " << botPos() << endl;
-        cout << positioner.heading() - startAngle << endl;
+        cout << botAngle() - startAngle << endl;
         exitDist = 0.0;
     }
     stopExitPrev = false;
