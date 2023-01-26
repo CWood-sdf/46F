@@ -85,33 +85,16 @@ public:
 struct Chassis
 {
     typedef Chassis& chain_method;
-#ifdef TEST
-    Stopwatch stopwatch;
-    FieldCoord position = {PVector(0, 0), 0};
-    double vel = 0;
-    double angVel = 0;
-    double currentLeftVel = 0;
-    double currentRightVel = 0;
-    double targetLeftVel = 0;
-    double targetRightVel = 0;
-#endif
     double speedLimit = 100;
     double maxAcc = 100; // in/s^2
     double maxDAcc = 80; // in/s^2
-#ifndef WINDOWS
     MotorGroup& leftWheels;
     MotorGroup& rightWheels;
     vector<bool> ptoMotorsLeft = vector<bool>();
     vector<bool> ptoMotorsRight = vector<bool>();
-    vector<pneumatics*> ptoPneumatics = vector<pneumatics*>();
-#endif
     double lastLeftSpeed = 0.0;
     double lastRightSpeed = 0.0;
-// If true, the chassis is on extra motors
-#ifndef WINDOWS
-    bool ptoEngaged = true;
-    Positioner& pos;
-#endif
+    GPS_Share& pos;
     double trackWidth = 0.0;
     double gearRatio = 1.0;
     double wheelRad = 0.0;

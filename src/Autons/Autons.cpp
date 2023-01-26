@@ -188,13 +188,17 @@ Auton skills = "Skills" + []()
 {
     PVector goal = {46, 50};
     wc.setRed();
-
-    flyTBH.setTargetSpeed(510);
+    flyTBH.setDisabled(false);
+    flyTBH.setTargetSpeed(450);
     wc.estimateStartPos(PVector(-61.39, 41.34), 89.36);
+    intakeController.enable();
     spinRoller();
+    intakeController.enable();
+    s(100);
+
     // Get first disk
     intakeController.intake();
-    wc.turnTo(63.04);
+    wc.turnTo(65.04);
     wc.driveDistance(21.29);
     wc.turnTo(90.79);
     launchDisks();
@@ -209,32 +213,33 @@ Auton skills = "Skills" + []()
 
     // Next disk
     intakeController.intake();
-    wc.turnTo(127.59);
+    wc.turnTo(125.59);
     wc.driveDistance(37.53);
-    wc.turnTo(77.17);
+    wc.turnTo(75.17);
     launchDisks();
+    flyTBH.setTargetSpeed(420);
 
     // Next disk
     intakeController.intake();
-    wc.turnTo(135.38);
-    wc.driveDistance(19.26);
+    wc.turnTo(127.38);
+    wc.driveDistance(12.26);
     wc.turnTo(60.96);
     launchDisks();
 
     // Next disk
     intakeController.intake();
-    flyTBH.setTargetSpeed(425);
+    flyTBH.setTargetSpeed(420);
     wc.turnTo(133.64);
-    wc.driveDistance(15.87);
+    wc.driveDistance(19.87);
     wc.turnTo(44.00);
     launchDisks();
 
     // Big stack
     intakeController.intake();
-    flyTBH.setTargetSpeed(467);
-    wc.turnTo(134.84);
+    flyTBH.setTargetSpeed(450);
+    wc.turnTo(125.84);
     wc.driveDistance(38.22);
-    wc.turnTo(9.45);
+    wc.turnTo(10.45);
     launchDisks();
 
     // Roller
@@ -242,19 +247,20 @@ Auton skills = "Skills" + []()
     wc.turnTo(143.77);
     wc.driveDistance(33.70);
     wc.turnTo(269.25);
+    wc.backwardsDriveDistance(12);
     spinRoller();
 
     // Disk
     intakeController.intake();
-    wc.driveDistance(3.08);
-    wc.turnTo(237.34);
-    wc.driveDistance(15.90);
+    wc.driveDistance(9.08);
+    wc.turnTo(250.34);
+    wc.driveDistance(11.90);
     wc.turnTo(-89.06);
     launchDisks();
 
     // Last roller
-    wc.turnTo(3.59);
-    wc.backwardsDriveDistance(9.27);
+    wc.turnTo(0);
+    wc.backwardsDriveDistance(15.27);
     spinRoller();
 
     // Endgame

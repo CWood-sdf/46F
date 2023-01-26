@@ -102,6 +102,7 @@ class Inertial
     double errPos = 1.0;
     double lastAngle = 0.0;
     double currentAngle = 0.0;
+    double offset = 0.0;
     void update();
 
 public:
@@ -117,8 +118,8 @@ public:
     }
     void setAngle(double a)
     {
-        currentAngle = a;
-        lastAngle = a;
+        offset += a - heading();
+        lastAngle = currentAngle = a;
     }
 };
 class Positioner
@@ -148,11 +149,7 @@ private:
     PVector pos = PVector(0.0, 0.0); // Make a vector to store the current position
 
 public:
-    void setPos(PVector pos, double a)
-    {
-        this->pos = pos;
-        angleSensor.setAngle(a);
-    }
+    void setPos(PVector pos, double a);
     // The constructors
 
     Positioner(encoderArr encodersX, encoderArr encodersY, Inertial angler, PVector fromCenter = PVector(0.0, 0.0));

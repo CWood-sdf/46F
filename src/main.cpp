@@ -539,6 +539,7 @@ int main()
     v5_lv_init();
     cout << "<< Lvgl initialized >>" << endl;
     positioner.init();
+    positioner.setPos({0, 0}, 0);
     cout << "<< Odometry initialized >>" << endl;
     testMotorConnection();
     // testMotorConfiguration();
