@@ -25,6 +25,8 @@ protected: // PID variables + other random things
     map<double, std::function<void()>> distFns, oldFns;
     LinkedList<PidAdder> customPidsTurn;
     bool callingInDrive = false;
+    std::function<PVector(PVector)> autonReversePosition;
+    std::function<double(double)> autonReverseAngle;
 
 public: // Some variables
     // A public path for drawing
@@ -40,8 +42,18 @@ public: // Some variables
     BasicPidController* defaultPid;
 
 public: // Constructor
-    WheelController(Chassis* c, RamseteController* defRamsete, PurePursuitController* defPurePursuit, BasicPidController* defPid, PID turnCtrl, double kConst = 1.0)
+    WheelController(
+        Chassis* c,
+        RamseteController* defRamsete,
+        PurePursuitController* defPurePursuit,
+        BasicPidController* defPid,
+        std::function<PVector(PVector)> reversePos,
+        std::function<double(double)> reverseAngle,
+        PID turnCtrl,
+        double kConst = 1.0)
     {
+        autonReversePosition = reversePos;
+        autonReverseAngle = reverseAngle;
         defaultPurePursuit = defPurePursuit;
         defaultRamsete = defRamsete;
         defaultPid = defPid;
@@ -65,7 +77,7 @@ public: // Some Functions
     void driveTo(double x, double y);
     void backInto(double x, double y);
     virtual double botAngle();
-    PVector botPos();
+    PVector& botPos();
     // Add a function to be called at a specified distance
     void addDistFn(double dist, std::function<void()> fn);
     // Reuse the old map
@@ -215,8 +227,8 @@ public:
         generalFollow(arr, controller, true);
     }
     void generalDriveDistance(double dist, bool isNeg, BasicPidController* pid);
-    void driveDistance(double dist);
-    void backwardsDriveDistance(double dist);
+    void driveDistance(double dist, BasicPidController* pid);
+    void backwardsDriveDistance(double dist, BasicPidController* pid);
     bool isRed();
     bool isBlue();
     void setRed();
@@ -227,11 +239,16 @@ class MechWheelController : public WheelController
 {
 public: // Import variables + constructor
     // MechWheelController(motor& BL, motor& BR, posTp&, gps&) = delete;
-    MechWheelController(Chassis* c, RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid, PID tc, double kConst = 1.0) : WheelController(c, ramsete, purePursuit, defPid, tc, kConst)
+    MechWheelController(
+        Chassis* c,
+        RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid,
+        std::function<PVector(PVector)> reversePos, std::function<double(double)> reverseAngle,
+        PID tc, double kConst = 1.0)
+      : WheelController(c, ramsete, purePursuit, defPid, reversePos, reverseAngle, tc, kConst)
     {
     }
 
-public: // EPIC PID Things, when actually used on competition bot, please rewrite
+public:
     void moveAt(double angle, double speed, double turnSpeed);
     void followPath(VectorArr arr, double targetAngle);
     void driveTo(PVector pos, double finalAngle);

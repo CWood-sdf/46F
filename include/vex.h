@@ -8,7 +8,7 @@
 #define BASE_FILE <Libs
 // clang-format on
 // Undef this macro to find all places that are game specific
-#define USE_GAME_SPECIFIC
+// #define USE_GAME_SPECIFIC
 #define BOT 1
 // #undef USE_GAME_SPECIFIC
 //

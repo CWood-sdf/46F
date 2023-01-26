@@ -204,15 +204,20 @@ BasicPidController pidController = BasicPidController(
         .setVirtualPursuitDist(9)
         .setMaxTimeIn(200));
 
-WheelController::PathFollowSettings debugSettings = WheelController::PathFollowSettings();
-DebugController debugController = DebugController(
-    debugSettings
-        .setBrakeMode(WheelController::exitMode::coast)
-        .setExitDist(4)
-        .setUseDistToGoal(false)
-        .setFollowPathDist(16)
-        .setVirtualPursuitDist(4));
-WheelController wc = WheelController(&chassis, &ramsete, &purePursuit, &pidController, PID(1.92, 0.05, 1.35 / 2, -1, 20, 4), 1.0);
+PVector reverseAutonPosition(PVector v)
+{
+    return v * -1;
+}
+double reverseAutonAngle(double a)
+{
+    return posNeg180(a + 180);
+}
+WheelController wc = WheelController(
+    &chassis,
+    &ramsete, &purePursuit, &pidController,
+    reverseAutonPosition, reverseAutonAngle,
+    PID(1.92, 0.05, 1.35 / 2, -1, 20, 4),
+    1.0);
 
 /*************************************
 
@@ -285,14 +290,3 @@ void vexcodeInit(void)
 {
     // wheels.set(hold);
 }
-
-bool toBool(double v)
-{
-    return (bool)(int)(v + 0.5);
-}
-
-/*************************************
- *
- * The intake automation variables in a struct
- *
- *************************************/

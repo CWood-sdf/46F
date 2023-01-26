@@ -83,15 +83,12 @@ void WheelController::useDistFns(double dist)
 void WheelController::turnTo(std::function<double()> angleCalc)
 {
     //
-    double oldAngleCalc = angleCalc();
+    auto oldAngleCalc = angleCalc;
     if (!isRed() && !callingInDrive)
     {
-#ifndef USE_GAME_SPECIFIC
-#warning GSD (Turning add)
-#endif
         angleCalc = [&]()
         {
-            return posNeg180(oldAngleCalc + 180);
+            return autonReverseAngle(oldAngleCalc() + 180);
         };
     }
     // If the auton is on the other side, turn to the opposite angle
@@ -165,9 +162,10 @@ void WheelController::faceTarget(PVector target)
         target.y *= -1.0;
     }
     callingInDrive = true;
-    turnTo(botPos().angleTo(target));
+    turnTo([=]()
+        { return botPos().angleTo(target); });
     // Reinvoke just in case the turn messed things up
-    turnTo(botPos().angleTo(target));
+    // turnTo(botPos().angleTo(target));
     callingInDrive = false;
 }
 
@@ -180,28 +178,15 @@ WheelController::chain_method WheelController::estimateStartPos(PVector v, doubl
 {
     cout << sign(botPos().x) << ", " << sign(v.x) << endl;
     // If it thinks it is at (0, 0), just use the given value
-    if (botPos().mag() < 6)
+
+    if (isBlue())
+    {
+        chassis->pos.setPos(autonReversePosition(v), autonReverseAngle(a));
+    }
+    else
     {
         chassis->pos.setPos(v, a);
     }
-    // botAngles.x = a;
-    // if (isBlue())
-    // {
-    //     botAngles.x = posNeg180(a + 180);
-    // }
-#ifndef USE_GAME_SPECIFIC
-#warning GSD (Conditions for reversing auton)
-#endif
-    // // If they are on opposite sides, reverse the auton
-    // else if (sign(botPos().x) != sign(v.x) && sign(botPos().y) != sign(v.y))
-    // {
-    //   reversed = true;
-    //   cout << "Reversing auton" << endl;
-    // }
-    // else
-    // {
-    //   reversed = false;
-    // }
     CHAIN;
 }
 #endif
@@ -414,15 +399,13 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
     double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
     controller->init();
-#ifndef USE_GAME_SPECIFIC
-#warning GSD (Auton position reverse)
-#endif
+
     // Change to new game dependency
     if (reversed)
     {
         for (auto& a : arr)
         {
-            a *= -1.0;
+            a = autonReversePosition(a);
         }
     }
 
@@ -848,7 +831,6 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
     }
 #endif
 }
-extern Positioner positioner;
 void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController* pid)
 {
     PVector startPos = chassis->botPos();
@@ -991,6 +973,8 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         this->drawArr = false;
         cout << "PID stop: ";
         // Print postion and target position
+        cout << -dist + targetDist << ", " << targetDist << endl;
+        cout << botAngle() - startAngle << endl;
         cout << -dist + targetDist << ", " << targetDist << ", " << botPos() << endl;
         cout << positioner.heading() - startAngle << endl;
         exitDist = 0.0;
@@ -1031,23 +1015,7 @@ bool WheelController::isBlue()
 void MechWheelController::moveAt(double angle, double speed, double turnSpeed)
 {
     // There are actual equations governing this
-    //  double Y1 = cos(angle * DEG_TO_RAD) * speed;
-    //  double Y2 = cos(angle * DEG_TO_RAD) * speed;
-    //  double X1 = sin(angle * DEG_TO_RAD) * speed;
-    //  double X2 = sin(angle * DEG_TO_RAD) * speed;
-    //  double FLS = Y1 + X1;
-    //  double BLS = Y1 - X1;
-    //  double FRS = Y2 - X2;
-    //  double BRS = Y2 + X2;
-    //  FLS += turnSpeed;
-    //  BLS += turnSpeed;
-    //  FRS -= turnSpeed;
-    //  BRS -= turnSpeed;
-    //  //Spin da motors
-    //  BL->spin(vex::forward, BLS, velocityUnits::pct);
-    //  BR->spin(vex::forward, BRS, velocityUnits::pct);
-    //  FL->spin(vex::forward, FLS, velocityUnits::pct);
-    //  FR->spin(vex::forward, FRS, velocityUnits::pct);
+    cout << "MechWheelController::moveAt is not implemented" << endl;
 }
 void MechWheelController::followPath(VectorArr arr, double targetAngle)
 {

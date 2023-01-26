@@ -9,111 +9,105 @@
 double sign(double v);
 class Controller
 {
-  bool turnAtStart = false;
-  bool defaultTurn = true;
+    bool turnAtStart = false;
+    bool defaultTurn = true;
 
 public:
-  WheelController::PathFollowSettings settings;
-  bool isTurnAtStart()
-  {
-    return turnAtStart;
-  }
-  void setTurn()
-  {
-    turnAtStart = true;
-  }
-  void preventTurn()
-  {
-    turnAtStart = false;
-  }
-  void setDefaultTurn(bool val)
-  {
-    defaultTurn = val;
-  }
-  bool getDefaultTurn()
-  {
-    return defaultTurn;
-  }
-  struct Input
-  {
-    PVector target;
-    PVector position;
-    double angleTarget;
-    double currentAngle;
-    double dist;
-    Path::El targetPt;
-    Chassis *chassis;
-    // bool isNeg;
-  };
-  enum class AngularVel
-  {
-    curvature,
-    pctDiff,
-    radps
-  };
-  enum class ForwardVel
-  {
-    pct,
-    inps
-  };
+    WheelController::PathFollowSettings settings;
+    bool isTurnAtStart()
+    {
+        return turnAtStart;
+    }
+    void setTurn()
+    {
+        turnAtStart = true;
+    }
+    void preventTurn()
+    {
+        turnAtStart = false;
+    }
+    void setDefaultTurn(bool val)
+    {
+        defaultTurn = val;
+    }
+    bool getDefaultTurn()
+    {
+        return defaultTurn;
+    }
+    struct Input
+    {
+        PVector target;
+        PVector position;
+        double angleTarget;
+        double currentAngle;
+        double dist;
+        Path::El targetPt;
+        Chassis* chassis;
+        // bool isNeg;
+    };
+    enum class AngularVel
+    {
+        curvature,
+        pctDiff,
+        radps
+    };
+    enum class ForwardVel
+    {
+        pct,
+        inps
+    };
 
-  virtual void init();
-  // Pure Pursuit
-  typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
-  virtual followToRet followTo(Input &input);
-  followToRet followTo(Input &&v)
-  {
-    return followTo(v);
-  }
+    virtual void init();
+    // Pure Pursuit
+    typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
+    virtual followToRet followTo(Input& input);
+    followToRet followTo(Input&& v)
+    {
+        return followTo(v);
+    }
 
-  virtual void deInit();
-  Controller()
-  {
-  }
+    virtual void deInit();
+    Controller()
+    {
+    }
 };
 class PurePursuitController : public Controller
 {
-  // Get ctrl kP up to 6.25
-  PID ctrl = PID();
+    // Get ctrl kP up to 6.25
+    PID ctrl = PID();
 
 public:
-  followToRet followTo(Input &input) override;
-  void init() override;
-  PurePursuitController(PID input);
-  PurePursuitController(PID input, WheelController::PathFollowSettings settings);
-  PurePursuitController() = delete;
+    followToRet followTo(Input& input) override;
+    void init() override;
+    PurePursuitController(PID input);
+    PurePursuitController(PID input, WheelController::PathFollowSettings settings);
+    PurePursuitController() = delete;
 };
 class RamseteController : public Controller
 {
-  // beta ~ p-term
-  //[b > 0]
-  // zeta ~ d-term
-  //[0 < zeta < 1]
-  double beta; // rad^2/in^2
-  double zeta; // 1/rad
+    // beta ~ p-term
+    //[b > 0]
+    // zeta ~ d-term
+    //[0 < zeta < 1]
+    double beta; // rad^2/in^2
+    double zeta; // 1/rad
 public:
-  followToRet followTo(Input &input) override;
-  //[b > 0], [0 < zeta < 1]
-  RamseteController(double beta, double zeta);
-  RamseteController(double beta, double zeta, WheelController::PathFollowSettings settings);
-  RamseteController() = delete;
+    followToRet followTo(Input& input) override;
+    //[b > 0], [0 < zeta < 1]
+    RamseteController(double beta, double zeta);
+    RamseteController(double beta, double zeta, WheelController::PathFollowSettings settings);
+    RamseteController() = delete;
 };
 class BasicPidController : public Controller
 {
-  PID ctrl;
-  PID slave;
+    PID ctrl;
+    PID slave;
 
 public:
-  void init() override;
-  BasicPidController(PID, PID);
-  BasicPidController(PID, PID, WheelController::PathFollowSettings settings);
-  followToRet followTo(Input &input) override;
-  BasicPidController() = delete;
-};
-class DebugController : public Controller
-{
-public:
-  followToRet followTo(Input &input) override;
-  DebugController(WheelController::PathFollowSettings settings);
+    void init() override;
+    BasicPidController(PID, PID);
+    BasicPidController(PID, PID, WheelController::PathFollowSettings settings);
+    followToRet followTo(Input& input) override;
+    BasicPidController() = delete;
 };
 #endif

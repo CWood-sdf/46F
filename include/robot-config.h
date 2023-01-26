@@ -51,7 +51,6 @@ extern Chassis chassis;
 extern PurePursuitController purePursuit;
 extern RamseteController ramsete;
 extern BasicPidController pidController;
-extern DebugController debugController;
 
 /*************************************
 
