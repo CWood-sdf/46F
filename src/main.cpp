@@ -104,6 +104,7 @@ void autonInit()
     intakeController.autonInit();
     intakeController.enable();
 #endif
+    intakeController.enable();
     cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -127,7 +128,60 @@ void autonomous()
 #define sensitivity 12
 
 // Drivercontrol + automation {
+void calibrateFlywheelSpeed()
+{
+    unsigned int i = 0;
+    unsigned int iMod = 10;
+    int currentSpeed = 350;
+    int direction = 0;
+    [[maybe_unused]] ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
+    [[maybe_unused]] ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
+    intakeController.enable();
+    while (1)
+    {
+        if (Greg.ButtonL1.pressing())
+        {
+            direction = 1;
+        }
+        else if (Greg.ButtonL2.pressing())
+        {
+            direction = -1;
+        }
+        else
+        {
+            direction = 0;
+        }
+        if (Greg.ButtonR1.pressing())
+        {
+            iMod = 10;
+        }
+        else if (Greg.ButtonR2.pressing())
+        {
+            iMod = 1;
+        }
+        i++;
+        i %= iMod;
+        if (i == 0)
+        {
+            currentSpeed += direction;
+            if (direction != 0)
+            {
+                cout << "Current Speed: " << currentSpeed << endl;
+            }
+            flyTBH.setTargetSpeed(currentSpeed);
+        }
+        if (XLatch.pressing())
+        {
+            intakeController.intake();
+        }
+        if (YLatch.pressing())
+        {
+            intakeController.setFiring();
+        }
 
+        s(10);
+    }
+}
 // This class allows a button latch to exist
 void drivercontrol()
 {
@@ -544,7 +598,7 @@ int main()
     // testMotorConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
-    wc.path.setK(1.2);
+    wc.path.setK(1.4);
     chassis.setMaxAcc(200);
     chassis.setMaxDAcc(160);
     cout << "<< Chassis initialized >>" << endl;
@@ -575,6 +629,7 @@ int main()
 
     // wc.prevStopExit();
     // wc.driveTo(-20, 48);
+    // calibrateFlywheelSpeed();
     autonomous();
     // // chassis.coastBrake();
     // flyTBH.setTargetSpeed(0);
