@@ -384,6 +384,30 @@ Auton winPoint = "Win Point" + []()
     wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
     wc.turnTo(0);
 };
+wc.estimateStartPos(PVector(-62.51, 40.91), 89.23);
+  wc.driveTo(-42.04, 51.98);
+  wc.faceTarget({49.93, 49.50});
+  wc.bacInto(-41.71, 62.05);
+  spinRoller();
+  wc.followPath(&purePursuit, {PVector(-41.87, 45.54), PVector(-12.81, 36.29)});
+  wc.faceTarget({49.93, 49.50});
+  launchDisks();
+  wc.driveTo(0.22, 23.74);
+  wc.faceTarget({49.93, 49.50});
+  launchDisks();
+  wc.driveTo(12.94, 11.19);
+  wc.faceTarget({49.93, 49.50});
+  wc.driveTo(36.22, -12.25);
+  wc.faceTarget({49.93, 49.50});
+  launchDisks();
+  wc.driveTo(57.36, -41.47);
+  wc.turnTo(-89.85);
+  wc.backwardsDriveDistance(4.01);
+  wc.driveTo(41.50, -52.04);
+  wc.faceTarget({-49.47, -50.06});
+  wc.turnTo(0.16);
+  wc.backwardsDriveDistance(9.30);
+
 #elif BOT == 2
 Auton leftA = "Left" + []() {
 
