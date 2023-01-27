@@ -108,7 +108,7 @@ void autonInit()
 }
 void autonomous()
 {
-    while (!Auton::isDone())
+    while (!Auton::isSelected())
     {
         s(100);
     }
@@ -129,7 +129,6 @@ void autonomous()
 // Drivercontrol + automation {
 
 // This class allows a button latch to exist
-
 void drivercontrol()
 {
     [[maybe_unused]] ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
@@ -390,7 +389,7 @@ bool helpAlignBot(bool)
     // static PVector position = PVector({60.5, -39});
     // position.angleTo({-50, -50});
     static bool init = false;
-    if (!init && Auton::isDone())
+    if (!init && Auton::isSelected())
     {
         if (Auton::selectedName() == "Right")
         {
@@ -437,22 +436,22 @@ void brainOS()
       wc.setBlue();
     } });
     // Make it skip the color set screen if were in skills
-    bos::bosFns.pushBack(testConnection);
+    bosFns.pushBack(testConnection);
 #if BOT == 1
-    bos::bosFns.pushBack(bos::BosFn(graphFlywheelTBH, true));
+    bosFns.pushBack(BosFn(graphFlywheelTBH, true));
 #endif
-    bos::bosFns.pushBack(bos::BosFn(displayBot, true));
+    bosFns.pushBack(BosFn(displayBot, true));
 // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
 #if BOT == 1
-    bos::bosFns.pushBack(bos::BosFn([](bool refresh)
+    bosFns.pushBack(BosFn([](bool refresh)
         { intakeController.drawState(refresh); },
         true));
 #endif
-    // bos::bosFns.pushBack(helpAlignBot);
-    bos::bosFns.pushBack(VariableConfig::drawAll);
-    // bos::bosFns.pushBack(bos::BosFn(printTestData));
-    // bos::bosFns.push_back(fn);
-    bos::bosFns.pushBack(windowsLoader);
+    // bosFns.pushBack(helpAlignBot);
+    bosFns.pushBack(VariableConfig::drawAll);
+    // bosFns.pushBack(BosFn(printTestData));
+    // bosFns.push_back(fn);
+    bosFns.pushBack(windowsLoader);
     // Make the buttons
     // Set it to 50 gray and 10 transparent
     color buttonColor = color(0x0a323232);
@@ -461,33 +460,33 @@ void brainOS()
     *((bool*)(((uint32_t*)&buttonColor) + 1)) = true;
     Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, "<", -40, -30);
     Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, ">", -40, -30);
-    bos::bosFns.getCurrent()->call(true);
+    bosFns.getCurrent()->call(true);
     while (1)
     {
-        if (bos::bosFns.empty())
+        if (bosFns.empty())
         {
             cout << "bosFns is empty for some reason" << endl;
             s(500);
             continue;
         }
         // Have buttons clicked first so that clicking them overrides the screen click functions
-        if (screenLeft.clicked() && &bos::bosFns.getBase() != &bos::bosFns.getCurrent())
+        if (screenLeft.clicked() && &bosFns.getBase() != &bosFns.getCurrent())
         {
             // If it's lvgl, clean it
-            if (bos::bosFns.getCurrent()->lvgl())
+            if (bosFns.getCurrent()->lvgl())
             {
                 cout << "Clean" << endl;
                 // Remove all objects
                 lv_obj_clean(lv_scr_act());
                 lv_anim_del_all();
             }
-            bos::bosFns.moveCurrentLeft();
+            bosFns.moveCurrentLeft();
             // Tell it to remake
-            bos::bosFns.getCurrent()->call(true);
+            bosFns.getCurrent()->call(true);
         }
-        else if (screenRight.clicked() && &bos::bosFns.getEnd() != &bos::bosFns.getCurrent())
+        else if (screenRight.clicked() && &bosFns.getEnd() != &bosFns.getCurrent())
         {
-            if (bos::bosFns.getCurrent()->lvgl())
+            if (bosFns.getCurrent()->lvgl())
             {
                 cout << "Clean" << endl;
                 // Remove all objects
@@ -495,13 +494,13 @@ void brainOS()
                 lv_anim_del_all();
             }
             // Shift the linked list pointer
-            bos::bosFns.moveCurrentRight();
+            bosFns.moveCurrentRight();
             // Tell it to remake
-            bos::bosFns.getCurrent()->call(true);
+            bosFns.getCurrent()->call(true);
         }
         // Draw the screen, and store it's pop result
-        auto result = bos::bosFns.getCurrent()->call(false);
-        if (bos::bosFns.getCurrent()->lvgl())
+        auto result = bosFns.getCurrent()->call(false);
+        if (bosFns.getCurrent()->lvgl())
         {
             lv_tick_inc(V5_LVGL_RATE);
             lv_task_handler();
@@ -509,16 +508,16 @@ void brainOS()
         // If we should pop the element from the list
         if (result)
         {
-            if (bos::bosFns.getCurrent()->lvgl())
+            if (bosFns.getCurrent()->lvgl())
             {
                 cout << "Clean" << endl;
                 // Remove all objects
                 lv_obj_clean(lv_scr_act());
                 lv_anim_del_all();
             }
-            bos::bosFns.popCurrent();
+            bosFns.popCurrent();
             // Send it the remake command
-            bos::bosFns.getCurrent()->call(true);
+            bosFns.getCurrent()->call(true);
         }
         // Draw the buttons
         // screenLeft.draw();

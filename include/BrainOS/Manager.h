@@ -1,10 +1,9 @@
 #include "BrainOS/BosFn.h"
-namespace bos
-{
+
 #ifndef NO_MAKE
-  LinkedList<BosFn> bosFns;
-  void setScreen(BosFn fn)
-  {
+LinkedList<BosFn> bosFns;
+void setScreen(BosFn fn)
+{
     // auto &oldCurrent = bosFns.getCurrent();
     // while (1)
     // {
@@ -19,9 +18,8 @@ namespace bos
     //   }
     // }
     // bosFns.setCurrent(oldCurrent);
-  }
-#else
-  extern LinkedList<BosFn> bosFns;
-  void setScreen(BosFn fn);
-#endif
 }
+#else
+extern LinkedList<BosFn> bosFns;
+void setScreen(BosFn fn);
+#endif

@@ -7,18 +7,18 @@ class PotDial;
 class SelectorArr
 {
     typedef function<void()> FnTp;
-    static inline FnTp emptyFn = []() {};
+    static inline FnTp emptyFn = []()
+    { cout << "SelectorArr: Empty function called" << endl; };
     static inline vector<PotDial*> boundDials = {};
     static inline map<vector<int>, FnTp> toVal = {};
     vector<int> count;
-    bool isValid = false;
     friend class PotDial;
     static void addDial(PotDial* dial);
 
 public:
     SelectorArr(vector<int> count, FnTp fn);
     SelectorArr(vector<int> count);
-    SelectorArr();
+    SelectorArr() {}
     void attachFn(FnTp fn);
     static FnTp getVal();
 };
@@ -29,15 +29,18 @@ class PotDial
     double baseVal = 0.0;
     int range = 250;
 
-    PotDial(int tickAmnt) : ticks(tickAmnt)
+    PotDial(int tickAmnt, bool addToSelector) : ticks(tickAmnt)
     {
-        SelectorArr::addDial(this);
+        if (addToSelector)
+        {
+            SelectorArr::addDial(this);
+        }
     }
-    PotDial(int tickAmnt, int rng) : PotDial(tickAmnt)
+    PotDial(int tickAmnt, int rng, bool addToSelector) : PotDial(tickAmnt, addToSelector)
     {
         range = rng;
     }
-    PotDial(int tickAmnt, int rng, double baseVal) : PotDial(tickAmnt, rng)
+    PotDial(int tickAmnt, int rng, double baseVal, bool addToSelector = true) : PotDial(tickAmnt, rng, addToSelector)
     {
         this->baseVal = baseVal;
     }

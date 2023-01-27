@@ -58,9 +58,10 @@ public:
         fn();
         CHAIN;
     }
-    void attachArr(vector<int> v)
+    Auton& attachArr(vector<int> v)
     {
         potGet = SelectorArr(v, fn);
+        return *this;
     }
     string getName()
     {
@@ -82,10 +83,6 @@ public:
             SelectorArr::getVal()();
         }
     }
-    static inline std::vector<Auton*> getRefs()
-    {
-        return refList;
-    }
 
     Auton& operator+(std::function<void()> fn)
     {
@@ -93,7 +90,12 @@ public:
         potGet.attachFn(fn);
         return *this;
     }
-    static bool isDone()
+    Auton& operator+(vector<int> arr)
+    {
+        attachArr(arr);
+        return *this;
+    }
+    static bool isSelected()
     {
         return ready;
     }
@@ -107,15 +109,15 @@ public:
     }
 };
 #ifndef NO_MAKE
-Auton operator"" _afn(const char* s)
-{
-    return Auton(s, []() {});
-}
 Auton operator+(const char* n, std::function<void()> f)
 {
     return Auton(n, f);
 }
+Auton operator+(const char* n, vector<int> v)
+{
+    return Auton(n, v);
+}
 #else
-Auton operator"" _afn(const char* s);
 Auton operator+(const char* n, std::function<void()> f);
+Auton operator+(const char* n, vector<int> v);
 #endif
