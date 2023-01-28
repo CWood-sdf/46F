@@ -68,7 +68,7 @@ void WheelController::useDistFns(double dist)
 {
     for (auto it = distFns.begin(); it != distFns.end() /* not hoisted */; /* no increment */)
     {
-        if ((*it).first < dist)
+        if ((*it).first > dist)
         {
 
             (*it).second();
@@ -608,7 +608,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         dist = botPos().dist2D(pursuit);
 #ifndef TEST
         // If the bot's not moving, and it's not currently accelerating
-        if (chassis->pos.velocity() < 0.1 && t.time(timeUnits::msec) > 1000)
+        if (chassis->pos.velocity() < 0.05 && t.time(timeUnits::msec) > 1000)
         {
             timesStopped++;
         }

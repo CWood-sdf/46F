@@ -175,7 +175,7 @@ Chassis chassis = Chassis(leftWheels, rightWheels, positioner, 11.25, 36.0 / 60.
 WheelController::PathFollowSettings purePursuitSettings = WheelController::PathFollowSettings();
 
 PurePursuitController purePursuit = PurePursuitController(
-    PID(6.25, 0.001, 2.4325, 0, 8, 1),
+    PIDF(6.25, 0.1, 2.4325, 200, 6, 1),
     purePursuitSettings
         .setBrakeMode(WheelController::exitMode::normal)
         .setExitDist(2)
@@ -193,7 +193,7 @@ RamseteController ramsete = RamseteController(
         .setVirtualPursuitDist(2));
 WheelController::PathFollowSettings pidSettings = WheelController::PathFollowSettings();
 BasicPidController pidController = BasicPidController(
-    PIDF(6.25, 0.1, 2.4325, 20, 6, 1),
+    PIDF(6.25, 0.1, 2.4325, 200, 6, 1),
     PID(0.8, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(WheelController::exitMode::normal)

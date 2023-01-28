@@ -378,11 +378,71 @@ Auton skills = "Skills" + []()
 };
 Auton winPoint = "Win Point" + []()
 {
-    wc.estimateStartPos(PVector(-60.26, 40.17), 102.22);
-    wc.followPath(&pidController, {PVector(-44.54, 0.13), PVector(18.49, -50.82)});
-    wc.driveTo(21.59, -44.32);
-    wc.backwardsFollow(&pidController, {PVector(41.18, -64.76)});
+    flyTBH.setTargetSpeed(485);
+    intakeController.enable();
+    wc.estimateStartPos(PVector(-60.36, 40.58), 91.46);
+    spinRoller();
+    s(20);
+    if (intakeController.count == 0)
+    {
+        intakeController.intake();
+    }
+    wc.addDistFn(12, []()
+        { chassis.setSpeedLimit(50); });
+    wc.followPath(&pidController, {PVector(-48.31, 0.46), PVector(-12.31, -11.91)});
+    chassis.setSpeedLimit(100);
+    s(100);
+    wc.faceTarget({49.93, 50.16});
+    launchDisks();
+    flyTBH.setTargetSpeed(487);
+    intakeController.intake();
+    wc.driveTo(-0.10, -23.97);
+    s(100);
+    wc.faceTarget({49.93, 50.16});
+    launchDisks();
+    intakeController.intake();
+    wc.driveTo(40.68, -56.99);
+    // wc.backInto(40.68, -61.12);
     wc.turnTo(0);
+    wc.backwardsDriveDistance(12);
+    spinRoller();
+};
+Auton skillsPt = "Skils driveTo" + []()
+{
+    flyTBH.setTargetSpeed(350);
+    wc.estimateStartPos(PVector(-62.51, 40.91), 89.23);
+    wc.driveTo(-42.04, 51.98);
+    wc.faceTarget({49.93, 49.50});
+    wc.backInto(-41.71, 62.05);
+    // spinRoller();
+    intakeController.intake();
+
+    wc.followPath(&purePursuit, {PVector(-41.87, 45.54), PVector(-12.81, 36.29)});
+    wc.faceTarget({49.93, 49.50});
+    launchDisks();
+
+    intakeController.intake();
+    wc.driveTo(0.22, 23.74);
+    wc.faceTarget({49.93, 49.50});
+    launchDisks();
+
+    intakeController.intake();
+    wc.driveTo(12.94, 11.19);
+    wc.faceTarget({49.93, 49.50});
+    launchDisks();
+
+    intakeController.intake();
+    wc.driveTo(36.22, -12.25);
+    wc.faceTarget({49.93, 49.50});
+    launchDisks();
+
+    wc.driveTo(57.36, -41.47);
+    wc.turnTo(-89.85);
+    wc.backwardsDriveDistance(4.01);
+    wc.driveTo(41.50, -52.04);
+    wc.faceTarget({-49.47, -50.06});
+    wc.turnTo(0.16);
+    wc.backwardsDriveDistance(9.30);
 };
 #elif BOT == 2
 Auton leftA = "Left" + []() {
