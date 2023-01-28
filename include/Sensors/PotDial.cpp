@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "Sensors/PotDial.h"
 
 void SelectorArr::addDial(PotDial* dial)

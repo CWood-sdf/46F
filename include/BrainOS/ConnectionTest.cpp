@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "BrainOS/ConnectionTest.h"
 extern vector<tuple<string, vex::device*, bool>> connectedDevices;
 void testConnection(bool)

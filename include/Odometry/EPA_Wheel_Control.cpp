@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "Controllers.h"
 double sign(double v)
 {

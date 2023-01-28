@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "BotTracker.h"
 #include "Odometry/EPA_Wheel_Control.h"
 std::vector<lv_point_t> pts = {{0, 0}, {100, 100}, {50, 100}, {150, 150}};

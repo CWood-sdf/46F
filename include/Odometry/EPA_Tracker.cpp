@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "EPA_Tracker.h"
 TrackingWheel::TrackingWheel(bool reverse, double wheelDiameter)
 {

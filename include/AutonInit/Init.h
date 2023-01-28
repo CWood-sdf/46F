@@ -108,7 +108,7 @@ public:
         return auton->getName();
     }
 };
-#ifndef NO_MAKE
+#ifdef MAKE
 Auton operator+(const char* n, std::function<void()> f)
 {
     return Auton(n, f);

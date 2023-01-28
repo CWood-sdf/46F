@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "Flywheel/Controller.h"
 #include <sstream>
 #if BOT != 2

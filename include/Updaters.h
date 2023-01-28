@@ -1,5 +1,5 @@
 #include "ClassBaseFns.h"
-#ifdef NO_MAKE
+#ifdef MAKE
 
 void microWait(uint);
 void executeThreads();

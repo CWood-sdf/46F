@@ -13,11 +13,13 @@
 
 */
 // main.cpp
+#define MAKE
 #include "Autons/Autons.h"
 #include "BrainOS/ConnectionTest.h"
 #include "BrainOS/VariableConfig.h"
 #include "ButtonLatch.h"
 using namespace ClassFns;
+
 using namespace vex;
 void spinRoller()
 {
@@ -434,8 +436,6 @@ enum class Alliance : int
 };
 
 void displayBot(bool);
-#define V5_LVGL_RATE 4
-void vexTaskSleep(uint32_t time);
 bool init = false;
 bool helpAlignBot(bool)
 {
@@ -472,119 +472,7 @@ bool helpAlignBot(bool)
     }
     return false;
 }
-void brainOS()
-{
-    // Wait for init to be done
-    while (!init)
-    {
-        s(500);
-    }
-    cout << "Start brainOS" << endl;
-    // Make the set alliance screen
-    VariableConfig setAlliance = VariableConfig({"red", "blue"}, "Alliance", 0, [](int i)
-        {
-    if (i == 0) {
-      wc.setRed();
-    }
-    else {
-      wc.setBlue();
-    } });
-    // Make it skip the color set screen if were in skills
-    bosFns.pushBack(testConnection);
-#if BOT == 1
-    bosFns.pushBack(graphFlywheelTBH);
-#endif
-    bosFns.pushBack(displayBot);
-// VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
-#if BOT == 1
-    bosFns.pushBack(BosFn([](bool refresh)
-        { intakeController.drawState(refresh); }));
-#endif
-    // bosFns.pushBack(helpAlignBot);
-    bosFns.pushBack(VariableConfig::drawAll);
-    // bosFns.pushBack(BosFn(printTestData));
-    // bosFns.push_back(fn);
-    bosFns.pushBack(windowsLoader);
-    // Make the buttons
-    // Set it to 50 gray and 10 transparent
-    color buttonColor = color(0x0a323232);
-    // Set the transparency to true
-    // HACK:
-    *((bool*)(((uint32_t*)&buttonColor) + 1)) = true;
-    Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, "<", -40, -30);
-    Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, black, buttonColor, ">", -40, -30);
-    bosFns.getCurrent()->call(true);
-    while (1)
-    {
-        if (bosFns.empty())
-        {
-            cout << "bosFns is empty for some reason" << endl;
-            s(500);
-            continue;
-        }
-        // Have buttons clicked first so that clicking them overrides the screen click functions
-        if (screenLeft.clicked() && &bosFns.getBase() != &bosFns.getCurrent())
-        {
-            // BUG: (maybe) I'm not sure if this will crash anything if the screen is not lvgl, it should be fine though
-            //  // If it's lvgl, clean it
-            //  if (bosFns.getCurrent()->lvgl())
-            //  {
-            cout << "Clean" << endl;
-            // Remove all objects
-            lv_obj_clean(lv_scr_act());
-            lv_anim_del_all();
-            // }
-            bosFns.moveCurrentLeft();
-            // Tell it to remake
-            bosFns.getCurrent()->call(true);
-        }
-        else if (screenRight.clicked() && &bosFns.getEnd() != &bosFns.getCurrent())
-        {
-            // if (bosFns.getCurrent()->lvgl())
-            // {
-            cout << "Clean" << endl;
-            // Remove all objects
-            lv_obj_clean(lv_scr_act());
-            lv_anim_del_all();
-            // }
-            // Shift the linked list pointer
-            bosFns.moveCurrentRight();
-            // Tell it to remake
-            bosFns.getCurrent()->call(true);
-        }
-        // Draw the screen, and store it's pop result
-        auto result = bosFns.getCurrent()->call(false);
-        // BUG: (maybe) I'm not sure if this will crash anything if the screen is not lvgl, it should be fine though
-        //  if (bosFns.getCurrent()->lvgl())
-        //  {
-        lv_tick_inc(V5_LVGL_RATE);
-        lv_task_handler();
-        // }
-        // If we should pop the element from the list
-        if (result)
-        {
-            // BUG:
-            //  if (bosFns.getCurrent()->lvgl())
-            //  {
-            cout << "Clean" << endl;
-            // Remove all objects
-            lv_obj_clean(lv_scr_act());
-            lv_anim_del_all();
-            // }
-            bosFns.popCurrent();
-            // Send it the remake command
-            bosFns.getCurrent()->call(true);
-        }
-        // Draw the buttons
-        // screenLeft.draw();
-        // screenRight.draw();
 
-        // Allow other tasks to run
-        vex::task::sleep(V5_LVGL_RATE);
-        // Wait for the screen to refresh, just in case the wait wasn't long enough
-        Brain.Screen.waitForRefresh();
-    }
-}
 //}
 int main()
 {
@@ -609,15 +497,33 @@ int main()
     flyTBH.setTargetSpeed(0);
     intakeController.disable();
     cout << "<< Flywheel initialized >>" << endl;
+    VariableConfig setAlliance = VariableConfig({"red", "blue"}, "Alliance", 0, [](int i)
+        {
+    if (i == 0) {
+      wc.setRed();
+    }
+    else {
+      wc.setBlue();
+    } });
+    BosFn::addNewFn(testConnection);
+#if BOT == 1
+    BosFn::addNewFn(graphFlywheelTBH);
+#endif
+    BosFn::addNewFn(displayBot);
+#if BOT == 1
+    BosFn::addNewFn(BosFn([](bool refresh)
+        { intakeController.drawState(refresh); }));
+#endif
+    BosFn::addNewFn(VariableConfig::drawAll);
+    BosFn::addNewFn(windowsLoader);
+    BosFn::useTransparentScreenSwitchButtons();
+    cout << "<< BrainOS functions initialized >>" << endl;
     intakeController.autonInit();
+
 #endif
     endgame.close();
     s(500);
     init = true; });
-    while (!init)
-    {
-        s(100);
-    }
     thread posUpdate = thread(updatePos);
 
     // Make a thread to execute some auton tasks concurrently
@@ -627,7 +533,7 @@ int main()
     thread flywheelControl = thread(runFlywheel);
 #endif
     // Awesome brain screen control thread
-    thread loader = thread(brainOS);
+    thread loader = thread(BosFn::runBrainOS);
 
     // wc.prevStopExit();
     // wc.driveTo(-20, 48);

@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "robot-config.h"
 std::vector<tuple<string, vex::device*, bool>> connectedDevices = {};
 

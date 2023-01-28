@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "VariableConfig.h"
 Button VariableConfig::confirm = Button(Brain, 0, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(0, 255, 0), color(0, 200, 0), "Confirm");
 Button VariableConfig::deny = Button(Brain, BRAIN_WIDTH / 2, 0, BRAIN_WIDTH / 2, BRAIN_HEIGHT, color(255, 0, 0), color(200, 0, 0), "Deny");

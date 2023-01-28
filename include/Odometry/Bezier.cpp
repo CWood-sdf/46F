@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "Bezier.h"
 #include "EPA_Tracker.h"
 // Constructor

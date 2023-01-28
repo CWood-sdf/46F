@@ -1,6 +1,6 @@
 #include "BrainOS/BosFn.h"
 
-#ifndef NO_MAKE
+#ifdef MAKE
 LinkedList<BosFn> bosFns;
 void setScreen(BosFn fn)
 {

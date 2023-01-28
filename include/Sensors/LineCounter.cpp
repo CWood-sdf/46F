@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "Sensors/LineCounter.h"
 
 bool LineCounter::firstHit()

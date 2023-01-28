@@ -60,7 +60,7 @@ extern controller Beethoven;
 #define _tan(t) (_sin(t) / _cos(t))
 
 // clang-format on
-#ifndef NO_MAKE
+#ifdef MAKE
 
 ostream& operator<<(ostream& cout, PVector& v)
 {

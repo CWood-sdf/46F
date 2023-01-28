@@ -1,4 +1,3 @@
-#define NO_MAKE
 #include "src/Autons/Autons.h"
 #if BOT == 1
 void waitIntakeDone()
