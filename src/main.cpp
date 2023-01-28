@@ -438,14 +438,13 @@ void brainOS()
     // Make it skip the color set screen if were in skills
     bosFns.pushBack(testConnection);
 #if BOT == 1
-    bosFns.pushBack(BosFn(graphFlywheelTBH, true));
+    bosFns.pushBack(graphFlywheelTBH);
 #endif
-    bosFns.pushBack(BosFn(displayBot, true));
+    bosFns.pushBack(displayBot);
 // VariableConfig setSDFsdfdf = VariableConfig({"sdfsdf", "sdasdwsdf", "werwerwe", "sdff", "???"}, "Thing");
 #if BOT == 1
     bosFns.pushBack(BosFn([](bool refresh)
-        { intakeController.drawState(refresh); },
-        true));
+        { intakeController.drawState(refresh); }));
 #endif
     // bosFns.pushBack(helpAlignBot);
     bosFns.pushBack(VariableConfig::drawAll);
@@ -472,27 +471,28 @@ void brainOS()
         // Have buttons clicked first so that clicking them overrides the screen click functions
         if (screenLeft.clicked() && &bosFns.getBase() != &bosFns.getCurrent())
         {
-            // If it's lvgl, clean it
-            if (bosFns.getCurrent()->lvgl())
-            {
-                cout << "Clean" << endl;
-                // Remove all objects
-                lv_obj_clean(lv_scr_act());
-                lv_anim_del_all();
-            }
+            // BUG: (maybe) I'm not sure if this will crash anything if the screen is not lvgl, it should be fine though
+            //  // If it's lvgl, clean it
+            //  if (bosFns.getCurrent()->lvgl())
+            //  {
+            cout << "Clean" << endl;
+            // Remove all objects
+            lv_obj_clean(lv_scr_act());
+            lv_anim_del_all();
+            // }
             bosFns.moveCurrentLeft();
             // Tell it to remake
             bosFns.getCurrent()->call(true);
         }
         else if (screenRight.clicked() && &bosFns.getEnd() != &bosFns.getCurrent())
         {
-            if (bosFns.getCurrent()->lvgl())
-            {
-                cout << "Clean" << endl;
-                // Remove all objects
-                lv_obj_clean(lv_scr_act());
-                lv_anim_del_all();
-            }
+            // if (bosFns.getCurrent()->lvgl())
+            // {
+            cout << "Clean" << endl;
+            // Remove all objects
+            lv_obj_clean(lv_scr_act());
+            lv_anim_del_all();
+            // }
             // Shift the linked list pointer
             bosFns.moveCurrentRight();
             // Tell it to remake
@@ -500,21 +500,23 @@ void brainOS()
         }
         // Draw the screen, and store it's pop result
         auto result = bosFns.getCurrent()->call(false);
-        if (bosFns.getCurrent()->lvgl())
-        {
-            lv_tick_inc(V5_LVGL_RATE);
-            lv_task_handler();
-        }
+        // BUG: (maybe) I'm not sure if this will crash anything if the screen is not lvgl, it should be fine though
+        //  if (bosFns.getCurrent()->lvgl())
+        //  {
+        lv_tick_inc(V5_LVGL_RATE);
+        lv_task_handler();
+        // }
         // If we should pop the element from the list
         if (result)
         {
-            if (bosFns.getCurrent()->lvgl())
-            {
-                cout << "Clean" << endl;
-                // Remove all objects
-                lv_obj_clean(lv_scr_act());
-                lv_anim_del_all();
-            }
+            // BUG:
+            //  if (bosFns.getCurrent()->lvgl())
+            //  {
+            cout << "Clean" << endl;
+            // Remove all objects
+            lv_obj_clean(lv_scr_act());
+            lv_anim_del_all();
+            // }
             bosFns.popCurrent();
             // Send it the remake command
             bosFns.getCurrent()->call(true);

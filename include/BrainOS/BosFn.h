@@ -3,29 +3,21 @@ class BosFn
 {
     bool (*popFn)(bool);
     void (*mainFn)(bool);
-    bool isLvgl = false;
     bool isPop = false;
 
 public:
-    BosFn()
+    BosFn() = delete;
+    BosFn(bool (*p)(bool))
     {
-    }
-    BosFn(bool (*p)(bool), bool isLv = false)
-    {
-        isLvgl = isLv;
         popFn = p;
         isPop = true;
     }
-    BosFn(void (*m)(bool), bool isLv = false)
+    BosFn(void (*m)(bool))
     {
-        isLvgl = isLv;
         mainFn = m;
         isPop = false;
     }
-    bool lvgl()
-    {
-        return isLvgl;
-    }
+
     bool call(bool remake = false)
     {
         if (isPop)
