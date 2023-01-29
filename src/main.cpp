@@ -484,8 +484,8 @@ int main()
     positioner.init();
     positioner.setPos({0, 0}, 0);
     cout << "<< Odometry initialized >>" << endl;
-    testMotorConnection();
-    // testMotorConfiguration();
+    testDeviceConnection();
+    testDriveConfiguration();
     cout << "<< Motor connection test complete >>" << endl;
     s(500);
     wc.path.setK(1.4);

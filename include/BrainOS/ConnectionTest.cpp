@@ -1,5 +1,5 @@
 #include "BrainOS/ConnectionTest.h"
-extern vector<tuple<string, vex::device*, bool>> connectedDevices;
+extern vector<tuple<string, vex::device*, bool, bool>> connectedDevices;
 void testConnection(bool)
 {
     int i = 0;
@@ -14,7 +14,8 @@ void testConnection(bool)
         {
             if (isMotor && ((motor*)dev)->temperature() > 50)
             {
-                Brain.Screen.setPenColor(27);
+                // hue 35 is orange
+                Brain.Screen.setPenColor(35);
                 Brain.Screen.printAt(10 + j * 180, 20 + i * 19, true, "%s-%d", name.c_str(), dev->index() + 1);
             }
             else

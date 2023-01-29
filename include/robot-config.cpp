@@ -1,18 +1,20 @@
 #include "robot-config.h"
-std::vector<tuple<string, vex::device*, bool>> connectedDevices = {};
+std::vector<tuple<string, vex::device*, bool, bool>> connectedDevices = {};
 
 AddDevice::AddDevice(string name, vex::device* device)
 {
-    connectedDevices.push_back(make_tuple(name, device, false));
+    connectedDevices.push_back(make_tuple(name, device, false, false));
 }
 AddDevice::AddDevice(string name, vex::motor* device)
 {
-    connectedDevices.push_back(make_tuple(name, device, true));
+    connectedDevices.push_back(make_tuple(name, device, true, false));
+}
+AddDevice::AddDevice(string name, vex::motor* device, bool drive)
+{
+    connectedDevices.push_back(make_tuple(name, device, true, drive));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
-#define TestDevices(device, ...) \
-    TestDevice(device);          \
-    TestDevices(__VA_ARGS__)
+#define TestDriveMotor(device) AddDevice device##AddDevice(#device, &device, true);
 // Make a brain
 brain Brain;
 
@@ -22,16 +24,16 @@ controller Beethoven = controller(partner);
 
 // Front Left Wheel (FL)
 motor FL = motor(PORT17, gearSetting::ratio6_1, !true);
-TestDevice(FL);
+TestDriveMotor(FL);
 // Front Right Wheel (FR)
 motor FR = motor(PORT9, gearSetting::ratio6_1, !false);
-TestDevice(FR);
+TestDriveMotor(FR);
 // Back Left Wheel (BL)
 motor BL = motor(PORT21, gearSetting::ratio6_1, !true);
-TestDevice(BL);
+TestDriveMotor(BL);
 // Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio6_1, !false);
-TestDevice(BR);
+TestDriveMotor(BR);
 #if BOT == 2
 // Middle Left Wheel (ML)
 motor ML = motor(PORT20, gearSetting::ratio6_1, true);
@@ -246,11 +248,11 @@ void graphFlywheelTBH(bool remake)
     s(1000);           \
     m->stop();         \
     s(1000);
-void testMotorConfiguration()
+void testDriveConfiguration()
 {
     for (auto i : connectedDevices)
     {
-        if (get<2>(i))
+        if (get<3>(i))
         {
             TEST_MOT(((motor*)get<1>(i)), get<0>(i))
         }
@@ -262,7 +264,7 @@ void testMotorConfiguration()
         cout << "Motor " << #m << " is not connected!" << endl; \
         Greg.rumble(".");                                       \
     }
-void testMotorConnection()
+void testDeviceConnection()
 {
     // TMC(FL)
     // TMC(ML)

@@ -113,9 +113,9 @@ void graphFlywheelPID(bool remake);
 void graphFlywheelTBH(bool remake);
 #endif
 
-void testMotorConfiguration();
+void testDriveConfiguration();
 
-void testMotorConnection();
+void testDeviceConnection();
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

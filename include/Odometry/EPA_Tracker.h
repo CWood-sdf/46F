@@ -65,6 +65,7 @@ struct AddDevice
 {
     AddDevice(string name, vex::device* device);
     AddDevice(string name, vex::motor* deivce);
+    AddDevice(string name, vex::motor* device, bool drive);
 };
 class Positioner;
 class TrackingWheel
