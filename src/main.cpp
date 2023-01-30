@@ -106,7 +106,6 @@ void autonInit()
     intakeController.autonInit();
     intakeController.enable();
 #endif
-    intakeController.enable();
     cout << "Auton Init Done" << endl;
 }
 void autonomous()
@@ -130,6 +129,7 @@ void autonomous()
 #define sensitivity 12
 
 // Drivercontrol + automation {
+#if BOT == 1
 void calibrateFlywheelSpeed()
 {
     unsigned int i = 0;
@@ -184,6 +184,7 @@ void calibrateFlywheelSpeed()
         s(10);
     }
 }
+#endif
 // This class allows a button latch to exist
 void drivercontrol()
 {
@@ -355,6 +356,18 @@ void drivercontrol()
             {
                 intake.stop(hold);
             }
+            if (Greg.ButtonL1.pressing())
+            {
+                sling.spin(fwd, 100);
+            }
+            else if (Greg.ButtonL2.pressing())
+            {
+                sling.spin(vex::reverse, 100);
+            }
+            else
+            {
+                sling.stop(hold);
+            }
 #endif
         }
         else
@@ -479,51 +492,58 @@ int main()
     // Init has to be in thread, otherwise it won't work with comp switch
     thread initThread = thread([]()
         {
-    v5_lv_init();
-    cout << "<< Lvgl initialized >>" << endl;
-    positioner.init();
-    positioner.setPos({0, 0}, 0);
-    cout << "<< Odometry initialized >>" << endl;
-    testDeviceConnection();
-    testDriveConfiguration();
-    cout << "<< Motor connection test complete >>" << endl;
-    s(500);
-    wc.path.setK(1.4);
-    chassis.setMaxAcc(200);
-    chassis.setMaxDAcc(160);
-    cout << "<< Chassis initialized >>" << endl;
+            s(100);
+            v5_lv_init();
+            cout << "<< Lvgl initialized >>" << endl;
+            positioner.init();
+            positioner.setPos({0, 0}, 0);
+            cout << "<< Odometry initialized >>" << endl;
+            testDeviceConnection();
+            testDriveConfiguration();
+            cout << "<< Motor connection test complete >>" << endl;
+            s(500);
+            wc.path.setK(1.4);
+            chassis.setMaxAcc(200);
+            chassis.setMaxDAcc(160);
+            cout << "<< Chassis initialized >>" << endl;
 #if BOT == 1
-    // flyTBH.setTarget(0);
-    flyTBH.setTargetSpeed(0);
-    intakeController.disable();
-    cout << "<< Flywheel initialized >>" << endl;
+            // flyTBH.setTarget(0);
+            flyTBH.setTargetSpeed(0);
+            intakeController.disable();
+            cout << "<< Flywheel initialized >>" << endl;
+#endif
+            
+            BosFn::addNewFn(testConnection);
+#if BOT == 1
+            BosFn::addNewFn(graphFlywheelTBH);
+#endif
+            BosFn::addNewFn(displayBot);
+#if BOT == 1
+            BosFn::addNewFn(BosFn([](bool refresh)
+                { intakeController.drawState(refresh); }));
+#endif
+            BosFn::addNewFn(VariableConfig::drawAll);
+            BosFn::addNewFn(windowsLoader);
+            BosFn::useTransparentScreenSwitchButtons();
+            cout << "<< BrainOS functions initialized >>" << endl;
+#if BOT == 1
+            intakeController.autonInit();
+#endif
+            endgame.close();
+            s(500);
+            init = true; });
+    while (!init)
+    {
+        s(100);
+    }
     VariableConfig setAlliance = VariableConfig({"red", "blue"}, "Alliance", 0, [](int i)
         {
-    if (i == 0) {
-      wc.setRed();
-    }
-    else {
-      wc.setBlue();
-    } });
-    BosFn::addNewFn(testConnection);
-#if BOT == 1
-    BosFn::addNewFn(graphFlywheelTBH);
-#endif
-    BosFn::addNewFn(displayBot);
-#if BOT == 1
-    BosFn::addNewFn(BosFn([](bool refresh)
-        { intakeController.drawState(refresh); }));
-#endif
-    BosFn::addNewFn(VariableConfig::drawAll);
-    BosFn::addNewFn(windowsLoader);
-    BosFn::useTransparentScreenSwitchButtons();
-    cout << "<< BrainOS functions initialized >>" << endl;
-    intakeController.autonInit();
-
-#endif
-    endgame.close();
-    s(500);
-    init = true; });
+        if (i == 0) {
+        wc.setRed();
+        }
+        else {
+        wc.setBlue();
+        } });
     thread posUpdate = thread(updatePos);
 
     // Make a thread to execute some auton tasks concurrently
@@ -533,12 +553,13 @@ int main()
     thread flywheelControl = thread(runFlywheel);
 #endif
     // Awesome brain screen control thread
-    thread loader = thread(BosFn::runBrainOS);
+    thread loader = thread([]()
+        { BosFn::runBrainOS(); });
 
     // wc.prevStopExit();
     // wc.driveTo(-20, 48);
     // calibrateFlywheelSpeed();
-    autonomous();
+    // autonomous();
     // // chassis.coastBrake();
     // flyTBH.setTargetSpeed(0);
     // flyTBH.setDisabled(false);

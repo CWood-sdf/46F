@@ -22,6 +22,7 @@ brain Brain;
 controller Greg = controller();
 controller Beethoven = controller(partner);
 
+#if BOT == 1
 // Front Left Wheel (FL)
 motor FL = motor(PORT17, gearSetting::ratio6_1, !true);
 TestDriveMotor(FL);
@@ -34,13 +35,25 @@ TestDriveMotor(BL);
 // Back Right Wheel (BR)
 motor BR = motor(PORT12, gearSetting::ratio6_1, !false);
 TestDriveMotor(BR);
-#if BOT == 2
+#elif BOT == 2
+// Front Left Wheel (FL)
+motor FL = motor(PORT1, gearSetting::ratio18_1, true);
+TestDriveMotor(FL);
+// Front Right Wheel (FR)
+motor FR = motor(PORT20, gearSetting::ratio18_1, false);
+TestDriveMotor(FR);
+// Back Left Wheel (BL)
+motor BL = motor(PORT4, gearSetting::ratio18_1, true);
+TestDriveMotor(BL);
+// Back Right Wheel (BR)
+motor BR = motor(PORT5, gearSetting::ratio18_1, false);
+TestDriveMotor(BR);
 // Middle Left Wheel (ML)
-motor ML = motor(PORT20, gearSetting::ratio6_1, true);
-TestDevice(ML);
+motor ML = motor(PORT3, gearSetting::ratio18_1, !true);
+TestDriveMotor(ML);
 // Middle Right Wheel (MR)
-motor MR = motor(PORT8, gearSetting::ratio6_1, false);
-TestDevice(MR);
+motor MR = motor(PORT7, gearSetting::ratio18_1, !false);
+TestDriveMotor(MR);
 #endif
 
 #if BOT == 1
@@ -55,10 +68,10 @@ motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
 MotorGroup flywheelNm = MotorGroup(flyWheelMot, flywheel2);
 #elif BOT == 2
-motor intakeMot = motor(PORT10, gearSetting::ratio18_1, !true);
+motor intakeMot = motor(PORT8, gearSetting::ratio18_1, !true);
 TestDevice(intakeMot);
 
-motor slingMot = motor(PORT5, gearSetting::ratio6_1, false);
+motor slingMot = motor(PORT10, gearSetting::ratio36_1, false);
 TestDevice(slingMot);
 
 MotorGroup intake = MotorGroup(intakeMot);

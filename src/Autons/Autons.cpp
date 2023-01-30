@@ -265,115 +265,6 @@ Auton skills = "Skills" + []()
     // Endgame
     wc.turnTo(-41.99);
     endgame.open();
-
-    // // thread runIntakeThread = thread([]()
-    // //                                 {
-    // //   while(1){
-    // //     if(intaking){
-    // //       intake.spin(fwd, 50);
-    // //     }
-    // //     if ((intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4) && intaking)
-    // //     {
-    // //       intaking = false;
-    // //       intake.stop(hold);
-    // //     }
-    // //     s(10);
-    // //   } });
-    // // botAngles.x = 90;
-    // // wc.estimateStartPos(PVector(61.34, -39.07), 271.99);
-    // flyTBH.setTargetSpeed(510);
-    // // flywheelNm.spin(fwd, 100);
-    // wc.estimateStartPos(PVector(-61.39, 41.17), 90);
-    // // flywheelNm.stop(coast);
-
-    // wc.turnTo(90);
-    // spinRoller();
-    // chassis.driveFromDiff(20, 0, fwd);
-    // s(700);
-    // chassis.coastBrake();
-
-    // // intaking = true;
-
-    // intakeController.intake();
-    // wc.turnTo(59.68);
-    // wc.driveDistance(12, &pidController);
-
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // flyTBH.setTargetSpeed(431);
-    // wc.driveTo(-40, 48);
-    // wc.backInto(-40.99, 63.09);
-    // wc.turnTo(180);
-    // chassis.driveFromDiff(-20, 0, fwd);
-    // s(700);
-    // chassis.coastBrake();
-    // spinRoller();
-    // chassis.driveFromDiff(20, 0, fwd);
-    // s(500);
-    // chassis.coastBrake();
-
-    // // intaking = true;
-
-    // intakeController.intake();
-    // wc.driveTo(-12, 36);
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // intakeController.intake();
-    // wc.driveTo(-0, 26);
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // intakeController.intake();
-    // flyTBH.setTargetSpeed(425);
-    // wc.driveTo(-12, 12);
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // intakeController.intake();
-    // flyTBH.setTargetSpeed(467);
-    // wc.driveTo(37, -13);
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // flyTBH.setTargetSpeed(535);
-    // wc.driveTo(50.94, -37.33);
-    // intakeController.intake();
-    // wc.faceTarget({48, -48});
-    // wc.driveDistance(12, &pidController);
-    // wc.faceTarget(goal);
-    // intakeController.setFiring();
-    // intakeController.waitForFiring();
-
-    // wc.backInto(59, -37);
-    // wc.turnTo(-89.83);
-    // chassis.driveFromDiff(-20, 0, fwd);
-    // s(700);
-    // chassis.coastBrake();
-    // spinRoller();
-    // chassis.driveFromDiff(20, 0, fwd);
-    // s(500);
-    // chassis.coastBrake();
-
-    // wc.driveTo(42.54, -45.91);
-    // wc.backInto(42.07, -57.7);
-    // wc.turnTo(0);
-    // chassis.driveFromDiff(-20, 0, fwd);
-    // s(700);
-    // chassis.coastBrake();
-    // spinRoller();
-    // chassis.driveFromDiff(20, 0, fwd);
-    // s(500);
-    // chassis.coastBrake();
-
-    // wc.faceTarget({-68.79, 69.19});
-    // endgame.open();
 };
 Auton winPoint = "Win Point" + []()
 {
@@ -438,10 +329,15 @@ Auton skillsPt = "Skils driveTo" + []()
     wc.driveTo(57.36, -41.47);
     wc.turnTo(-89.85);
     wc.backwardsDriveDistance(4.01);
+    spinRoller();
+
     wc.driveTo(41.50, -52.04);
     wc.faceTarget({-49.47, -50.06});
     wc.turnTo(0.16);
     wc.backwardsDriveDistance(9.30);
+    spinRoller();
+
+    wc.faceTarget({-72, 72});
 };
 #elif BOT == 2
 Auton leftA = "Left" + []() {

@@ -97,15 +97,20 @@ public:
         }
         Button screenLeft = Button(Brain, 0, BRAIN_HEIGHT - 60, 40, 40, buttonColor, buttonColorPress, "<", -40, -30);
         Button screenRight = Button(Brain, BRAIN_WIDTH - 40, BRAIN_HEIGHT - 60, 40, 40, buttonColor, buttonColorPress, ">", -40, -30);
+        int emptyCount = 0;
+        while (bosFns.empty())
+        {
+            cout << "bosFns is empty for some reason" << endl;
+            s(500);
+            if(++emptyCount == 10)
+            {
+                cout << "bosFns is empty for 5 seconds, exiting" << endl;
+                return;
+            }
+        }
         bosFns.getCurrent()->call(true);
         while (1)
         {
-            if (bosFns.empty())
-            {
-                cout << "bosFns is empty for some reason" << endl;
-                s(500);
-                continue;
-            }
             // Have buttons clicked first so that clicking them overrides the screen click functions
             if (screenLeft.clicked() && &bosFns.getBase() != &bosFns.getCurrent())
             {
