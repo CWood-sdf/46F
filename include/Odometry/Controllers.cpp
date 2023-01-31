@@ -152,11 +152,12 @@ void Controller::deInit()
 }
 PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
 {
+    // From pages 13-15 of implementation paper found at https://www.chiefdelphi.com/t/paper-implementation-of-the-adaptive-pure-pursuit-controller/166552
     double travelCurvature;
     {
-        auto rPos = input.position;
-        auto lPos = input.targetPt.bezierPt;
-        double moddedAngle = input.currentAngle * DEG_TO_RAD;
+        auto rPos = input.position;                           // in
+        auto lPos = input.targetPt.bezierPt;                  // in
+        double moddedAngle = input.currentAngle * DEG_TO_RAD; // rad
         double
             side =
                 sign(
@@ -164,17 +165,8 @@ PurePursuitController::followToRet PurePursuitController::followTo(Input& input)
             a = -tan(moddedAngle),
             b = 1.0,
             c = tan(moddedAngle) * rPos.y - rPos.x;
-        double x = abs(a * lPos.y + b * lPos.x + c) * sqrt(pow(a, 2) + pow(b, 2)) * side;
+        double x = abs(a * lPos.y + b * lPos.x + c) / sqrt(pow(a, 2) + pow(b, 2)) * side;
         travelCurvature = 2.0 * x / pow(input.dist, 2);
-    }
-    double normAngle = posNeg180(input.angleTarget - input.currentAngle);
-    if (abs(normAngle) < 10)
-    {
-        travelCurvature /= 2.0;
-    }
-    if (input.dist < 10)
-    {
-        travelCurvature = 0;
     }
     // Get the target speed of the robot
     double speed = -ctrl.getVal(input.dist);
@@ -214,7 +206,6 @@ RamseteController::followToRet RamseteController::followTo(Input& input)
     double k = 2.0 * zeta * sqrt(Wd * Wd /*rad^2/s^2*/ + beta * vd * vd /*rad^2/s^2*/); // 1/s^2
     double eTheta = error(2, 0) /*rad*/;
     double speed = vd * cos(eTheta) + k * error(1, 0); // inps
-    cout << Wd << endl;
     double turnVel = Wd + k * eTheta + beta * vd * sin(eTheta) / (eTheta + eTheta == 0 ? 0.00001 : 0) * error(0, 0);
     return {{speed, ForwardVel::inps}, {turnVel, AngularVel::radps}};
 }
