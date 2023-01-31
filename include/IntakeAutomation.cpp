@@ -1,4 +1,5 @@
 #include "IntakeAutomation.h"
+
 #if BOT == 1
 AutoIntake::AutoIntake(vector<std::function<bool()>> sensors)
 {
@@ -505,6 +506,27 @@ void AutoIntake::drawState(bool refresh)
     else
     {
         lv_label_set_text(intakingLabel, intakingNo);
+    }
+}
+#elif BOT == 2
+AutoIntake::AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready)
+  : counter(counter), slingMot(sling), intakeMot(intake), release(release), ready(ready)
+{
+}
+void AutoIntake::disable()
+{
+    enabled = false;
+}
+void AutoIntake::enable()
+{
+    enabled = true;
+}
+void AutoIntake::updateValues()
+{
+    int countThrough = counter.getCountIn();
+    if (!ready() && timeSinceRelease > 500)
+    {
+        slingMot.spinVolt(reverse, 100);
     }
 }
 #endif

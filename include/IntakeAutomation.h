@@ -130,5 +130,27 @@ struct AutoIntake
      */
     void drawState(bool);
 };
+#elif BOT == 2
+struct AutoIntake
+{
+    LineCounter& counter;
+    bool enabled = false;
+    MotorGroup& slingMot;
+    MotorGroup& intakeMot;
+    pneumatics& release;
+    std::function<bool()> ready;
+    bool readyState = false;
+    int timeSinceRelease = 0;
+    bool intaking = false;
+    bool reversed = false;
+    AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready);
+    void disable();
+    void enable();
+    void updateValues();
+    void setFiring();
+    void intake();
+    void intakeMultiple(int count);
+    void reverseMotor();
+};
 #endif
 #endif
