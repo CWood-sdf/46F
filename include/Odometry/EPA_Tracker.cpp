@@ -1,4 +1,4 @@
-#include "EPA_Tracker.h"
+﻿#include "EPA_Tracker.h"
 TrackingWheel::TrackingWheel(bool reverse, double wheelDiameter)
 {
     this->reverse = reverse;

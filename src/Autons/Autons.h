@@ -1,7 +1,7 @@
-#include "Updaters.h"
-#include "AutonInit/Init.h"
+﻿#include "AutonInit/Init.h"
 #include "BrainOS/BotTracker.h"
 #include "BrainOS/VariableConfig.h"
+#include "Updaters.h"
 
 using namespace ClassFns;
 using namespace vex;

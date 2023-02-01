@@ -1,4 +1,4 @@
-#ifndef BUTTONLATCH_H
+﻿#ifndef BUTTONLATCH_H
 #define BUTTONLATCH_H
 #include "vex.h"
 class ButtonLatch

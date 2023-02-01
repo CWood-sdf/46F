@@ -1,4 +1,4 @@
-#include "vex.h"
+﻿#include "vex.h"
 #define V5_LVGL_RATE 4
 void vexTaskSleep(uint32_t time);
 class BosFn
@@ -102,7 +102,7 @@ public:
         {
             cout << "bosFns is empty for some reason" << endl;
             s(500);
-            if(++emptyCount == 10)
+            if (++emptyCount == 10)
             {
                 cout << "bosFns is empty for 5 seconds, exiting" << endl;
                 return;

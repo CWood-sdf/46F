@@ -1,4 +1,4 @@
-#include "Bezier.h"
+﻿#include "Bezier.h"
 #include "EPA_Tracker.h"
 // Constructor
 VectorArr::VectorArr(std::initializer_list<PVector> list)

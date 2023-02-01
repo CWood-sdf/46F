@@ -1,4 +1,4 @@
-#include "Sensors/LineCounter.h"
+﻿#include "Sensors/LineCounter.h"
 
 bool LineCounter::firstHit()
 {

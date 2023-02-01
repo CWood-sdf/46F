@@ -1,4 +1,4 @@
-#ifndef INTAKE_AUTOMATION_H
+﻿#ifndef INTAKE_AUTOMATION_H
 #define INTAKE_AUTOMATION_H
 #include "Sensors/LineCounter.h"
 #include <functional>

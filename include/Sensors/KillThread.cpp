@@ -1,4 +1,4 @@
-// #include "Sensors/KillThread.h"
+﻿// #include "Sensors/KillThread.h"
 // KillThread::KillThread(void(*callback)(void) ) : t(new thread(callback)) {
 //   instances.push_back(t);
 // }

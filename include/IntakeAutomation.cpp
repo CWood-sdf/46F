@@ -1,4 +1,4 @@
-#include "IntakeAutomation.h"
+﻿#include "IntakeAutomation.h"
 
 #if BOT == 1
 AutoIntake::AutoIntake(vector<std::function<bool()>> sensors)

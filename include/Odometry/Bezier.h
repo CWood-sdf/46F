@@ -1,4 +1,4 @@
-#ifndef BEZIER_H
+﻿#ifndef BEZIER_H
 #define BEZIER_H
 #include "EPA_Tracker.h"
 #include <deque>

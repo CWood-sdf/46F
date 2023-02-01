@@ -1,4 +1,4 @@
-#include "fns.h"
+﻿#include "fns.h"
 // ClassBaseFns.h -- use this file for all auton functions
 #ifdef MAKE
 list<function<void()>> threadFns;

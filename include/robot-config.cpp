@@ -1,4 +1,4 @@
-#include "robot-config.h"
+﻿#include "robot-config.h"
 std::vector<tuple<string, vex::device*, bool, bool>> connectedDevices = {};
 
 AddDevice::AddDevice(string name, vex::device* device)

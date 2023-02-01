@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------*/
+﻿/*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Copyright (c) James Pearman, All rights reserved.                       */
 /*                                                                            */
@@ -16,16 +16,17 @@
 #ifndef V5_LVGL_H_
 #define V5_LVGL_H_
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "lvgl/lvgl.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void    v5_lv_init( void );
+    void v5_lv_init(void);
 
 #ifdef __cplusplus
 }

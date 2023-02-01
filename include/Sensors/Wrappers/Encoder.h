@@ -1,4 +1,4 @@
-#ifndef ENCODER_H
+﻿#ifndef ENCODER_H
 #define ENCODER_H
 #include "v5_apitypes.h"
 #include "vex.h"

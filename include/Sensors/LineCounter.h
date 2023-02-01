@@ -1,4 +1,4 @@
-
+﻿
 #ifndef LINECOUNTER_H
 #define LINECOUNTER_H
 

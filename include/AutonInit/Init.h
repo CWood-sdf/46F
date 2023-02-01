@@ -1,4 +1,4 @@
-#include "BrainOS/VariableConfig.h"
+﻿#include "BrainOS/VariableConfig.h"
 #include "Sensors/PotDial.h"
 #include "vex.h"
 class Auton

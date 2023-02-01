@@ -1,4 +1,4 @@
-#include "Sensors/PotDial.h"
+﻿#include "Sensors/PotDial.h"
 
 void SelectorArr::addDial(PotDial* dial)
 {

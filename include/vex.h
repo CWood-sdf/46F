@@ -1,4 +1,4 @@
-// vex.h -- This file includes all external files, defines random functions
+﻿// vex.h -- This file includes all external files, defines random functions
 //       and defines devices
 #ifndef VEX_H
 #define VEX_H
