@@ -4,7 +4,7 @@ function Format-Files($folder, $skipFolders, $depth = 5){
     Get-ChildItem -Depth 0 -File | ForEach-Object {
         $str = clang-format $_.Name
         if($str -ne $_.Name -and $str -ne ""){
-            $str | Out-File -FilePath $_.Name
+            $str | Set-Content -Encoding UTF8 $_.Name
         }
     }
     if($depth -gt 0){
