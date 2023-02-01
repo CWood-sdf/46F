@@ -72,19 +72,15 @@ int LineCounter::rawData()
     return sensor->reflectivity();
 }
 
-void microWait(uint time);
-vector<LineCounter*> LineCounter::instances = {};
 const KillThread LineCounter::updater = thread([]()
     {
-    //Wait to allow initialization
-    s(1000);
     if(LineCounter::instances.size() == 0){
         cout << "No Line Counter instances exist, exiting thread" << endl;
         return;
     }
     while(1){
         for(auto t : LineCounter::instances){
-        t->update();
+            t->update();
         }
         s(10);
   } });

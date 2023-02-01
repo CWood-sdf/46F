@@ -197,6 +197,9 @@ void drivercontrol()
     [[maybe_unused]] ButtonLatch RightLatch = ButtonLatch(Greg.ButtonRight);
     [[maybe_unused]] ButtonLatch L1Latch = ButtonLatch(Greg.ButtonL1);
     [[maybe_unused]] ButtonLatch L2Latch = ButtonLatch(Greg.ButtonL2);
+    [[maybe_unused]] ButtonLatch R1Latch = ButtonLatch(Greg.ButtonR1);
+    [[maybe_unused]] ButtonLatch R2Latch = ButtonLatch(Greg.ButtonR2);
+
 // int currentVelocity = 510;
 // int flywheelI = 1;
 #if BOT == 1
@@ -344,29 +347,17 @@ void drivercontrol()
                 intakeController.setFiring();
             }
 #elif BOT == 2
-            if (Greg.ButtonR1.pressing())
+            if (R1Latch.pressing())
             {
-                intake.spin(fwd, 100);
+                intakeController.intakeMultiple(1);
             }
-            else if (Greg.ButtonR2.pressing())
+            if (R2Latch.pressing())
             {
-                intake.spin(vex::reverse, 100);
+                intakeController.reverseMotor();
             }
-            else
+            if (L1Latch.pressing())
             {
-                intake.stop(hold);
-            }
-            if (Greg.ButtonL1.pressing())
-            {
-                sling.spin(fwd, 100);
-            }
-            else if (Greg.ButtonL2.pressing())
-            {
-                sling.spin(vex::reverse, 100);
-            }
-            else
-            {
-                sling.stop(hold);
+                intakeController.setFiring();
             }
 #endif
         }
@@ -437,6 +428,15 @@ void runFlywheel()
         s(20);
     }
 }
+#elif BOT == 2
+void runIntake()
+{
+    while (1)
+    {
+        intakeController.updateValues();
+        s(10);
+    }
+}
 #endif
 //}
 
@@ -450,41 +450,6 @@ enum class Alliance : int
 
 void displayBot(bool);
 bool init = false;
-bool helpAlignBot(bool)
-{
-    static double desiredAngle = 255;
-    // static PVector position = PVector({60.5, -39});
-    // position.angleTo({-50, -50});
-    static bool init = false;
-    if (!init && Auton::isSelected())
-    {
-        if (Auton::selectedName() == "Right")
-        {
-            desiredAngle = 194;
-        }
-        init = true;
-        if (wc.isRed())
-        {
-            desiredAngle = posNeg180(desiredAngle + 180);
-        }
-    }
-    Brain.Screen.clearScreen(black);
-    Brain.Screen.setPenColor(red);
-    if (abs(wc.botAngle() - desiredAngle) < 1)
-    {
-        Brain.Screen.setPenColor(green);
-    }
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print("Desired angle: %f", desiredAngle);
-    Brain.Screen.setCursor(2, 1);
-    Brain.Screen.print("Current angle: %f", wc.botAngle());
-    Brain.Screen.setPenColor(white);
-    if (Brain.Screen.pressing() && Brain.Screen.yPosition() < 100)
-    {
-        return true;
-    }
-    return false;
-}
 
 //}
 int main()

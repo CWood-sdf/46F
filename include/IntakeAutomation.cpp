@@ -509,8 +509,8 @@ void AutoIntake::drawState(bool refresh)
     }
 }
 #elif BOT == 2
-AutoIntake::AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready)
-  : counter(counter), slingMot(sling), intakeMot(intake), release(release), ready(ready)
+AutoIntake::AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> atBack, bool pneumaticReleaseState)
+  : counter(counter), slingMot(sling), intakeMot(intake), release(release), atBack(atBack), pneumaticsReleaseState(pneumaticReleaseState)
 {
 }
 void AutoIntake::disable()
@@ -523,10 +523,63 @@ void AutoIntake::enable()
 }
 void AutoIntake::updateValues()
 {
-    int countThrough = counter.getCountIn();
-    if (!ready() && timeSinceRelease > 500)
+    if (enabled)
     {
-        slingMot.spinVolt(reverse, 100);
+        int countThrough = counter.getCountIn();
+        if (!atBack() && timeSinceRelease > 500)
+        {
+            slingMot.spinVolt(reverse, 100);
+        }
+        else if (atBack() && timeSinceRelease > 500)
+        {
+            release.set(pneumaticsReleaseState);
+            slingMot[0].spinToPosition(0, degrees, 100, velocityUnits::pct, false);
+        }
+        // I'm fairly sure that as of writing this,
+        // there is no way to accidentally get more than 3 disks through the intake (bc of protection in intake function), but might as well have protection for it
+        if ((countThrough > 3 && counter.pressing()) || reversed)
+        {
+            intakeMot.spinVolt(vex::reverse, 100);
+        }
+        else if (targetCount > counter.getCountOut() && countThrough <= 3 && atBack())
+        {
+            intakeMot.spinVolt(fwd, 100);
+        }
+        else
+        {
+            intakeMot.stop();
+        }
     }
+
+    timeSinceRelease += 10;
+}
+void AutoIntake::setFiring()
+{
+    if (release.value() != pneumaticsReleaseState)
+    {
+        counter.reset();
+        timeSinceRelease = 0;
+        release.set(pneumaticsReleaseState);
+    }
+}
+void AutoIntake::intake()
+{
+    intakeMultiple(1);
+}
+void AutoIntake::intakeMultiple(int count)
+{
+    targetCount = counter.getCountOut() + count;
+    if (targetCount > 3)
+    {
+        targetCount = 3;
+    }
+}
+void AutoIntake::reverseMotor()
+{
+    reversed = true;
+}
+void AutoIntake::setCount(int count)
+{
+    counter.setCount(count);
 }
 #endif

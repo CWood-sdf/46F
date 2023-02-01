@@ -27,7 +27,7 @@ class LineCounter
     bool fHit = false;
 
 public:
-    static vector<LineCounter*> instances;
+    static inline vector<LineCounter*> instances = {};
     LineCounter(const LineCounter&) = delete;
     LineCounter(line& se, bool throughPolycarb = false) : sensor(&se)
     {
@@ -63,7 +63,16 @@ public:
     bool pressing();
     // Returns raw line tracker value
     int rawData();
+    // Sets the count to a specific value
+    void setCount(int count)
+    {
+        countOut = count;
+        countIn = count;
+        if (pressing())
+        {
+            countIn++;
+        }
+    }
 };
-void microWait(uint time);
 
 #endif // LINECOUNTER_H

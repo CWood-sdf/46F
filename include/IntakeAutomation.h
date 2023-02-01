@@ -134,16 +134,16 @@ struct AutoIntake
 struct AutoIntake
 {
     LineCounter& counter;
-    bool enabled = false;
+    bool enabled = __bool_true_false_are_defined;
     MotorGroup& slingMot;
     MotorGroup& intakeMot;
     pneumatics& release;
-    std::function<bool()> ready;
-    bool readyState = false;
+    std::function<bool()> atBack;
+    bool pneumaticsReleaseState = false;
     int timeSinceRelease = 0;
-    bool intaking = false;
+    int targetCount = 0;
     bool reversed = false;
-    AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready);
+    AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready, bool pneumaticsReleaseState = false);
     void disable();
     void enable();
     void updateValues();
@@ -151,6 +151,7 @@ struct AutoIntake
     void intake();
     void intakeMultiple(int count);
     void reverseMotor();
+    void setCount(int count);
 };
 #endif
 #endif

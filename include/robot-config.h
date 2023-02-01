@@ -75,11 +75,11 @@ extern triport Expander;
 
 extern optical rachetColor;
 
+extern AutoIntake intakeController;
 #if BOT == 1
 extern LineCounter intakeBottom;
 extern vex::distance intakeMiddle;
 extern LineCounter intakeTop;
-extern AutoIntake intakeController;
 #elif BOT == 2
 extern LineCounter intakeCounter;
 #endif
