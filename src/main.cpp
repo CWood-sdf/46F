@@ -234,7 +234,7 @@ void drivercontrol()
         {
             // Drive control, uses quotient/square for smoothness
             double Y1 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
-            double X1 = abs(Greg.Axis4.value()) > sensitivity ? Greg.Axis4.value() : 0;
+            double Y2 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
             // Y1 /= 10;
             // Y1 *= Y1;
             // Y2 /= 10;
@@ -242,8 +242,8 @@ void drivercontrol()
             // Y1 *= Greg.Axis2.value() != 0 ? Greg.Axis2.value() / abs(Greg.Axis2.value()) : 1;
             // Y2 *= Greg.Axis3.value() != 0 ? Greg.Axis3.value() / abs(Greg.Axis3.value()) : 1;
 
-            double s1 = Y1 + X1;
-            double s2 = Y1 - X1;
+            double s1 = Y1 / 1.27;
+            double s2 = Y2 / 1.27;
             if (Greg.ButtonLeft.pressing())
             {
                 s1 = -50, s2 = 50;
@@ -260,7 +260,7 @@ void drivercontrol()
             {
                 rightWheels.stop(coast);
             }
-            else if (driveReversed)
+            if (driveReversed)
             {
                 leftWheels.spin(vex::reverse, s1, pct);
                 rightWheels.spin(vex::reverse, s2, pct);
@@ -349,11 +349,15 @@ void drivercontrol()
 #elif BOT == 2
             if (R1Latch.pressing())
             {
-                intakeController.intakeMultiple(1);
+                intakeController.intakeMultiple(3);
             }
-            if (R2Latch.pressing())
+            if (Greg.ButtonR2.pressing())
             {
                 intakeController.reverseMotor();
+            }
+            else
+            {
+                intakeController.reversed = false;
             }
             if (L1Latch.pressing())
             {
@@ -464,7 +468,7 @@ int main()
             positioner.setPos({0, 0}, 0);
             cout << "<< Odometry initialized >>" << endl;
             testDeviceConnection();
-            testDriveConfiguration();
+            // testDriveConfiguration();
             cout << "<< Motor connection test complete >>" << endl;
             s(500);
             wc.path.setK(1.4);
@@ -513,8 +517,8 @@ int main()
 
     // Make a thread to execute some auton tasks concurrently
     thread otherThreads = thread(executeThreads);
-#if BOT == 1
     thread intakeThread = thread(runIntake);
+#if BOT == 1
     thread flywheelControl = thread(runFlywheel);
 #endif
     // Awesome brain screen control thread

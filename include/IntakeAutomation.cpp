@@ -526,13 +526,13 @@ void AutoIntake::updateValues()
     if (enabled)
     {
         int countThrough = counter.getCountIn();
-        if (!atBack() && timeSinceRelease > 500)
+        if (!atBack() && timeSinceRelease > 1000)
         {
             slingMot.spinVolt(reverse, 100);
         }
         else if (atBack() && timeSinceRelease > 500)
         {
-            release.set(pneumaticsReleaseState);
+            release.set(!pneumaticsReleaseState);
             slingMot[0].spinToPosition(0, degrees, 100, velocityUnits::pct, false);
         }
         // I'm fairly sure that as of writing this,
@@ -557,6 +557,8 @@ void AutoIntake::setFiring()
 {
     if (release.value() != pneumaticsReleaseState)
     {
+        cout << "fire" << endl;
+        targetCount = 0;
         counter.reset();
         timeSinceRelease = 0;
         release.set(pneumaticsReleaseState);

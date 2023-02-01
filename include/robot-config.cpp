@@ -117,7 +117,7 @@ Pneumatics
 
 *************************************/
 
-pneumatics endgame = pneumatics(Brain.ThreeWirePort.H);
+pneumatics endgame = pneumatics(Brain.ThreeWirePort.F);
 pneumatics slingLatch = pneumatics(Brain.ThreeWirePort.G);
 /*************************************
 
@@ -136,8 +136,6 @@ Inertial angler = Inertial(PORT16, 358.0, 358.0);
 
 optical rachetColor = optical(PORT11);
 TestDevice(rachetColor);
-
-limit slingAtBack = limit(Brain.ThreeWirePort.A);
 
 #if BOT == 1
 vex::distance intakeMiddle = vex::distance(PORT19);
@@ -158,6 +156,7 @@ AutoIntake intakeController = AutoIntake({[]()
         return intakeTop.pressing();
     }});
 #elif BOT == 2
+limit slingAtBack = limit(Brain.ThreeWirePort.H);
 LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C, true);
 AutoIntake intakeController = AutoIntake(
     intakeCounter, sling, intake, slingLatch, []()
