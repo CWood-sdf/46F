@@ -27,10 +27,9 @@ class VariableConfig
      * @return false is not done
      */
     bool draw();
-    // Keep it private
-    VariableConfig(VariableConfig& other) = default;
 
 public:
+    VariableConfig(VariableConfig& other) = default;
     /**
      * @brief Construct a new Variable Config object
      *
