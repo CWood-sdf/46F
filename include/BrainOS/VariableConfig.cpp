@@ -25,7 +25,7 @@ VariableConfig::VariableConfig(vector<string> options, string title, int default
 {
     this->callback = callback;
 }
-VariableConfig& VariableConfig::addBypass(function<bool()> bypass)
+VariableConfig& VariableConfig::setBypass(function<bool()> bypass)
 {
     this->bypass = bypass;
     return *this;
