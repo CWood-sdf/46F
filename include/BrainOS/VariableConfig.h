@@ -19,31 +19,103 @@ class VariableConfig
     string title = "";
 
 public:
-    // Constructor that takes a list of options
+    /**
+     * @brief Construct a new Variable Config object
+     *
+     * @param options The string options to choose from
+     * @param title The title of the variable
+     */
     VariableConfig(vector<string> options, string title);
-    // Constructor that takes a list of options and a default option
+    /**
+     * @brief Construct a new Variable Config object
+     *
+     * @param options The string options to choose from
+     * @param title The title of the variable
+     * @param defaultOption The default option index
+     */
     VariableConfig(vector<string> options, string title, int defaultOption);
-    // Make all the constructors above but have them take a callback
+    /**
+     * @brief Construct a new Variable Config object
+     *
+     * @param options The string options to choose from
+     * @param title The title of the variable
+     * @param callback A callback function for when the variable is finally selected
+     */
     VariableConfig(vector<string> options, string title, function<void(int)> callback);
+    /**
+     * @brief Construct a new Variable Config object
+     *
+     * @param options The string options to choose from
+     * @param title The title of the variable
+     * @param defaultOption The default option index
+     * @param callback A callback function for when the variable is finally selected
+     */
     VariableConfig(vector<string> options, string title, int defaultOption, function<void(int)> callback);
-    VariableConfig& addBypass(function<bool()> bypass);
-    // A function that sets the name of an index
+    /**
+     * @brief set the bypass function for the variable
+     *
+     * @param bypass a function that causes the configuration to skip when it returns true
+     * @return VariableConfig& *this
+     */
+    VariableConfig& setBypass(function<bool()> bypass);
+    /**
+     * @brief Changes an option's name
+     *
+     * @param index the index of the option
+     * @param name the new name of the option
+     */
     void setOptionName(int index, string name);
-    // A function that changes the callback
+    /**
+     * @brief Sets the callback function for when the variable is finally selected
+     *
+     * @param callback the callback function
+     */
     void setCallback(function<void(int)> callback);
-    // A function that adds an option to the list of options
+    /**
+     * @brief Adds an option to the list of options
+     *
+     * @param option the option to add
+     */
     void addOption(string option);
-    // A function that adds a list of options to the list of options
+    /**
+     * @brief Adds multiple options to the list of options
+     *
+     * @param options the options to add
+     */
     void addOptions(vector<string> options);
-    // A function that returns the current option
+    /**
+     * @brief Returns the current option
+     *
+     * @return string the current option
+     */
     string getOption();
-    // Returns if the variable is selected
+    /**
+     * @brief Returns if the variable is selected
+     *
+     * @return true the variable is selected
+     * @return false the variable is not selected
+     */
     bool isSelected();
-    // Returns if the variable is defaulted but not selected
+    /**
+     * @brief Returns if the variable can be defaulted
+     *
+     * @return true the variable can be defaulted
+     * @return false the variable is not defaulted
+     */
     bool isDefaulted();
-    // A function that draws a list of buttons to select the options
+    /**
+     * @brief draws the individual config screen
+     *
+     * @return true is done
+     * @return false is not done
+     */
     bool draw();
-    // A function that draws each of the variable screens in order
+    /**
+     * @brief Draws all the config screens
+     *
+     * @return true is done
+     * @return false is not done
+     */
     static bool drawAll(bool);
 };
 #endif
