@@ -5,7 +5,7 @@ VariableConfig::VariableConfig(vector<string> options, string title)
 {
     optionNames = options;
     index = -1;
-    variables.pushBack(this);
+    variables.pushBack(*this);
     this->title = title;
 }
 // Constructor that takes a list of options and a default option
@@ -13,7 +13,7 @@ VariableConfig::VariableConfig(vector<string> options, string title, int default
 {
     optionNames = options;
     index = defaultOption;
-    variables.pushBack(this);
+    variables.pushBack(*this);
     this->title = title;
 }
 // Make all the constructors above but have them take a callback

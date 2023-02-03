@@ -4,9 +4,11 @@
 #include <functional>
 class VariableConfig
 {
+    // The confirm and deny buttons
     static Button confirm;
     static Button deny;
-    static inline LinkedList<VariableConfig*> variables = LinkedList<VariableConfig*>();
+    // The list of all the instances
+    static inline LinkedList<VariableConfig> variables = LinkedList<VariableConfig>();
     int index = -1;
     vector<string> optionNames;
     bool selected = false;
@@ -17,6 +19,16 @@ class VariableConfig
     // A callback function for when the variable is finally selected
     function<void(int)> callback = [](int) {};
     string title = "";
+
+    /**
+     * @brief draws the individual config screen
+     *
+     * @return true is done
+     * @return false is not done
+     */
+    bool draw();
+    // Keep it private
+    VariableConfig(VariableConfig& other) = default;
 
 public:
     /**
@@ -103,13 +115,6 @@ public:
      * @return false the variable is not defaulted
      */
     bool isDefaulted();
-    /**
-     * @brief draws the individual config screen
-     *
-     * @return true is done
-     * @return false is not done
-     */
-    bool draw();
     /**
      * @brief Draws all the config screens
      *
