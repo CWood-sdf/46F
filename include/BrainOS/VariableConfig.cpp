@@ -12,7 +12,7 @@ VariableConfig::VariableConfig(vector<string> options, string title)
 VariableConfig::VariableConfig(vector<string> options, string title, int defaultOption)
 {
     optionNames = options;
-    index = defaultOption;
+    defaultIndex = defaultOption;
     variables.pushBack(*this);
     this->title = title;
 }
@@ -33,6 +33,11 @@ VariableConfig& VariableConfig::setBypass(function<bool()> bypass)
 // A function that sets the name of an index
 void VariableConfig::setOptionName(int index, string name)
 {
+    if (index < 0 || index >= optionNames.size())
+    {
+        std::cout << "Invalid index given to variable config " << title << " in set option name, given " << index << " but max is " << optionNames.size() - 1 << std::endl;
+        return;
+    }
     optionNames[index] = name;
 }
 // A function that changes the callback
@@ -54,7 +59,7 @@ void VariableConfig::addOptions(vector<string> options)
     }
 }
 // A function that returns the current option
-string VariableConfig::getOption()
+string VariableConfig::getSelectedOption()
 {
     // If the index is -1, return an empty string
     if (index == -1)
@@ -69,9 +74,9 @@ bool VariableConfig::isSelected()
     return selected;
 }
 // Returns if the variable is defaulted but not selected
-bool VariableConfig::isDefaulted()
+bool VariableConfig::hasDefault()
 {
-    return index != -1 && !ready;
+    return defaultIndex != -1;
 }
 // A function that draws a list of buttons to select the options
 bool VariableConfig::draw()
@@ -135,7 +140,9 @@ bool VariableConfig::draw()
     }
     if (bypass())
     {
+        index = defaultIndex;
         ready = true;
+        selected = true;
         // Delete buttons
         for (auto b : buttons)
         {

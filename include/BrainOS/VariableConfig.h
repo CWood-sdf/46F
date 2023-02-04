@@ -10,6 +10,7 @@ class VariableConfig
     // The list of all the instances
     static inline LinkedList<VariableConfig> variables = LinkedList<VariableConfig>();
     int index = -1;
+    int defaultIndex = -1;
     vector<string> optionNames;
     bool selected = false;
     bool ready = false;
@@ -95,11 +96,11 @@ public:
      */
     void addOptions(vector<string> options);
     /**
-     * @brief Returns the current option
+     * @brief Returns the selected option
      *
-     * @return string the current option
+     * @return string the selected option
      */
-    string getOption();
+    string getSelectedOption();
     /**
      * @brief Returns if the variable is selected
      *
@@ -113,7 +114,7 @@ public:
      * @return true the variable can be defaulted
      * @return false the variable is not defaulted
      */
-    bool isDefaulted();
+    bool hasDefault();
     /**
      * @brief Draws all the config screens
      *
