@@ -105,9 +105,37 @@ struct VectorArr
     double getCurveLength();
 };
 
-// Create a bezier curve
+/**
+ * @brief Creates a bezier curve
+ *
+ * @param ptArr The control point array
+ * @param inc The increment to the t-value use
+ * @return VectorArr The array of points on the curve
+ */
 VectorArr bezierCurve(VectorArr ptArr, double inc = 1.0 / 50.0);
+/**
+ * @brief Returns the derivative of a bezier curve at each point
+ *
+ * @param ptArr The control point array
+ * @param inc The increment to the t-value use
+ * @return VectorArr The array of derivative points
+ */
 VectorArr bezierDerivative(VectorArr ptArr, double inc = 1.0 / 50.0);
+/**
+ * @brief Returns the left and right normals at each curve point
+ *
+ * @param ptArr The control point array
+ * @param dist The distance away from the curve to place the normals
+ * @param inc The increment to the t-value use
+ * @return pair<VectorArr, VectorArr> The left and right normals
+ */
 pair<VectorArr, VectorArr> bezierCurveNormalLR(VectorArr ptArr, double dist = 1.0, double inc = 1.0 / 50.0);
+/**
+ * @brief Returns the curvature of the curve at each point
+ *
+ * @param ptArr The control point array
+ * @param inc The increment to the t-value use
+ * @return vector<double> The curvature at each point
+ */
 vector<double> bezierCurvature(VectorArr ptArr, double inc = 1.0 / 50.0);
 #endif
