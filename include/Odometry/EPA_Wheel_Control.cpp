@@ -313,7 +313,7 @@ void WheelController::generalFollowTurnAtStart(VectorArr& arr, double& purePursu
 {
     this->drawArr = true;
     auto arrCopy = arr;
-    arrCopy.push_front(botPos());
+    arrCopy.pushBase(botPos());
     // Construct the original bezier
     VectorArr bezier = bezierCurve(arrCopy);
 

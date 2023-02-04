@@ -9,49 +9,102 @@ struct VectorArr
     // Leave it public just because
     deque<PVector> arr = deque<PVector>();
 
-    // Constructor
+    /**
+     * @brief Construct a new Vector Arr object
+     *
+     * @param list A list of vectors to initialize the array with
+     */
     VectorArr(std::initializer_list<PVector> list);
-
-    // Default the other constructors and destructor
     VectorArr() = default;
-    VectorArr(const VectorArr& a)
+    /**
+     * @brief Construct a new Vector Arr object
+     *
+     * @param other The other array to copy
+     */
+    VectorArr(const VectorArr& other)
     {
-        arr = a.arr;
+        arr = other.arr;
     }
     VectorArr(VectorArr&&) = default;
 
-    // Use decltype because I don't care enough to find out the type
-
-    // Iterators:
+    /**
+     * @brief Get the begin iterator
+     *
+     * @return decltype(arr.begin())
+     */
     decltype(arr.begin()) begin();
+    /**
+     * @brief Get the end iterator
+     *
+     * @return decltype(arr.end())
+     */
     decltype(arr.end()) end();
-    // Bracket access
+    /**
+     * @brief Get the vector at index i
+     *
+     * @param i the index
+     * @return PVector& the vector at index i
+     */
     PVector& operator[](int i);
+    /**
+     * @brief Remove the element at index i
+     *
+     * @param i the index
+     */
     void pop(int i);
-    // void popCurrentNext(){
-    //   arr.popCurrentNext();
-    // }
+    /**
+     * @brief Remove the first element
+     *
+     */
     void popBase();
+    /**
+     * @brief Remove the last element
+     *
+     */
     void popEnd();
-    // Get the size
+    /**
+     * @brief Get the size of the array
+     *
+     * @return size_t the size of the array
+     */
     size_t size();
-    // Add elements
+    /**
+     * @brief Push a vector to the end of the array
+     *
+     * @param v the vector to push
+     */
     void push(PVector v);
-    void push_front(PVector v);
+    /**
+     * @brief Push a vector to the beginning of the array
+     *
+     * @param v the vector to push
+     */
+    void pushBase(PVector v);
 
-    // Get last / first elements
+    /**
+     * @brief Return the last element
+     *
+     * @return PVector& A reference to the last element
+     */
     PVector& last();
+    /**
+     * @brief Return the first element
+     *
+     * @return PVector& A reference to the first element
+     */
     PVector& first();
-    // operator=
+
     VectorArr& operator=(const VectorArr& v);
-    // operator=
     VectorArr& operator=(VectorArr&& v);
 
-    double getLength();
+    /**
+     * @brief Gets the length of the curve formed by the points in the array
+     *
+     * @return double The length of the curve
+     */
+    double getCurveLength();
 };
 
-// Find a single point on a bezier curve with parameter t (t goes from 0 -> 1)
-PVector bezierInterpolate(VectorArr ptArr, double t);
 // Create a bezier curve
 VectorArr bezierCurve(VectorArr ptArr, double inc = 1.0 / 50.0);
 VectorArr bezierDerivative(VectorArr ptArr, double inc = 1.0 / 50.0);

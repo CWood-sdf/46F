@@ -49,7 +49,7 @@ void VectorArr::push(PVector v)
 {
     arr.push_back(v);
 }
-void VectorArr::push_front(PVector v)
+void VectorArr::pushBase(PVector v)
 {
     arr.insert(arr.cbegin(), v);
 }
@@ -76,7 +76,7 @@ VectorArr& VectorArr::operator=(VectorArr&& v)
     arr = v.arr;
     return *this;
 }
-double VectorArr::getLength()
+double VectorArr::getCurveLength()
 {
     double length = 0;
     for (int i = 0; i < arr.size() - 1; i++)

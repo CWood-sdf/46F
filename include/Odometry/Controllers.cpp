@@ -27,7 +27,7 @@ void Path::make(VectorArr& arr, Chassis* chassis)
     this->arr = arr;
     auto arrCopy = VectorArr(arr);
     // cout << "Path size: " << arr.size() << endl; s(100);
-    arrCopy.push_front(chassis->botPos());
+    arrCopy.pushBase(chassis->botPos());
 
     auto bezier = VectorArr(bezierCurve(arrCopy));
     // cout << "Bezier size: " << bezier.size() << endl; s(100);
