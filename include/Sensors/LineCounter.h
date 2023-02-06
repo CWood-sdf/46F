@@ -14,8 +14,8 @@ class LineCounter
     friend class LineGroup;
     line* sensor;
     bool isActive = false;
-    static const int highThresholdPolycarb = 85;
-    static const int lowThresholdPolycarb = 85;
+    static const int highThresholdPolycarb = 75;
+    static const int lowThresholdPolycarb = 55;
     static const int highThresholdAir = 15;
     static const int lowThresholdAir = 13;
     int startThreshold = highThresholdAir;
@@ -34,7 +34,7 @@ public:
         instances.push_back(this);
         if (throughPolycarb)
         {
-            startThreshold = highThresholdPolycarb;
+            threshold = startThreshold = highThresholdPolycarb;
             lowThreshold = lowThresholdPolycarb;
         }
     }
@@ -43,7 +43,7 @@ public:
         instances.push_back(this);
         if (throughPolycarb)
         {
-            startThreshold = highThresholdPolycarb;
+            threshold = startThreshold = highThresholdPolycarb;
             lowThreshold = lowThresholdPolycarb;
         }
     }
@@ -71,6 +71,15 @@ public:
         if (pressing())
         {
             countIn++;
+        }
+    }
+    static void listVals(bool)
+    {
+        int i = 0;
+        Brain.Screen.clearScreen(black);
+        for (LineCounter* l : instances)
+        {
+            Brain.Screen.printAt(20, i * 20 + 20, "R: %d, Ci: %d, Co: %d, A: %d", l->rawData(), l->getCountIn(), l->getCountOut(), l->active());
         }
     }
 };

@@ -491,6 +491,7 @@ int main()
             BosFn::addNewFn(BosFn([](bool refresh)
                 { intakeController.drawState(refresh); }));
 #endif
+            BosFn::addNewFn(LineCounter::listVals);
             BosFn::addNewFn(VariableConfig::drawAll);
             BosFn::addNewFn(windowsLoader);
             BosFn::useTransparentScreenSwitchButtons();

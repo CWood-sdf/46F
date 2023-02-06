@@ -535,13 +535,23 @@ void AutoIntake::updateValues()
             release.set(!pneumaticsReleaseState);
             slingMot[0].spinToPosition(0, degrees, 100, velocityUnits::pct, false);
         }
+        if (lastCount == 2 && counter.getCountOut() == 3)
+        {
+            continueTime = 300;
+            continueDirection = 1;
+        }
+        if (countThrough > 3 && !counter.pressing())
+        {
+            continueTime = 500;
+            continueDirection = -1;
+        }
         // I'm fairly sure that as of writing this,
         // there is no way to accidentally get more than 3 disks through the intake (bc of protection in intake function), but might as well have protection for it
-        if ((countThrough > 3 && counter.pressing()) || reversed)
+        if ((countThrough > 3 && counter.pressing()) || reversed || (continueDirection < 0 && continueTime > 0))
         {
             intakeMot.spinVolt(vex::reverse, 100);
         }
-        else if (targetCount > counter.getCountOut() && countThrough <= 3 && atBack())
+        else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0)) && countThrough <= 3 && atBack())
         {
             intakeMot.spinVolt(fwd, 100);
         }
@@ -549,8 +559,9 @@ void AutoIntake::updateValues()
         {
             intakeMot.stop();
         }
+        lastCount = counter.getCountOut();
     }
-
+    continueTime -= 10;
     timeSinceRelease += 10;
 }
 void AutoIntake::setFiring()
