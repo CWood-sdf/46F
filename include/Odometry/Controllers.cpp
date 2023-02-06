@@ -3,10 +3,9 @@
 #include <cstdint>
 #include <iomanip>
 // That should be a sufficient path generator
-Path::chain_method Path::setK(double s)
+void Path::setK(double s)
 {
     kConst = s;
-    CHAIN
 }
 double clamp(double val, double high, double low)
 {
@@ -122,15 +121,15 @@ VectorArr Path::getBezier()
     }
     return ret;
 }
-vector<Ref<PVector>> Path::getBezierRef()
-{
-    vector<Ref<PVector>> ret = {};
-    for (auto i : path)
-    {
-        ret.push_back(i.bezierPt);
-    }
-    return ret;
-}
+// vector<Ref<PVector>> Path::getBezierRef()
+// {
+//     vector<Ref<PVector>> ret = {};
+//     for (auto i : path)
+//     {
+//         ret.push_back(i.bezierPt);
+//     }
+//     return ret;
+// }
 int Path::size()
 {
     return path.size();

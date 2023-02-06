@@ -28,11 +28,10 @@ private:
     double kConst;
 
 public:
-    chain_method setK(double s);
+    void setK(double s);
     void make(VectorArr& arr, Chassis* chassis);
     void remake(Chassis* chassis);
     VectorArr getBezier();
-    vector<Ref<PVector>> getBezierRef();
     int size();
     El& last();
     El& operator[](int index);
