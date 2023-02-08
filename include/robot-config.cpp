@@ -161,7 +161,7 @@ LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C, true);
 AutoIntake intakeController = AutoIntake(
     intakeCounter, sling, intake, slingLatch, []()
     { return slingAtBack.pressing(); },
-    false);
+    true);
 #endif
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);

@@ -126,7 +126,7 @@ void autonomous()
 }
 
 //}
-#define sensitivity 12
+#define sensitivity 20
 
 // Drivercontrol + automation {
 #if BOT == 1
@@ -244,6 +244,7 @@ void drivercontrol()
 
             double s1 = Y1 / 1.27;
             double s2 = Y2 / 1.27;
+            // cout << Greg.Axis3.value() << ", " << s1;
             if (Greg.ButtonLeft.pressing())
             {
                 s1 = -50, s2 = 50;
@@ -252,6 +253,7 @@ void drivercontrol()
             {
                 s1 = 50, s2 = -50;
             }
+            // cout << s1 << ", " << Greg.ButtonLeft.pressing() << ", " << Greg.ButtonRight.pressing() << ", ";
             if (s1 == 0)
             {
                 leftWheels.stop(coast);
@@ -262,13 +264,26 @@ void drivercontrol()
             }
             if (driveReversed)
             {
-                leftWheels.spin(vex::reverse, s1, pct);
-                rightWheels.spin(vex::reverse, s2, pct);
+                if (s1 != 0)
+                {
+                    leftWheels.spin(vex::reverse, s1, pct);
+                }
+                if (s2 != 0)
+                {
+                    rightWheels.spin(vex::reverse, s2, pct);
+                }
             }
             else
             {
-                leftWheels.spin(fwd, s1, pct);
-                rightWheels.spin(fwd, s2, pct);
+                if (s1 != 0)
+                {
+                    leftWheels.spin(fwd, s1, pct);
+                }
+                if (s2 != 0)
+                {
+                    rightWheels.spin(fwd, s2, pct);
+                }
+                // cout << s1 << endl;
             }
             if (UpLatch.pressing())
             {
@@ -357,7 +372,7 @@ void drivercontrol()
             }
             else
             {
-                intakeController.reversed = false;
+                intakeController.stopReverse();
             }
             if (L1Latch.pressing())
             {
@@ -454,7 +469,8 @@ enum class Alliance : int
 
 void displayBot(bool);
 bool init = false;
-
+extern limit slingAtBack;
+extern pneumatics slingLatch;
 //}
 int main()
 {
@@ -514,8 +530,12 @@ int main()
         else {
         wc.setBlue();
         } });
-    thread posUpdate = thread(updatePos);
 
+    thread posUpdate = thread(updatePos);
+    if (!slingAtBack.pressing())
+    {
+        slingLatch.set(true);
+    }
     // Make a thread to execute some auton tasks concurrently
     thread otherThreads = thread(executeThreads);
     thread intakeThread = thread(runIntake);

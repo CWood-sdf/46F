@@ -139,6 +139,7 @@ struct AutoIntake
     MotorGroup& intakeMot;
     pneumatics& release;
     std::function<bool()> atBack;
+    bool isAtBack = false;
     bool pneumaticsReleaseState = false;
     int timeSinceRelease = 0;
     int targetCount = 0;
@@ -154,6 +155,7 @@ struct AutoIntake
     void intake();
     void intakeMultiple(int count);
     void reverseMotor();
+    void stopReverse();
     void setCount(int count);
 };
 #endif

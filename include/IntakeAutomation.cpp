@@ -526,7 +526,11 @@ void AutoIntake::updateValues()
     if (enabled)
     {
         int countThrough = counter.getCountIn();
-        if (!atBack() && timeSinceRelease > 1000)
+        if (atBack() && timeSinceRelease > 1000)
+        {
+            isAtBack = true;
+        }
+        if (!isAtBack && timeSinceRelease > 1000)
         {
             slingMot.spinVolt(reverse, 100);
         }
@@ -551,7 +555,7 @@ void AutoIntake::updateValues()
         {
             intakeMot.spinVolt(vex::reverse, 100);
         }
-        else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0)) && countThrough <= 3 && atBack())
+        else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0)) && countThrough <= 3 && isAtBack)
         {
             intakeMot.spinVolt(fwd, 100);
         }
@@ -573,6 +577,7 @@ void AutoIntake::setFiring()
         counter.reset();
         timeSinceRelease = 0;
         release.set(pneumaticsReleaseState);
+        isAtBack = false;
     }
 }
 void AutoIntake::intake()
@@ -590,6 +595,10 @@ void AutoIntake::intakeMultiple(int count)
 void AutoIntake::reverseMotor()
 {
     reversed = true;
+}
+void AutoIntake::stopReverse()
+{
+    reversed = false;
 }
 void AutoIntake::setCount(int count)
 {
