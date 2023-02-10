@@ -340,16 +340,81 @@ Auton skillsPt = "Skils driveTo" + []()
     wc.faceTarget({-72, 72});
 };
 #elif BOT == 2
-Auton leftA = "Left" + []() {
-
+void spinRoller()
+{
+    chassis.driveFromDiff(-10, 0, fwd);
+    intakeController.disable();
+    s(100);
+    intake.spinVolt(fwd, 100);
+    s(100);
+    intake.stop(hold);
+    intakeController.enable();
+    chassis.driveFromDiff(0, 0, fwd);
+    wc.driveDistance(3);
+}
+void launchDisks()
+{
+    intakeController.setFiring();
+}
+void intakeCount(int count)
+{
+    intakeController.intakeMultiple(count);
+}
+Auton leftA = "Left" + []()
+{
+    wc.estimateStartPos(PVector(-60.69, 40.42), 89.98);
+    spinRoller();
+    wc.followPath(&purePursuit, {PVector(-61.02, -10.76), PVector(-18.92, 5.74)});
+    wc.faceTarget({49.10, 50.32});
+    launchDisks();
+    intakeCount(1);
+    wc.turnTo(50.52);
+    wc.driveDistance(2.90);
+    wc.backwardsDriveDistance(2.64);
+    wc.faceTarget({49.76, 50.99});
+    launchDisks();
 };
-Auton rightA = "Right" + []() {
-
+Auton rightA = "Right" + []()
+{
+    wc.estimateStartPos(PVector(16.90, -55.18), 269.05);
+    wc.backInto(37.54, -55.18);
+    wc.turnTo(0.08);
+    wc.backwardsDriveDistance(5.83);
+    spinRoller();
+    intakeCount(2);
+    wc.followPath(&purePursuit, {PVector(-13.64, -40.32), PVector(-12.31, -12.58)});
+    wc.faceTarget({49.76, 49.99});
+    wc.backwardsDriveDistance(5.13);
+    wc.faceTarget({49.76, 49.99});
+    wc.addDistFn(3, []()
+        { launchDisks(); });
+    wc.driveDistance(15.88);
 };
 Auton skills = "Skills" + []() {
 
 };
-Auton winPoint = "Win Point" + []() {
-
+Auton winPoint = "Win Point" + []()
+{
+    wc.estimateStartPos(PVector(-62.02, 41.24), 90.72);
+    spinRoller();
+    intakeCount(2);
+    wc.followPath(&purePursuit, {PVector(-54.09, -7.62), PVector(-28.99, -0.03), PVector(-11.65, -12.08)});
+    wc.faceTarget({49.26, 50.49});
+    wc.backwardsDriveDistance(5.58);
+    wc.addDistFn(3, []()
+        { launchDisks(); });
+    wc.driveDistance(15.62);
+    wc.backwardsDriveDistance(3.03);
+    intakeCount(1);
+    wc.driveTo(-0.76, -23.31);
+    wc.faceTarget({49.26, 50.49});
+    wc.addDistFn(3, []()
+        { launchDisks(); });
+    wc.driveDistance(7.97);
+    wc.backwardsDriveDistance(7.40);
+    wc.driveTo(39.85, -58.64);
+    wc.turnTo(-0.43);
+    wc.backwardsDriveDistance(2.35);
+    spinRoller();
 };
 #endif

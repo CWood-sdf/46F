@@ -718,6 +718,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
     int timesStopped = 0;
     pid->init();
     double lastSpeed = 0.0;
+
     // cout << "%ctrlP: def d" << endl;
     while (1)
     {
@@ -752,6 +753,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         PVector pos = chassis->botPos();
         // auto newRotation = chassis->rightWheels[0].rotation(rev);
         dist = targetDist - pos.dist2D(startPos);
+        useDistFns(dist);
         // If near target, start the timer
         if (abs(dist) < pid->settings.exitDist)
         {

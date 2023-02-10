@@ -21,71 +21,71 @@
 using namespace ClassFns;
 
 using namespace vex;
-void spinRoller()
-{
-#if BOT == 1
-    bool intakeDisabled = intakeController.disabled;
-    intakeController.disable();
-#endif
-    rachetColor.setLightPower(50, percent);
-    bool targetRed = wc.isRed();
+// void spinRoller()
+// {
+// #if BOT == 1
+//     bool intakeDisabled = intakeController.disabled;
+//     intakeController.disable();
+// #endif
+//     rachetColor.setLightPower(50, percent);
+//     bool targetRed = wc.isRed();
 
-    auto hue = rachetColor.hue();
-    bool isRed = hue > 300 || hue < 60;
-    bool lastRed = isRed;
-    chassis.driveFromDiff(-60, 0, fwd);
-    int count = 0;
-    bool countUp = true;
-    int i = 0;
-    int time = 0;
-    while (1)
-    {
-        if (time > 3000)
-        {
-            break;
-        }
-        if (isRed != lastRed && !isRed == targetRed && i > 10)
-        {
-            break;
-        }
-        intake.spin(vex::reverse, 40);
-        auto hue = rachetColor.hue();
-        lastRed = isRed;
-        isRed = hue > 300 || hue < 60;
-        if (countUp)
-        {
-            count++;
-        }
-        else
-        {
-            count--;
-        }
-        if (count == 20)
-        {
-            countUp = false;
-            chassis.driveFromDiff(40, 0, fwd);
-        }
-        else if (count == 0)
-        {
-            countUp = true;
-            chassis.driveFromDiff(-100, 0, fwd);
-        }
-        i++;
-        s(10);
-        time += 10;
-    }
-    // intake.spin(vex::reverse, -100);
-    chassis.driveFromDiff(-10, 0, fwd);
-    // s(500);
-    chassis.coastBrake();
-    intake.stop(hold);
-#if BOT == 1
-    if (!intakeDisabled)
-    {
-        intakeController.enable();
-    }
-#endif
-}
+//     auto hue = rachetColor.hue();
+//     bool isRed = hue > 300 || hue < 60;
+//     bool lastRed = isRed;
+//     chassis.driveFromDiff(-60, 0, fwd);
+//     int count = 0;
+//     bool countUp = true;
+//     int i = 0;
+//     int time = 0;
+//     while (1)
+//     {
+//         if (time > 3000)
+//         {
+//             break;
+//         }
+//         if (isRed != lastRed && !isRed == targetRed && i > 10)
+//         {
+//             break;
+//         }
+//         intake.spin(vex::reverse, 40);
+//         auto hue = rachetColor.hue();
+//         lastRed = isRed;
+//         isRed = hue > 300 || hue < 60;
+//         if (countUp)
+//         {
+//             count++;
+//         }
+//         else
+//         {
+//             count--;
+//         }
+//         if (count == 20)
+//         {
+//             countUp = false;
+//             chassis.driveFromDiff(40, 0, fwd);
+//         }
+//         else if (count == 0)
+//         {
+//             countUp = true;
+//             chassis.driveFromDiff(-100, 0, fwd);
+//         }
+//         i++;
+//         s(10);
+//         time += 10;
+//     }
+//     // intake.spin(vex::reverse, -100);
+//     chassis.driveFromDiff(-10, 0, fwd);
+//     // s(500);
+//     chassis.coastBrake();
+//     intake.stop(hold);
+// #if BOT == 1
+//     if (!intakeDisabled)
+//     {
+//         intakeController.enable();
+//     }
+// #endif
+// }
 competition Competition;
 
 string testPrintData = "";
@@ -471,6 +471,7 @@ void displayBot(bool);
 bool init = false;
 extern limit slingAtBack;
 extern pneumatics slingLatch;
+extern LineCounter intakeCounter;
 //}
 int main()
 {
@@ -530,7 +531,8 @@ int main()
         else {
         wc.setBlue();
         } });
-
+    // intake.spinVolt(fwd, 90);
+    intakeCounter.reset();
     thread posUpdate = thread(updatePos);
     if (!slingAtBack.pressing())
     {
@@ -546,19 +548,6 @@ int main()
     thread loader = thread([]()
         { BosFn::runBrainOS(); });
 
-    // wc.prevStopExit();
-    // wc.driveTo(-20, 48);
-    // calibrateFlywheelSpeed();
-    // autonomous();
-    // // chassis.coastBrake();
-    // flyTBH.setTargetSpeed(0);
-    // flyTBH.setDisabled(false);
-    // while (1)
-    // {
-    //   s(100);
-    // }
-    // drivercontrol();
-    // wc.followPath(&purePursuit, {{0, 30}, {30, 30}});
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 
