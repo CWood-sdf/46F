@@ -549,6 +549,11 @@ void AutoIntake::updateValues()
             continueTime = 500;
             continueDirection = -1;
         }
+        if (targetCount == counter.getCountOut() && lastCount != counter.getCountOut())
+        {
+            continueDirection = 1;
+            continueTime = 500;
+        }
         // I'm fairly sure that as of writing this,
         // there is no way to accidentally get more than 3 disks through the intake (bc of protection in intake function), but might as well have protection for it
         if ((countThrough > 3 && counter.pressing()) || reversed || (continueDirection < 0 && continueTime > 0))
@@ -557,7 +562,7 @@ void AutoIntake::updateValues()
         }
         else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0)) && countThrough <= 3 && isAtBack)
         {
-            intakeMot.spinVolt(fwd, 80);
+            intakeMot.spinVolt(fwd, 100);
         }
         else
         {

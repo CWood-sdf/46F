@@ -181,7 +181,7 @@ posTp::encoderArr arrX = {TrackingWheel(PORT14, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 2.77)};
 #elif BOT == 2
 posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
-posTp::encoderArr arrY = {TrackingWheel(PORT14, true, 2.77)};
+posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, angler, {0, 5});
@@ -214,8 +214,8 @@ RamseteController ramsete = RamseteController(
 
 WheelController::PathFollowSettings pidSettings = WheelController::PathFollowSettings();
 BasicPidController pidController = BasicPidController(
-    PIDF(6.25, 0.1, 2.4325, 200, 6, 1),
-    PID(0.8, 0, 0.3, 0, 0, 0),
+    PIDF(9.25, 0.1, 2.4325, 200, 6, 1),
+    PID(0.9, 0, 0.3, 0, 0, 0),
     pidSettings
         .setBrakeMode(WheelController::exitMode::normal)
         .setExitDist(1)
@@ -237,7 +237,7 @@ WheelController wc = WheelController(
     &chassis,
     &ramsete, &purePursuit, &pidController,
     reverseAutonPosition, reverseAutonAngle,
-    PID(1.92, 0.05, 1.35 / 2, -1, 20, 4),
+    PID(1.5, 0, 4.6, -1, 20, 4),
     1.0);
 
 /*************************************

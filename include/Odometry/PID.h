@@ -8,9 +8,9 @@ class PIDF;
 class PidfAdder
 {
     friend class PIDF;
-    double p, i, d, f;
 
 public:
+    double p, i, d, f;
     // Constructor
     // PidAdder(0.1, 0.2, 0.1);
     PidfAdder(double p, double i, double d, double f = 0.0);

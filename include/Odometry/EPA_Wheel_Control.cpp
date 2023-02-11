@@ -83,15 +83,9 @@ void WheelController::turnTo(std::function<double()> angleCalc)
 {
     //
     auto oldAngleCalc = angleCalc;
-    if (!isRed() && !callingInDrive)
-    {
-        angleCalc = [&]()
-        {
-            return autonReverseAngle(oldAngleCalc() + 180);
-        };
-    }
+    bool add180 = isBlue() && !callingInDrive;
     // If the auton is on the other side, turn to the opposite angle
-    double angle = angleCalc();
+    double angle = posNeg180(angleCalc() + add180 * 180);
     // cout << "A: " << angle << endl;
     // cout << "A2: " << botAngle() << endl;
     // if(!callingInDrive && reversed){
@@ -107,6 +101,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
     int minTimeIn = 200;
     double degRange = 4.0;
     int speedLimit = 100;
+    int timeSpent = 0;
 
     //
     //
@@ -127,7 +122,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
         chassis->turnLeft(speed > speedLimit ? speedLimit : speed);
         s(sleepTime);
 
-        angle = angleCalc();
+        angle = posNeg180(angleCalc() + add180 * 180);
 
         normAngle = posNeg180(angle - botAngle());
         if (abs(normAngle) < degRange)
@@ -137,6 +132,12 @@ void WheelController::turnTo(std::function<double()> angleCalc)
         else
         {
             timeIn = 0;
+        }
+        timeSpent += sleepTime;
+        if (timeSpent > 5000)
+        {
+            cout << "Turn fail (timeout)" << endl;
+            break;
         }
         //
     }
@@ -398,8 +399,8 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
     // double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
     controller->init();
-
-    if (reversed)
+    cout << "blue: " << isBlue() << endl;
+    if (isBlue())
     {
         for (auto& a : arr)
         {

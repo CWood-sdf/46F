@@ -8,7 +8,7 @@ class VariableConfig
     static Button confirm;
     static Button deny;
     // The list of all the instances
-    static inline LinkedList<VariableConfig> variables = LinkedList<VariableConfig>();
+    static inline LinkedList<VariableConfig*> variables = LinkedList<VariableConfig*>();
     int index = -1;
     int defaultIndex = -1;
     vector<string> optionNames;

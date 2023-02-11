@@ -151,7 +151,6 @@ void PIDF::setTarget(double val)
 void PIDF::incVals(double sensorVal)
 {
 
-    lastError = error;
     if (manager)
     {
         error = manager->manageError(target - sensorVal);
@@ -180,6 +179,7 @@ void PIDF::incVals(double sensorVal)
         manager->manageI(i);
         manager->manageD(d);
     }
+    lastError = error;
 }
 // Get the speed value given that error has already been applied
 double PIDF::getVal()

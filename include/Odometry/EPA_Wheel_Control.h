@@ -20,8 +20,6 @@ class WheelController
 protected: // PID variables + other random things
     typedef WheelController& chain_method;
 
-    PID turnCtrl;
-
     map<double, std::function<void()>> distFns, oldFns;
     LinkedList<PidAdder> customPidsTurn;
     bool callingInDrive = false;
@@ -29,6 +27,7 @@ protected: // PID variables + other random things
     std::function<double(double)> autonReverseAngle;
 
 public: // Some variables
+    PID turnCtrl;
     // A public path for drawing
     VectorArr publicPath;
     bool drawArr = false;

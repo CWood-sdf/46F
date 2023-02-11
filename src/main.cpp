@@ -472,6 +472,57 @@ bool init = false;
 extern limit slingAtBack;
 extern pneumatics slingLatch;
 extern LineCounter intakeCounter;
+ostream& operator<<(ostream& cout, PidAdder p)
+{
+    cout << "[" << p.p << ", " << p.i << ", " << p.d << "]";
+    return cout;
+}
+void tuneTurnPid()
+{
+    auto kIInc = 0.005;
+    auto kDInc = 0.05;
+    auto kPInc = 0.05;
+
+    while (1)
+    {
+        PidAdder adder = PidAdder(0, 0, 0);
+        wc.turnTo(wc.botAngle() + 90);
+        for (int i = 0; i < 3; i++)
+        {
+            while (1)
+            {
+                if (Greg.ButtonLeft.pressing())
+                {
+                    break;
+                }
+                else if (Greg.ButtonRight.pressing())
+                {
+                    switch (i)
+                    {
+                    case 0:
+                        adder.p += kPInc;
+                        break;
+                    case 1:
+                        adder.i += kIInc;
+                        break;
+                    case 2:
+                        adder.d += kDInc;
+                        break;
+                    }
+                    break;
+                }
+                s(100);
+            }
+            while (Greg.ButtonLeft.pressing() || Greg.ButtonRight.pressing())
+            {
+                s(100);
+            }
+            Greg.rumble(".");
+        }
+        wc.turnCtrl += adder;
+        cout << "Added " << adder << " ending with " << wc.turnCtrl << endl;
+    }
+}
 //}
 int main()
 {
@@ -547,7 +598,7 @@ int main()
     // Awesome brain screen control thread
     thread loader = thread([]()
         { BosFn::runBrainOS(); });
-
+    autonomous();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 

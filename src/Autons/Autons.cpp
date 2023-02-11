@@ -342,15 +342,15 @@ Auton skillsPt = "Skils driveTo" + []()
 #elif BOT == 2
 void spinRoller()
 {
-    chassis.driveFromDiff(-10, 0, fwd);
     intakeController.disable();
-    s(100);
+    s(50);
+    chassis.driveFromDiff(-40, 0, fwd);
     intake.spinVolt(fwd, 100);
-    s(100);
+    s(200);
     intake.stop(hold);
     intakeController.enable();
-    chassis.driveFromDiff(0, 0, fwd);
-    wc.driveDistance(3);
+    chassis.driveFromDiff(40, 0, fwd);
+    s(200);
 }
 void launchDisks()
 {
@@ -362,16 +362,19 @@ void intakeCount(int count)
 }
 Auton leftA = "Left" + []()
 {
+    // wc.setBlue();
     wc.estimateStartPos(PVector(-60.69, 40.42), 89.98);
     spinRoller();
-    wc.followPath(&purePursuit, {PVector(-61.02, -10.76), PVector(-18.92, 5.74)});
+    wc.followPath(&purePursuit, {PVector(-61.02, -10.76), PVector(-21.92, 4.74)});
     wc.faceTarget({49.10, 50.32});
     launchDisks();
+    s(200);
     intakeCount(1);
-    wc.turnTo(50.52);
-    wc.driveDistance(2.90);
-    wc.backwardsDriveDistance(2.64);
+    s(3000);
+    wc.turnTo(164.05);
+    wc.driveDistance(17.70);
     wc.faceTarget({49.76, 50.99});
+    s(1000);
     launchDisks();
 };
 Auton rightA = "Right" + []()
@@ -393,6 +396,7 @@ Auton rightA = "Right" + []()
 Auton skills = "Skills" + []() {
 
 };
+Auton noOp = "No Run" + []() {};
 Auton winPoint = "Win Point" + []()
 {
     wc.estimateStartPos(PVector(-62.02, 41.24), 90.72);
@@ -405,13 +409,9 @@ Auton winPoint = "Win Point" + []()
         { launchDisks(); });
     wc.driveDistance(15.62);
     wc.backwardsDriveDistance(3.03);
-    intakeCount(1);
+    intakeCount(2);
     wc.driveTo(-0.76, -23.31);
     wc.faceTarget({49.26, 50.49});
-    wc.addDistFn(3, []()
-        { launchDisks(); });
-    wc.driveDistance(7.97);
-    wc.backwardsDriveDistance(7.40);
     wc.driveTo(39.85, -58.64);
     wc.turnTo(-0.43);
     wc.backwardsDriveDistance(2.35);
