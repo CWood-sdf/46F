@@ -800,6 +800,10 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
                 break;
             }
         }
+        if (abs(speed) > chassis->speedLimit)
+        {
+            speed = chassis->speedLimit * sign(speed);
+        }
         if (isNeg)
         {
             speed *= -1.0;

@@ -147,6 +147,7 @@ struct AutoIntake
     int continueTime = 0;
     int continueDirection = 0;
     int lastCount = 0;
+    bool forward = false;
     AutoIntake(LineCounter& counter, MotorGroup& sling, MotorGroup& intake, pneumatics& release, std::function<bool()> ready, bool pneumaticsReleaseState = false);
     void disable();
     void enable();
@@ -155,8 +156,10 @@ struct AutoIntake
     void intake();
     void intakeMultiple(int count);
     void reverseMotor();
-    void stopReverse();
+    void stopDriverSpins();
     void setCount(int count);
+    void moveForward();
+    void decreaseCount();
 };
 #endif
 #endif

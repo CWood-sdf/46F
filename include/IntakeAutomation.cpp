@@ -544,7 +544,7 @@ void AutoIntake::updateValues()
             continueTime = 300;
             continueDirection = 1;
         }
-        if (countThrough > 3 && !counter.pressing())
+        if (countThrough > 3 && lastCount != counter.getCountOut())
         {
             continueTime = 500;
             continueDirection = -1;
@@ -560,9 +560,9 @@ void AutoIntake::updateValues()
         {
             intakeMot.spinVolt(vex::reverse, 100);
         }
-        else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0)) && countThrough <= 3 && isAtBack)
+        else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0) || forward) && countThrough <= 3 && isAtBack)
         {
-            intakeMot.spinVolt(fwd, 100);
+            intakeMot.spin(fwd, 52);
         }
         else
         {
@@ -572,6 +572,10 @@ void AutoIntake::updateValues()
     }
     continueTime -= 10;
     timeSinceRelease += 10;
+}
+void AutoIntake::decreaseCount()
+{
+    counter.setCount(2);
 }
 void AutoIntake::setFiring()
 {
@@ -601,9 +605,14 @@ void AutoIntake::reverseMotor()
 {
     reversed = true;
 }
-void AutoIntake::stopReverse()
+void AutoIntake::moveForward()
+{
+    forward = true;
+}
+void AutoIntake::stopDriverSpins()
 {
     reversed = false;
+    forward = false;
 }
 void AutoIntake::setCount(int count)
 {

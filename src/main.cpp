@@ -122,7 +122,7 @@ void autonomous()
     Auton::callAuton();
     // wc.driveTo(1, 1);
     // Print time
-    cout << "Auton Time: " << (Brain.Timer.system() - startTime) / 1000 << endl;
+    cout << "Auton Time: " << (Brain.Timer.system() - startTime) / 1000.0 << endl;
 }
 
 //}
@@ -299,10 +299,10 @@ void drivercontrol()
             // if(YLatch.pressing()){
             //   wc.turnTo(wc.botPos().angleTo({50, 50}));
             // }
-            if (Greg.ButtonY.pressing())
+            if (Greg.ButtonA.pressing())
             {
                 int time = 0;
-                while (Greg.ButtonY.pressing())
+                while (Greg.ButtonA.pressing())
                 {
                     s(10);
                     time += 10;
@@ -362,21 +362,25 @@ void drivercontrol()
                 intakeController.setFiring();
             }
 #elif BOT == 2
-            if (R1Latch.pressing())
+            if (Greg.ButtonR1.pressing())
             {
-                intakeController.intakeMultiple(3);
+                intakeController.moveForward();
             }
-            if (Greg.ButtonR2.pressing())
+            else if (Greg.ButtonR2.pressing())
             {
                 intakeController.reverseMotor();
             }
             else
             {
-                intakeController.stopReverse();
+                intakeController.stopDriverSpins();
             }
             if (L1Latch.pressing())
             {
                 intakeController.setFiring();
+            }
+            if (L2Latch.pressing())
+            {
+                intakeController.decreaseCount();
             }
 #endif
         }

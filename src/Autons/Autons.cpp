@@ -352,6 +352,30 @@ void spinRoller()
     chassis.driveFromDiff(40, 0, fwd);
     s(200);
 }
+void skillsSpinRoller()
+{
+    intakeController.disable();
+    s(50);
+    chassis.driveFromDiff(-40, 0, fwd);
+    intake.spinVolt(fwd, 100);
+    s(400);
+    intake.stop(hold);
+    intakeController.enable();
+    chassis.driveFromDiff(40, 0, fwd);
+    s(400);
+}
+void skillsFrontRoller()
+{
+    intakeController.disable();
+    s(50);
+    chassis.driveFromDiff(40, 0, fwd);
+    intake.spinVolt(fwd, 100);
+    s(200);
+    intake.stop(hold);
+    intakeController.enable();
+    chassis.driveFromDiff(-40, 0, fwd);
+    s(200);
+}
 void launchDisks()
 {
     intakeController.setFiring();
@@ -365,17 +389,28 @@ Auton leftA = "Left" + []()
     // wc.setBlue();
     wc.estimateStartPos(PVector(-60.69, 40.42), 89.98);
     spinRoller();
+    wc.path.setK(1.8);
     wc.followPath(&purePursuit, {PVector(-61.02, -10.76), PVector(-21.92, 4.74)});
     wc.faceTarget({49.10, 50.32});
+    wc.driveDistance(5);
+    wc.faceTarget({49.10, 50.32});
+    s(800);
     launchDisks();
-    s(200);
-    intakeCount(1);
-    s(3000);
-    wc.turnTo(164.05);
-    wc.driveDistance(17.70);
-    wc.faceTarget({49.76, 50.99});
-    s(1000);
-    launchDisks();
+    // chassis.driveFromDiff(100, 0, fwd);
+    // s(300);
+    // launchDisks();
+    // chassis.driveFromDiff(0, 0, fwd);
+    // intakeCount(1);
+    // s(3000);
+    // wc.turnTo(154.05);
+    // chassis.setSpeedLimit(40);
+    // wc.driveDistance(17.70);
+    // s(1000);
+    // wc.faceTarget({49.76, 50.99});
+    // wc.driveDistance(7);
+    // wc.faceTarget({48, 48});
+    // s(1000);
+    // launchDisks();
 };
 Auton rightA = "Right" + []()
 {
@@ -384,17 +419,71 @@ Auton rightA = "Right" + []()
     wc.turnTo(0.08);
     wc.backwardsDriveDistance(5.83);
     spinRoller();
-    intakeCount(2);
-    wc.followPath(&purePursuit, {PVector(-13.64, -40.32), PVector(-12.31, -12.58)});
-    wc.faceTarget({49.76, 49.99});
-    wc.backwardsDriveDistance(5.13);
-    wc.faceTarget({49.76, 49.99});
-    wc.addDistFn(3, []()
-        { launchDisks(); });
-    wc.driveDistance(15.88);
+    // intakeCount(2);
+    wc.driveTo(-12.31, -12.58);
+    wc.faceTarget({49.76, 52.99});
+    launchDisks();
+    // wc.backwardsDriveDistance(5.13);
+    // wc.faceTarget({49.76, 49.99});
+    // wc.addDistFn(3, []()
+    //     { launchDisks(); });
+    // wc.driveDistance(15.88);
 };
-Auton skills = "Skills" + []() {
-
+Auton skills = "Skills" + []()
+{
+    wc.estimateStartPos(PVector(-61.52, 40.75), 90.72);
+    skillsSpinRoller();
+    intakeCount(3);
+    chassis.setSpeedLimit(30);
+    wc.driveTo(-43.19, 50.99);
+    s(700);
+    chassis.setSpeedLimit(100);
+    wc.turnTo(0);
+    wc.driveDistance(13.34);
+    skillsFrontRoller();
+    wc.backwardsDriveDistance(3.63);
+    chassis.setSpeedLimit(50);
+    wc.driveTo(12.07, 57.42);
+    chassis.setSpeedLimit(100);
+    wc.faceTarget({49.76, 50.82});
+    s(300);
+    launchDisks();
+    s(500);
+    intakeCount(3);
+    chassis.setSpeedLimit(40);
+    wc.followPath(&purePursuit, {PVector(-45.50, 55.61), PVector(19.21, 2.57)});
+    wc.faceTarget({49.76, 50.82});
+    wc.driveDistance(14);
+    wc.faceTarget({49.76, 50.82});
+    launchDisks();
+    s(1000);
+    chassis.setSpeedLimit(30);
+    wc.driveTo(41.34, -25.2);
+    chassis.setSpeedLimit(100);
+    wc.driveTo(50.85, 19.78);
+    wc.faceTarget({49.76, 50.82});
+    launchDisks();
+    wc.backInto(59.17, -41.14);
+    wc.turnTo(270);
+    wc.backwardsDriveDistance(1.53);
+    skillsSpinRoller();
+    intakeCount(3);
+    wc.driveTo(32.59, -36.52);
+    wc.backInto(34.40, -60.79);
+    skillsSpinRoller();
+    // wc.driveTo(-17.10, -57.82);
+    // wc.faceTarget({-49.96, -50.22});
+    // launchDisks();
+    // intakeCount(3);
+    // wc.followPath(&purePursuit, {PVector(44.64, -56.66), PVector(-19.58, -4.98)});
+    // wc.faceTarget({-49.96, -50.22});
+    // launchDisks();
+    // wc.driveTo(-39.56, 14.66);
+    // wc.driveTo(-55.41, -15.71);
+    // wc.faceTarget({-49.96, -50.22});
+    // wc.backInto(-51.45, 50.82);
+    // wc.turnTo(135);
+    // endgame.open();
 };
 Auton noOp = "No Run" + []() {};
 Auton winPoint = "Win Point" + []()

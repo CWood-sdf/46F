@@ -184,7 +184,7 @@ posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad
-posTp positioner = posTp(arrX, arrY, angler, {0, 5});
+posTp positioner = posTp(arrX, arrY, angler, {0, 0});
 
 // GPS_Share share = GPS_Share(positioner, GPS);
 
