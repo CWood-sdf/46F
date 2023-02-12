@@ -20,11 +20,11 @@ Chassis::Chassis(MotorGroup& left, MotorGroup& right, Positioner& p, double trac
 
 void Chassis::turnRight(double speed)
 {
-    driveFromDiff(0, speed, fwd);
+    driveFromDiff(0, speed);
 }
 void Chassis::turnLeft(double speed)
 {
-    driveFromDiff(0, -speed, fwd);
+    driveFromDiff(0, -speed);
 }
 void Chassis::moveRightSide(double speed, directionType d)
 {
@@ -34,7 +34,7 @@ void Chassis::moveLeftSide(double speed, directionType d)
 {
     leftWheels.spinVolt(d, speed);
 }
-void Chassis::hardBrake()
+void Chassis::holdBrake()
 {
     leftWheels.stop(hold);
     rightWheels.stop(hold);
@@ -60,7 +60,7 @@ Chassis::chain_method Chassis::setSpeedLimit(double v)
     CHAIN
 }
 double sign(double);
-void Chassis::driveFromDiff(double speed, double diff, directionType d)
+void Chassis::driveFromDiff(double speed, double diff)
 {
     if (abs(speed) > speedLimit)
     {
@@ -100,5 +100,5 @@ TOP:
 void Chassis::driveFromLR(double left, double right)
 {
     double diff = (left - right) / 2.0;
-    driveFromDiff((left + right) / 2.0, diff, fwd);
+    driveFromDiff((left + right) / 2.0, diff);
 }

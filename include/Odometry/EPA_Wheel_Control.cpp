@@ -100,7 +100,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
     int sleepTime = 20;
     int minTimeIn = 200;
     double degRange = 4.0;
-    int speedLimit = 100;
+    int speedLimit = chassis->getSpeedLimit();
     int timeSpent = 0;
 
     //
@@ -141,7 +141,7 @@ void WheelController::turnTo(std::function<double()> angleCalc)
         }
         //
     }
-    chassis->hardBrake();
+    chassis->holdBrake();
 
     // s(300);
 
@@ -613,9 +613,9 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         {
             speed = path[nearestIndex].targetSpeed * sign(speed);
         }
-        if (abs(speed) > abs(chassis->speedLimit))
+        if (abs(speed) > abs(chassis->getSpeedLimit()))
         {
-            speed = chassis->speedLimit * sign(speed);
+            speed = chassis->getSpeedLimit() * sign(speed);
         }
         // The extra speed to add to the right side
         double rightExtra = 0;
@@ -624,12 +624,12 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
             switch (speeds.second.second)
             {
             case Controller::AngularVel::curvature:
-                rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
+                rightExtra = chassis->realToPct(speeds.second.first * (chassis->getTrackWidth() + 3.0) * targetRobotVel / 2.0);
                 while (abs(rightExtra) + abs(speed) > 100.0)
                 {
                     speed = (abs(speed) - 1.0) * sign(speed);
                     targetRobotVel = chassis->pctToReal(speed);
-                    rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
+                    rightExtra = chassis->realToPct(speeds.second.first * (chassis->getTrackWidth() + 3.0) * targetRobotVel / 2.0);
                     if (abs(speed) < 1.0)
                         break;
                 }
@@ -639,7 +639,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
                 rightExtra = speeds.second.first;
                 break;
             case Controller::AngularVel::radps:
-                rightExtra = chassis->realToPct(speeds.second.first * chassis->trackWidth / -2.0);
+                rightExtra = chassis->realToPct(speeds.second.first * chassis->getTrackWidth() / -2.0);
                 while (abs(rightExtra) + abs(speed) > 100.0)
                 {
                     speed = (abs(speed) - 1.0) * sign(speed);
@@ -656,7 +656,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         }
         // Mindblowing lines right here
         // Move the robot
-        chassis->driveFromDiff(speed, -rightExtra, fwd);
+        chassis->driveFromDiff(speed, -rightExtra);
         // Sleep (WOW, HE'S A GENIUS)
 
         s(sleepTime);
@@ -678,7 +678,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         switch (BrakeMode)
         {
         case exitMode::normal:
-            chassis->hardBrake();
+            chassis->holdBrake();
             break;
         case exitMode::coast:
             chassis->coastBrake();
@@ -790,19 +790,19 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
             switch (speeds.second.second)
             {
             case Controller::AngularVel::curvature:
-                rightExtra = chassis->realToPct(speeds.second.first * (chassis->trackWidth + 3.0) * targetRobotVel / 2.0);
+                rightExtra = chassis->realToPct(speeds.second.first * (chassis->getTrackWidth() + 3.0) * targetRobotVel / 2.0);
                 break;
             case Controller::AngularVel::pctDiff:
                 rightExtra = speeds.second.first;
                 break;
             case Controller::AngularVel::radps:
-                rightExtra = chassis->realToPct(speeds.second.first * chassis->trackWidth / -2.0);
+                rightExtra = chassis->realToPct(speeds.second.first * chassis->getTrackWidth() / -2.0);
                 break;
             }
         }
-        if (abs(speed) > chassis->speedLimit)
+        if (abs(speed) > chassis->getSpeedLimit())
         {
-            speed = chassis->speedLimit * sign(speed);
+            speed = chassis->getSpeedLimit() * sign(speed);
         }
         if (isNeg)
         {
@@ -828,7 +828,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         //     speed = maxSpeed * speedSign;
         //   }
         // }
-        chassis->driveFromDiff(speed, -rightExtra, fwd);
+        chassis->driveFromDiff(speed, -rightExtra);
         lastSpeed = speed;
         s(sleepTime);
     }
@@ -840,7 +840,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         switch (BrakeMode)
         {
         case exitMode::normal:
-            chassis->hardBrake();
+            chassis->holdBrake();
             break;
         case exitMode::coast:
             chassis->coastBrake();

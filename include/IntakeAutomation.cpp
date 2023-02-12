@@ -562,7 +562,7 @@ void AutoIntake::updateValues()
         }
         else if ((targetCount > counter.getCountOut() || (continueDirection > 0 && continueTime > 0) || forward) && countThrough <= 3 && isAtBack)
         {
-            intakeMot.spin(fwd, 52);
+            intakeMot.spin(fwd, 65);
         }
         else
         {

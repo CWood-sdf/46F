@@ -33,7 +33,7 @@ using namespace vex;
 //     auto hue = rachetColor.hue();
 //     bool isRed = hue > 300 || hue < 60;
 //     bool lastRed = isRed;
-//     chassis.driveFromDiff(-60, 0, fwd);
+//     chassis.driveFromDiff(-60, 0);
 //     int count = 0;
 //     bool countUp = true;
 //     int i = 0;
@@ -63,19 +63,19 @@ using namespace vex;
 //         if (count == 20)
 //         {
 //             countUp = false;
-//             chassis.driveFromDiff(40, 0, fwd);
+//             chassis.driveFromDiff(40, 0);
 //         }
 //         else if (count == 0)
 //         {
 //             countUp = true;
-//             chassis.driveFromDiff(-100, 0, fwd);
+//             chassis.driveFromDiff(-100, 0);
 //         }
 //         i++;
 //         s(10);
 //         time += 10;
 //     }
 //     // intake.spin(vex::reverse, -100);
-//     chassis.driveFromDiff(-10, 0, fwd);
+//     chassis.driveFromDiff(-10, 0);
 //     // s(500);
 //     chassis.coastBrake();
 //     intake.stop(hold);
@@ -185,6 +185,75 @@ void calibrateFlywheelSpeed()
     }
 }
 #endif
+class DriveController
+{
+    Chassis* chassis;
+    std::function<double(double)> joystickSpeedCurve = [](double v)
+    {
+        return v;
+    };
+    int threshold = 20;
+    double getPctSpeed(controller::axis& joystick)
+    {
+        double joystickValue = abs(joystick.value()) > threshold ? joystick.value() : 0;
+        joystickValue /= 1.27;
+        return joystickValue;
+    }
+
+public:
+    DriveController(Chassis* chassis)
+    {
+        this->chassis = chassis;
+    }
+    DriveController(Chassis* chassis, int threshold) : DriveController(chassis)
+    {
+        this->threshold = threshold;
+    }
+    DriveController(Chassis* chassis, int threshold, std::function<double(double)> speedCurve) : DriveController(chassis, threshold)
+    {
+        this->joystickSpeedCurve = speedCurve;
+    }
+    DriveController(Chassis* chassis, std::function<double(double)> speedCurve) : DriveController(chassis)
+    {
+        this->joystickSpeedCurve = speedCurve;
+    }
+    DriveController& setSpeedCurve(std::function<double(double)> speedCurve)
+    {
+        this->joystickSpeedCurve = speedCurve;
+        CHAIN
+    }
+    DriveController& setThreshold(int theshold)
+    {
+        this->threshold = theshold;
+        CHAIN
+    }
+    DriveController& useQuadraticSpeedCurve()
+    {
+        this->joystickSpeedCurve = [](double pct)
+        {
+            pct /= 10.0;
+            pct *= pct * sign(pct);
+            return pct;
+        };
+        CHAIN
+    }
+    DriveController& driveArcade(controller::axis& forwardAxis, controller::axis& turnAxis, bool reverseForward = false, bool reverseTurn = false)
+    {
+        chassis->setSpeedLimit(100);
+        double forward = (reverseForward * -2 + 1) * joystickSpeedCurve(getPctSpeed(forwardAxis));
+        double turn = (reverseTurn * -2 + 1) * joystickSpeedCurve(getPctSpeed(turnAxis));
+        chassis->driveFromDiff(forward, turn);
+        CHAIN
+    }
+    DriveController& driveTank(controller::axis& leftAxis, controller::axis& rightAxis)
+    {
+        chassis->setSpeedLimit(100);
+        double left = joystickSpeedCurve(getPctSpeed(leftAxis));
+        double right = joystickSpeedCurve(getPctSpeed(rightAxis));
+        chassis->driveFromLR(left, right);
+        CHAIN
+    }
+};
 // This class allows a button latch to exist
 void drivercontrol()
 {
@@ -364,6 +433,7 @@ void drivercontrol()
 #elif BOT == 2
             if (Greg.ButtonR1.pressing())
             {
+                intakeController.decreaseCount();
                 intakeController.moveForward();
             }
             else if (Greg.ButtonR2.pressing())
@@ -545,7 +615,7 @@ int main()
             s(500);
             wc.path.setK(1.4);
             chassis.setMaxAcc(200);
-            chassis.setMaxDAcc(160);
+            chassis.setMaxDAcc(120);
             cout << "<< Chassis initialized >>" << endl;
 #if BOT == 1
             // flyTBH.setTarget(0);
@@ -589,10 +659,10 @@ int main()
     // intake.spinVolt(fwd, 90);
     intakeCounter.reset();
     thread posUpdate = thread(updatePos);
-    if (!slingAtBack.pressing())
-    {
-        slingLatch.set(true);
-    }
+    // if (!slingAtBack.pressing())
+    // {
+    //     slingLatch.set(true);
+    // }
     // Make a thread to execute some auton tasks concurrently
     thread otherThreads = thread(executeThreads);
     thread intakeThread = thread(runIntake);
@@ -602,7 +672,7 @@ int main()
     // Awesome brain screen control thread
     thread loader = thread([]()
         { BosFn::runBrainOS(); });
-    autonomous();
+    // autonomous();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 

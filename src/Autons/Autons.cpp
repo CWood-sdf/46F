@@ -92,7 +92,7 @@ Auton leftA = "Left" + []()
     cout << "1" << endl;
     intake.stop(hold);
     // spinRoller();
-    // chassis.driveFromDiff(20, 0, fwd);
+    // chassis.driveFromDiff(20, 0);
     // s(300);
     // chassis.coastBrake();
 
@@ -167,7 +167,7 @@ Auton rightA = "Right" + []()
     pidController.settings.setBrakeMode(WheelController::exitMode::hold);
     wc.backInto(37.18, -56.76);
     wc.turnTo(-10);
-    chassis.driveFromDiff(-20, 0, fwd);
+    chassis.driveFromDiff(-20, 0);
     s(300);
     chassis.coastBrake();
     spinRoller();
@@ -344,36 +344,36 @@ void spinRoller()
 {
     intakeController.disable();
     s(50);
-    chassis.driveFromDiff(-40, 0, fwd);
+    chassis.driveFromDiff(-40, 0);
     intake.spinVolt(fwd, 100);
     s(200);
     intake.stop(hold);
     intakeController.enable();
-    chassis.driveFromDiff(40, 0, fwd);
+    chassis.driveFromDiff(40, 0);
     s(200);
 }
 void skillsSpinRoller()
 {
     intakeController.disable();
     s(50);
-    chassis.driveFromDiff(-40, 0, fwd);
+    chassis.driveFromDiff(-40, 0);
     intake.spinVolt(fwd, 100);
     s(400);
     intake.stop(hold);
     intakeController.enable();
-    chassis.driveFromDiff(40, 0, fwd);
+    chassis.driveFromDiff(40, 0);
     s(400);
 }
 void skillsFrontRoller()
 {
     intakeController.disable();
     s(50);
-    chassis.driveFromDiff(40, 0, fwd);
+    chassis.driveFromDiff(40, 0);
     intake.spinVolt(fwd, 100);
     s(200);
     intake.stop(hold);
     intakeController.enable();
-    chassis.driveFromDiff(-40, 0, fwd);
+    chassis.driveFromDiff(-40, 0);
     s(200);
 }
 void launchDisks()
@@ -396,10 +396,10 @@ Auton leftA = "Left" + []()
     wc.faceTarget({49.10, 50.32});
     s(800);
     launchDisks();
-    // chassis.driveFromDiff(100, 0, fwd);
+    // chassis.driveFromDiff(100, 0);
     // s(300);
     // launchDisks();
-    // chassis.driveFromDiff(0, 0, fwd);
+    // chassis.driveFromDiff(0, 0);
     // intakeCount(1);
     // s(3000);
     // wc.turnTo(154.05);
@@ -422,6 +422,7 @@ Auton rightA = "Right" + []()
     // intakeCount(2);
     wc.driveTo(-12.31, -12.58);
     wc.faceTarget({49.76, 52.99});
+    s(500);
     launchDisks();
     // wc.backwardsDriveDistance(5.13);
     // wc.faceTarget({49.76, 49.99});

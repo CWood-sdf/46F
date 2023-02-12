@@ -44,7 +44,7 @@ void Path::make(VectorArr& arr, Chassis* chassis)
     targetSpeeds = vector<double>();
     for (int i = 0; i < bezier.size(); i++)
     {
-        targetSpeeds.push_back(abs(min(chassis->speedLimit, kConst / curvatures[i])));
+        targetSpeeds.push_back(abs(min(chassis->getSpeedLimit(), kConst / curvatures[i])));
         if (targetSpeeds.back() > 100)
         {
             targetSpeeds.back() = 100;
@@ -62,7 +62,7 @@ void Path::make(VectorArr& arr, Chassis* chassis)
     {
         // I think this math of converting inches to percent works
         double d = (bezier)[i].dist2D((bezier)[i - 1]);
-        double a = chassis->maxAcc;
+        double a = chassis->getMaxAcc();
         targetSpeeds[i] = abs(targetSpeeds[i]);
         if (startVel < targetSpeeds[i] && i != bezier.size() - 1)
         {
@@ -79,7 +79,7 @@ void Path::make(VectorArr& arr, Chassis* chassis)
             {
                 startVel = targetSpeeds[i];
                 i--;
-                double a = chassis->maxDAcc;
+                double a = chassis->getMaxDAcc();
                 double d = (bezier)[i].dist2D((bezier)[i + 1]);
                 startVel = targetSpeeds[i] = clamp(chassis->realToPct(sqrt(pow(chassis->pctToReal(startVel), 2) + 2.0 * a * d)), abs(targetSpeeds[i]), 0);
             } while (i != 0 && startVel < targetSpeeds[i - 1]);
