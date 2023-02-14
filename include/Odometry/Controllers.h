@@ -11,18 +11,6 @@ class SpeedController
 {
 public:
     PathFollowSettings settings;
-    bool isTurnAtStart()
-    {
-        return settings.turnAtStart;
-    }
-    void setTurn()
-    {
-        settings.turnAtStart = true;
-    }
-    void preventTurn()
-    {
-        settings.turnAtStart = false;
-    }
 
     struct Input
     {
