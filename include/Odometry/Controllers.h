@@ -7,33 +7,23 @@
 // That should be a sufficient path generator
 
 double sign(double v);
-class Controller
+class SpeedController
 {
-    bool turnAtStart = false;
-    bool defaultTurn = true;
-
 public:
-    WheelController::PathFollowSettings settings;
+    PathFollowSettings settings;
     bool isTurnAtStart()
     {
-        return turnAtStart;
+        return settings.turnAtStart;
     }
     void setTurn()
     {
-        turnAtStart = true;
+        settings.turnAtStart = true;
     }
     void preventTurn()
     {
-        turnAtStart = false;
+        settings.turnAtStart = false;
     }
-    void setDefaultTurn(bool val)
-    {
-        defaultTurn = val;
-    }
-    bool getDefaultTurn()
-    {
-        return defaultTurn;
-    }
+
     struct Input
     {
         PVector target;
@@ -58,7 +48,7 @@ public:
     };
 
     virtual void init();
-    // Pure Pursuit
+
     typedef pair<pair<double, ForwardVel>, pair<double, AngularVel>> followToRet;
     virtual followToRet followTo(Input& input);
     followToRet followTo(Input&& v)
@@ -67,11 +57,11 @@ public:
     }
 
     virtual void deInit();
-    Controller()
+    SpeedController()
     {
     }
 };
-class PurePursuitController : public Controller
+class PurePursuitController : public SpeedController
 {
     // Get ctrl kP up to 6.25
     PID ctrl = PID();
@@ -80,10 +70,10 @@ public:
     followToRet followTo(Input& input) override;
     void init() override;
     PurePursuitController(PID input);
-    PurePursuitController(PID input, WheelController::PathFollowSettings settings);
+    PurePursuitController(PID input, PathFollowSettings settings);
     PurePursuitController() = delete;
 };
-class RamseteController : public Controller
+class RamseteController : public SpeedController
 {
     // beta ~ p-term
     //[b > 0]
@@ -95,10 +85,10 @@ public:
     followToRet followTo(Input& input) override;
     //[b > 0], [0 < zeta < 1]
     RamseteController(double beta, double zeta);
-    RamseteController(double beta, double zeta, WheelController::PathFollowSettings settings);
+    RamseteController(double beta, double zeta, PathFollowSettings settings);
     RamseteController() = delete;
 };
-class BasicPidController : public Controller
+class BasicPidController : public SpeedController
 {
     PID ctrl;
     PID slave;
@@ -106,7 +96,7 @@ class BasicPidController : public Controller
 public:
     void init() override;
     BasicPidController(PID, PID);
-    BasicPidController(PID, PID, WheelController::PathFollowSettings settings);
+    BasicPidController(PID, PID, PathFollowSettings settings);
     followToRet followTo(Input& input) override;
     BasicPidController() = delete;
 };

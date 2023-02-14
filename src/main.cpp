@@ -613,9 +613,10 @@ int main()
             // testDriveConfiguration();
             cout << "<< Motor connection test complete >>" << endl;
             s(500);
-            wc.path.setK(1.4);
-            chassis.setMaxAcc(200);
-            chassis.setMaxDAcc(120);
+            wc.path
+                .setK(1.4)
+                .setMaxAcc(200)
+                .setMaxDAcc(120);
             cout << "<< Chassis initialized >>" << endl;
 #if BOT == 1
             // flyTBH.setTarget(0);

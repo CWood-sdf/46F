@@ -339,7 +339,7 @@ void WheelController::generalFollowTurnAtStart(VectorArr& arr, double& purePursu
     afterTurn();
     afterTurn = []() {};
 }
-PVector WheelController::generalFollowGetVirtualPursuit(PVector& pursuit, Controller* controller)
+PVector WheelController::generalFollowGetVirtualPursuit(PVector& pursuit, SpeedController* controller)
 {
     PVector virtualPursuit = pursuit;
     if (!(botPos().dist2D(pursuit) < controller->settings.virtualPursuitDist && pursuit == path.last()))
@@ -356,7 +356,7 @@ PVector WheelController::generalFollowGetVirtualPursuit(PVector& pursuit, Contro
     virtualPursuit += last;
     return virtualPursuit;
 }
-double WheelController::generalFollowGetDist(int& bezierIndex, Controller* controller, PVector& pursuit)
+double WheelController::generalFollowGetDist(int& bezierIndex, SpeedController* controller, PVector& pursuit)
 {
     double dist = 0.0;
     if (controller->settings.useDistToGoal)
@@ -394,7 +394,7 @@ double WheelController::generalFollowGetDist(int& bezierIndex, Controller* contr
     dist = pathDir.y - botDir.y;
     return dist;
 }
-void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool isNeg)
+void WheelController::generalFollow(VectorArr& arr, SpeedController* controller, bool isNeg)
 {
     // double purePursuitDist = controller->settings.followPathDist; // Distance to pure pursuit target
 
@@ -586,7 +586,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         double normAngle = posNeg180(angle - botAngle() + 180 * isNeg);
 
         // Input to speed controller
-        Controller::Input input = Controller::Input();
+        SpeedController::Input input = SpeedController::Input();
         input.angleTarget = angle;
         input.currentAngle = posNeg180(botAngle() + 180 * isNeg);
         input.target = virtualPursuit;
@@ -601,10 +601,10 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
         double speed = 0;
         switch (speeds.first.second)
         {
-        case Controller::ForwardVel::inps:
+        case SpeedController::ForwardVel::inps:
             speed = chassis->realToPct(speeds.first.first);
             break;
-        case Controller::ForwardVel::pct:
+        case SpeedController::ForwardVel::pct:
             speed = speeds.first.first;
             break;
         }
@@ -623,7 +623,7 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
             double targetRobotVel = chassis->pctToReal(speed);
             switch (speeds.second.second)
             {
-            case Controller::AngularVel::curvature:
+            case SpeedController::AngularVel::curvature:
                 rightExtra = chassis->realToPct(speeds.second.first * (chassis->getTrackWidth() + 3.0) * targetRobotVel / 2.0);
                 while (abs(rightExtra) + abs(speed) > 100.0)
                 {
@@ -635,10 +635,10 @@ void WheelController::generalFollow(VectorArr& arr, Controller* controller, bool
                 }
 
                 break;
-            case Controller::AngularVel::pctDiff:
+            case SpeedController::AngularVel::pctDiff:
                 rightExtra = speeds.second.first;
                 break;
-            case Controller::AngularVel::radps:
+            case SpeedController::AngularVel::radps:
                 rightExtra = chassis->realToPct(speeds.second.first * chassis->getTrackWidth() / -2.0);
                 while (abs(rightExtra) + abs(speed) > 100.0)
                 {
@@ -764,7 +764,7 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         {
             timeIn = 0;
         }
-        Controller::Input input = Controller::Input();
+        SpeedController::Input input = SpeedController::Input();
         // Construct the inpur
         input.angleTarget = startAngle;
         input.currentAngle = angle;
@@ -775,10 +775,10 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
         // Convert the speed to a percentage
         switch (speeds.first.second)
         {
-        case Controller::ForwardVel::inps:
+        case SpeedController::ForwardVel::inps:
             speed = chassis->realToPct(speeds.first.first);
             break;
-        case Controller::ForwardVel::pct:
+        case SpeedController::ForwardVel::pct:
             speed = speeds.first.first;
             break;
         }
@@ -789,13 +789,13 @@ void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicP
             double targetRobotVel = chassis->pctToReal(speed);
             switch (speeds.second.second)
             {
-            case Controller::AngularVel::curvature:
+            case SpeedController::AngularVel::curvature:
                 rightExtra = chassis->realToPct(speeds.second.first * (chassis->getTrackWidth() + 3.0) * targetRobotVel / 2.0);
                 break;
-            case Controller::AngularVel::pctDiff:
+            case SpeedController::AngularVel::pctDiff:
                 rightExtra = speeds.second.first;
                 break;
-            case Controller::AngularVel::radps:
+            case SpeedController::AngularVel::radps:
                 rightExtra = chassis->realToPct(speeds.second.first * chassis->getTrackWidth() / -2.0);
                 break;
             }
