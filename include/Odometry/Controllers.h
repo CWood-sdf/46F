@@ -76,16 +76,16 @@ public:
     RamseteController(double beta, double zeta, PathFollowSettings settings);
     RamseteController() = delete;
 };
-class BasicPidController : public SpeedController
+class PidController : public SpeedController
 {
     PID ctrl;
     PID slave;
 
 public:
     void init() override;
-    BasicPidController(PID, PID);
-    BasicPidController(PID, PID, PathFollowSettings settings);
+    PidController(PID, PID);
+    PidController(PID, PID, PathFollowSettings settings);
     followToRet followTo(Input& input) override;
-    BasicPidController() = delete;
+    PidController() = delete;
 };
 #endif

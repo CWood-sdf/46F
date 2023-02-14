@@ -213,7 +213,7 @@ RamseteController ramsete = RamseteController(
         .setVirtualPursuitDist(2));
 
 PathFollowSettings pidSettings = PathFollowSettings();
-BasicPidController pidController = BasicPidController(
+PidController pidController = PidController(
     PIDF(9.25, 0.1, 2.4325, 200, 6, 1),
     PID(0.9, 0, 0.3, 0, 0, 0),
     pidSettings

@@ -704,7 +704,7 @@ void WheelController::generalFollow(VectorArr& arr, SpeedController* controller,
     }
 #endif
 }
-void WheelController::generalDriveDistance(double targetDist, bool isNeg, BasicPidController* pid)
+void WheelController::generalDriveDistance(double targetDist, bool isNeg, PidController* pid)
 {
     PVector startPos = chassis->botPos();
     double startAngle = chassis->botAngle();

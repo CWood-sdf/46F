@@ -227,17 +227,17 @@ RamseteController::RamseteController(double beta, double zeta, PathFollowSetting
 RamseteController::RamseteController(double beta, double zeta) : RamseteController(beta, zeta, PathFollowSettings())
 {
 }
-BasicPidController::BasicPidController(PID ctrl, PID slave, PathFollowSettings settings) : SpeedController()
+PidController::PidController(PID ctrl, PID slave, PathFollowSettings settings) : SpeedController()
 {
     this->ctrl = ctrl;
     this->slave = slave;
     this->settings = settings;
 }
-BasicPidController::BasicPidController(PID ctrl, PID slave) : BasicPidController(ctrl, slave, PathFollowSettings())
+PidController::PidController(PID ctrl, PID slave) : PidController(ctrl, slave, PathFollowSettings())
 {
 }
 
-BasicPidController::followToRet BasicPidController::followTo(Input& input)
+PidController::followToRet PidController::followTo(Input& input)
 {
     double dist = input.dist;
     double normAngle = posNeg180(input.angleTarget - input.currentAngle);
@@ -251,7 +251,7 @@ BasicPidController::followToRet BasicPidController::followTo(Input& input)
 
     return {{fwdVel * 0.8, SpeedController::ForwardVel::pct}, {turnVel * 2.0, SpeedController::AngularVel::pctDiff}};
 }
-void BasicPidController::init()
+void PidController::init()
 {
     ctrl.setTarget(0);
     slave.setTarget(0);

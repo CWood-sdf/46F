@@ -50,7 +50,7 @@ extern MotorGroup rightWheels;
 extern Chassis chassis;
 extern PurePursuitController purePursuit;
 extern RamseteController ramsete;
-extern BasicPidController pidController;
+extern PidController pidController;
 
 /*************************************
 

@@ -13,7 +13,7 @@
 #endif
 // The basic wheel controller
 class RamseteController;
-class BasicPidController;
+class PidController;
 class PurePursuitController;
 class PathFollowSettings
 {
@@ -99,14 +99,14 @@ public: // Some variables
     std::function<void()> afterTurn = []() {};
     RamseteController* defaultRamsete;
     PurePursuitController* defaultPurePursuit;
-    BasicPidController* defaultPid;
+    PidController* defaultPid;
 
 public: // Constructor
     WheelController(
         Chassis* c,
         RamseteController* defRamsete,
         PurePursuitController* defPurePursuit,
-        BasicPidController* defPid,
+        PidController* defPid,
         std::function<PVector(PVector)> reversePos,
         std::function<double(double)> reverseAngle,
         PID turnCtrl,
@@ -225,7 +225,7 @@ public:
     {
         generalFollow(arr, controller, true);
     }
-    void generalDriveDistance(double dist, bool isNeg, BasicPidController* pid);
+    void generalDriveDistance(double dist, bool isNeg, PidController* pid);
     void driveDistance(double dist);
     void backwardsDriveDistance(double dist);
     bool isRed();
@@ -240,7 +240,7 @@ public: // Import variables + constructor
     // MechWheelController(motor& BL, motor& BR, posTp&, gps&) = delete;
     MechWheelController(
         Chassis* c,
-        RamseteController* ramsete, PurePursuitController* purePursuit, BasicPidController* defPid,
+        RamseteController* ramsete, PurePursuitController* purePursuit, PidController* defPid,
         std::function<PVector(PVector)> reversePos, std::function<double(double)> reverseAngle,
         PID tc, double kConst = 1.0)
       : WheelController(c, ramsete, purePursuit, defPid, reversePos, reverseAngle, tc, kConst)
