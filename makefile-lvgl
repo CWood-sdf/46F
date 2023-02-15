@@ -4,14 +4,17 @@
 VERBOSE = 0
 
 # include toolchain options
-include vex/mkenv.mk
+include lvgl-mk/mkenv.mk
 
 # location of the project source cpp and c files
-SRC_C  = $(wildcard src/*.cpp) 
-SRC_C += $(wildcard src/*/*.cpp) 
-SRC_C += $(wildcard include/*.cpp)
-SRC_C += $(wildcard include/*/*.cpp)
-SRC_C += $(wildcard include/*/*/*.cpp)
+SRC_C = $(wildcard src/lvgl-main.cpp)
+SRC_C += $(wildcard src/*.c)
+SRC_C += $(wildcard src/*/*.c)
+SRC_C += $(wildcard include/lvgl/src/*.c) 
+SRC_C += $(wildcard include/lvgl/src/*/*.c) 
+SRC_C += $(wildcard include/lvgl/src/*/*/*.c) 
+SRC_C += $(wildcard include/lvgl/src/*/*/*/*.c)
+SRC_C += $(wildcard include/lvgl/src/*/*/*/*/*.c)  
 
 OBJA = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
 OBJ = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
@@ -22,17 +25,12 @@ SRC_H += $(wildcard include/*/*.h)
 SRC_H += $(wildcard include/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*.h)
 SRC_H += $(wildcard include/*/*/*/*/*.h)
-SRC_H += $(wildcard include/*/*/*/*/*/*.h)
-SRC_H += $(wildcard include/*/*/*/*/*/*/*.h)
-SRC_H += $(wildcard include/*/*/*/*/*/*/*/*.h)
-SRC_H += $(wildcard Libs/*.h)
-
 
 # additional dependancies
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include . include/lvgl include/lvgl/src include/Odometry Libs/
+INC_F  = include . include/lvgl include/lvgl/src
 
 # headers needed to use library
 LV_SRC_H += $(wildcard include/lvgl/lvgl.h) 
@@ -48,13 +46,13 @@ $(BUILD)/include/%: %
 	$(Q)$(MKDIR)
 	$(Q) $(call copyfile,$^, $@)
 
-vpath %.h include/lvgl/ include/ Libs/
+vpath %.h include/lvgl/ include/
 
 # override proj name
-PROJECTLIB = lib46f
+PROJECTLIB = liblvgl
 
 # build targets
-all: $(BUILD)/$(PROJECT).bin inc
+all: $(BUILD)/$(PROJECT).bin $(BUILD)/$(PROJECTLIB).a inc
 
 # copy lvgl header files
 .PHONY: inc
@@ -62,4 +60,4 @@ inc: $(LV_DST_H)
 	$(ECHO) "Copy headers to build folder"
 
 # include build rules
-include vex/mkrules.mk
+include lvgl-mk/mkrules.mk
