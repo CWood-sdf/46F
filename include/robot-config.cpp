@@ -192,7 +192,7 @@ posTp positioner = posTp(arrX, arrY, angler, {0, 0});
 
 Chassis chassis = Chassis(leftWheels, rightWheels, positioner, 10.5, 36.0 / 60.0, 3.25 / 2.0, gearSetting::ratio18_1);
 
-WheelController::PathFollowSettings purePursuitSettings = WheelController::PathFollowSettings();
+PathFollowSettings purePursuitSettings = PathFollowSettings();
 PurePursuitController purePursuit = PurePursuitController(
     PIDF(6.25, 0.1, 2.4325, 200, 6, 1),
     purePursuitSettings
@@ -202,7 +202,7 @@ PurePursuitController purePursuit = PurePursuitController(
         .setFollowPathDist(16)
         .setVirtualPursuitDist(11));
 
-WheelController::PathFollowSettings ramseteSettings = WheelController::PathFollowSettings();
+PathFollowSettings ramseteSettings = PathFollowSettings();
 RamseteController ramsete = RamseteController(
     0.0108, 0.05,
     ramseteSettings
@@ -212,8 +212,8 @@ RamseteController ramsete = RamseteController(
         .setFollowPathDist(12)
         .setVirtualPursuitDist(2));
 
-WheelController::PathFollowSettings pidSettings = WheelController::PathFollowSettings();
-BasicPidController pidController = BasicPidController(
+PathFollowSettings pidSettings = PathFollowSettings();
+PidController pidController = PidController(
     PIDF(9.25, 0.1, 2.4325, 200, 6, 1),
     PID(0.9, 0, 0.3, 0, 0, 0),
     pidSettings
