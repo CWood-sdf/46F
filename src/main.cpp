@@ -14,11 +14,8 @@
 */
 // main.cpp
 #define MAKE
-#include "Autons/Autons.h"
-#include "BrainOS/ConnectionTest.h"
-#include "BrainOS/VariableConfig.h"
-#include "ButtonLatch.h"
-using namespace ClassFns;
+#include "Autons.h"
+extern controller Greg;
 
 using namespace vex;
 // void spinRoller()
@@ -126,7 +123,6 @@ void autonomous()
 }
 
 //}
-#define sensitivity 20
 
 // Drivercontrol + automation {
 #if BOT == 1
@@ -185,75 +181,6 @@ void calibrateFlywheelSpeed()
     }
 }
 #endif
-class DriveController
-{
-    Chassis* chassis;
-    std::function<double(double)> joystickSpeedCurve = [](double v)
-    {
-        return v;
-    };
-    int threshold = 20;
-    double getPctSpeed(controller::axis& joystick)
-    {
-        double joystickValue = abs(joystick.value()) > threshold ? joystick.value() : 0;
-        joystickValue /= 1.27;
-        return joystickValue;
-    }
-
-public:
-    DriveController(Chassis* chassis)
-    {
-        this->chassis = chassis;
-    }
-    DriveController(Chassis* chassis, int threshold) : DriveController(chassis)
-    {
-        this->threshold = threshold;
-    }
-    DriveController(Chassis* chassis, int threshold, std::function<double(double)> speedCurve) : DriveController(chassis, threshold)
-    {
-        this->joystickSpeedCurve = speedCurve;
-    }
-    DriveController(Chassis* chassis, std::function<double(double)> speedCurve) : DriveController(chassis)
-    {
-        this->joystickSpeedCurve = speedCurve;
-    }
-    DriveController& setSpeedCurve(std::function<double(double)> speedCurve)
-    {
-        this->joystickSpeedCurve = speedCurve;
-        CHAIN
-    }
-    DriveController& setThreshold(int theshold)
-    {
-        this->threshold = theshold;
-        CHAIN
-    }
-    DriveController& useQuadraticSpeedCurve()
-    {
-        this->joystickSpeedCurve = [](double pct)
-        {
-            pct /= 10.0;
-            pct *= pct * sign(pct);
-            return pct;
-        };
-        CHAIN
-    }
-    DriveController& driveArcade(controller::axis& forwardAxis, controller::axis& turnAxis, bool reverseForward = false, bool reverseTurn = false)
-    {
-        chassis->setSpeedLimit(100);
-        double forward = (reverseForward * -2 + 1) * joystickSpeedCurve(getPctSpeed(forwardAxis));
-        double turn = (reverseTurn * -2 + 1) * joystickSpeedCurve(getPctSpeed(turnAxis));
-        chassis->driveFromDiff(forward, turn);
-        CHAIN
-    }
-    DriveController& driveTank(controller::axis& leftAxis, controller::axis& rightAxis)
-    {
-        chassis->setSpeedLimit(100);
-        double left = joystickSpeedCurve(getPctSpeed(leftAxis));
-        double right = joystickSpeedCurve(getPctSpeed(rightAxis));
-        chassis->driveFromLR(left, right);
-        CHAIN
-    }
-};
 // This class allows a button latch to exist
 void drivercontrol()
 {
@@ -278,7 +205,6 @@ void drivercontrol()
     int speedIndex = 0;
 #endif
 
-    static bool driveReversed = false;
     // Protection from multiple instances of drivercontrol running
     // Is true if there is no instance of drivercontrol running
     static bool allEmpty = false;
@@ -295,65 +221,24 @@ void drivercontrol()
     // The index of this drivercontrol instance in countsExist
     int localCount = count;
     count++;
+    DriveController dc = DriveController(&chassis, 20);
     // TODO: intake controls
     while (1)
     {
         // Place driver code in here
         if (primary)
         {
-            // Drive control, uses quotient/square for smoothness
-            double Y1 = abs(Greg.Axis3.value()) > sensitivity ? Greg.Axis3.value() : 0;
-            double Y2 = abs(Greg.Axis2.value()) > sensitivity ? Greg.Axis2.value() : 0;
-            // Y1 /= 10;
-            // Y1 *= Y1;
-            // Y2 /= 10;
-            // Y2 *= Y2;
-            // Y1 *= Greg.Axis2.value() != 0 ? Greg.Axis2.value() / abs(Greg.Axis2.value()) : 1;
-            // Y2 *= Greg.Axis3.value() != 0 ? Greg.Axis3.value() / abs(Greg.Axis3.value()) : 1;
 
-            double s1 = Y1 / 1.27;
-            double s2 = Y2 / 1.27;
-            // cout << Greg.Axis3.value() << ", " << s1;
             if (Greg.ButtonLeft.pressing())
             {
-                s1 = -50, s2 = 50;
+                chassis.turnLeft(50);
             }
             if (Greg.ButtonRight.pressing())
             {
-                s1 = 50, s2 = -50;
+                chassis.turnRight(50);
             }
-            // cout << s1 << ", " << Greg.ButtonLeft.pressing() << ", " << Greg.ButtonRight.pressing() << ", ";
-            if (s1 == 0)
-            {
-                leftWheels.stop(coast);
-            }
-            if (s2 == 0)
-            {
-                rightWheels.stop(coast);
-            }
-            if (driveReversed)
-            {
-                if (s1 != 0)
-                {
-                    leftWheels.spin(vex::reverse, s1, pct);
-                }
-                if (s2 != 0)
-                {
-                    rightWheels.spin(vex::reverse, s2, pct);
-                }
-            }
-            else
-            {
-                if (s1 != 0)
-                {
-                    leftWheels.spin(fwd, s1, pct);
-                }
-                if (s2 != 0)
-                {
-                    rightWheels.spin(fwd, s2, pct);
-                }
-                // cout << s1 << endl;
-            }
+            dc.driveTank(Greg.Axis3, Greg.Axis2);
+
             if (UpLatch.pressing())
             {
                 wc.faceTarget({50, 50});
@@ -362,12 +247,6 @@ void drivercontrol()
             {
                 wc.faceTarget({-50, -50});
             }
-            // if(XLatch.pressing()){
-            //   wc.turnTo(wc.botPos().angleTo({-50, -50}));
-            // }
-            // if(YLatch.pressing()){
-            //   wc.turnTo(wc.botPos().angleTo({50, 50}));
-            // }
             if (Greg.ButtonA.pressing())
             {
                 int time = 0;
@@ -664,8 +543,6 @@ int main()
     // {
     //     slingLatch.set(true);
     // }
-    // Make a thread to execute some auton tasks concurrently
-    thread otherThreads = thread(executeThreads);
     thread intakeThread = thread(runIntake);
 #if BOT == 1
     thread flywheelControl = thread(runFlywheel);

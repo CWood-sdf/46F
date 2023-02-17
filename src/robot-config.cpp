@@ -309,6 +309,6 @@ void testDeviceConnection()
  */
 void vexcodeInit(void)
 {
-    leftWheels.setBrakeMode(hold);
-    rightWheels.setBrakeMode(hold);
+    leftWheels.setBrakeMode(coast);
+    rightWheels.setBrakeMode(coast);
 }

@@ -139,7 +139,7 @@ void FlywheelTBHEncoder::graph(bool remake)
     text[i] = '\0';
     basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), minMaxFilter(4), weightFilter(4, 2.0, 0), sma(5)
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), weightFilter(4, 2.0, 0), sma(5)
 {
     init();
     filter.seed(0);
@@ -266,7 +266,6 @@ void FlywheelTBHEncoder::step()
     }
     double extremeRemoved = sum / list.size();
     sma.update(extremeRemoved);
-    minMaxFilter.update(sma);
     weightFilter.update(sma);
     filter.update(weightFilter);
     double speed = filter;

@@ -1,4 +1,4 @@
-﻿#include "ClassBaseFns.h"
+﻿#include "robot-config.h"
 #ifdef MAKE
 
 void microWait(uint);
@@ -12,24 +12,6 @@ void microWait(uint time)
     while (Brain.Timer.systemHighResolution() - startTime < time || i < -10)
     {
         i++;
-    }
-}
-
-void executeThreads()
-{
-
-    // Execute autonomous functions
-    while (1)
-    {
-        if (threadFns.size() > 0)
-        {
-            threadFns.front()();
-            threadFns.pop_front();
-        }
-        else
-        {
-            this_thread::sleep_for(10);
-        }
     }
 }
 void updatePos()

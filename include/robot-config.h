@@ -1,14 +1,8 @@
 ﻿// #include "EPA_Tracker.h"
 #ifndef ROBOT_CONFIG_H
 #define ROBOT_CONFIG_H
-#include "Sensors/LineCounter.h"
-#include "Sensors/PotDial.h"
-// #include "Sensors/Distance.h"
 #include "Flywheel/Controller.h"
 #include "IntakeAutomation.h"
-#include "Odometry/Controllers.h"
-#include "Sensors/VisionOdom.h"
-#include "Sensors/Wrappers/Encoder.h"
 /*************************************
 
 Motors

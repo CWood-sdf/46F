@@ -107,7 +107,6 @@ class FlywheelTBHEncoder
     Encoder en;
     MotorGroup& mots;
     EMA filter;
-    MinMaxFilter minMaxFilter;
     WeightFilter weightFilter;
     SMA sma;
     vector<double> velTargets = {550};
