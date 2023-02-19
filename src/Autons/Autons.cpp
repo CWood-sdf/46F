@@ -185,85 +185,72 @@ void launchDisks()
 }
 Auton skills = "Skills" + []()
 {
-    PVector goal = {46, 50};
-    wc.setRed();
-    flyTBH.setDisabled(false);
-    flyTBH.setTargetSpeed(450);
-    wc.estimateStartPos(PVector(-61.39, 41.34), 89.36);
-    intakeController.enable();
-    spinRoller();
-    intakeController.enable();
-    s(100);
-
-    // Get first disk
-    intakeController.intake();
-    wc.turnTo(65.04);
-    wc.driveDistance(21.29);
-    wc.turnTo(90.79);
-    launchDisks();
-    flyTBH.setTargetSpeed(431);
-
-    // Spin roller
-    wc.turnTo(180.67);
-    wc.backwardsDriveDistance(10.38);
+    wc.estimateStartPos(PVector(-61.10, 41.64), 89.34);
     spinRoller();
 
-    wc.driveDistance(2.23);
-
-    // Next disk
-    intakeController.intake();
-    wc.turnTo(125.59);
-    wc.driveDistance(37.53);
-    wc.turnTo(75.17);
-    launchDisks();
-    flyTBH.setTargetSpeed(420);
-
-    // Next disk
-    intakeController.intake();
-    wc.turnTo(127.38);
-    wc.driveDistance(12.26);
-    wc.turnTo(60.96);
-    launchDisks();
-
-    // Next disk
-    intakeController.intake();
-    flyTBH.setTargetSpeed(420);
-    wc.turnTo(133.64);
-    wc.driveDistance(19.87);
-    wc.turnTo(44.00);
-    launchDisks();
-
-    // Big stack
-    intakeController.intake();
-    flyTBH.setTargetSpeed(450);
-    wc.turnTo(125.84);
-    wc.driveDistance(38.22);
-    wc.turnTo(10.45);
-    launchDisks();
+    // Get 1
+    intake(3);
+    wc.driveTo(-41.60, 52.4);
 
     // Roller
-    flyTBH.setTargetSpeed(535);
-    wc.turnTo(143.77);
-    wc.driveDistance(33.70);
-    wc.turnTo(269.25);
-    wc.backwardsDriveDistance(12);
+    wc.turnTo(179.46);
+    wc.backwardsDriveDistance(8.78);
     spinRoller();
 
-    // Disk
-    intakeController.intake();
-    wc.driveDistance(9.08);
-    wc.turnTo(250.34);
-    wc.driveDistance(11.90);
-    wc.turnTo(-89.06);
+    // Launch
+    wc.driveTo(15.76, 57.55);
+    wc.faceTarget({50.04, 49.49});
     launchDisks();
 
-    // Last roller
-    wc.turnTo(0);
-    wc.backwardsDriveDistance(15.27);
+    // 1st 3-row
+    intake(3);
+    wc.turnTo(181.00);
+    wc.driveDistance(36.95);
+    wc.faceTarget({49.82, 50.61});
+    launchDisks();
+
+    // 2nd 3-row
+    intake(3);
+    wc.followPath(&purePursuit, {PVector(14.19, 12.74), PVector(58.78, 14.53)});
+    wc.faceTarget({49.82, 50.61});
+    launchDisks();
+
+    // Next roller
+    wc.backInto(59.01, -41.26);
+    wc.turnTo(269.56);
+    wc.backwardsDriveDistance(2.88);
     spinRoller();
 
+    // mid 3-stack
+    intake(3);
+    wc.driveTo(34.13, -36.33);
+
+    // Roller
+    wc.backInto(39.29, -58.07);
+    wc.turnTo(0);
+    wc.backwardsDriveDistance(2.65);
+    spinRoller();
+
+    // Launch
+    wc.driveTo(-14.04, -56.72);
+    wc.faceTarget({-50.34, -50.00});
+    launchDisks();
+
+    // 3-row
+    intake(3);
+    wc.turnTo(-3.57);
+    wc.driveDistance(34.67);
+    wc.faceTarget({-50.34, -50.00});
+    launchDisks();
+
+    // 3-row
+    wc.followPath(&purePursuit, {PVector(-12.02, -14.82), PVector(-53.70, -15.04)});
+    wc.faceTarget({-50.34, -50.00});
+    launchDisks();
+
     // Endgame
-    wc.turnTo(-41.99);
+    wc.backInto(-50.11, 49.49);
+    wc.turnTo(134.72);
     endgame.open();
 };
 Auton winPoint = "Win Point" + []()
@@ -296,48 +283,6 @@ Auton winPoint = "Win Point" + []()
     wc.turnTo(0);
     wc.backwardsDriveDistance(12);
     spinRoller();
-};
-Auton skillsPt = "Skils driveTo" + []()
-{
-    flyTBH.setTargetSpeed(350);
-    wc.estimateStartPos(PVector(-62.51, 40.91), 89.23);
-    wc.driveTo(-42.04, 51.98);
-    wc.faceTarget({49.93, 49.50});
-    wc.backInto(-41.71, 62.05);
-    // spinRoller();
-    intakeController.intake();
-
-    wc.followPath(&purePursuit, {PVector(-41.87, 45.54), PVector(-12.81, 36.29)});
-    wc.faceTarget({49.93, 49.50});
-    launchDisks();
-
-    intakeController.intake();
-    wc.driveTo(0.22, 23.74);
-    wc.faceTarget({49.93, 49.50});
-    launchDisks();
-
-    intakeController.intake();
-    wc.driveTo(12.94, 11.19);
-    wc.faceTarget({49.93, 49.50});
-    launchDisks();
-
-    intakeController.intake();
-    wc.driveTo(36.22, -12.25);
-    wc.faceTarget({49.93, 49.50});
-    launchDisks();
-
-    wc.driveTo(57.36, -41.47);
-    wc.turnTo(-89.85);
-    wc.backwardsDriveDistance(4.01);
-    spinRoller();
-
-    wc.driveTo(41.50, -52.04);
-    wc.faceTarget({-49.47, -50.06});
-    wc.turnTo(0.16);
-    wc.backwardsDriveDistance(9.30);
-    spinRoller();
-
-    wc.faceTarget({-72, 72});
 };
 #elif BOT == 2
 void spinRoller()
