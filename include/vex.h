@@ -1,4 +1,4 @@
-#include "v5.h"
+﻿#include "v5.h"
 #include "v5_vcs.h"
 #include <math.h>
 #include <stdio.h>
@@ -15,3 +15,4 @@
 
 #define repeat(iterations) \
     for (int iterator = 0; iterator < iterations; iterator++)
+extern brain Brain;
