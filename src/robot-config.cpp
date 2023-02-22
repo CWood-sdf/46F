@@ -196,17 +196,18 @@ PathFollowSettings purePursuitSettings = PathFollowSettings();
 PurePursuitController purePursuit = PurePursuitController(
     PIDF(6.25, 0.1, 2.4325, 200, 6, 1),
     purePursuitSettings
-        .setBrakeMode(WheelController::exitMode::normal)
+        .setBrakeMode(PathFollowSettings::exitMode::normal)
         .setExitDist(2)
         .setUseDistToGoal(true)
         .setFollowPathDist(16)
-        .setVirtualPursuitDist(11));
+        .setVirtualPursuitDist(11)
+        .setTimeIn(100));
 
 PathFollowSettings ramseteSettings = PathFollowSettings();
 RamseteController ramsete = RamseteController(
     0.0108, 0.05,
     ramseteSettings
-        .setBrakeMode(WheelController::exitMode::normal)
+        .setBrakeMode(PathFollowSettings::exitMode::normal)
         .setExitDist(2)
         .setUseDistToGoal(true)
         .setFollowPathDist(12)
@@ -217,13 +218,13 @@ PidController pidController = PidController(
     PIDF(9.25, 0.1, 2.4325, 200, 6, 1),
     PID(0.9, 0, 0.3, 0, 0, 0),
     pidSettings
-        .setBrakeMode(WheelController::exitMode::normal)
+        .setBrakeMode(PathFollowSettings::exitMode::normal)
         .setExitDist(1)
         .setUseDistToGoal(false)
         .setFollowPathDist(16)
         .setTurnAtStart(true)
         .setVirtualPursuitDist(9)
-        .setMaxTimeIn(200));
+        .setTimeIn(100));
 
 PVector reverseAutonPosition(PVector v)
 {

@@ -60,6 +60,12 @@ void waitFlywheelNotReady(int minTime = 0)
     }
 }
 void graphFlywheelTBH(bool);
+void spinRoller()
+{
+}
+void intakeDisks(int)
+{
+}
 Auton leftA = "Left" + []()
 {
     // flyTBH.setDisabled(true);
@@ -129,7 +135,7 @@ Auton rightA = "Right" + []()
     cout << "Red: " << wc.isRed() << endl;
     intakeController.disable();
     wc.estimateStartPos(PVector(16.81, -62.47), 0);
-    // pidController.settings.setBrakeMode(WheelController::exitMode::hold);
+    // pidController.settings.setBrakeMode(PathFollowSettings::exitMode::hold);
     // bos::bosFns.moveCurrentLeft();
     // bos::bosFns.moveCurrentLeft();
     // bos::bosFns.getCurrent()->call(true);
@@ -164,7 +170,7 @@ Auton rightA = "Right" + []()
     wc.driveTo(21.59, -44.32);
     // // Drive to roller
     // wc.backwardsFollow(&pidController, {PVector(39.01, -56.1)});
-    pidController.settings.setBrakeMode(WheelController::exitMode::hold);
+    pidController.settings.setBrakeMode(PathFollowSettings::exitMode::hold);
     wc.backInto(37.18, -56.76);
     wc.turnTo(-10);
     chassis.driveFromDiff(-20, 0);
@@ -189,7 +195,7 @@ Auton skills = "Skills" + []()
     spinRoller();
 
     // Get 1
-    intake(3);
+    intakeDisks(3);
     wc.driveTo(-41.60, 52.4);
 
     // Roller
@@ -203,14 +209,14 @@ Auton skills = "Skills" + []()
     launchDisks();
 
     // 1st 3-row
-    intake(3);
+    intakeDisks(3);
     wc.turnTo(181.00);
     wc.driveDistance(36.95);
     wc.faceTarget({49.82, 50.61});
     launchDisks();
 
     // 2nd 3-row
-    intake(3);
+    intakeDisks(3);
     wc.followPath(&purePursuit, {PVector(14.19, 12.74), PVector(58.78, 14.53)});
     wc.faceTarget({49.82, 50.61});
     launchDisks();
@@ -222,7 +228,7 @@ Auton skills = "Skills" + []()
     spinRoller();
 
     // mid 3-stack
-    intake(3);
+    intakeDisks(3);
     wc.driveTo(34.13, -36.33);
 
     // Roller
@@ -237,7 +243,7 @@ Auton skills = "Skills" + []()
     launchDisks();
 
     // 3-row
-    intake(3);
+    intakeDisks(3);
     wc.turnTo(-3.57);
     wc.driveDistance(34.67);
     wc.faceTarget({-50.34, -50.00});
@@ -432,24 +438,86 @@ Auton skills = "Skills" + []()
     // endgame.open();
 };
 Auton noOp = "No Run" + []() {};
-Auton winPoint = "Win Point" + []()
+Auton winPoint = "Test" + []()
 {
-    wc.estimateStartPos(PVector(-62.02, 41.24), 90.72);
-    spinRoller();
-    intakeCount(2);
-    wc.followPath(&purePursuit, {PVector(-54.09, -7.62), PVector(-28.99, -0.03), PVector(-11.65, -12.08)});
-    wc.faceTarget({49.26, 50.49});
-    wc.backwardsDriveDistance(5.58);
-    wc.addDistFn(3, []()
-        { launchDisks(); });
-    wc.driveDistance(15.62);
-    wc.backwardsDriveDistance(3.03);
-    intakeCount(2);
-    wc.driveTo(-0.76, -23.31);
-    wc.faceTarget({49.26, 50.49});
-    wc.driveTo(39.85, -58.64);
-    wc.turnTo(-0.43);
-    wc.backwardsDriveDistance(2.35);
-    spinRoller();
+    wc.estimateStartPos(PVector(-61.10, 41.64), 89.34);
+    // spinRoller();
+
+    // Get 1
+    // intakeDisks(3);
+    wc.driveTo(-41.60, 52.4);
+
+    // Roller
+    wc.turnTo(179.46);
+    wc.backwardsDriveDistance(8.78);
+    s(1000);
+    wc.driveDistance(5);
+    // spinRoller();
+
+    // Launch
+    wc.driveTo(7.76, 57.55);
+    wc.faceTarget({50.04, 49.49});
+    wc.backwardsDriveDistance(2);
+    // launchDisks();
+    s(1000);
+
+    // 1st 3-row
+    // intakeDisks(3);
+    wc.turnTo(181.00);
+    wc.driveDistance(28.95);
+    wc.faceTarget({49.82, 50.61});
+    // launchDisks();
+    s(1000);
+
+    // 2nd 3-row
+    // intakeDisks(3);
+    wc.followPath(&purePursuit, {PVector(14.19, 14.74), PVector(58.78, 16.53)});
+    wc.faceTarget({49.82, 50.61});
+    // launchDisks();
+    s(1000);
+
+    // Next roller
+    wc.backInto(59.01, -41.26);
+    wc.turnTo(269.56);
+    wc.backwardsDriveDistance(2.88);
+    // spinRoller();
+    s(1000);
+    wc.driveDistance(5);
+
+    // mid 3-stack
+    // intakeDisks(3);
+    wc.driveTo(34.13, -36.33);
+    s(1000);
+    // Roller
+    wc.backInto(39.29, -58.07);
+    wc.turnTo(0);
+    wc.backwardsDriveDistance(2.65);
+    // spinRoller();
+    s(1000);
+    wc.driveDistance(5);
+
+    // Launch
+    wc.driveTo(-14.04, -56.72);
+    wc.faceTarget({-50.34, -50.00});
+    // launchDisks();
+    s(1000);
+
+    // 3-row
+    // intakeDisks(3);
+    wc.turnTo(-3.57);
+    wc.driveDistance(34.67);
+    wc.faceTarget({-50.34, -50.00});
+    // launchDisks();
+    s(1000);
+
+    // 3-row
+    wc.followPath(&purePursuit, {PVector(-12.02, -14.82), PVector(-53.70, -15.04)});
+    wc.faceTarget({-50.34, -50.00});
+    // launchDisks();
+    s(1000);
+
+    // Endgame
+    wc.backInto(-50.11, 49.49);
+    wc.turnTo(134.72);
 };
 #endif
