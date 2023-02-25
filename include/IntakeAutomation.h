@@ -169,7 +169,7 @@ struct AutoIntake {
     int expectedCount = 0;
     bool enabled = true;
     bool firing = false;
-    bool intaking = false;
+    // bool intaking = false;
     bool reverse = false;
     bool forward = false;
     bool stop = false;
