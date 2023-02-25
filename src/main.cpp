@@ -125,7 +125,7 @@ void autonomous()
 //}
 
 // Drivercontrol + automation {
-#if BOT == 1
+#if BOT == 1 || BOT == 3
 void calibrateFlywheelSpeed()
 {
     unsigned int i = 0;
@@ -409,6 +409,15 @@ void runIntake()
         s(10);
     }
 }
+#elif BOT == 3
+void runIntake()
+{
+    while (1)
+    {
+
+        s(10);
+    }
+}
 #endif
 //}
 
@@ -554,7 +563,7 @@ int main()
     // Awesome brain screen control thread
     thread loader = thread([]()
         { BosFn::runBrainOS(); });
-    autonomous();
+    calibrateFlywheelSpeed();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 

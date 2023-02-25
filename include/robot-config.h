@@ -31,7 +31,7 @@ Motors
 // extern motor flywheel2;
 
 extern MotorGroup intake;
-#if BOT == 1
+#if BOT == 1 || BOT == 3
 extern MotorGroup flywheelNm;
 extern FlywheelTBHEncoder flyTBH;
 #elif BOT == 2

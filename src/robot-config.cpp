@@ -54,6 +54,27 @@ TestDriveMotor(ML);
 // Middle Right Wheel (MR)
 motor MR = motor(PORT7, gearSetting::ratio18_1, !false);
 TestDriveMotor(MR);
+
+#elif BOT == 3
+
+// Front Left Wheel (FL)
+motor FL = motor(PORT1, gearSetting::ratio18_1, true);
+TestDriveMotor(FL);
+// Front Right Wheel (FR)
+motor FR = motor(PORT20, gearSetting::ratio18_1, false);
+TestDriveMotor(FR);
+// Back Left Wheel (BL)
+motor BL = motor(PORT4, gearSetting::ratio18_1, true);
+TestDriveMotor(BL);
+// Back Right Wheel (BR)
+motor BR = motor(PORT5, gearSetting::ratio18_1, false);
+TestDriveMotor(BR);
+// Middle Left Wheel (ML)
+motor ML = motor(PORT3, gearSetting::ratio18_1, !true);
+TestDriveMotor(ML);
+// Middle Right Wheel (MR)
+motor MR = motor(PORT7, gearSetting::ratio18_1, !false);
+TestDriveMotor(MR);
 #endif
 
 #if BOT == 1
@@ -78,6 +99,21 @@ MotorGroup intake = MotorGroup(intakeMot);
 MotorGroup sling = MotorGroup(slingMot);
 MotorGroup leftWheels = MotorGroup(BL, FL, ML);
 MotorGroup rightWheels = MotorGroup(BR, FR, MR);
+#elif BOT == 3
+motor intakeMot = motor(PORT8, gearSetting::ratio18_1, !true);
+TestDevice(intakeMot);
+
+motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, false);
+
+MotorGroup intake = MotorGroup(intakeMot);
+
+MotorGroup leftWheels = MotorGroup(BL, FL, ML);
+MotorGroup rightWheels = MotorGroup(BR, FR, MR);
+
+Encoder flywheelEncoder = Encoder(flyWheelMot);
+MotorGroup flywheelNm = MotorGroup(flyWheelMot);
+FlywheelTBHEncoder flyTBH = FlywheelTBHEncoder(flywheelNm, flywheelEncoder);
+
 #endif
 
 #if BOT == 1
@@ -162,6 +198,10 @@ AutoIntake intakeController = AutoIntake(
     intakeCounter, sling, intake, slingLatch, []()
     { return slingAtBack.pressing(); },
     true);
+#elif BOT == 3
+LineCounter entranceCounter = LineCounter(Brain.ThreeWirePort.C, true);
+PotDial counter = PotDial(Brain.ThreeWirePort.H, 3, 80, 3, false);
+AutoIntake intakeController = AutoIntake(entranceCounter, counter, intake, flyTBH);
 #endif
 // Distance goalFront = Distance(PORT11);
 // Distance goalBack = Distance(PORT12);
@@ -180,6 +220,9 @@ posTp::encoderArr arrX = {TrackingWheel(PORT14, true, 2.77)};
 
 posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 2.77)};
 #elif BOT == 2
+posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
+posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
+#elif BOT == 3
 posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
 #endif

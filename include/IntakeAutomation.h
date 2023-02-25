@@ -1,5 +1,6 @@
 ﻿#ifndef INTAKE_AUTOMATION_H
 #define INTAKE_AUTOMATION_H
+#include "Flywheel/Controller.h"
 #include "vex.h"
 #include <functional>
 #if BOT == 1
@@ -160,6 +161,46 @@ struct AutoIntake
     void setCount(int count);
     void moveForward();
     void decreaseCount();
+};
+#elif BOT == 3
+struct AutoIntake
+{
+    LineCounter& entranceCounter;
+    PotDial& counter;
+    MotorGroup& intakeMot;
+    FlywheelTBHEncoder& flywheel;
+    int expectedCount = 0;
+    bool enabled = true;
+    bool firing = false;
+    bool intaking = false;
+    bool reverse = false;
+    bool forward = false;
+    bool stop = false;
+    int count = 0;
+    int intakeCount = 0;
+    bool lastDiskLeft = false;
+    int timeSinceLastDiskLeft = 0;
+    AutoIntake(LineCounter& entranceCounter, PotDial& counter, MotorGroup& intakeMot, FlywheelTBHEncoder& flywheel);
+
+    void disable();
+
+    void enable();
+
+    void updateValues();
+
+    void setFiring();
+
+    void intake();
+
+    void intakeMultiple(int count);
+
+    void reverseMotor();
+
+    void stopDriverSpins();
+
+    void autonInit();
+
+    void moveForward();
 };
 #endif
 #endif

@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "lib46f_inc.h"
-#define BOT 2
+#define BOT 3
 #define waitUntil(condition) \
     do                       \
     {                        \

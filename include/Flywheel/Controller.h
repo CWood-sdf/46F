@@ -1,4 +1,6 @@
-﻿#include "Filters.h"
+﻿#ifndef FLYWHEEL_CONTROLLER_H
+#define FLYWHEEL_CONTROLLER_H
+#include "Filters.h"
 #include "Odometry/PID.h"
 #include "Sensors/Wrappers/Encoder.h"
 #include <algorithm>
@@ -161,4 +163,5 @@ public:
 //   void graph(bool);
 //   void initPID();
 // };
+#endif
 #endif
