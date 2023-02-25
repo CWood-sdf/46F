@@ -86,15 +86,13 @@ using namespace vex;
 competition Competition;
 
 string testPrintData = "";
-void printTestData(bool)
-{
+void printTestData(bool) {
     Brain.Screen.clearScreen(black);
     Brain.Screen.setCursor(1, 1);
     Brain.Screen.print(testPrintData.data());
 }
 
-void autonInit()
-{
+void autonInit() {
     cout << "Auton Init" << endl;
     rachetColor.setLight(ledState::on);
     rachetColor.setLightPower(100, percent);
@@ -105,10 +103,8 @@ void autonInit()
 #endif
     cout << "Auton Init Done" << endl;
 }
-void autonomous()
-{
-    while (!Auton::isSelected())
-    {
+void autonomous() {
+    while (!Auton::isSelected()) {
         s(100);
     }
 
@@ -126,8 +122,7 @@ void autonomous()
 
 // Drivercontrol + automation {
 #if BOT == 1 || BOT == 3
-void calibrateFlywheelSpeed()
-{
+void calibrateFlywheelSpeed() {
     unsigned int i = 0;
     unsigned int iMod = 10;
     int currentSpeed = 350;
@@ -135,45 +130,32 @@ void calibrateFlywheelSpeed()
     [[maybe_unused]] ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
     [[maybe_unused]] ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
     intakeController.enable();
-    while (1)
-    {
-        if (Greg.ButtonL1.pressing())
-        {
+    while (1) {
+        if (Greg.ButtonL1.pressing()) {
             direction = 1;
-        }
-        else if (Greg.ButtonL2.pressing())
-        {
+        } else if (Greg.ButtonL2.pressing()) {
             direction = -1;
-        }
-        else
-        {
+        } else {
             direction = 0;
         }
-        if (Greg.ButtonR1.pressing())
-        {
+        if (Greg.ButtonR1.pressing()) {
             iMod = 10;
-        }
-        else if (Greg.ButtonR2.pressing())
-        {
+        } else if (Greg.ButtonR2.pressing()) {
             iMod = 1;
         }
         i++;
         i %= iMod;
-        if (i == 0)
-        {
+        if (i == 0) {
             currentSpeed += direction;
-            if (direction != 0)
-            {
+            if (direction != 0) {
                 cout << "Current Speed: " << currentSpeed << endl;
             }
             flyTBH.setTargetSpeed(currentSpeed);
         }
-        if (XLatch.pressing())
-        {
+        if (XLatch.pressing()) {
             intakeController.intake();
         }
-        if (YLatch.pressing())
-        {
+        if (YLatch.pressing()) {
             intakeController.setFiring();
         }
 
@@ -182,8 +164,7 @@ void calibrateFlywheelSpeed()
 }
 #endif
 // This class allows a button latch to exist
-void drivercontrol()
-{
+void drivercontrol() {
     [[maybe_unused]] ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
     [[maybe_unused]] ButtonLatch UpLatch = ButtonLatch(Greg.ButtonUp);
     [[maybe_unused]] ButtonLatch DownLatch = ButtonLatch(Greg.ButtonDown);
@@ -223,39 +204,30 @@ void drivercontrol()
     count++;
     DriveController dc = DriveController(&chassis, 20);
     // TODO: intake controls
-    while (1)
-    {
+    while (1) {
         // Place driver code in here
-        if (primary)
-        {
+        if (primary) {
 
-            if (Greg.ButtonLeft.pressing())
-            {
+            if (Greg.ButtonLeft.pressing()) {
                 chassis.turnLeft(50);
             }
-            if (Greg.ButtonRight.pressing())
-            {
+            if (Greg.ButtonRight.pressing()) {
                 chassis.turnRight(50);
             }
             dc.driveTank(Greg.Axis3, Greg.Axis2);
 
-            if (UpLatch.pressing())
-            {
+            if (UpLatch.pressing()) {
                 wc.faceTarget({50, 50});
             }
-            if (DownLatch.pressing())
-            {
+            if (DownLatch.pressing()) {
                 wc.faceTarget({-50, -50});
             }
-            if (Greg.ButtonA.pressing())
-            {
+            if (Greg.ButtonA.pressing()) {
                 int time = 0;
-                while (Greg.ButtonA.pressing())
-                {
+                while (Greg.ButtonA.pressing()) {
                     s(10);
                     time += 10;
-                    if (time >= 100)
-                    {
+                    if (time >= 100) {
                         endgame.open();
                         Greg.rumble("....");
                         break;
@@ -263,17 +235,14 @@ void drivercontrol()
                 }
             }
 #if BOT == 1
-            if (L1Latch.pressing())
-            {
+            if (L1Latch.pressing()) {
                 speedIndex = (speedIndex + 1) % speeds.size();
                 flyTBH.setTargetSpeed(speeds[speedIndex]);
                 Greg.rumble(string(speedIndex + 1, '.').data());
             }
-            if (L2Latch.pressing())
-            {
+            if (L2Latch.pressing()) {
                 speedIndex--;
-                if (speedIndex < 0)
-                {
+                if (speedIndex < 0) {
                     speedIndex = speeds.size() - 1;
                 }
                 speedIndex = speedIndex % speeds.size();
@@ -281,18 +250,13 @@ void drivercontrol()
                 Greg.rumble(string(speedIndex + 1, '.').data());
             }
 
-            if (Greg.ButtonR1.pressing())
-            {
+            if (Greg.ButtonR1.pressing()) {
                 intakeController.disable();
                 intake.spin(fwd, 50);
-            }
-            else if (Greg.ButtonR2.pressing())
-            {
+            } else if (Greg.ButtonR2.pressing()) {
                 intakeController.disable();
                 intake.spin(vex::reverse, 50);
-            }
-            else
-            {
+            } else {
                 intakeController.enable();
                 // intake.stop(hold);
             }
@@ -301,40 +265,29 @@ void drivercontrol()
             //   driveReversed = !driveReversed;
             // }
 
-            if (XLatch.pressing())
-            {
+            if (XLatch.pressing()) {
                 intakeController.intake();
             }
-            if (BLatch.pressing())
-            {
+            if (BLatch.pressing()) {
                 intakeController.setFiring();
             }
 #elif BOT == 2
-            if (Greg.ButtonR1.pressing())
-            {
+            if (Greg.ButtonR1.pressing()) {
                 intakeController.decreaseCount();
                 intakeController.moveForward();
-            }
-            else if (Greg.ButtonR2.pressing())
-            {
+            } else if (Greg.ButtonR2.pressing()) {
                 intakeController.reverseMotor();
-            }
-            else
-            {
+            } else {
                 intakeController.stopDriverSpins();
             }
-            if (L1Latch.pressing())
-            {
+            if (L1Latch.pressing()) {
                 intakeController.setFiring();
             }
-            if (L2Latch.pressing())
-            {
+            if (L2Latch.pressing()) {
                 intakeController.decreaseCount();
             }
 #endif
-        }
-        else
-        {
+        } else {
         }
         s(10);
     }
@@ -342,55 +295,41 @@ void drivercontrol()
     countsExist[localCount].first = false;
     // Search for a working drivercontrol instance, and set it to working
     // If it's not working, allEmpty will be true
-    for (auto [exist, ptr] : countsExist)
-    {
-        if (exist)
-        {
+    for (auto [exist, ptr] : countsExist) {
+        if (exist) {
             *ptr = true;
             allEmpty = false;
             break;
-        }
-        else
-        {
+        } else {
             allEmpty = true;
         }
     }
 }
 #if BOT == 1
-void runIntake()
-{
-    while (1)
-    {
-        if (!intakeController.disabled)
-        {
+void runIntake() {
+    while (1) {
+        if (!intakeController.disabled) {
             bool flywheelReady = flyTBH.ready();
             // cout << flywheelReady << endl;
             intakeController.updateValues(flywheelReady);
             // cout << hex;
             // cout << intakeController.diskMask << endl;
-            if (intakeController.spinMotor())
-            {
+            if (intakeController.spinMotor()) {
                 intake.spin(fwd, 70);
-            }
-            else if (intakeController.reverseMotor())
-            {
+            } else if (intakeController.reverseMotor()) {
                 intake.spin(vex::reverse, 100);
-            }
-            else
-            {
+            } else {
                 intake.stop(hold);
             }
         }
         s(10);
     }
 }
-void runFlywheel()
-{
+void runFlywheel() {
     // int index = 0;
     //  flyPID.setTarget(0);
     //  timer ok;
-    while (1)
-    {
+    while (1) {
         // if(flywheelPID){
         //   flyPID.step();
         // }
@@ -401,19 +340,15 @@ void runFlywheel()
     }
 }
 #elif BOT == 2
-void runIntake()
-{
-    while (1)
-    {
+void runIntake() {
+    while (1) {
         intakeController.updateValues();
         s(10);
     }
 }
 #elif BOT == 3
-void runIntake()
-{
-    while (1)
-    {
+void runIntake() {
+    while (1) {
 
         s(10);
     }
@@ -423,8 +358,7 @@ void runIntake()
 
 // Brain Drawing Stuff {
 
-enum class Alliance : int
-{
+enum class Alliance : int {
     red = 0,
     blue = 1
 };
@@ -436,33 +370,24 @@ extern pneumatics slingLatch;
 #if BOT == 2
 extern LineCounter intakeCounter;
 #endif
-ostream& operator<<(ostream& cout, PidAdder p)
-{
+ostream& operator<<(ostream& cout, PidAdder p) {
     cout << "[" << p.p << ", " << p.i << ", " << p.d << "]";
     return cout;
 }
-void tuneTurnPid()
-{
+void tuneTurnPid() {
     auto kIInc = 0.005;
     auto kDInc = 0.05;
     auto kPInc = 0.05;
 
-    while (1)
-    {
+    while (1) {
         PidAdder adder = PidAdder(0, 0, 0);
         wc.turnTo(wc.botAngle() + 90);
-        for (int i = 0; i < 3; i++)
-        {
-            while (1)
-            {
-                if (Greg.ButtonLeft.pressing())
-                {
+        for (int i = 0; i < 3; i++) {
+            while (1) {
+                if (Greg.ButtonLeft.pressing()) {
                     break;
-                }
-                else if (Greg.ButtonRight.pressing())
-                {
-                    switch (i)
-                    {
+                } else if (Greg.ButtonRight.pressing()) {
+                    switch (i) {
                     case 0:
                         adder.p += kPInc;
                         break;
@@ -477,8 +402,7 @@ void tuneTurnPid()
                 }
                 s(100);
             }
-            while (Greg.ButtonLeft.pressing() || Greg.ButtonRight.pressing())
-            {
+            while (Greg.ButtonLeft.pressing() || Greg.ButtonRight.pressing()) {
                 s(100);
             }
             Greg.rumble(".");
@@ -488,11 +412,9 @@ void tuneTurnPid()
     }
 }
 //}
-int main()
-{
+int main() {
     // Init has to be in thread, otherwise it won't work with comp switch
-    thread initThread = thread([]()
-        {
+    thread initThread = thread([]() {
             s(100);
             v5_lv_init();
             cout << "<< Lvgl initialized >>" << endl;
@@ -535,12 +457,10 @@ int main()
             endgame.close();
             s(500);
             init = true; });
-    while (!init)
-    {
+    while (!init) {
         s(100);
     }
-    VariableConfig setAlliance = VariableConfig({"red", "blue"}, "Alliance", 0, [](int i)
-        {
+    VariableConfig setAlliance = VariableConfig({"red", "blue"}, "Alliance", 0, [](int i) {
         if (i == 0) {
         wc.setRed();
         }
@@ -561,15 +481,13 @@ int main()
     thread flywheelControl = thread(runFlywheel);
 #endif
     // Awesome brain screen control thread
-    thread loader = thread([]()
-        { BosFn::runBrainOS(); });
+    thread loader = thread([]() { BosFn::runBrainOS(); });
     calibrateFlywheelSpeed();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 
     // Prevent main from exiting
-    while (1)
-    {
+    while (1) {
         s(300);
     }
 }

@@ -2,8 +2,7 @@
 #include <sstream>
 #if BOT != 2
 const int FlywheelDebugEl::size = sizeof(FlywheelDebugEl) / sizeof(double);
-void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown)
-{
+void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t distDown) {
     // Create primary container and set padding
     lv_obj_t* keyCont = lv_obj_create(key);
     lv_obj_set_style_pad_all(keyCont, 0, 0);
@@ -34,8 +33,7 @@ void makeKeyCont(lv_obj_t* key, const char* lbl, lv_color_t color, lv_coord_t di
     lv_label_set_text(label2, lbl);
 }
 
-void basicGraph(bool remake, const char* text, FlywheelDebugEl out)
-{
+void basicGraph(bool remake, const char* text, FlywheelDebugEl out) {
     static lv_obj_t* chart;
     static lv_chart_series_t* serTarg;
     static lv_chart_series_t* serMeas;
@@ -46,8 +44,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out)
     static lv_obj_t* chartLabel;
     static lv_obj_t* key;
     // cout << "LO" << endl;
-    if (remake)
-    {
+    if (remake) {
         // cout << "LI" << endl;
         // //Make the chart
         chart = lv_chart_create(lv_scr_act());
@@ -96,8 +93,7 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out)
         lv_chart_set_next_value(chart, serFilt, out.filterVel);
     }
     // cout << chart << endl;
-    if (chart != NULL)
-    {
+    if (chart != NULL) {
         lv_label_set_text(chartLabel, text);
         lv_chart_set_next_value(chart, serTarg, out.targetVel);
         lv_chart_set_next_value(chart, serErr, out.error);
@@ -107,19 +103,16 @@ void basicGraph(bool remake, const char* text, FlywheelDebugEl out)
         lv_chart_set_next_value(chart, serDeriv, out.deriv);
     }
 }
-void FlywheelTBHEncoder::init()
-{
+void FlywheelTBHEncoder::init() {
     gain = 0.025;
     maxRateGain = 10;
     maxRateDrop = 10;
     velCheck = Settled(10, 1000, 500);
 }
-void FlywheelTBHEncoder::setDisabled(bool p)
-{
+void FlywheelTBHEncoder::setDisabled(bool p) {
     disabled = p;
 }
-void FlywheelTBHEncoder::graph(bool remake)
-{
+void FlywheelTBHEncoder::graph(bool remake) {
     static char text[80] = "TBHE ctrl";
     const char* newName = "TBHE ctrl - ";
     std::stringstream thing = std::stringstream();
@@ -127,55 +120,43 @@ void FlywheelTBHEncoder::graph(bool remake)
     const char* otherName = thing.str().c_str();
     // cout << otherName << endl;
     int i = 0;
-    for (; newName[i] != '\0'; i++)
-    {
+    for (; newName[i] != '\0'; i++) {
         text[i] = newName[i];
     }
-    for (int j = 0; otherName[j] != '\0'; j++)
-    {
+    for (int j = 0; otherName[j] != '\0'; j++) {
         text[i] = otherName[j];
         i++;
     }
     text[i] = '\0';
     basicGraph(remake, text, debug);
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), weightFilter(4, 2.0, 0), sma(5)
-{
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m, Encoder p) : mots(m), filter(0.7), weightFilter(4, 2.0, 0), sma(5) {
     init();
     filter.seed(0);
     en = p;
 }
-FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m) : FlywheelTBHEncoder(m, Encoder(m[0]))
-{
+FlywheelTBHEncoder::FlywheelTBHEncoder(MotorGroup& m) : FlywheelTBHEncoder(m, Encoder(m[0])) {
 }
 
-void FlywheelTBHEncoder::setTarget(int i)
-{
+void FlywheelTBHEncoder::setTarget(int i) {
     if (velTargets.size() == 0)
         return;
     target = i;
-    if (target < 0)
-    {
+    if (target < 0) {
         target = 0;
-    }
-    else if (target >= velTargets.size())
-    {
+    } else if (target >= velTargets.size()) {
         target = velTargets.size() - 1;
     }
 
     tbh = initialTbh[target];
-    if (velTargets.size() != 0)
-    {
+    if (velTargets.size() != 0) {
         hasTarget = true;
     }
 }
-void FlywheelTBHEncoder::setTargetSpeed(double t)
-{
+void FlywheelTBHEncoder::setTargetSpeed(double t) {
     // Loop through the targets and check if t is already in it
-    for (int i = 0; i < velTargets.size(); i++)
-    {
-        if (velTargets[i] == t)
-        {
+    for (int i = 0; i < velTargets.size(); i++) {
+        if (velTargets[i] == t) {
             setTarget(i);
             return;
         }
@@ -184,52 +165,41 @@ void FlywheelTBHEncoder::setTargetSpeed(double t)
     addTarget(t);
     setTarget(velTargets.size() - 1);
 }
-void FlywheelTBHEncoder::addTarget(double t)
-{
+void FlywheelTBHEncoder::addTarget(double t) {
     velTargets.push_back(t);
     initialTbh.push_back(t / 6.0);
 }
-bool FlywheelTBHEncoder::ready()
-{
+bool FlywheelTBHEncoder::ready() {
     return velCheck.settled();
 }
-void FlywheelTBHEncoder::step()
-{
+void FlywheelTBHEncoder::step() {
     if (!hasTarget)
         return;
     static LinkedList<double> lastVals = {0, 1, 5, 10, 2, 6, 10};
-    auto removeExtremes = [](LinkedList<double> list)
-    {
+    auto removeExtremes = [](LinkedList<double> list) {
         double min = list.getBase();
         double max = list.getBase();
-        for (auto val : list)
-        {
-            if (val < min)
-            {
+        for (auto val : list) {
+            if (val < min) {
                 min = val;
             }
-            if (val > max)
-            {
+            if (val > max) {
                 max = val;
             }
         }
         bool removeMin = false;
         bool removeMax = false;
-        for (auto val : list)
-        {
-            if (val == min && !removeMin)
-            {
+        for (auto val : list) {
+            if (val == min && !removeMin) {
                 removeMin = true;
                 list.popCurrent();
             }
-            if (val == max && !removeMax)
-            {
+            if (val == max && !removeMax) {
                 removeMax = true;
                 list.popCurrent();
             }
             // break on both removed
-            if (removeMin && removeMax)
-            {
+            if (removeMin && removeMax) {
                 break;
             }
         }
@@ -253,15 +223,13 @@ void FlywheelTBHEncoder::step()
     lastRotation = rotation;
     // Get a filtered velocity
     lastVals.pushBack(speedEst);
-    while (lastVals.size() > 8)
-    {
+    while (lastVals.size() > 8) {
         lastVals.popBase();
     }
     auto list = removeExtremes(removeExtremes(removeExtremes(lastVals)));
     // Average
     double sum = 0;
-    for (auto val : list)
-    {
+    for (auto val : list) {
         sum += val;
     }
     double extremeRemoved = sum / list.size();
@@ -274,8 +242,7 @@ void FlywheelTBHEncoder::step()
     bool settled = velCheck.settled(err);
     static bool freeAccel = false;
 
-    if (settled)
-    {
+    if (settled) {
         calcTbh = false;
         // settledCount++;
         // if(settledCount > 1000/50){
@@ -289,48 +256,35 @@ void FlywheelTBHEncoder::step()
     //   }
     // }
     // If the target velocity has changed, don't recalculate the tbh
-    if (desiredVel != lastDesiredVel)
-    {
+    if (desiredVel != lastDesiredVel) {
         calcTbh = false;
         settledCount = 0;
     }
     lastDesiredVel = desiredVel;
     // Vary the gain value to optimize the flywheel acceleration
-    if (abs(err) < 10)
-    {
+    if (abs(err) < 10) {
         gain = 0.0002;
     }
-    if (abs(err) < 40)
-    {
+    if (abs(err) < 40) {
         gain = 0.001;
-    }
-    else
-    {
+    } else {
         gain = 0.004;
     }
-    if (calcTbh)
-    {
-        if (std::signbit(err) != std::signbit(prevErr))
-        {
+    if (calcTbh) {
+        if (std::signbit(err) != std::signbit(prevErr)) {
             tbh = (lastVel + tbh) / 2;
-            if (tbh < 0)
-            {
+            if (tbh < 0) {
                 tbh = 0;
             }
-            if (tbh > 100)
-            {
+            if (tbh > 100) {
                 tbh = 100;
             }
             initialTbh[target] = tbh;
             velSent = tbh;
-        }
-        else
-        {
+        } else {
             velSent = lastVel + gain * err;
         }
-    }
-    else
-    {
+    } else {
         velSent = lastVel;
     }
     // cout << velSent << endl;
@@ -340,50 +294,37 @@ void FlywheelTBHEncoder::step()
     // cout << velSent << endl << endl;
 
     // Limit the velocity change
-    if (velSent - lastVel > maxRateGain)
-    {
+    if (velSent - lastVel > maxRateGain) {
         velSent = lastVel + maxRateGain;
-    }
-    else if (velSent - lastVel < -maxRateDrop)
-    {
+    } else if (velSent - lastVel < -maxRateDrop) {
         velSent = lastVel - maxRateDrop;
     }
     // //Slow down the acceleration if the flywheel is close to the target
     // if(abs(err) < 60 && velSent - lastVel > 0.1){
     //   velSent = lastVel + 0.1;
     // }
-    if (velSent < 0)
-    {
+    if (velSent < 0) {
         velSent = 0;
     }
-    if (velSent > 100)
-    {
+    if (velSent > 100) {
         velSent = 100;
     }
-    if (abs(err) > 100 && speed < desiredVel)
-    {
+    if (abs(err) > 100 && speed < desiredVel) {
         freeAccel = true;
-    }
-    else
-    {
+    } else {
         freeAccel = false;
     }
-    if (freeAccel)
-    {
-        if (speedEst < desiredVel)
-        {
+    if (freeAccel) {
+        if (speedEst < desiredVel) {
             velSent = 100;
-        }
-        else
-        {
+        } else {
             // velSent = initialTbh[target];
             freeAccel = false;
         }
     }
     debug.set(err, speedEst, speed, desiredVel, velSent, velCheck.getDeriv() * 100.0);
     prevErr = err;
-    if (!disabled)
-    {
+    if (!disabled) {
         mots.spinVolt(fwd, velSent);
     }
     lastVel = velSent;

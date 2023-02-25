@@ -1,16 +1,13 @@
 ﻿#pragma once
 #include "vex.h"
-class RobotState
-{
+class RobotState {
 public:
     int containedDisks;
     Pose position;
 };
-class Match
-{
+class Match {
 public:
-    class State
-    {
+    class State {
         int timeLeft = 0;
         int otherPoints;
         int currentPoints;
@@ -23,29 +20,23 @@ private:
     State state;
 
 public:
-    Match()
-    {
+    Match() {
     }
-    void start()
-    {
+    void start() {
         isRunning = true;
         t.reset();
     }
-    void stop()
-    {
+    void stop() {
         isRunning = false;
     }
-    bool running()
-    {
+    bool running() {
         return isRunning;
     }
-    int getTimeLeft()
-    {
+    int getTimeLeft() {
         return 105 - t.time();
     }
 };
-class BasicAiTask
-{
+class BasicAiTask {
 public:
     virtual void setState(Match::State&) = 0;
     virtual double estimatePointValue() = 0;
@@ -56,29 +47,24 @@ public:
     virtual bool done() = 0;
     virtual std::unique_ptr<BasicAiTask> getNew() = 0;
 };
-class BasicAiTaskBuilder
-{
+class BasicAiTaskBuilder {
 public:
     virtual std::unique_ptr<BasicAiTask> build() = 0;
     virtual double estimatePointValue() = 0;
     virtual double estimateTime() = 0;
 };
 
-class AiTaskFactory
-{
+class AiTaskFactory {
     LinkedList<std::unique_ptr<BasicAiTaskBuilder>> builders;
-    BasicAiTaskBuilder* selectOptimalTask()
-    {
+    BasicAiTaskBuilder* selectOptimalTask() {
         // The gain function is the point value of the task divided by the time it takes to complete the task.
         // Select the task with the highest gain
         // The unit on gain is points / sec
         double maxGain = 0;
         BasicAiTaskBuilder* maxGainTask;
-        for (auto& builder : builders)
-        {
+        for (auto& builder : builders) {
             double gain = builder->estimatePointValue() / builder->estimateTime();
-            if (gain > maxGain)
-            {
+            if (gain > maxGain) {
                 maxGain = gain;
                 maxGainTask = builder.get();
             }
@@ -87,13 +73,11 @@ class AiTaskFactory
     }
 
 public:
-    std::unique_ptr<BasicAiTask> createTask()
-    {
+    std::unique_ptr<BasicAiTask> createTask() {
         // Return the optimal task
         return selectOptimalTask()->build();
     }
-    void addBuilder(std::unique_ptr<BasicAiTaskBuilder> builder)
-    {
+    void addBuilder(std::unique_ptr<BasicAiTaskBuilder> builder) {
         builders.pushBack(std::move(builder));
     }
 };

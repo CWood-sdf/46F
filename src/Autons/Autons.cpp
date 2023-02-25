@@ -1,58 +1,42 @@
 ﻿#include "Autons.h"
 #if BOT == 1
-void waitIntakeDone()
-{
-    while (intakeController.clearingDisks || intakeController.intaking)
-    {
+void waitIntakeDone() {
+    while (intakeController.clearingDisks || intakeController.intaking) {
         wait(20, msec);
     }
 }
-void waitFlywheelReady(int minTime = 0)
-{
+void waitFlywheelReady(int minTime = 0) {
     int readyCount = 5;
     bool canExit = false;
-    while (readyCount > 0 || minTime > 0)
-    {
-        if (flyTBH.ready())
-        {
+    while (readyCount > 0 || minTime > 0) {
+        if (flyTBH.ready()) {
             readyCount--;
-        }
-        else
-        {
+        } else {
             readyCount = 8;
         }
-        if (readyCount < 0)
-        {
+        if (readyCount < 0) {
             canExit = true;
         }
-        if (canExit && minTime < 0)
-        {
+        if (canExit && minTime < 0) {
             break;
         }
         wait(50, msec);
         minTime -= 50;
     }
 }
-void waitFlywheelNotReady(int minTime = 0)
-{
+void waitFlywheelNotReady(int minTime = 0) {
     int readyCount = 5;
     bool canExit = false;
-    while (readyCount > 0 || minTime > 0)
-    {
-        if (!flyTBH.ready())
-        {
+    while (readyCount > 0 || minTime > 0) {
+        if (!flyTBH.ready()) {
             readyCount--;
-        }
-        else
-        {
+        } else {
             readyCount = 5;
         }
-        if (readyCount < 0)
-        {
+        if (readyCount < 0) {
             canExit = true;
         }
-        if (canExit && minTime < 0)
-        {
+        if (canExit && minTime < 0) {
             break;
         }
         wait(50, msec);
@@ -60,14 +44,11 @@ void waitFlywheelNotReady(int minTime = 0)
     }
 }
 void graphFlywheelTBH(bool);
-void spinRoller()
-{
+void spinRoller() {
 }
-void intakeDisks(int)
-{
+void intakeDisks(int) {
 }
-Auton leftA = "Left" + []()
-{
+Auton leftA = "Left" + []() {
     // flyTBH.setDisabled(true);
     // bos::bosFns.moveCurrentLeft();
     // bos::bosFns.moveCurrentLeft();
@@ -129,8 +110,7 @@ Auton leftA = "Left" + []()
     // intake.spin(fwd, 60);
     // intakeController.setFiring();
 };
-Auton rightA = "Right" + []()
-{
+Auton rightA = "Right" + []() {
     // wc.setBlue();
     cout << "Red: " << wc.isRed() << endl;
     intakeController.disable();
@@ -184,13 +164,11 @@ Auton rightA = "Right" + []()
     // intakeController.setFiring();
 };
 bool intaking = false;
-void launchDisks()
-{
+void launchDisks() {
     intakeController.setFiring();
     intakeController.waitForFiring();
 }
-Auton skills = "Skills" + []()
-{
+Auton skills = "Skills" + []() {
     wc.estimateStartPos(PVector(-61.10, 41.64), 89.34);
     spinRoller();
 
@@ -259,19 +237,16 @@ Auton skills = "Skills" + []()
     wc.turnTo(134.72);
     endgame.open();
 };
-Auton winPoint = "Win Point" + []()
-{
+Auton winPoint = "Win Point" + []() {
     flyTBH.setTargetSpeed(485);
     intakeController.enable();
     wc.estimateStartPos(PVector(-60.36, 40.58), 91.46);
     spinRoller();
     s(20);
-    if (intakeController.count == 0)
-    {
+    if (intakeController.count == 0) {
         intakeController.intake();
     }
-    wc.addDistFn(12, []()
-        { chassis.setSpeedLimit(50); });
+    wc.addDistFn(12, []() { chassis.setSpeedLimit(50); });
     wc.followPath(&pidController, {PVector(-48.31, 0.46), PVector(-12.31, -11.91)});
     chassis.setSpeedLimit(100);
     s(100);
@@ -291,8 +266,7 @@ Auton winPoint = "Win Point" + []()
     spinRoller();
 };
 #elif BOT == 2
-void spinRoller()
-{
+void spinRoller() {
     intakeController.disable();
     s(50);
     chassis.driveFromDiff(-40, 0);
@@ -303,8 +277,7 @@ void spinRoller()
     chassis.driveFromDiff(40, 0);
     s(200);
 }
-void skillsSpinRoller()
-{
+void skillsSpinRoller() {
     intakeController.disable();
     s(50);
     chassis.driveFromDiff(-40, 0);
@@ -315,8 +288,7 @@ void skillsSpinRoller()
     chassis.driveFromDiff(40, 0);
     s(400);
 }
-void skillsFrontRoller()
-{
+void skillsFrontRoller() {
     intakeController.disable();
     s(50);
     chassis.driveFromDiff(40, 0);
@@ -327,16 +299,13 @@ void skillsFrontRoller()
     chassis.driveFromDiff(-40, 0);
     s(200);
 }
-void launchDisks()
-{
+void launchDisks() {
     intakeController.setFiring();
 }
-void intakeCount(int count)
-{
+void intakeCount(int count) {
     intakeController.intakeMultiple(count);
 }
-Auton leftA = "Left" + []()
-{
+Auton leftA = "Left" + []() {
     // wc.setBlue();
     wc.estimateStartPos(PVector(-60.69, 40.42), 89.98);
     spinRoller();
@@ -363,8 +332,7 @@ Auton leftA = "Left" + []()
     // s(1000);
     // launchDisks();
 };
-Auton rightA = "Right" + []()
-{
+Auton rightA = "Right" + []() {
     wc.estimateStartPos(PVector(16.90, -55.18), 269.05);
     wc.backInto(37.54, -55.18);
     wc.turnTo(0.08);
@@ -381,8 +349,7 @@ Auton rightA = "Right" + []()
     //     { launchDisks(); });
     // wc.driveDistance(15.88);
 };
-Auton skills = "Skills" + []()
-{
+Auton skills = "Skills" + []() {
     wc.estimateStartPos(PVector(-61.52, 40.75), 90.72);
     skillsSpinRoller();
     intakeCount(3);
@@ -438,8 +405,7 @@ Auton skills = "Skills" + []()
     // endgame.open();
 };
 Auton noOp = "No Run" + []() {};
-Auton winPoint = "Test" + []()
-{
+Auton winPoint = "Test" + []() {
     wc.estimateStartPos(PVector(-61.10, 41.64), 89.34);
     // spinRoller();
 

@@ -8,8 +8,7 @@
 #include "lib46f_inc.h"
 #define BOT 3
 #define waitUntil(condition) \
-    do                       \
-    {                        \
+    do {                     \
         wait(5, msec);       \
     } while (!(condition))
 

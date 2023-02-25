@@ -1,16 +1,13 @@
 ﻿#include "robot-config.h"
 std::vector<tuple<string, vex::device*, bool, bool>> connectedDevices = {};
 
-AddDevice::AddDevice(string name, vex::device* device)
-{
+AddDevice::AddDevice(string name, vex::device* device) {
     connectedDevices.push_back(make_tuple(name, device, false, false));
 }
-AddDevice::AddDevice(string name, vex::motor* device)
-{
+AddDevice::AddDevice(string name, vex::motor* device) {
     connectedDevices.push_back(make_tuple(name, device, true, false));
 }
-AddDevice::AddDevice(string name, vex::motor* device, bool drive)
-{
+AddDevice::AddDevice(string name, vex::motor* device, bool drive) {
     connectedDevices.push_back(make_tuple(name, device, true, drive));
 }
 #define TestDevice(device) AddDevice device##AddDevice(#device, &device);
@@ -179,24 +176,20 @@ TestDevice(intakeMiddle);
 
 LineCounter intakeBottom = LineCounter(Brain.ThreeWirePort.C, true);
 LineCounter intakeTop = LineCounter(Brain.ThreeWirePort.E, true);
-AutoIntake intakeController = AutoIntake({[]()
-    {
-        return intakeBottom.pressing();
-    },
-    []()
-    {
+AutoIntake intakeController = AutoIntake({[]() {
+                                              return intakeBottom.pressing();
+                                          },
+    []() {
         return intakeMiddle.isObjectDetected() && intakeMiddle.objectDistance(inches) < 4;
     },
-    []()
-    {
+    []() {
         return intakeTop.pressing();
     }});
 #elif BOT == 2
 limit slingAtBack = limit(Brain.ThreeWirePort.H);
 LineCounter intakeCounter = LineCounter(Brain.ThreeWirePort.C, true);
 AutoIntake intakeController = AutoIntake(
-    intakeCounter, sling, intake, slingLatch, []()
-    { return slingAtBack.pressing(); },
+    intakeCounter, sling, intake, slingLatch, []() { return slingAtBack.pressing(); },
     true);
 #elif BOT == 3
 LineCounter entranceCounter = LineCounter(Brain.ThreeWirePort.C, true);
@@ -269,12 +262,10 @@ PidController pidController = PidController(
         .setVirtualPursuitDist(9)
         .setTimeIn(100));
 
-PVector reverseAutonPosition(PVector v)
-{
+PVector reverseAutonPosition(PVector v) {
     return v * -1;
 }
-double reverseAutonAngle(double a)
-{
+double reverseAutonAngle(double a) {
     return posNeg180(a + 180);
 }
 WheelController wc = WheelController(
@@ -296,10 +287,8 @@ Autonomous System Controllers
 //   flyPID.graph(remake);
 // }
 #if BOT == 1
-void graphFlywheelTBH(bool remake)
-{
-    if (remake)
-    {
+void graphFlywheelTBH(bool remake) {
+    if (remake) {
         // flywheelPID = false;
     }
     flyTBH.graph(remake);
@@ -312,34 +301,27 @@ void graphFlywheelTBH(bool remake)
     s(1000);           \
     m->stop();         \
     s(1000);
-void testDriveConfiguration()
-{
-    for (auto i : connectedDevices)
-    {
-        if (get<3>(i))
-        {
+void testDriveConfiguration() {
+    for (auto i : connectedDevices) {
+        if (get<3>(i)) {
             TEST_MOT(((motor*)get<1>(i)), get<0>(i))
         }
     }
 }
 #define TMC(m)                                                  \
-    if (!m.installed())                                         \
-    {                                                           \
+    if (!m.installed()) {                                       \
         cout << "Motor " << #m << " is not connected!" << endl; \
         Greg.rumble(".");                                       \
     }
-void testDeviceConnection()
-{
+void testDeviceConnection() {
     // TMC(FL)
     // TMC(ML)
     // TMC(BL)
     // TMC(FR)
     // TMC(MR)
     // TMC(BR)
-    for (auto i : connectedDevices)
-    {
-        if (!get<1>(i)->installed())
-        {
+    for (auto i : connectedDevices) {
+        if (!get<1>(i)->installed()) {
             int32_t port = get<1>(i)->index() + 1;
             cout << get<0>(i) << " is not connected on port " << port << "!" << endl;
             Greg.rumble(".");
@@ -351,8 +333,7 @@ void testDeviceConnection()
  *
  * This should be called at the start of your int main function.
  */
-void vexcodeInit(void)
-{
+void vexcodeInit(void) {
     leftWheels.setBrakeMode(coast);
     rightWheels.setBrakeMode(coast);
 }
