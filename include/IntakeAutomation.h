@@ -4,8 +4,7 @@
 #include "vex.h"
 #include <functional>
 #if BOT == 1
-struct AutoIntake
-{
+struct AutoIntake {
     // The count of disks in the intake
     int count = 0;
     // The count of disks in the intake last time it was checked
@@ -132,8 +131,7 @@ struct AutoIntake
     void drawState(bool);
 };
 #elif BOT == 2
-struct AutoIntake
-{
+struct AutoIntake {
     LineCounter& counter;
     bool enabled = true;
     MotorGroup& slingMot;
@@ -163,8 +161,7 @@ struct AutoIntake
     void decreaseCount();
 };
 #elif BOT == 3
-struct AutoIntake
-{
+struct AutoIntake {
     LineCounter& entranceCounter;
     PotDial& counter;
     MotorGroup& intakeMot;
@@ -180,6 +177,7 @@ struct AutoIntake
     int intakeCount = 0;
     bool lastDiskLeft = false;
     int timeSinceLastDiskLeft = 0;
+    int timeSinceLinePressed = 0;
     AutoIntake(LineCounter& entranceCounter, PotDial& counter, MotorGroup& intakeMot, FlywheelTBHEncoder& flywheel);
 
     void disable();

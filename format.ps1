@@ -20,4 +20,3 @@ function Format-Files($folder, $skipFolders, $depth = 5){
 }
 Format-Files "include" @("lvgl")
 Format-Files "src" @()
-Format-Files "Libs" @("Eigen")

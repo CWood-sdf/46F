@@ -3,7 +3,7 @@
   UseTab: Never,
   IndentWidth: 4,
   TabWidth: 4,
-  BreakBeforeBraces: Allman,
+  BreakBeforeBraces: Attach,
   AllowShortIfStatementsOnASingleLine: false,
   IndentCaseLabels: false,
   ColumnLimit: 0,
@@ -14,4 +14,5 @@
   AlignAfterOpenBracket: DontAlign,
   ConstructorInitializerIndentWidth: 2,
   BreakConstructorInitializers: BeforeColon,
+  AlignAfterOpenBracket: DontAlign,
 }
