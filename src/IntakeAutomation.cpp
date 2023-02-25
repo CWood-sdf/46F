@@ -618,4 +618,94 @@ void AutoIntake::setCount(int count)
 {
     counter.setCount(count);
 }
+#elif BOT == 3
+
+AutoIntake::AutoIntake(LineCounter& entranceCounter, PotDial& counter, MotorGroup& intake, FlywheelTBHEncoder& flywheel)
+  : entranceCounter(entranceCounter), counter(counter), intakeMot(intake), flywheel(flywheel)
+{
+}
+void AutoIntake::disable()
+{
+    enabled = false;
+}
+void AutoIntake::enable()
+{
+    enabled = true;
+}
+void AutoIntake::updateValues()
+{
+    if (entranceCounter.getCountOut() != count)
+    {
+        expectedCount++;
+    }
+    bool diskLeft = counter.getAmnt() == count - 1 && firing;
+    if (lastDiskLeft && timeSinceLastDiskLeft > 500 && flywheel.ready())
+    {
+        lastDiskLeft = false;
+    }
+    if (!entranceCounter.pressing())
+    {
+        count = counter.getAmnt();
+    }
+    if (enabled)
+    {
+        if (expectedCount > count || intakeCount > count || forward)
+        {
+            intakeMot.spin(fwd, 100);
+        }
+        if ((firing && !diskLeft && !lastDiskLeft) || reverse)
+        {
+            intakeMot.spin(vex::reverse, 100);
+        }
+        else
+        {
+            intakeMot.stop();
+        }
+    }
+    if (diskLeft)
+    {
+        lastDiskLeft = true;
+        timeSinceLastDiskLeft = 0;
+    }
+    timeSinceLastDiskLeft += 10;
+}
+void AutoIntake::intake()
+{
+    intakeCount++;
+    if (intakeCount > 3)
+    {
+        intakeCount = 3;
+    }
+}
+void AutoIntake::setFiring()
+{
+    firing = true;
+}
+void AutoIntake::reverseMotor()
+{
+    reverse = true;
+}
+void AutoIntake::moveForward()
+{
+    forward = true;
+}
+void AutoIntake::stopDriverSpins()
+{
+    reverse = false;
+    forward = false;
+}
+void AutoIntake::autonInit()
+{
+    entranceCounter.setCount(counter.getAmnt());
+}
+void AutoIntake::intakeMultiple(int count)
+{
+    intakeCount = count;
+
+    if (intakeCount > 3)
+    {
+        intakeCount = 3;
+    }
+}
+
 #endif

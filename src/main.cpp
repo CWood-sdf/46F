@@ -125,7 +125,7 @@ void autonomous()
 //}
 
 // Drivercontrol + automation {
-#if BOT == 1
+#if BOT == 1 || BOT == 3
 void calibrateFlywheelSpeed()
 {
     unsigned int i = 0;
@@ -409,6 +409,15 @@ void runIntake()
         s(10);
     }
 }
+#elif BOT == 3
+void runIntake()
+{
+    while (1)
+    {
+
+        s(10);
+    }
+}
 #endif
 //}
 
@@ -424,7 +433,9 @@ void displayBot(bool);
 bool init = false;
 extern limit slingAtBack;
 extern pneumatics slingLatch;
+#if BOT == 2
 extern LineCounter intakeCounter;
+#endif
 ostream& operator<<(ostream& cout, PidAdder p)
 {
     cout << "[" << p.p << ", " << p.i << ", " << p.d << "]";
@@ -516,7 +527,7 @@ int main()
             BosFn::addNewFn(LineCounter::listVals);
             BosFn::addNewFn(VariableConfig::drawAll);
             BosFn::addNewFn(windowsLoader);
-            BosFn::useTransparentScreenSwitchButtons();
+            // BosFn::useTransparentScreenSwitchButtons();
             cout << "<< BrainOS functions initialized >>" << endl;
 #if BOT == 1
             intakeController.autonInit();
@@ -536,8 +547,10 @@ int main()
         else {
         wc.setBlue();
         } });
-    // intake.spinVolt(fwd, 90);
+// intake.spinVolt(fwd, 90);
+#if BOT == 2
     intakeCounter.reset();
+#endif
     thread posUpdate = thread(updatePos);
     // if (!slingAtBack.pressing())
     // {
@@ -550,7 +563,7 @@ int main()
     // Awesome brain screen control thread
     thread loader = thread([]()
         { BosFn::runBrainOS(); });
-    // autonomous();
+    calibrateFlywheelSpeed();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 
