@@ -210,12 +210,11 @@ void drivercontrol() {
 
             if (Greg.ButtonLeft.pressing()) {
                 chassis.turnLeft(50);
-            }
-            if (Greg.ButtonRight.pressing()) {
+            } else if (Greg.ButtonRight.pressing()) {
                 chassis.turnRight(50);
+            } else {
+                dc.driveTank(Greg.Axis3, Greg.Axis2);
             }
-            dc.driveTank(Greg.Axis3, Greg.Axis2);
-
             if (UpLatch.pressing()) {
                 wc.faceTarget({50, 50});
             }
