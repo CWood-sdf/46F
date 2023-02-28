@@ -53,24 +53,23 @@ motor MR = motor(PORT7, gearSetting::ratio18_1, !false);
 TestDriveMotor(MR);
 
 #elif BOT == 3
-
 // Front Left Wheel (FL)
-motor FL = motor(PORT1, gearSetting::ratio18_1, true);
+motor FL = motor(PORT18, gearSetting::ratio6_1, !true);
 TestDriveMotor(FL);
 // Front Right Wheel (FR)
-motor FR = motor(PORT20, gearSetting::ratio18_1, false);
+motor FR = motor(PORT15, gearSetting::ratio6_1, !false);
 TestDriveMotor(FR);
 // Back Left Wheel (BL)
-motor BL = motor(PORT4, gearSetting::ratio18_1, true);
+motor BL = motor(PORT19, gearSetting::ratio6_1, !true);
 TestDriveMotor(BL);
 // Back Right Wheel (BR)
-motor BR = motor(PORT5, gearSetting::ratio18_1, false);
+motor BR = motor(PORT12, gearSetting::ratio6_1, !false);
 TestDriveMotor(BR);
 // Middle Left Wheel (ML)
-motor ML = motor(PORT3, gearSetting::ratio18_1, !true);
+motor ML = motor(PORT3, gearSetting::ratio6_1, !true);
 TestDriveMotor(ML);
 // Middle Right Wheel (MR)
-motor MR = motor(PORT7, gearSetting::ratio18_1, !false);
+motor MR = motor(PORT7, gearSetting::ratio6_1, !false);
 TestDriveMotor(MR);
 #endif
 
@@ -86,7 +85,7 @@ motor flywheel2 = motor(PORT4, ratio6_1, true);
 TestDevice(flywheel2);
 MotorGroup flywheelNm = MotorGroup(flyWheelMot, flywheel2);
 #elif BOT == 2
-motor intakeMot = motor(PORT8, gearSetting::ratio18_1, !true);
+motor intakeMot = motor(PORT8, gearSetting::ratio18_1, true);
 TestDevice(intakeMot);
 
 motor slingMot = motor(PORT10, gearSetting::ratio36_1, false);
@@ -97,10 +96,11 @@ MotorGroup sling = MotorGroup(slingMot);
 MotorGroup leftWheels = MotorGroup(BL, FL, ML);
 MotorGroup rightWheels = MotorGroup(BR, FR, MR);
 #elif BOT == 3
-motor intakeMot = motor(PORT8, gearSetting::ratio18_1, !true);
+motor intakeMot = motor(PORT10, gearSetting::ratio18_1, true);
 TestDevice(intakeMot);
 
-motor flyWheelMot = motor(PORT10, gearSetting::ratio6_1, false);
+motor flyWheelMot = motor(PORT4, gearSetting::ratio6_1, true);
+TestDevice(flyWheelMot);
 
 MotorGroup intake = MotorGroup(intakeMot);
 
@@ -162,7 +162,7 @@ Sensors
 //  triport Expander = triport(PORT9);
 //  TestDevice(Expander);
 // Inertial Sensor
-Inertial angler = Inertial(PORT16, 358.0, 358.0);
+Inertial angler = Inertial(PORT20, 358.0, 358.0);
 // gps
 // gps GPS = gps(PORT6, 7, 0.0, inches, 0);
 // TestDevice(GPS);
@@ -193,7 +193,7 @@ AutoIntake intakeController = AutoIntake(
     true);
 #elif BOT == 3
 LineCounter entranceCounter = LineCounter(Brain.ThreeWirePort.C, true);
-PotDial counter = PotDial(Brain.ThreeWirePort.H, 3, 80, 3, false);
+PotDial counter = PotDial(Brain.ThreeWirePort.H, 4, 41, 147, false);
 AutoIntake intakeController = AutoIntake(entranceCounter, counter, intake, flyTBH);
 #endif
 // Distance goalFront = Distance(PORT11);
@@ -216,8 +216,8 @@ posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
 #elif BOT == 3
-posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
-posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
+posTp::encoderArr arrX = {TrackingWheel(PORT14, true, 2.77)};
+posTp::encoderArr arrY = {TrackingWheel(PORT13, false, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad
 posTp positioner = posTp(arrX, arrY, angler, {0, 0});
@@ -286,7 +286,7 @@ Autonomous System Controllers
 //   }
 //   flyPID.graph(remake);
 // }
-#if BOT == 1
+#if BOT == 1 || BOT == 3
 void graphFlywheelTBH(bool remake) {
     if (remake) {
         // flywheelPID = false;

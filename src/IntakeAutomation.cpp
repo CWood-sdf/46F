@@ -495,19 +495,28 @@ void AutoIntake::enable() {
     enabled = true;
 }
 void AutoIntake::updateValues() {
+    static int i = 0;
+    static int it = 0;
+    if (it++ < 10) {
+        entranceCounter.reset();
+        entranceCounter.setCount(counter.getAmnt() - 1);
+    }
     if (entranceCounter.getCountOut() != count) {
         expectedCount = count + 1;
     }
     bool diskLeft = counter.getAmnt() == count - 1 && firing;
     if (!entranceCounter.pressing() && timeSinceLinePressed > 500) {
-        count = counter.getAmnt();
+        count = counter.getAmnt() - 1;
     }
     if (entranceCounter.pressing()) {
         timeSinceLinePressed = 0;
     }
     timeSinceLinePressed += 10;
     if (firing) {
-        entranceCounter.setCount(counter.getAmnt());
+        entranceCounter.setCount(counter.getAmnt() - 1);
+    }
+    if (firing && count == 0) {
+        firing = false;
     }
     if (lastDiskLeft && timeSinceLastDiskLeft > 10) {
         if (flywheel.ready()) {
@@ -517,9 +526,10 @@ void AutoIntake::updateValues() {
         }
     }
     if (enabled) {
-        if (expectedCount > count || intakeCount > count || forward) {
+        bool flywheelReady = !diskLeft && !lastDiskLeft && flywheel.ready();
+        if (expectedCount > count || intakeCount > count || forward || (firing && !flywheelReady)) {
             intakeMot.spin(fwd, 100);
-        } else if ((firing && !diskLeft && !lastDiskLeft) || reverse) {
+        } else if ((firing && flywheelReady) || reverse) {
             intakeMot.spin(vex::reverse, 100);
         } else {
             intakeMot.stop();
@@ -530,6 +540,7 @@ void AutoIntake::updateValues() {
         timeSinceLastDiskLeft = 0;
     }
     timeSinceLastDiskLeft += 10;
+    flywheel.step();
 }
 void AutoIntake::intake() {
     intakeCount++;

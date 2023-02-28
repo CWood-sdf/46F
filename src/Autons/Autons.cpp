@@ -486,4 +486,47 @@ Auton winPoint = "Test" + []() {
     wc.backInto(-50.11, 49.49);
     wc.turnTo(134.72);
 };
+#elif BOT == 3
+void launchDisks() {
+    intakeController.setFiring();
+    while (intakeController.firing) {
+        s(10);
+    }
+}
+void intakeCount(int v) {
+    intakeController.intakeMultiple(v);
+}
+void spinRoller() {
+    s(50);
+    chassis.driveFromDiff(-100, 0);
+    intake.spinVolt(vex::reverse, 100);
+    s(600);
+    intake.stop(hold);
+    chassis.driveFromDiff(40, 0);
+    s(200);
+}
+Auton leftA = "Left" + []() {
+    flyTBH.setDisabled(false);
+    intakeController.disable();
+    s(30);
+    flyTBH.setTargetSpeed(600);
+    wc.estimateStartPos(PVector(-61.68, 40.58), 92.21);
+    spinRoller();
+    wc.faceTarget({50.42, 50.82});
+    s(3000);
+    intake.spinVolt(vex::reverse, 100);
+    s(1000);
+    intake.spinVolt(fwd, 100);
+    s(500);
+    intake.stop(hold);
+    s(2000);
+    intake.spinVolt(vex::reverse, 100);
+    s(500);
+    intake.stop(hold);
+    intakeController.enable();
+    intakeCount(3);
+    wc.driveTo(-28.50, 5.08);
+    wc.faceTarget({50.42, 50.82});
+    launchDisks();
+};
 #endif

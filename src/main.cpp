@@ -121,16 +121,27 @@ void autonomous() {
 //}
 
 // Drivercontrol + automation {
+extern PotDial counter;
+extern MotorGroup intake;
 #if BOT == 1 || BOT == 3
 void calibrateFlywheelSpeed() {
     unsigned int i = 0;
     unsigned int iMod = 10;
-    int currentSpeed = 350;
+    int currentSpeed = 0;
     int direction = 0;
     [[maybe_unused]] ButtonLatch XLatch = ButtonLatch(Greg.ButtonX);
     [[maybe_unused]] ButtonLatch YLatch = ButtonLatch(Greg.ButtonY);
-    intakeController.enable();
+    [[maybe_unused]] ButtonLatch R1Latch = ButtonLatch(Greg.ButtonR1);
+    [[maybe_unused]] ButtonLatch R2Latch = ButtonLatch(Greg.ButtonR2);
+    intakeController.disable();
+    flyTBH.setDisabled(false);
+    flyTBH.setTargetSpeed(currentSpeed);
+    int j = 0;
     while (1) {
+        if (j++ == 100) {
+            // cout << "PotDial raw: " << counter.getAmnt() << ", " << counter.raw() << endl;
+            j = 0;
+        }
         if (Greg.ButtonL1.pressing()) {
             direction = 1;
         } else if (Greg.ButtonL2.pressing()) {
@@ -138,9 +149,9 @@ void calibrateFlywheelSpeed() {
         } else {
             direction = 0;
         }
-        if (Greg.ButtonR1.pressing()) {
+        if (Greg.ButtonX.pressing()) {
             iMod = 10;
-        } else if (Greg.ButtonR2.pressing()) {
+        } else if (Greg.ButtonY.pressing()) {
             iMod = 1;
         }
         i++;
@@ -152,11 +163,12 @@ void calibrateFlywheelSpeed() {
             }
             flyTBH.setTargetSpeed(currentSpeed);
         }
-        if (XLatch.pressing()) {
-            intakeController.intake();
-        }
-        if (YLatch.pressing()) {
-            intakeController.setFiring();
+        if (Greg.ButtonR1.pressing()) {
+            intake.spinVolt(fwd, 100);
+        } else if (Greg.ButtonR2.pressing()) {
+            intake.spinVolt(vex::reverse, 100);
+        } else {
+            intake.stop();
         }
 
         s(10);
@@ -179,10 +191,10 @@ void drivercontrol() {
 
 // int currentVelocity = 510;
 // int flywheelI = 1;
-#if BOT == 1
-    flyTBH.setTargetSpeed(367);
+#if BOT == 1 || BOT == 3
+    flyTBH.setTargetSpeed(480);
     flyTBH.setDisabled(false);
-    vector<int> speeds = {367, 421, 457, 502};
+    vector<int> speeds = {480};
     int speedIndex = 0;
 #endif
 
@@ -233,7 +245,7 @@ void drivercontrol() {
                     }
                 }
             }
-#if BOT == 1
+#if BOT == 1 || BOT == 3
             if (L1Latch.pressing()) {
                 speedIndex = (speedIndex + 1) % speeds.size();
                 flyTBH.setTargetSpeed(speeds[speedIndex]);
@@ -256,20 +268,14 @@ void drivercontrol() {
                 intakeController.disable();
                 intake.spin(vex::reverse, 50);
             } else {
-                intakeController.enable();
-                // intake.stop(hold);
+                // intakeController.enable();
+                intake.stop(hold);
             }
 
             // if (BLatch.pressing()) {
             //   driveReversed = !driveReversed;
             // }
 
-            if (XLatch.pressing()) {
-                intakeController.intake();
-            }
-            if (BLatch.pressing()) {
-                intakeController.setFiring();
-            }
 #elif BOT == 2
             if (Greg.ButtonR1.pressing()) {
                 intakeController.decreaseCount();
@@ -348,7 +354,7 @@ void runIntake() {
 #elif BOT == 3
 void runIntake() {
     while (1) {
-
+        intakeController.updateValues();
         s(10);
     }
 }
@@ -429,7 +435,7 @@ int main() {
                 .setMaxAcc(200)
                 .setMaxDAcc(120);
             cout << "<< Chassis initialized >>" << endl;
-#if BOT == 1
+#if BOT == 1 || BOT == 3
             // flyTBH.setTarget(0);
             flyTBH.setTargetSpeed(0);
             intakeController.disable();
@@ -437,7 +443,7 @@ int main() {
 #endif
             
             BosFn::addNewFn(testConnection);
-#if BOT == 1
+#if BOT == 1 || BOT == 3
             BosFn::addNewFn(graphFlywheelTBH);
 #endif
             BosFn::addNewFn(displayBot);
@@ -481,7 +487,8 @@ int main() {
 #endif
     // Awesome brain screen control thread
     thread loader = thread([]() { BosFn::runBrainOS(); });
-    calibrateFlywheelSpeed();
+    drivercontrol();
+    autonomous();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 

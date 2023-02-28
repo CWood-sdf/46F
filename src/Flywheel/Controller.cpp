@@ -263,12 +263,12 @@ void FlywheelTBHEncoder::step() {
     lastDesiredVel = desiredVel;
     // Vary the gain value to optimize the flywheel acceleration
     if (abs(err) < 10) {
-        gain = 0.0002;
+        gain = 0.0001;
     }
     if (abs(err) < 40) {
-        gain = 0.001;
+        gain = 0.0005;
     } else {
-        gain = 0.004;
+        gain = 0.002;
     }
     if (calcTbh) {
         if (std::signbit(err) != std::signbit(prevErr)) {

@@ -96,10 +96,10 @@ class FlywheelTBHEncoder {
     WeightFilter weightFilter;
     SMA sma;
     vector<double> velTargets = {550};
-    vector<double> initialTbh = {10};
+    vector<double> initialTbh = {91};
     double tbh = 0;
     double gain;
-    Settled velCheck = Settled(10, 100, 500);
+    Settled velCheck = Settled(20, 10000, 500);
     int target;
     FlywheelDebugEl debug;
     bool hasTarget = false;

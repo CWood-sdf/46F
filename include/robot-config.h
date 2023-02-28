@@ -102,7 +102,7 @@ extern WheelController wc;
 Autonomous System Controllers
 
 *************************************/
-#if BOT == 1
+#if BOT == 1 || BOT == 3
 void graphFlywheelPID(bool remake);
 void graphFlywheelTBH(bool remake);
 #endif
