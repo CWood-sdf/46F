@@ -1,4 +1,4 @@
-﻿#include "Autons.h"
+#include "Autons.h"
 #if BOT == 1
 void waitIntakeDone() {
     while (intakeController.clearingDisks || intakeController.intaking) {
@@ -487,14 +487,28 @@ Auton winPoint = "Test" + []() {
     wc.turnTo(134.72);
 };
 #elif BOT == 3
-void launchDisks() {
-    intakeController.setFiring();
-    while (intakeController.firing) {
-        s(10);
+void launchDisks(int waitAfter) {
+    int currentCount = counter.getAmnt() - 1;
+    int lastCount = currentCount;
+    while(lastCount != 0){
+        currentCount = counter.getAmnt() - 1;
+        if(currentCount != lastCount && currentCount != 0){
+            intake.spinVolt(fwd, 100);
+            s(600);
+            intake.stop(hold);
+            s(waitAfter);
+        }
+        else {
+            intake.spinVolt(vex::reverse, 100);
+            s(10);
+        }
+        lastCount = currentCount;
     }
+    s(500);
+    intake.stop(hold);
 }
-void intakeCount(int v) {
-    intakeController.intakeMultiple(v);
+void intakeDisks() {
+    intake.spin(fwd, 50);
 }
 void spinRoller() {
     s(50);
@@ -513,20 +527,13 @@ Auton leftA = "Left" + []() {
     wc.estimateStartPos(PVector(-61.68, 40.58), 92.21);
     spinRoller();
     wc.faceTarget({50.42, 50.82});
-    s(3000);
-    intake.spinVolt(vex::reverse, 100);
-    s(1000);
-    intake.spinVolt(fwd, 100);
-    s(500);
-    intake.stop(hold);
-    s(2000);
-    intake.spinVolt(vex::reverse, 100);
-    s(500);
-    intake.stop(hold);
-    intakeController.enable();
-    intakeCount(3);
+    launchDisks(600);
+    //3-stack
+    intakeDisks();
+    chassis.setSpeedLimit(30);
     wc.driveTo(-28.50, 5.08);
+    chassis.setSpeedLimit(100);
     wc.faceTarget({50.42, 50.82});
-    launchDisks();
+    launchDisks(600);
 };
 #endif
