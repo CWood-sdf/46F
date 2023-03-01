@@ -77,6 +77,10 @@ extern LineCounter intakeTop;
 #elif BOT == 2
 extern LineCounter intakeCounter;
 #endif
+
+#if BOT == 3
+extern PotDial counter;
+#endif
 // Distance goalFront;
 // Distance goalBack;
 
