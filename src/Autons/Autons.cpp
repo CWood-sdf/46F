@@ -1,4 +1,4 @@
-#include "Autons.h"
+﻿#include "Autons.h"
 #if BOT == 1
 void waitIntakeDone() {
     while (intakeController.clearingDisks || intakeController.intaking) {
@@ -490,15 +490,14 @@ Auton winPoint = "Test" + []() {
 void launchDisks(int waitAfter) {
     int currentCount = counter.getAmnt() - 1;
     int lastCount = currentCount;
-    while(lastCount != 0){
+    while (lastCount != 0) {
         currentCount = counter.getAmnt() - 1;
-        if(currentCount != lastCount && currentCount != 0){
+        if (currentCount != lastCount && currentCount != 0) {
             intake.spinVolt(fwd, 100);
             s(600);
             intake.stop(hold);
             s(waitAfter);
-        }
-        else {
+        } else {
             intake.spinVolt(vex::reverse, 100);
             s(10);
         }
@@ -528,12 +527,92 @@ Auton leftA = "Left" + []() {
     spinRoller();
     wc.faceTarget({50.42, 50.82});
     launchDisks(600);
-    //3-stack
+    // 3-stack
     intakeDisks();
     chassis.setSpeedLimit(30);
     wc.driveTo(-28.50, 5.08);
     chassis.setSpeedLimit(100);
     wc.faceTarget({50.42, 50.82});
     launchDisks(600);
+};
+Auton rightA = "Right" + []() {
+    wc.estimateStartPos(PVector(16.41, -55.18), 269.79);
+    wc.backwardsDriveDistance(22.51);
+    wc.turnTo(0.23);
+    wc.backwardsDriveDistance(6.08);
+    spinRoller();
+    wc.faceTarget({49.43, 50.49});
+    launchDisks(600);
+    intakeDisks();
+    wc.driveTo(-14.96, -10.1);
+    wc.faceTarget({49.43, 50.49});
+    launchDisks(600);
+};
+Auton winPoint = "Win Point" + []() {
+    wc.estimateStartPos(PVector(-62.02, 40.58), 88.49);
+    spinRoller();
+    wc.faceTarget({50.09, 50.16});
+    launchDisks(600);
+    intakeDisks();
+    wc.followPath(&purePursuit, {PVector(-52.11, -0.52), PVector(-16.44, -0.69), PVector(14.09, -39.16)});
+    wc.faceTarget({50.09, 50.16});
+    launchDisks(600);
+    wc.backInto(35.89, -54.52);
+    wc.turnTo(0.79);
+    wc.backwardsDriveDistance(6.18);
+    spinRoller();
+};
+Auton skills = "Skills" + []() {
+    wc.estimateStartPos(PVector(-60.53, 41.08), 92.21);
+    spinRoller();
+    intakeDisks();
+    wc.driveTo(-42.70, 51.48);
+    wc.turnTo(180.89);
+    wc.backwardsDriveDistance(10.42);
+    spinRoller();
+    wc.driveTo(15.91, 56.6);
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(600);
+
+    intakeDisks();
+    wc.followPath(&purePursuit, {PVector(-38.24, 48.34), PVector(16.90, 8.55)});
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(600);
+
+    intakeDisks();
+    wc.driveTo(40.51, -18.19);
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(699);
+
+    wc.backInto(56.03, -37.34);
+    wc.turnTo(268.78);
+    wc.backwardsDriveDistance(4.54);
+    spinRoller();
+
+    intakeDisks();
+    wc.driveTo(36.55, -36.19);
+
+    wc.turnTo(0.81);
+    wc.backwardsDriveDistance(24.66);
+    spinRoller();
+
+    wc.setBlue();
+    wc.driveTo(15.91, 56.6);
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(699);
+
+    intakeDisks();
+    wc.followPath(&purePursuit, {PVector(-38.24, 48.34), PVector(16.90, 8.55)});
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(600);
+
+    intakeDisks();
+    wc.driveTo(40.51, -18.19);
+    wc.faceTarget({50.26, 50.16});
+    launchDisks(600);
+
+    wc.setRed();
+    wc.backInto(-48.31, 47.68);
+    wc.faceTarget({54.05, -54.52});
 };
 #endif
