@@ -193,7 +193,7 @@ AutoIntake intakeController = AutoIntake(
     true);
 #elif BOT == 3
 LineCounter entranceCounter = LineCounter(Brain.ThreeWirePort.C, true);
-PotDial counter = PotDial(Brain.ThreeWirePort.H, 4, 41, 147, false);
+PotDial counter = PotDial(Brain.ThreeWirePort.H, 4, 41, 32, false);
 AutoIntake intakeController = AutoIntake(entranceCounter, counter, intake, flyTBH);
 #endif
 // Distance goalFront = Distance(PORT11);
@@ -216,7 +216,7 @@ posTp::encoderArr arrY = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrX = {TrackingWheel(PORT15, true, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT14, false, 2.77)};
 #elif BOT == 3
-posTp::encoderArr arrX = {TrackingWheel(PORT14, true, 2.77)};
+posTp::encoderArr arrX = {TrackingWheel(PORT14, false, 2.77)};
 posTp::encoderArr arrY = {TrackingWheel(PORT13, false, 2.77)};
 #endif
 // Make a positioner that measures x and y with smallest omni wheel rad

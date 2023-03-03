@@ -103,6 +103,12 @@ void autonInit() {
 #endif
     cout << "Auton Init Done" << endl;
 }
+double autonTime = 0;
+void printAutonTime(bool) {
+    Brain.Screen.clearScreen(black);
+    Brain.Screen.setPenColor(white);
+    Brain.Screen.printAt(30, 30, false, "%f", autonTime);
+}
 void autonomous() {
     while (!Auton::isSelected()) {
         s(100);
@@ -115,7 +121,9 @@ void autonomous() {
     Auton::callAuton();
     // wc.driveTo(1, 1);
     // Print time
-    cout << "Auton Time: " << (Brain.Timer.system() - startTime) / 1000.0 << endl;
+    autonTime = (Brain.Timer.system() - startTime) / 1000.0;
+    cout << "Auton Time: " << autonTime << endl;
+    chassis.coastBrake();
 }
 
 //}
@@ -175,6 +183,17 @@ void calibrateFlywheelSpeed() {
     }
 }
 #endif
+
+bool intakeFwd = false;
+bool intakeBack = false;
+void brainDriver(bool) {
+    static Button intakeUp = Button(0, 0, 90, 90, green, vex::color(0, 200, 0), "Up", 20, 20);
+    static Button intakeDown = Button(90, 0, 90, 90, red, vex::color(200, 0, 0), "Down", 20, 20);
+    intakeUp.draw();
+    intakeDown.draw();
+    intakeFwd = intakeUp.pressing();
+    intakeBack = intakeDown.pressing();
+}
 // This class allows a button latch to exist
 void drivercontrol() {
     [[maybe_unused]] ButtonLatch BLatch = ButtonLatch(Greg.ButtonB);
@@ -192,7 +211,7 @@ void drivercontrol() {
 // int currentVelocity = 510;
 // int flywheelI = 1;
 #if BOT == 1 || BOT == 3
-    flyTBH.setTargetSpeed(480);
+    flyTBH.setTargetSpeed(600);
     flyTBH.setDisabled(false);
     vector<int> speeds = {480};
     int speedIndex = 0;
@@ -261,12 +280,12 @@ void drivercontrol() {
                 Greg.rumble(string(speedIndex + 1, '.').data());
             }
 
-            if (Greg.ButtonR1.pressing()) {
+            if (Greg.ButtonR1.pressing() || intakeFwd) {
                 intakeController.disable();
-                intake.spin(fwd, 50);
-            } else if (Greg.ButtonR2.pressing()) {
+                intake.spin(fwd, 100);
+            } else if (Greg.ButtonR2.pressing() || intakeBack) {
                 intakeController.disable();
-                intake.spin(vex::reverse, 50);
+                intake.spin(vex::reverse, 100);
             } else {
                 // intakeController.enable();
                 intake.stop(hold);
@@ -418,6 +437,7 @@ void tuneTurnPid() {
 }
 //}
 int main() {
+    // testDriveConfiguration();
     // Init has to be in thread, otherwise it won't work with comp switch
     thread initThread = thread([]() {
             s(100);
@@ -431,7 +451,7 @@ int main() {
             cout << "<< Motor connection test complete >>" << endl;
             s(500);
             wc.path
-                .setK(1.4)
+                .setK(2.5)
                 .setMaxAcc(200)
                 .setMaxDAcc(120);
             cout << "<< Chassis initialized >>" << endl;
@@ -451,8 +471,10 @@ int main() {
             BosFn::addNewFn(BosFn([](bool refresh)
                 { intakeController.drawState(refresh); }));
 #endif
-            BosFn::addNewFn(LineCounter::listVals);
+            // BosFn::addNewFn(LineCounter::listVals);
+            BosFn::addNewFn(brainDriver);
             BosFn::addNewFn(VariableConfig::drawAll);
+            BosFn::addNewFn(printAutonTime);
             BosFn::addNewFn(windowsLoader);
             // BosFn::useTransparentScreenSwitchButtons();
             cout << "<< BrainOS functions initialized >>" << endl;
@@ -487,7 +509,11 @@ int main() {
 #endif
     // Awesome brain screen control thread
     thread loader = thread([]() { BosFn::runBrainOS(); });
-    drivercontrol();
+    // while (1) {
+    //     cout << counter.getAmnt() << ", " << counter.raw() << endl;
+    //     s(500);
+    // }
+    // drivercontrol();
     autonomous();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
