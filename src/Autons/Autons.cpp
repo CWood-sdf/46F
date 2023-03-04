@@ -493,7 +493,11 @@ void launchDisks(int waitAfter, int count) {
     while (count != 0) {
 
         intake.spinVolt(vex::reverse, 100);
-        s(900);
+        if (count >= 2) {
+            s(400);
+        } else {
+            s(900);
+        }
         count--;
         if (count > 0) {
             intake.spinVolt(fwd, 100);
@@ -526,71 +530,83 @@ void spinRoller() {
     chassis.holdBrake();
 }
 Auton leftA = "Left" + []() {
-    flyTBH.setDisabled(false);
+    flyTBH.setDisabled(true);
+    flywheelNm.spinVolt(vex::forward, 100);
     intakeController.disable();
     s(30);
-    flyTBH.setTargetSpeed(520);
+    flyTBH.setTargetSpeed(540);
     wc.estimateStartPos(PVector(-66, 40), 90.21);
     wc.faceTarget({50.42, 58.82});
-    s(3000);
-    launchDisks(1000, 2);
+    s(3500);
+    launchDisks(1800, 2);
 
-    flyTBH.setTargetSpeed(500);
     spinRoller();
-    intakeDisks();
-    // 3-stack
-    chassis.setSpeedLimit(100);
-    wc.addDistFn(15, []() {
-        chassis.setSpeedLimit(30);
-    });
-    wc.addDistFn(12, []() {
-        intakeDisks();
-    });
-    // wc.estimateStartPos(PVector(-61.10, 40.08), 90.35);
-    // wc.driveTo(-19.41, 6.01);
-    // intake.stop(hold);
-    wc.driveTo(-25.50, 0.08);
-    chassis.setSpeedLimit(100);
-    s(1500);
     wc.faceTarget({50.42, 58.82});
-    s(3000);
-    launchDisks(900, 2);
-    intake.spinVolt(vex::reverse, 100);
+    intake.spin(vex::reverse, 100);
+    // intakeDisks();
+    // 3-stack
+    // chassis.setSpeedLimit(100);
+    // wc.addDistFn(15, []() {
+    //     chassis.setSpeedLimit(30);
+    // });
+    // wc.addDistFn(12, []() {
+    //     intakeDisks();
+    // });
+    // // wc.estimateStartPos(PVector(-61.10, 40.08), 90.35);
+    // // wc.driveTo(-19.41, 6.01);
+    // // intake.stop(hold);
+    // wc.driveTo(-25.50, 0.08);
+    // chassis.setSpeedLimit(100);
+    // s(1500);
+    // wc.faceTarget({50.42, 58.82});
+    // s(3000);
+    // launchDisks(900, 2);
+    // intake.spinVolt(vex::reverse, 100);
 };
+void rightSpinRoller() {
+    s(50);
+    chassis.driveFromDiff(-100, 0);
+    intake.spinVolt(vex::reverse, 100);
+    s(100);
+    intake.stop(hold);
+    chassis.driveFromDiff(40, 0);
+    s(400);
+    chassis.holdBrake();
+}
 Auton rightA = "Right" + []() {
     flyTBH.setDisabled(false);
-    flyTBH.setTargetSpeed(800);
+    flyTBH.setTargetSpeed(530);
     wc.estimateStartPos(PVector(20, -57.18), 270.79);
     wc.backwardsDriveDistance(22.51);
     wc.turnTo(0.23);
     wc.backwardsDriveDistance(6.08);
-    spinRoller();
+    rightSpinRoller();
     intakeDisks();
     wc.driveDistance(3);
     wc.faceTarget({49.43, 50.49});
     launchDisks(600, 2);
 
-    flyTBH.setTargetSpeed(580);
+    flyTBH.setTargetSpeed(500);
     intakeDisks();
     chassis.setSpeedLimit(100);
-    wc.addDistFn(17, []() {
-        chassis.setSpeedLimit(40);
-    });
-    wc.driveTo(0.67, -28.56);
+    chassis.setSpeedLimit(40);
+    wc.driveTo(16, -44);
 
-    wc.faceTarget({49.43, 58.49});
+    wc.faceTarget({49.43, 52.49});
     s(800);
-    launchDisks(400, 2);
+    intake.spin(vex::reverse, 100);
+    s(3000);
 };
 Auton winPoint = "Win Point" + []() {
     flyTBH.setDisabled(false);
     intakeController.disable();
     s(30);
     flyTBH.setTargetSpeed(600);
-    wc.estimateStartPos(PVector(-66, 40), 90.21);
+    wc.estimateStartPos(PVector(-62, 40), 90.21);
     wc.faceTarget({50.42, 58.82});
-    s(3000);
+    s(3200);
     launchDisks(1000, 2);
+    wc.backwardsDriveDistance(6);
     spinRoller();
 
     wc.driveTo(28.25, -46.69);
@@ -608,13 +624,23 @@ void skillsSpinRoller() {
     s(400);
     chassis.holdBrake();
 }
+void skillsSlamRoller() {
+    s(50);
+    chassis.driveFromDiff(-100, 0);
+    intake.spinVolt(vex::fwd, 100);
+    s(600);
+    intake.stop(hold);
+    chassis.driveFromDiff(40, 0);
+    s(400);
+    chassis.holdBrake();
+}
 Auton skills = "Skills" + []() {
     wc.setRed();
     flyTBH.setDisabled(false);
     flyTBH.setTargetSpeed(440);
     int count = 0;
     wc.estimateStartPos(PVector(-67, 40), 90.21);
-    skillsSpinRoller();
+    skillsSlamRoller();
     wc.turnTo(45);
     wc.driveDistance(13);
     s(300);
@@ -629,7 +655,7 @@ TOP:
 
     intakeDisks();
     // wc.followPath(&purePursuit, {PVector(-17.95, 44.56), PVector(12.74, 23.94)});
-    wc.driveTo(-18, 45);
+    wc.driveTo(-18, 50);
     chassis.setSpeedLimit(50);
     wc.driveTo(13, 24);
     chassis.setSpeedLimit(100);
@@ -647,16 +673,16 @@ TOP:
         wc.driveTo(50, -30);
         wc.turnTo(267.52);
         wc.backwardsDriveDistance(8.98);
-        skillsSpinRoller();
+        skillsSlamRoller();
         wc.driveDistance(3);
 
         // 3-stack
-        intakeDisks();
-        wc.driveTo(31.22, -36.1);
-        wc.backInto(44.79, -60.75);
+        wc.turnTo(-135);
+        wc.driveDistance(13);
+        s(300);
         wc.turnTo(0);
-        wc.backwardsDriveDistance(6);
-        skillsSpinRoller();
+        wc.backwardsDriveDistance(9);
+        skillsSlamRoller();
         wc.driveDistance(2.85);
         wc.setBlue();
         goto TOP;

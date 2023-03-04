@@ -211,9 +211,9 @@ void drivercontrol() {
 // int currentVelocity = 510;
 // int flywheelI = 1;
 #if BOT == 1 || BOT == 3
-    flyTBH.setTargetSpeed(600);
+    flyTBH.setTargetSpeed(435);
     flyTBH.setDisabled(false);
-    vector<int> speeds = {480};
+    vector<int> speeds = {435};
     int speedIndex = 0;
 #endif
 
@@ -280,10 +280,10 @@ void drivercontrol() {
                 Greg.rumble(string(speedIndex + 1, '.').data());
             }
 
-            if (Greg.ButtonR1.pressing() || intakeFwd) {
+            if (Greg.ButtonR1.pressing()) {
                 intakeController.disable();
                 intake.spin(fwd, 100);
-            } else if (Greg.ButtonR2.pressing() || intakeBack) {
+            } else if (Greg.ButtonR2.pressing()) {
                 intakeController.disable();
                 intake.spin(vex::reverse, 100);
             } else {
@@ -514,7 +514,8 @@ int main() {
     //     s(500);
     // }
     // drivercontrol();
-    autonomous();
+    // autonomous();
+    // calibrateFlywheelSpeed();
     Competition.autonomous(autonomous);
     Competition.drivercontrol(drivercontrol);
 
